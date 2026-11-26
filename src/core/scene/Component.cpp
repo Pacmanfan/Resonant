@@ -9,12 +9,16 @@ namespace resonant {
 namespace acoustics {
 void registerAcousticComponents(ComponentRegistry& registry);
 }
+namespace manipulators {
+void registerManipulatorComponents(ComponentRegistry& registry);
+}
 
 ComponentRegistry& ComponentRegistry::instance()
 {
     static ComponentRegistry registry = [] {
         ComponentRegistry created;
         acoustics::registerAcousticComponents(created);
+        manipulators::registerManipulatorComponents(created);
         return created;
     }();
     return registry;

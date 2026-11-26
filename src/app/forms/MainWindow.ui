@@ -103,6 +103,27 @@
     <addaction name="actionSolveInverse"/>
     <addaction name="actionRunField"/>
    </widget>
+   <widget class="QMenu" name="menuManipulators">
+    <property name="title"><string>&amp;Wave Manipulators</string></property>
+    <addaction name="actionAddParabolicReflector"/>
+    <addaction name="actionAddEllipticalReflector"/>
+    <addaction name="actionAddSphericalReflector"/>
+    <addaction name="actionAddCylindricalReflector"/>
+    <addaction name="actionAddFlatReflector"/>
+    <addaction name="separator"/>
+    <addaction name="actionAddLens"/>
+    <addaction name="separator"/>
+    <addaction name="actionAddCircularWaveguide"/>
+    <addaction name="actionAddRectangularWaveguide"/>
+    <addaction name="separator"/>
+    <addaction name="actionAddRectangularCavity"/>
+    <addaction name="actionAddCylindricalCavity"/>
+    <addaction name="actionAddSphericalCavity"/>
+    <addaction name="separator"/>
+    <addaction name="actionAddSlitPlate"/>
+    <addaction name="separator"/>
+    <addaction name="actionShowRays"/>
+   </widget>
    <widget class="QMenu" name="menuSimulation">
     <property name="title"><string>S&amp;imulation</string></property>
     <addaction name="actionRunDemonstrator"/>
@@ -133,6 +154,7 @@
    <addaction name="menuGeometry"/>
    <addaction name="menuMaterials"/>
    <addaction name="menuAcoustics"/>
+   <addaction name="menuManipulators"/>
    <addaction name="menuSimulation"/>
    <addaction name="menuTools"/>
    <addaction name="menuHelp"/>
@@ -514,6 +536,72 @@
    <property name="toolTip"><string>Calculate the field over the chosen region</string></property>
    <property name="statusTip"><string>Calculate the field over the chosen region</string></property>
    <property name="shortcut"><string>F5</string></property>
+  </action>
+  <action name="actionAddParabolicReflector">
+   <property name="text"><string>&amp;Parabolic Reflector</string></property>
+   <property name="toolTip"><string>Add a wave manipulator: parabolic reflector</string></property>
+   <property name="statusTip"><string>Add a wave manipulator: parabolic reflector</string></property>
+  </action>
+  <action name="actionAddEllipticalReflector">
+   <property name="text"><string>&amp;Elliptical Reflector</string></property>
+   <property name="toolTip"><string>Add a wave manipulator: elliptical reflector</string></property>
+   <property name="statusTip"><string>Add a wave manipulator: elliptical reflector</string></property>
+  </action>
+  <action name="actionAddSphericalReflector">
+   <property name="text"><string>&amp;Spherical Reflector</string></property>
+   <property name="toolTip"><string>Add a wave manipulator: spherical reflector</string></property>
+   <property name="statusTip"><string>Add a wave manipulator: spherical reflector</string></property>
+  </action>
+  <action name="actionAddCylindricalReflector">
+   <property name="text"><string>&amp;Cylindrical (Trough) Reflector</string></property>
+   <property name="toolTip"><string>Add a wave manipulator: cylindrical (trough) reflector</string></property>
+   <property name="statusTip"><string>Add a wave manipulator: cylindrical (trough) reflector</string></property>
+  </action>
+  <action name="actionAddFlatReflector">
+   <property name="text"><string>&amp;Flat Reflector</string></property>
+   <property name="toolTip"><string>Add a wave manipulator: flat reflector</string></property>
+   <property name="statusTip"><string>Add a wave manipulator: flat reflector</string></property>
+  </action>
+  <action name="actionAddLens">
+   <property name="text"><string>Acoustic &amp;Lens</string></property>
+   <property name="toolTip"><string>Add a wave manipulator: acoustic lens</string></property>
+   <property name="statusTip"><string>Add a wave manipulator: acoustic lens</string></property>
+  </action>
+  <action name="actionAddCircularWaveguide">
+   <property name="text"><string>Ci&amp;rcular Waveguide</string></property>
+   <property name="toolTip"><string>Add a wave manipulator: circular waveguide</string></property>
+   <property name="statusTip"><string>Add a wave manipulator: circular waveguide</string></property>
+  </action>
+  <action name="actionAddRectangularWaveguide">
+   <property name="text"><string>Rec&amp;tangular Waveguide</string></property>
+   <property name="toolTip"><string>Add a wave manipulator: rectangular waveguide</string></property>
+   <property name="statusTip"><string>Add a wave manipulator: rectangular waveguide</string></property>
+  </action>
+  <action name="actionAddRectangularCavity">
+   <property name="text"><string>Rectangular Ca&amp;vity</string></property>
+   <property name="toolTip"><string>Add a wave manipulator: rectangular cavity</string></property>
+   <property name="statusTip"><string>Add a wave manipulator: rectangular cavity</string></property>
+  </action>
+  <action name="actionAddCylindricalCavity">
+   <property name="text"><string>C&amp;ylindrical Cavity</string></property>
+   <property name="toolTip"><string>Add a wave manipulator: cylindrical cavity</string></property>
+   <property name="statusTip"><string>Add a wave manipulator: cylindrical cavity</string></property>
+  </action>
+  <action name="actionAddSphericalCavity">
+   <property name="text"><string>Sp&amp;herical Cavity</string></property>
+   <property name="toolTip"><string>Add a wave manipulator: spherical cavity</string></property>
+   <property name="statusTip"><string>Add a wave manipulator: spherical cavity</string></property>
+  </action>
+  <action name="actionAddSlitPlate">
+   <property name="text"><string>Plate with a Sl&amp;it</string></property>
+   <property name="toolTip"><string>Add a wave manipulator: plate with a slit</string></property>
+   <property name="statusTip"><string>Add a wave manipulator: plate with a slit</string></property>
+  </action>
+  <action name="actionShowRays">
+   <property name="checkable"><bool>true</bool></property>
+   <property name="text"><string>Show &amp;Ray Paths for the Selected Reflector</string></property>
+   <property name="toolTip"><string>Draw geometrical rays from the intended source (or the first emitter) reflected once by the selected reflector</string></property>
+   <property name="statusTip"><string>Geometrical rays are a check of the shape; they carry no amplitude or phase and are not a field result</string></property>
   </action>
  </widget>
  <customwidgets>

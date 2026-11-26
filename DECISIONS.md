@@ -12,6 +12,7 @@ development-control system, not the application.
 | [ADR-000205](docs/decisions/ADR-000205-layered-architecture-and-physics-domains.md) | Layers core / render / app with a Qt-free core; physics domains as separate modules; engineering geometry distinct from meshes; SI units, Z-up, radians, Z-Y-X Euler angles; results carry their model and assumptions; jobs off the UI thread; CPU reference before GPU | M0 |
 | [ADR-000206](docs/decisions/ADR-000206-application-foundation-design.md) | One editable state per object and immutable domain components; geometry kinds as registry data; commands on one stack; a document controller; draw items instead of scene objects in the renderer; project format 1; the application as a library plus an executable; globbed sources; moc kept away from standard headers; display units in the application | M1 |
 | [ADR-000207](docs/decisions/ADR-000207-acoustic-engine-design.md) | Acoustic conventions (`e^{+jωt}`, peak amplitudes), source strength as pressure at 1 m, explicit medium, one propagation interface, near-source clamping, intensity from particle velocity, arrays as one object with overrides, phase and delay focusing as distinct settings, SVD inverse design, results as snapshots, display from stored data | M2 |
+| [ADR-000208](docs/decisions/ADR-000208-wave-manipulators-and-reflector-model.md) | Manipulators as scene objects with design data, parametric geometry and a separate simulation representation; support levels; a Kirchhoff reflector model as a selectable propagation model; the field model as a recorded project setting; rays as a geometric aid; minimal optimization interfaces; constraints as checks | M3 |
 
 ## Deviations from requests
 
@@ -21,3 +22,4 @@ Recorded in the decision that caused them:
 * GoogleTest is vendored rather than fetched or installed (ADR-000204).
 * The deviations of the V0.1 foundation from its request are listed at the end of ADR-000206.
 * The deviations of the acoustic engine from its request are listed at the end of ADR-000207.
+* The deviations of passive wave manipulation from its request are listed in ADR-000208.

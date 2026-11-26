@@ -17,6 +17,7 @@ class AcousticController;
 class AcousticsPanel;
 class AnalysisPanel;
 class FieldAnalysisPanel;
+class ManipulatorController;
 class DisplayUnits;
 class DocumentController;
 class PropertiesPanel;
@@ -42,6 +43,7 @@ public:
     AcousticController& acoustics() { return *acoustics_; }
     AcousticsPanel& acousticsPanel();
     FieldAnalysisPanel& fieldAnalysis() { return *fieldAnalysis_; }
+    ManipulatorController& manipulators() { return *manipulators_; }
     QAction* action(const QString& objectName) const;
 
     // File operations without dialogs (the dialog-driven actions call these).
@@ -68,6 +70,7 @@ protected:
 private:
     void connectActions();
     void connectAcoustics();
+    void connectManipulators();
     void updateDocumentState();
     void updateSelectionState();
     void fillAssignMaterialMenu();
@@ -83,6 +86,7 @@ private:
     DisplayUnits* units_ = nullptr;
     AcousticController* acoustics_ = nullptr;
     FieldAnalysisPanel* fieldAnalysis_ = nullptr;
+    ManipulatorController* manipulators_ = nullptr;
     QActionGroup* unitGroup_ = nullptr;
     QByteArray defaultLayout_;
     QString graphicsDescription_ = QStringLiteral("not initialized yet");

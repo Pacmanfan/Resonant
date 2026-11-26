@@ -120,6 +120,7 @@ struct PointReport {
     double referencePressure = 0.0;   // Pa
     Vec3 activeIntensity = Vec3::Zero();  // W/m^2
     bool intensityIsExact = true;     // false: directivity gradients were neglected
+    bool intensityAvailable = true;   // false: the model provides no particle velocity; the intensity is not calculated
     std::optional<Complex> desired;   // for targets
 };
 

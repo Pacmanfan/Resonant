@@ -10,7 +10,7 @@ states:
 * **Deferred** — deliberately left to a later milestone, with the reason.
 
 Milestones and the requests that deliver them are in
-`docs/architecture/roadmap.md`. Last updated for REQ-CHAT-20261126-003.
+`docs/architecture/roadmap.md`. Last updated for REQ-CHAT-20261126-004.
 
 ## Application foundation (V0.1) — `docs/requirements/application_foundation.md`
 
@@ -99,3 +99,30 @@ Milestones and the requests that deliver them are in
 | Help system, demonstrations | Missing | request 010 |
 | Windows and macOS builds | Untested | nothing platform-specific is used on purpose, but only Linux has been built and run |
 | Installer / packaging | Missing | |
+
+## Passive wave manipulation — `docs/requirements/wave_manipulators.md`, `docs/manipulators/`
+
+| Capability | State | Notes |
+|---|---|---|
+| Manipulator object: category, boundary condition, intended focus and source, notes | Tested | undoable, saved in the project |
+| Reflector geometry: parabolic, elliptical, spherical, cylindrical trough, flat | Tested | generated from the equations; characteristic points shown |
+| Freeform reflectors, extruded 2D ellipse | Missing | |
+| Lens geometry (spherical surfaces) | Tested | geometry only in simulations |
+| Lens estimate: acoustic refractive index, thick-lens focal length, interface transmission | Tested | paraxial, fluid-like lens; an estimate, not a field result |
+| Field through a lens | Missing | needs a full-wave solver (request 005) |
+| Waveguide geometry (circular straight / tapered, rectangular) and cut-off estimates | Tested | rigid walls; entry cross-section only for a taper |
+| Curved or branching waveguides; field inside a waveguide | Missing | |
+| Cavity geometry (box, cylinder, sphere) and resonance estimates; Helmholtz and quarter-wave formulas | Tested | rigid, lossless; the two resonator formulas are functions without a geometry kind |
+| Cavity mode shapes, frequency response | Missing | |
+| Slit plate | Tested | geometry only; no diffraction field |
+| Periodic, layered, metamaterial structures | Missing | |
+| Reflector field model (Kirchhoff approximation), four boundary behaviours | Tested | one reflection; no mutual shadowing; not full-wave; validated against closed-form limits only |
+| Particle velocity and intensity with the reflector model | Missing | shown as not calculated |
+| Surface resolution setting, preflight with surface elements, convergence | Tested | |
+| Ray paths for the selected reflector | Tested | geometric aid only |
+| Focus metrics: peak, location, widths, displacement, sidelobe ratio, focal gain | Tested | energy-based efficiency is not reported |
+| Result comparison table | Tested | results of the current session |
+| Hybrid focusing (phase) and inverse design with the reflector model | Tested | time-delay focusing compensates direct paths only, and says so |
+| Geometry optimization interfaces; one-parameter reflector optimization in the editor | Tested | local search; general framework is request 009 |
+| Manufacturing constraint checks | Tested | wall thickness, largest dimension, curvature radius, feature size; in the core, used by the optimizer; no editor for them |
+| Example projects A to E in `examples/manipulators` | Tested | |

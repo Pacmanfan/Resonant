@@ -53,6 +53,13 @@ QStringList FieldAnalysisPanel::summaryItems() const
 }
 
 int FieldAnalysisPanel::pointRowCount() const { return ui_->pointTable->rowCount(); }
+int FieldAnalysisPanel::comparisonRowCount() const { return ui_->comparisonTable->rowCount(); }
+
+QString FieldAnalysisPanel::comparisonCell(int row, int column) const
+{
+    const QTableWidgetItem* item = ui_->comparisonTable->item(row, column);
+    return item ? item->text() : QString();
+}
 
 QString FieldAnalysisPanel::pointCell(int row, int column) const
 {
@@ -124,7 +131,9 @@ void FieldAnalysisPanel::refresh()
         QStringList notes;
         if (p.nearSource)
             notes.append(QStringLiteral("inside a source: not valid"));
-        if (!p.intensityIsExact)
+        if (!p.intensityAvailable)
+            notes.append(QStringLiteral("this model provides no particle velocity"));
+        else if (!p.intensityIsExact)
             notes.append(QStringLiteral("intensity approximate (directivity gradient neglected)"));
         cell(0, QString::fromStdString(p.label));
         cell(1, p.desired ? QStringLiteral("Target") : QStringLiteral("Probe"));
@@ -135,10 +144,40 @@ void FieldAnalysisPanel::refresh()
         cell(6, QString::number(units::radiansToDegrees(std::arg(p.pressure)), 'f', 2));
         cell(7, QString::number(p.rms, 'g', 6));
         cell(8, QStringLiteral("%1 re %2 uPa").arg(p.splDb, 0, 'f', 2).arg(p.referencePressure * 1e6, 0, 'g', 3));
-        cell(9, QString::number(p.activeIntensity.norm(), 'g', 5));
+        cell(9, p.intensityAvailable ? QString::number(p.activeIntensity.norm(), 'g', 5) : QStringLiteral("not calculated"));
         cell(10, p.desired ? QString::number(std::abs(*p.desired), 'g', 6) : QStringLiteral("-"));
         cell(11, notes.join(QStringLiteral("; ")));
     }
     ui_->pointTable->resizeColumnsToContents();
     ui_->exportButton->setEnabled(!reports.empty());
+
+    // --- comparison of the session's results ---
+    const auto intended = controller_->intendedPoint();
+    ui_->comparisonTable->setRowCount(static_cast<int>(controller_->results().size()));
+    for (int r = 0; r < static_cast<int>(controller_->results().size()); ++r) {
+        const auto& result = controller_->results()[static_cast<size_t>(r)];
+        const manipulators::FocusMetrics m = controller_->metricsFor(*result);
+        const auto cell = [&](int column, const QString& text) {
+            auto* item = new QTableWidgetItem(text);
+            item->setFlags(item->flags() & ~Qt::ItemIsEditable);
+            ui_->comparisonTable->setItem(r, column, item);
+        };
+        const auto width = [&](double w) { return w > 0.0 ? QStringLiteral("%1 %2").arg(length(w), unit) : QStringLiteral("0 (not resolved)"); };
+        cell(0, QString::fromStdString(result->name));
+        cell(1, QString::fromStdString(result->metadata.solverId));
+        cell(2, QString::number(m.peakMagnitude, 'g', 6));
+        cell(3, length(m.peakPoint.x()));
+        cell(4, length(m.peakPoint.y()));
+        cell(5, length(m.peakPoint.z()));
+        cell(6, width(m.widthU));
+        cell(7, width(m.widthV));
+        cell(8, result->frame.isVolume() ? width(m.widthW) : QStringLiteral("-"));
+        cell(9, m.displacement ? QStringLiteral("%1 %2").arg(length(*m.displacement), unit) : QStringLiteral("-"));
+        cell(10, m.magnitudeAtIntended ? QString::number(*m.magnitudeAtIntended, 'g', 6) : QStringLiteral("-"));
+        cell(11, m.sidelobeRatio ? QString::number(*m.sidelobeRatio, 'f', 3) : QStringLiteral("-"));
+        cell(12, QString::number(result->metadata.elapsedSeconds, 'f', 2));
+    }
+    ui_->comparisonTable->resizeColumnsToContents();
+    ui_->comparisonNote->setVisible(true);
+    (void)intended;
 }

@@ -8,13 +8,16 @@
 #include "acoustics/Focusing.h"
 #include "acoustics/InverseDesign.h"
 #include "acoustics/Settings.h"
+#include "manipulators/ReflectorModel.h"
 #include "render/FieldLayer.h"
 
 #include <QObject>
 #include <QString>
+#include <QStringList>
 #include <QTimer>
 
 #include <memory>
+#include <optional>
 #include <vector>
 
 class DocumentController;
@@ -71,8 +74,19 @@ public:
     void displayResult(const resonant::Id& resultId);  // a null id hides the field
     void removeResult(const resonant::Id& resultId);
 
-    // An evaluator for the scene as it is now (for probes and targets).
+    // An evaluator for the scene as it is now, with the selected field model
+    // (free field, or free field plus the scene's reflectors).
     std::shared_ptr<const resonant::acoustics::FieldEvaluator> currentEvaluator() const;
+    // The selected model as a per-source propagation model.
+    std::shared_ptr<const resonant::acoustics::PropagationModel> currentModel() const;
+    bool reflectorModelSelected() const;
+    // What the selected model leaves out of this scene (manipulators without
+    // a field model, hidden reflectors, missing materials), in sentences.
+    QStringList modelNotes() const;
+    // Peak, width and displacement of a result; the intended point is the
+    // first target point of the scene, else a reflector's intended focus.
+    resonant::manipulators::FocusMetrics metricsFor(const resonant::acoustics::FieldResult& result) const;
+    std::optional<resonant::Vec3> intendedPoint() const;
     std::vector<resonant::acoustics::PointReport> pointReports(bool includeTargets) const;
     resonant::Status exportPointReports(const QString& path) const;  // .csv or .json by extension
 

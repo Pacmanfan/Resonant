@@ -120,15 +120,15 @@ std::shared_ptr<FieldResult> prepareResult(const std::string& name, const FieldE
     result->medium = evaluator.medium();
     result->sources = evaluator.sources();
     result->excludedSources = evaluator.excludedSourceCount();
-    result->assumptions = evaluator.model().assumptions();
+    result->assumptions = evaluator.assumptions();
     if (result->excludedSources > 0)
         result->assumptions.push_back(std::to_string(result->excludedSources)
                                       + " active source(s) at a different frequency were left out of this "
                                         "single-frequency solution.");
     metadata.simulationId = result->id;
     metadata.domain = PhysicsDomain::Acoustic;
-    metadata.solverId = evaluator.model().id();
-    metadata.solverVersion = evaluator.model().version();
+    metadata.solverId = evaluator.solverId();
+    metadata.solverVersion = evaluator.solverVersion();
     metadata.softwareVersion = kApplicationVersion;
     metadata.startedUtc = utcNowIso8601();
     metadata.assumptions = result->assumptions;
@@ -275,6 +275,7 @@ std::vector<PointReport> reportPoints(const Scene& scene, const FieldEvaluator& 
         report.rms = rmsPressure(sample.pressure);
         report.referencePressure = reference;
         report.splDb = soundPressureLevel(sample.pressure, reference);
+        report.intensityAvailable = evaluator.providesVelocity();
         report.activeIntensity = evaluator.activeIntensity(report.position);
         report.intensityIsExact = evaluator.velocityIsExact();
         if (target)
@@ -291,7 +292,8 @@ std::string pointReportsToCsv(const std::vector<PointReport>& reports)
     std::ostringstream out;
     out << std::setprecision(12);
     out << "name,x_m,y_m,z_m,pressure_real_Pa,pressure_imag_Pa,magnitude_Pa_peak,phase_rad,rms_Pa,spl_dB,"
-           "spl_reference_Pa,intensity_x_W_m2,intensity_y_W_m2,intensity_z_W_m2,intensity_exact,near_source\n";
+           "spl_reference_Pa,intensity_x_W_m2,intensity_y_W_m2,intensity_z_W_m2,intensity_exact,near_source,"
+           "intensity_available\n";
     for (const PointReport& r : reports) {
         std::string name = r.label;
         for (char& c : name)
@@ -301,7 +303,7 @@ std::string pointReportsToCsv(const std::vector<PointReport>& reports)
             << r.pressure.real() << ',' << r.pressure.imag() << ',' << std::abs(r.pressure) << ','
             << std::arg(r.pressure) << ',' << r.rms << ',' << r.splDb << ',' << r.referencePressure << ','
             << r.activeIntensity.x() << ',' << r.activeIntensity.y() << ',' << r.activeIntensity.z() << ','
-            << (r.intensityIsExact ? 1 : 0) << ',' << (r.nearSource ? 1 : 0) << '\n';
+            << (r.intensityIsExact ? 1 : 0) << ',' << (r.nearSource ? 1 : 0) << ',' << (r.intensityAvailable ? 1 : 0) << '\n';
     }
     return out.str();
 }
@@ -321,6 +323,7 @@ nlohmann::json pointReportsToJson(const std::vector<PointReport>& reports, const
                                 {"splReferencePa", r.referencePressure},
                                 {"activeIntensity", resonant::toJson(r.activeIntensity)},
                                 {"intensityIsExact", r.intensityIsExact},
+                                {"intensityAvailable", r.intensityAvailable},
                                 {"nearSource", r.nearSource}};
         if (r.desired)
             point["desiredPressure"] = {r.desired->real(), r.desired->imag()};
@@ -330,7 +333,7 @@ nlohmann::json pointReportsToJson(const std::vector<PointReport>& reports, const
             {"version", 1},
             {"frequencyHz", evaluator.frequencyHz()},
             {"medium", toJson(evaluator.medium())},
-            {"model", evaluator.model().id()},
+            {"model", evaluator.solverId()},
             {"timeConvention", kTimeConvention},
             {"amplitudes", "peak"},
             {"points", std::move(points)}};

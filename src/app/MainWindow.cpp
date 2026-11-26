@@ -6,6 +6,8 @@
 #include "AcousticMarkers.h"
 #include "AcousticsPanel.h"
 #include "FieldAnalysisPanel.h"
+#include "ManipulatorController.h"
+#include "ManipulatorEditor.h"
 #include "AnalysisPanel.h"
 #include "DisplayUnits.h"
 #include "DocumentController.h"
@@ -89,6 +91,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     connectActions();
     connectAcoustics();
+    connectManipulators();
 
     unsavedChangesPrompt = [this] {
         return QMessageBox::warning(this, QStringLiteral("Unsaved changes"),
@@ -323,6 +326,31 @@ void MainWindow::connectAcoustics()
         if (acoustics_->displayedResult())
             ui_->analysisPanel->showTab(fieldAnalysis_);
     });
+}
+
+void MainWindow::connectManipulators()
+{
+    manipulators_ = new ManipulatorController(controller_, acoustics_, this);
+    ui_->viewport->bridge().addDecorator(manipulators_->makeDecorator());
+    ui_->propertiesPanel->addComponentEditorFactory(makeManipulatorEditorFactory(*acoustics_, *manipulators_));
+
+    const std::pair<QAction*, const char*> kinds[] = {
+        {ui_->actionAddParabolicReflector, "reflector.parabolic"},   {ui_->actionAddEllipticalReflector, "reflector.elliptical"},
+        {ui_->actionAddSphericalReflector, "reflector.spherical"},   {ui_->actionAddCylindricalReflector, "reflector.cylindrical"},
+        {ui_->actionAddFlatReflector, "reflector.flat"},             {ui_->actionAddLens, "lens.spherical"},
+        {ui_->actionAddCircularWaveguide, "waveguide.circular"},     {ui_->actionAddRectangularWaveguide, "waveguide.rectangular"},
+        {ui_->actionAddRectangularCavity, "cavity.rectangular"},     {ui_->actionAddCylindricalCavity, "cavity.cylindrical"},
+        {ui_->actionAddSphericalCavity, "cavity.spherical"},         {ui_->actionAddSlitPlate, "diffraction.slit"}};
+    for (const auto& [action, kind] : kinds) {
+        connect(action, &QAction::triggered, this, [this, kind = QString::fromLatin1(kind)] {
+            if (auto created = manipulators_->addManipulator(kind); !created)
+                showFailure(QString::fromStdString(created.message()));
+            else
+                ui_->viewport->frameAll();
+        });
+    }
+    connect(ui_->actionShowRays, &QAction::toggled, manipulators_, &ManipulatorController::setShowRays);
+    connect(manipulators_, &ManipulatorController::displayChanged, ui_->viewport, &ViewportWidget::refresh);
 }
 
 void MainWindow::updateDocumentState()

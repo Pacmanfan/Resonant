@@ -40,6 +40,7 @@ public:
 private:
     void refreshObjectLists();
     void refreshMedium();
+    void refreshModelNote();
     void commitMedium();
     void refreshEstimate();
     void refreshResults();

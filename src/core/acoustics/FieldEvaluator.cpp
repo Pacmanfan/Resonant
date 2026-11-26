@@ -44,6 +44,8 @@ Eigen::Vector3cd FieldEvaluator::particleVelocity(const Vec3& point) const
 
 Vec3 FieldEvaluator::activeIntensity(const Vec3& point) const
 {
+    if (!providesVelocity())
+        return Vec3::Zero();
     const Complex p = pressure(point);
     const Eigen::Vector3cd v = particleVelocity(point);
     return 0.5 * (p * v.conjugate()).real();

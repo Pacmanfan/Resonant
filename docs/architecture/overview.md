@@ -1,7 +1,7 @@
 # Resonant — Architecture Overview
 
 **Status:** current. Decisions: ADR-000204 (stack, build systems),
-ADR-000205 (layers, domains). Requirements: `docs/requirements/product.md`.
+ADR-000205 (layers, domains), ADR-000207 (acoustics), ADR-000208 (manipulators). Requirements: `docs/requirements/product.md`.
 
 This document describes the architecture every milestone builds on. Each
 subsystem gets its own document in this directory when it is implemented;
@@ -37,6 +37,7 @@ A higher layer may use a lower one; never the reverse.
 | `project` | the project document, JSON persistence, validation, schema versions and migration |
 | `simulation` | simulation configuration, solver/domain identifiers, jobs (states, progress, cancellation), result metadata |
 | `acoustics` | the acoustic domain: emitters, arrays, targets, probes, regions; medium; propagation models; field evaluation; focusing; inverse design; field jobs and results (`docs/acoustics/`) |
+| `manipulators` | passive wave manipulators: design component, reflector / lens / waveguide / cavity geometry, analytical estimates, the reflector field model, rays, focus metrics, geometry optimization (`docs/manipulators/`) |
 | later physics domains | one module per domain, each with its own equations, property sets and solvers |
 
 ## Rendering and application (`src/render`, `src/app`)
@@ -53,6 +54,7 @@ A higher layer may use a lower one; never the reverse.
 | `app/ViewportWidget` | the OpenGL widget: navigation and selection input |
 | `app/SceneTreePanel`, `app/PropertiesPanel`, `app/AnalysisPanel`, `app/MaterialsDialog` | the panels and the material editor |
 | `app/AcousticController`, `app/AcousticsPanel`, `app/AcousticEditors`, `app/FieldAnalysisPanel`, `app/AcousticMarkers` | the acoustic user interface: creating objects, focusing, inverse design, running and displaying fields, analysis |
+| `app/ManipulatorController`, `app/ManipulatorEditor` | adding manipulators, their property editor, focal markers and ray paths, reflector optimization |
 | `app/DisplayUnits` | the single boundary between displayed units and SI |
 | `app/MainWindow` | wires the actions of `forms/MainWindow.ui` to the controller |
 

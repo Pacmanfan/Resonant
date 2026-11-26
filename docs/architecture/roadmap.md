@@ -9,7 +9,7 @@ The implementation status of each milestone is kept in
 | M0 Vision and architecture | REQ-CHAT-20261126-001 | product requirements, architecture, decisions, this roadmap | RES-PRODUCT-001..016 (recorded) |
 | M1 Application foundation (V0.1) | REQ-CHAT-20261126-002 | application shell, 3D viewport, scene graph, primitives, materials, project save/load, undo/redo, job infrastructure, logging | RES-PRODUCT-002, -007, -012, -013 |
 | M2 Acoustic physics engine | REQ-CHAT-20261126-003 | acoustic emitters and arrays, analytical propagation, focusing, multi-target inverse design, field regions, field visualization, probes | RES-PRODUCT-003, -004, -008, -010, -012 |
-| M3 Passive wave manipulation | REQ-CHAT-20261126-004 | wave manipulators (reflectors, lenses, waveguides, cavities), ray-based reflector model, hybrid focusing, geometry optimization | RES-PRODUCT-005, -006, -010 |
+| M3 Passive wave manipulation | REQ-CHAT-20261126-004 | wave manipulators (reflectors, lenses, waveguides, cavities), Kirchhoff reflector field model, ray paths, hybrid focusing, geometry optimization | RES-PRODUCT-005, -006, -010 |
 | M4 Full-wave numerical solvers | REQ-CHAT-20261126-005 | solver framework, validated FDTD, boundaries, material interfaces, transient sources, frequency analysis | RES-PRODUCT-001, -006, -008 |
 | M5 Mechanical waves | REQ-CHAT-20261126-006 | mechanical domain: structural models, modal analysis, forced and transient response | RES-PRODUCT-001 |
 | M6 Electromagnetic waves | REQ-CHAT-20261126-007 | electromagnetic domain: antennas, arrays, array factor, RF analysis, a full-wave method | RES-PRODUCT-001, -003 |

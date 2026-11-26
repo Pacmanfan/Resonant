@@ -53,6 +53,8 @@ AcousticsPanel::AcousticsPanel(QWidget* parent) : QWidget(parent), ui_(std::make
                                  ui_->frequencySpin, ui_->minDistanceSpin})
         connect(spin, &QDoubleSpinBox::valueChanged, this, [this] { commitMedium(); });
     connect(ui_->mediumPreset, &QComboBox::activated, this, [this] { commitMedium(); });
+    connect(ui_->modelCombo, &QComboBox::activated, this, [this] { commitMedium(); });
+    connect(ui_->surfaceResolutionSpin, &QDoubleSpinBox::valueChanged, this, [this] { commitMedium(); });
     connect(ui_->directivityCheck, &QCheckBox::clicked, this, [this] { commitMedium(); });
     connect(ui_->attenuationCheck, &QCheckBox::clicked, this, [this] { commitMedium(); });
 
@@ -131,6 +133,8 @@ void AcousticsPanel::setController(AcousticController* controller, DisplayUnits*
         else
             updateFocusPosition();
         refreshEstimate();
+        // What the model leaves out depends on the scene.
+        refreshModelNote();
     });
     connect(document, &DocumentController::projectReplaced, this, [this] {
         focus_.reset();
@@ -229,10 +233,24 @@ void AcousticsPanel::refreshMedium()
     ui_->frequencySpin->setValue(s.frequencyHz);
     ui_->wavelengthValue->setText(QStringLiteral("%1 %2").arg(units_->lengthFromSI(s.medium.wavelength(s.frequencyHz)), 0, 'g', 5)
                                       .arg(units_->lengthSymbol()));
+    const bool reflectors = s.modelId == kReflectorModelId;
+    ui_->modelCombo->setCurrentIndex(reflectors ? 1 : 0);
+    ui_->surfaceResolutionSpin->setEnabled(reflectors);
+    ui_->surfaceResolutionSpin->setValue(s.reflectorElementsPerWavelength);
+    refreshModelNote();
     ui_->directivityCheck->setChecked(s.propagation.includeDirectivity);
     ui_->attenuationCheck->setChecked(s.propagation.includeAttenuation);
     ui_->minDistanceSpin->setValue(s.propagation.minimumDistance * 1000.0);
     updating_ = false;
+}
+
+void AcousticsPanel::refreshModelNote()
+{
+    QStringList notes{controller_->reflectorModelSelected()
+                          ? QStringLiteral("Reflector manipulators are included by the Kirchhoff approximation: one reflection, aperture diffraction included, no multiple reflections or shadowing between surfaces. NOT a full-wave solution. Other objects are ignored.")
+                          : QStringLiteral("Objects in the scene do not affect the calculated field.")};
+    notes.append(controller_->modelNotes());
+    ui_->modelNote->setText(notes.join(QLatin1Char('\n')));
 }
 
 void AcousticsPanel::commitMedium()
@@ -256,6 +274,8 @@ void AcousticsPanel::commitMedium()
     }
     s.medium.attenuation = attenuation;
     s.frequencyHz = ui_->frequencySpin->value();
+    s.modelId = ui_->modelCombo->currentIndex() == 1 ? kReflectorModelId : kFreeFieldModelId;
+    s.reflectorElementsPerWavelength = ui_->surfaceResolutionSpin->value();
     s.propagation.includeDirectivity = ui_->directivityCheck->isChecked();
     s.propagation.includeAttenuation = ui_->attenuationCheck->isChecked();
     s.propagation.minimumDistance = ui_->minDistanceSpin->value() / 1000.0;
@@ -291,11 +311,18 @@ bool AcousticsPanel::calculateFocus()
         ui_->focusTable->setItem(row, 4, cell(QString::number(e.weight, 'f', 3)));
     }
     ui_->focusApplyButton->setEnabled(true);
-    ui_->focusNote->setText(focus_->control == FocusControl::Phase
-                                ? QStringLiteral("Phases for %1 Hz in a medium with c = %2 m/s. They are valid at this frequency only. Apply them, then run a field simulation to see the field that results.")
-                                      .arg(focus_->frequencyHz, 0, 'g', 8).arg(focus_->soundSpeed, 0, 'g', 6)
-                                : QStringLiteral("Time delays for c = %1 m/s. They align the arrivals at any frequency. Apply them, then run a field simulation to see the field that results.")
-                                      .arg(focus_->soundSpeed, 0, 'g', 6));
+    const bool reflectors = controller_->reflectorModelSelected();
+    QString note;
+    if (focus_->control == FocusControl::Phase)
+        note = (reflectors ? QStringLiteral("Hybrid focusing: phases from the reflector model's own responses, so direct and reflected paths arrive in phase at the target. Valid at %1 Hz only.")
+                           : QStringLiteral("Phases for %1 Hz in a medium with c = %2 m/s. They are valid at this frequency only."))
+                   .arg(focus_->frequencyHz, 0, 'g', 8)
+                   .arg(focus_->soundSpeed, 0, 'g', 6);
+    else
+        note = QStringLiteral("Time delays for c = %1 m/s. They align the direct arrivals at any frequency.%2")
+                   .arg(focus_->soundSpeed, 0, 'g', 6)
+                   .arg(reflectors ? QStringLiteral(" Reflected paths are NOT compensated by time-delay focusing; use phase control for hybrid focusing.") : QString());
+    ui_->focusNote->setText(note + QStringLiteral(" Apply them, then run a field simulation to see the field that results."));
     return true;
 }
 
@@ -368,7 +395,9 @@ bool AcousticsPanel::solveInverse()
     QStringList notes;
     for (const std::string& note : solution.notes)
         notes.append(QString::fromStdString(note));
-    notes.append(QStringLiteral("Model: analytical free field; the solution assumes the propagation matrix of that model."));
+    notes.append(controller_->reflectorModelSelected()
+                     ? QStringLiteral("Model: free field + reflectors (Kirchhoff approximation); the propagation matrix includes the reflected paths that model calculates.")
+                     : QStringLiteral("Model: analytical free field; the solution assumes the propagation matrix of that model."));
     ui_->inverseNotes->setPlainText(notes.join(QLatin1Char('\n')));
     inverse_ = std::move(run);
     ui_->inverseApplyButton->setEnabled(true);
@@ -402,7 +431,7 @@ void AcousticsPanel::refreshEstimate()
     const FieldEstimate& e = estimated.value();
     const AcousticSettings s = controller_->settings();
     ui_->estimateLabel->setText(
-        QStringLiteral("%1 samples, %2 MiB, %3 source evaluations.\nSample spacing %4 %5; wavelength %6 %5 (%7 samples per wavelength).\n%8 Hz in %9; free-field model: objects in the scene are ignored.")
+        QStringLiteral("%1 samples, %2 MiB, %3 evaluations.\nSample spacing %4 %5; wavelength %6 %5 (%7 samples per wavelength).\n%8 Hz in %9; %10")
             .arg(e.points)
             .arg(e.bytes / (1024.0 * 1024.0), 0, 'f', 2)
             .arg(e.evaluations, 0, 'g', 3)
@@ -411,7 +440,10 @@ void AcousticsPanel::refreshEstimate()
             .arg(units_->lengthFromSI(e.wavelength), 0, 'g', 4)
             .arg(e.samplesPerWavelength, 0, 'f', 1)
             .arg(s.frequencyHz, 0, 'g', 8)
-            .arg(QString::fromStdString(s.medium.name)));
+            .arg(QString::fromStdString(s.medium.name))
+            .arg(controller_->reflectorModelSelected()
+                     ? QStringLiteral("free field + reflectors (Kirchhoff approximation).")
+                     : QStringLiteral("free-field model: objects in the scene are ignored.")));
     QStringList warnings;
     if (!e.allowed)
         warnings.append(QString::fromStdString(e.refusal));

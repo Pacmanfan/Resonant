@@ -16,12 +16,20 @@ struct AcousticSettings {
     PropagationOptions propagation;
     double frequencyHz = 40000.0;   // the frequency field simulations are run at
     size_t memoryLimitBytes = 1024ull * 1024ull * 1024ull;
+    // Which field model simulations use: kFreeFieldModelId, or
+    // kReflectorModelId to include reflector manipulators (the model itself
+    // lives in the manipulators module).
+    std::string modelId = "acoustic.freefield.analytical";
+    // Surface elements per wavelength for the reflector model.
+    double reflectorElementsPerWavelength = 6.0;
 
     Status validate() const;
     friend bool operator==(const AcousticSettings&, const AcousticSettings&) = default;
 };
 
 inline constexpr const char* kSettingsKey = "acoustics";
+inline constexpr const char* kFreeFieldModelId = "acoustic.freefield.analytical";
+inline constexpr const char* kReflectorModelId = "acoustic.reflector.kirchhoff";
 
 nlohmann::json toJson(const AcousticSettings& settings);
 Result<AcousticSettings> settingsFromJson(const nlohmann::json& value);

@@ -1,0 +1,75 @@
+{
+ "work": "WORK-000004",
+ "runs": [
+  {
+   "at": "2026-11-26T22:21:13.330906+00:00",
+   "verdict": "PASS",
+   "gate_version": 3,
+   "work": "WORK-000004",
+   "request": "2026-11-26-prompt-8-resonant-passive-wave-req-chat-20261126-004.md",
+   "request_id": "REQ-CHAT-20261126-004",
+   "request_fingerprint": "87d5c5181b53c4368babdebc66b82dae5798aa23cb3c165f53f55003a1a08174",
+   "request_code_paths": [
+    "examples/acoustics/a-two-source-interference.resonant",
+    "examples/acoustics/b-linear-array.resonant",
+    "examples/acoustics/c-focused-planar-array.resonant",
+    "examples/acoustics/d-multiple-target-points.resonant",
+    "examples/manipulators/a-parabolic-reflector.resonant",
+    "examples/manipulators/b-elliptical-reflector.resonant",
+    "examples/manipulators/c-acoustic-lens.resonant",
+    "examples/manipulators/d-hybrid-focusing.resonant",
+    "examples/manipulators/e-geometry-optimization.resonant",
+    "src/app/AcousticController.cpp",
+    "src/app/AcousticController.h",
+    "src/app/AcousticsPanel.cpp",
+    "src/app/AcousticsPanel.h",
+    "src/app/FieldAnalysisPanel.cpp",
+    "src/app/FieldAnalysisPanel.h",
+    "src/app/MainWindow.cpp",
+    "src/app/MainWindow.h",
+    "src/app/ManipulatorController.cpp",
+    "src/app/ManipulatorController.h",
+    "src/app/ManipulatorEditor.cpp",
+    "src/app/ManipulatorEditor.h",
+    "src/app/forms/AcousticsPanel.ui",
+    "src/app/forms/FieldAnalysisPanel.ui",
+    "src/app/forms/MainWindow.ui",
+    "src/app/forms/ManipulatorEditor.ui",
+    "src/core/acoustics/FieldEvaluator.cpp",
+    "src/core/acoustics/FieldEvaluator.h",
+    "src/core/acoustics/FieldGrid.cpp",
+    "src/core/acoustics/FieldGrid.h",
+    "src/core/acoustics/Settings.cpp",
+    "src/core/acoustics/Settings.h",
+    "src/core/geometry/Geometry.cpp",
+    "src/core/manipulators/Analytics.cpp",
+    "src/core/manipulators/Analytics.h",
+    "src/core/manipulators/GeometryOptimization.cpp",
+    "src/core/manipulators/GeometryOptimization.h",
+    "src/core/manipulators/Manipulator.cpp",
+    "src/core/manipulators/Manipulator.h",
+    "src/core/manipulators/ManipulatorGeometry.cpp",
+    "src/core/manipulators/ReflectorModel.cpp",
+    "src/core/manipulators/ReflectorModel.h",
+    "src/core/manipulators/ReflectorSurface.h",
+    "src/core/scene/Component.cpp",
+    "tests/app/test_manipulators_ui.cpp",
+    "tests/core/test_manipulator_examples.cpp",
+    "tests/core/test_manipulators.cpp"
+   ],
+   "test_runs": [
+    "20261126T171626-3413267"
+   ],
+   "evidence": [
+    "VER-000004"
+   ],
+   "head": "1e65394cdd200dce514f22f273e3a1c98fb02bff",
+   "agent_id": "agent-dev-20261126151713-76f632",
+   "fails": [],
+   "warns": [
+    "10 unowned change(s) in the tree (not this request's; never committed by it)"
+   ],
+   "passes": 14
+  }
+ ]
+}

@@ -14,6 +14,11 @@ Status AcousticSettings::validate() const
         return Status::failure("the minimum distance must be greater than zero");
     if (memoryLimitBytes < 1024 * 1024)
         return Status::failure("the memory limit must be at least 1 MiB");
+    if (modelId != kFreeFieldModelId && modelId != kReflectorModelId)
+        return Status::failure("unknown field model '" + modelId + "'");
+    if (!(std::isfinite(reflectorElementsPerWavelength) && reflectorElementsPerWavelength >= 2.0
+          && reflectorElementsPerWavelength <= 40.0))
+        return Status::failure("the reflector surface resolution must be between 2 and 40 elements per wavelength");
     return Status::success();
 }
 
@@ -25,7 +30,9 @@ nlohmann::json toJson(const AcousticSettings& settings)
               {"includeDirectivity", settings.propagation.includeDirectivity},
               {"minimumDistance", settings.propagation.minimumDistance}}},
             {"frequencyHz", settings.frequencyHz},
-            {"memoryLimitBytes", settings.memoryLimitBytes}};
+            {"memoryLimitBytes", settings.memoryLimitBytes},
+            {"model", settings.modelId},
+            {"reflectorElementsPerWavelength", settings.reflectorElementsPerWavelength}};
 }
 
 Result<AcousticSettings> settingsFromJson(const nlohmann::json& value)
@@ -48,6 +55,8 @@ Result<AcousticSettings> settingsFromJson(const nlohmann::json& value)
         }
         settings.frequencyHz = value.value("frequencyHz", 40000.0);
         settings.memoryLimitBytes = value.value("memoryLimitBytes", settings.memoryLimitBytes);
+        settings.modelId = value.value("model", std::string(kFreeFieldModelId));
+        settings.reflectorElementsPerWavelength = value.value("reflectorElementsPerWavelength", 6.0);
     } catch (const nlohmann::json::exception& error) {
         return Result<AcousticSettings>::failure(std::string("invalid acoustic settings: ") + error.what());
     }

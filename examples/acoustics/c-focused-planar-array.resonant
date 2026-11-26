@@ -15,11 +15,13 @@
         "temperatureK": 293.15
       },
       "memoryLimitBytes": 1073741824,
+      "model": "acoustic.freefield.analytical",
       "propagation": {
         "includeAttenuation": true,
         "includeDirectivity": true,
         "minimumDistance": 0.0001
-      }
+      },
+      "reflectorElementsPerWavelength": 6.0
     }
   },
   "format": "resonant-project",

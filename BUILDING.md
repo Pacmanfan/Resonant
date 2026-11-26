@@ -3,8 +3,10 @@
 Resonant builds with **CMake** and with **qmake**. Both build the same
 targets from the same sources (each target globs its directory), so use
 whichever fits your workflow. After adding or removing a source file,
-re-run the configure step (`cmake` does it by itself; for qmake run
-`qmake6` again).
+re-run the configure step: `cmake` does it by itself; for qmake run
+`qmake6 -r ../../project.pro` in the build tree (the `-r` matters: without
+it only the top-level Makefile is regenerated), or
+`python3 scripts/devsys.py build fresh`.
 
 ## Requirements
 

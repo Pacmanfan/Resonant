@@ -25,6 +25,8 @@ public:
     QStringList summaryItems() const;
     int pointRowCount() const;
     QString pointCell(int row, int column) const;
+    int comparisonRowCount() const;
+    QString comparisonCell(int row, int column) const;
 
 public slots:
     void refresh();

@@ -12,11 +12,15 @@ const ParameterDef* GeometryKind::findParameter(std::string_view key) const
     return it == parameters.end() ? nullptr : &*it;
 }
 
+// Defined by the module that owns the wave-manipulator kinds.
+void registerManipulatorGeometry(GeometryRegistry& registry);
+
 GeometryRegistry& GeometryRegistry::instance()
 {
     static GeometryRegistry registry = [] {
         GeometryRegistry created;
         registerPrimitiveGeometry(created);
+        registerManipulatorGeometry(created);
         return created;
     }();
     return registry;

@@ -10,6 +10,7 @@
 
 using namespace resonant;
 using namespace resonant::acoustics;
+using namespace resonant::manipulators;
 
 AcousticController::AcousticController(DocumentController* document, QObject* parent)
     : QObject(parent), document_(document)
@@ -144,6 +145,20 @@ Result<FocusSolution> AcousticController::computeFocus(const Id& arrayId, const 
     if (!target.allFinite())
         return Result<FocusSolution>::failure("the target position is not valid");
     const AcousticSettings s = settings();
+    if (reflectorModelSelected() && control == FocusControl::Phase) {
+        // Hybrid focusing: phases from the model's own responses, so the
+        // reflected paths are compensated together with the direct ones.
+        FocusSolution solution = computeModelFocus(collectSources(document_->scene(), {arrayId}), target, s.medium, *currentModel());
+        const FocusSolution tapered = acoustics::computeFocus(generateElements(array->settings),
+                                                               document_->scene().worldMatrix(*object), target, s.medium,
+                                                               array->settings.element.frequencyHz, control, taper);
+        // Inactive elements are not sources; give each solved element its taper weight by index.
+        for (FocusElement& element : solution.elements)
+            for (const FocusElement& reference : tapered.elements)
+                if (reference.index == element.index)
+                    element.weight = reference.weight;
+        return solution;
+    }
     return acoustics::computeFocus(generateElements(array->settings), document_->scene().worldMatrix(*object), target,
                                    s.medium, array->settings.element.frequencyHz, control, taper);
 }
@@ -164,8 +179,7 @@ AcousticController::InverseRun AcousticController::solveInverse(const Id& arrayI
     const AcousticSettings s = settings();
     run.sources = collectSources(document_->scene(), {arrayId});
     run.targets = collectTargets(document_->scene());
-    const FreeFieldModel model(s.propagation);
-    run.solution = acoustics::solveInverse(run.sources, run.targets.points, s.medium, model, options);
+    run.solution = acoustics::solveInverse(run.sources, run.targets.points, s.medium, *currentModel(), options);
     for (const std::string& name : run.targets.unsupported)
         run.solution.notes.push_back("Target \"" + name + "\" is not a point target and was not used: only point "
                                      "targets are solved.");
@@ -185,11 +199,79 @@ Status AcousticController::applyInverse(const Id& arrayId, const InverseRun& run
                         QStringLiteral("Apply inverse design to"));
 }
 
+bool AcousticController::reflectorModelSelected() const
+{
+    return settings().modelId == kReflectorModelId;
+}
+
+namespace {
+ReflectorCollection reflectorsOf(const DocumentController& document, const AcousticSettings& s)
+{
+    ReflectorOptions options;
+    options.elementsPerWavelength = s.reflectorElementsPerWavelength;
+    return collectReflectors(document.scene(), document.project().materials, s.medium.wavelength(s.frequencyHz), options);
+}
+}  // namespace
+
+std::shared_ptr<const PropagationModel> AcousticController::currentModel() const
+{
+    const AcousticSettings s = settings();
+    if (s.modelId == kReflectorModelId)
+        return std::make_shared<const ReflectorModel>(s.propagation, reflectorsOf(*document_, s).surfaces);
+    return std::make_shared<const FreeFieldModel>(s.propagation);
+}
+
 std::shared_ptr<const FieldEvaluator> AcousticController::currentEvaluator() const
 {
     const AcousticSettings s = settings();
-    return std::make_shared<const FieldEvaluator>(collectSources(document_->scene()), s.frequencyHz, s.medium,
+    const auto sources = collectSources(document_->scene());
+    if (s.modelId == kReflectorModelId) {
+        auto model = std::make_shared<const ReflectorModel>(s.propagation, reflectorsOf(*document_, s).surfaces);
+        return std::make_shared<const ReflectorFieldEvaluator>(sources, s.frequencyHz, s.medium, std::move(model));
+    }
+    return std::make_shared<const FieldEvaluator>(sources, s.frequencyHz, s.medium,
                                                   std::make_shared<FreeFieldModel>(s.propagation));
+}
+
+QStringList AcousticController::modelNotes() const
+{
+    QStringList notes;
+    const AcousticSettings s = settings();
+    if (s.modelId == kReflectorModelId) {
+        const ReflectorCollection collection = reflectorsOf(*document_, s);
+        if (collection.surfaces.empty())
+            notes.append(QStringLiteral("There is no reflector in the scene: the result equals the free field."));
+        for (const std::string& note : collection.notes)
+            notes.append(QString::fromStdString(note));
+    } else {
+        bool manipulators = false;
+        document_->scene().forEach([&](const SceneObject& object) {
+            manipulators = manipulators || dynamic_cast<const ManipulatorComponent*>(object.state.component.get()) != nullptr;
+        });
+        if (manipulators)
+            notes.append(QStringLiteral("The scene has wave manipulators, but the free-field model ignores them. Select the "
+                                        "reflector model to include reflectors."));
+    }
+    return notes;
+}
+
+std::optional<Vec3> AcousticController::intendedPoint() const
+{
+    const TargetCollection targets = collectTargets(document_->scene());
+    if (!targets.points.empty())
+        return targets.points.front().position;
+    std::optional<Vec3> focus;
+    document_->scene().forEach([&](const SceneObject& object) {
+        const auto* manipulator = dynamic_cast<const ManipulatorComponent*>(object.state.component.get());
+        if (!focus && manipulator && manipulator->settings.intendedFocus)
+            focus = manipulator->settings.intendedFocus;
+    });
+    return focus;
+}
+
+FocusMetrics AcousticController::metricsFor(const FieldResult& result) const
+{
+    return analyzeFocus(result, intendedPoint());
 }
 
 Result<FieldEstimate> AcousticController::estimate(const Id& regionId) const
@@ -199,9 +281,32 @@ Result<FieldEstimate> AcousticController::estimate(const Id& regionId) const
     if (!region)
         return Result<FieldEstimate>::failure("choose a field region");
     const AcousticSettings s = settings();
-    const auto evaluator = currentEvaluator();
-    return estimateField(gridOf(region->settings, document_->scene().worldMatrix(*object)), evaluator->sources().size(),
-                         s.medium, s.frequencyHz, s.memoryLimitBytes);
+    size_t sourceCount = 0;
+    for (const PointSource& source : collectSources(document_->scene()))
+        if (std::abs(source.frequencyHz - s.frequencyHz) <= 1e-9 * s.frequencyHz)
+            ++sourceCount;
+    FieldEstimate estimate = estimateField(gridOf(region->settings, document_->scene().worldMatrix(*object)), sourceCount,
+                                           s.medium, s.frequencyHz, s.memoryLimitBytes);
+    if (s.modelId == kReflectorModelId) {
+        // Every sample also costs one pass over the reflector surface elements.
+        ReflectorOptions options;
+        options.elementsPerWavelength = s.reflectorElementsPerWavelength;
+        const size_t elements = estimateReflectorElements(document_->scene(), s.medium.wavelength(s.frequencyHz), options);
+        estimate.evaluations += static_cast<double>(estimate.points) * static_cast<double>(elements);
+        estimate.warnings.push_back("Reflector model: " + std::to_string(elements) + " surface element(s) at "
+                                    + std::to_string(s.reflectorElementsPerWavelength).substr(0, 4)
+                                    + " per wavelength (Kirchhoff approximation, not a full-wave solution).");
+        if (estimate.evaluations > 2e11 && estimate.allowed) {
+            estimate.allowed = false;
+            estimate.refusal = "This calculation needs more than 200 billion element evaluations and would run for "
+                               "hours. Reduce the region's resolution, the reflector size or the surface resolution.";
+        } else if (estimate.evaluations > 5e9) {
+            estimate.warnings.push_back("This is a large calculation and may take minutes.");
+        }
+    }
+    for (const QString& note : modelNotes())
+        estimate.warnings.push_back(note.toStdString());
+    return estimate;
 }
 
 Result<Id> AcousticController::runField(const Id& regionId)
@@ -237,7 +342,18 @@ Result<Id> AcousticController::runField(const Id& regionId)
                            {"position", {target.position.x(), target.position.y(), target.position.z()}},
                            {"desired", {target.desired.real(), target.desired.imag()}},
                            {"weight", target.weight}});
+    nlohmann::json reflectors = nlohmann::json::array();
+    // Keep the model alive while its surfaces are read.
+    const std::shared_ptr<const PropagationModel> propagationModel = currentModel();
+    if (const auto* model = dynamic_cast<const ReflectorModel*>(propagationModel.get()))
+        for (const ReflectingSurface& surface : model->surfaces())
+            reflectors.push_back({{"object", surface.objectId.str()},
+                                  {"name", surface.label},
+                                  {"boundary", std::string(manipulators::toString(surface.boundary))},
+                                  {"impedance", surface.impedance},
+                                  {"surfaceElements", surface.elements.size()}});
     metadata.configuration = {{"settings", toJson(s)},
+                              {"reflectors", std::move(reflectors)},
                               {"region", {{"object", regionId.str()}, {"name", object->state.name}, {"component", region->toJson()}}},
                               {"sources", std::move(sources)},
                               {"targets", std::move(targets)}};

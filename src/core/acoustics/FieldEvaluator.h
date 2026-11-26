@@ -30,6 +30,7 @@ public:
     // frequency-domain solution; they are left out and counted.
     FieldEvaluator(const std::vector<PointSource>& sources, double frequencyHz, Medium medium,
                    std::shared_ptr<const PropagationModel> model);
+    virtual ~FieldEvaluator() = default;
 
     double frequencyHz() const { return frequencyHz_; }
     const Medium& medium() const { return medium_; }
@@ -40,12 +41,22 @@ public:
     // intensity formulas are exact for this model.
     bool velocityIsExact() const { return velocityExact_; }
 
-    FieldSample sample(const Vec3& point) const;
+    // A derived evaluator may add to the field (for example what reflectors
+    // scatter); everything that samples a field goes through these.
+    virtual FieldSample sample(const Vec3& point) const;
     Complex pressure(const Vec3& point) const { return sample(point).pressure; }
-    Eigen::Vector3cd particleVelocity(const Vec3& point) const;
+    // False when the evaluator has no particle velocity (and therefore no
+    // intensity) to offer; the two functions below then return zero.
+    virtual bool providesVelocity() const { return true; }
+    virtual Eigen::Vector3cd particleVelocity(const Vec3& point) const;
     Vec3 activeIntensity(const Vec3& point) const;
+    // What the evaluator assumes, for the user and for result metadata.
+    virtual std::vector<std::string> assumptions() const { return model_->assumptions(); }
+    // Identification of the calculation as a whole.
+    virtual std::string solverId() const { return model_->id(); }
+    virtual std::string solverVersion() const { return model_->version(); }
 
-private:
+protected:
     std::vector<PointSource> sources_;
     double frequencyHz_;
     Medium medium_;
