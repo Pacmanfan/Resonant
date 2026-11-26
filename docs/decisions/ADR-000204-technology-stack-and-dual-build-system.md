@@ -28,16 +28,16 @@ installed and the session cannot install packages.
    CMake (`CMakeLists.txt`) and with qmake (`project.pro`). Both build the
    same targets from the same sources: the `resonant_core` static library,
    the `resonant_render` static library, the `resonant` application and the
-   test binaries. Neither is derived from the other, so a source file added
-   to one build must be added to the other; a test
-   (`scripts/tests`-independent, `tests/build/check_build_lists.py`,
-   registered as a t0 suite) fails when the two source lists differ.
+   test binaries. Both collect a target's sources by globbing its
+   directory, so there is no source list that could differ between them
+   (amended by ADR-000206, which replaced the consistency check first
+   planned here).
 3. **The development-control system builds through qmake.** `devsys.json`
    keeps `build.system: qmake` (root project `project.pro`, tree
    `build/debug`), which also gives the test orchestrator its affected-test
-   selection from the qmake project graph. CMake is verified by building a
-   separate tree (`build/cmake-debug`) and running CTest; the result is
-   recorded in evidence.
+   selection from the qmake project graph. CMake is verified by the `cmake` test suite in tier
+   t2 (`tools/verify_cmake_build.sh`): it builds a separate tree
+   (`build/cmake-debug`) and runs CTest.
 4. **GoogleTest is vendored.** `third_party/googletest` holds the
    GoogleTest 1.17.0 sources (BSD-3-Clause), compiled by both build
    systems. This makes the tests reproducible without network access or a
@@ -59,12 +59,11 @@ installed and the session cannot install packages.
 
 ## Consequences
 
-* Two build descriptions must be maintained; the consistency check keeps
-  them from drifting.
+* Two build descriptions must be maintained; globbing keeps their source
+  sets equal, and the `cmake` suite builds and tests the CMake tree.
 * The vendored GoogleTest adds about 1.5 MB of third-party source.
 * The completion gate's build is the qmake build; a CMake-only breakage is
-  caught by the CMake verification step recorded in evidence and by the
-  consistency check, not by the gate's own build.
+  caught by the `cmake` suite of the gate's t2 run.
 
 ## Rejected
 

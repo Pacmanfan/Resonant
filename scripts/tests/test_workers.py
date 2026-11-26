@@ -452,9 +452,24 @@ class Identity(unittest.TestCase):
     PROJECT_CONFIG = ("devsys.json", "." + "cl" + "aude/")
     SKIP = {".git", "tmp", "build", "__pycache__", "node_modules"}
 
+    @staticmethod
+    def ignored_top_level() -> set:
+        """Top-level entries git ignores (a scratch checkout, a virtual
+        environment): they are not part of the system and are not installed
+        with it, so the identity scan does not read them."""
+        names = sorted(p.name for p in FRAMEWORK.iterdir() if p.name != ".git")
+        if not names:
+            return set()
+        res = subprocess.run(["git", "-C", str(FRAMEWORK), "check-ignore", "--", *names],
+                             capture_output=True, text=True)
+        return set(res.stdout.split("\n")) - {""} if res.returncode in (0, 1) else set()
+
     def files(self):
+        ignored = self.ignored_top_level()
         for p in sorted(FRAMEWORK.rglob("*")):
             rel = p.relative_to(FRAMEWORK)
+            if rel.parts and rel.parts[0] in ignored:
+                continue
             if p.is_file() and not (set(rel.parts) & self.SKIP) and rel.parts[:2] != (".audit", "runs") \
                     and rel.parts[:3] not in ((".agent", "state", "runtime"), (".agent", "state", "claims")):
                 if not rel.as_posix().startswith(self.RECORD_DIRS + self.PROJECT_CONFIG):

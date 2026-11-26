@@ -11,9 +11,14 @@ The implementation status of each milestone is kept in
 | M2 Acoustic physics engine | REQ-CHAT-20261126-003 | acoustic emitters and arrays, analytical propagation, focusing, multi-target inverse design, field regions, field visualization, probes | RES-PRODUCT-003, -004, -008, -010, -012 |
 | M3 Passive wave manipulation | REQ-CHAT-20261126-004 | wave manipulators (reflectors, lenses, waveguides, cavities), ray-based reflector model, hybrid focusing, geometry optimization | RES-PRODUCT-005, -006, -010 |
 | M4 Full-wave numerical solvers | REQ-CHAT-20261126-005 | solver framework, validated FDTD, boundaries, material interfaces, transient sources, frequency analysis | RES-PRODUCT-001, -006, -008 |
-| Later | — | geometry import from CAD formats, Python scripting interface, mechanical and electromagnetic domains, hardware and measurements, GPU backends | RES-PRODUCT-001, -002, -009, -015 |
+| M5 Mechanical waves | REQ-CHAT-20261126-006 | mechanical domain: structural models, modal analysis, forced and transient response | RES-PRODUCT-001 |
+| M6 Electromagnetic waves | REQ-CHAT-20261126-007 | electromagnetic domain: antennas, arrays, array factor, RF analysis, a full-wave method | RES-PRODUCT-001, -003 |
+| M7 Experiments and hardware | REQ-CHAT-20261126-008 | experiment framework, simulated devices, acquisition, calibration, correlation with simulation | RES-PRODUCT-009 |
+| M8 Optimization | REQ-CHAT-20261126-009 | optimization framework, inverse design, geometry optimization across domains | RES-PRODUCT-004, -010 |
+| M9 Python, help, demonstrations | REQ-CHAT-20261126-010 | Python API and scripting, automation, plugins, HTML help, demonstration system | RES-PRODUCT-015 |
+| Later | — | geometry import from CAD formats, GPU backends | RES-PRODUCT-002, -014 |
 
 V1 (RES-PRODUCT-015) is reached when M1 and M2 are complete and the two
-remaining V1 items — geometry import and the initial Python scripting
-interface — have been delivered by requests of their own. Neither is part of
-a submitted request yet.
+remaining V1 items have been delivered: the initial Python scripting
+interface (part of M9) and geometry import, which no submitted request
+covers yet.

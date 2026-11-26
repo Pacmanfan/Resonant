@@ -10,8 +10,10 @@ subsystem gets its own document in this directory when it is implemented;
 ## Layers
 
 ```text
-src/app      Qt Widgets application — main window, dock panels (.ui forms),
-             controllers that turn user actions into core commands
+src/main     the executable: main.cpp only
+src/app      Qt Widgets application as a library — main window, dock panels
+             (.ui forms in src/app/forms), controllers that turn user
+             actions into core commands
 src/render   OpenGL 4.5 Core rendering — shaders, meshes on the GPU, camera,
              grid, field display; knows core data, not the application
 src/core     data model and physics — no Qt, no OpenGL
@@ -35,6 +37,21 @@ A higher layer may use a lower one; never the reverse.
 | `project` | the project document, JSON persistence, validation, schema versions and migration |
 | `simulation` | simulation configuration, solver/domain identifiers, jobs (states, progress, cancellation), result metadata |
 | physics domains | one module per domain — `acoustics` first — with sources, propagation models, field evaluation, inverse design and numerical solvers |
+
+## Rendering and application (`src/render`, `src/app`)
+
+| Part | Responsibility |
+|---|---|
+| `render/Camera` | orbit camera mathematics and pick rays; no OpenGL calls |
+| `render/ShaderLibrary`, `render/GpuMesh` | shader programs with reported build errors; meshes and line buffers on the GPU |
+| `render/RenderLayer`, `render/Layers` | a frame is a sequence of layers: grid and axes, lit meshes, marker lines; new visualizations are new layers |
+| `render/Renderer` | lifecycle (initialize, resize, render, shutdown), requires OpenGL 4.5 Core |
+| `app/DocumentController` | the project, the command stack, the selection and the jobs; the only path from the user interface to the core |
+| `app/SceneRenderBridge` | scene objects to draw items; cached display meshes; picking |
+| `app/ViewportWidget` | the OpenGL widget: navigation and selection input |
+| `app/SceneTreePanel`, `app/PropertiesPanel`, `app/AnalysisPanel`, `app/MaterialsDialog` | the panels and the material editor |
+| `app/DisplayUnits` | the single boundary between displayed units and SI |
+| `app/MainWindow` | wires the actions of `forms/MainWindow.ui` to the controller |
 
 ## Data flow
 

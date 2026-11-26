@@ -209,6 +209,98 @@
      "expected_seconds": 60
     }
    }
+  },
+  {
+   "id": "core",
+   "kind": "binary",
+   "results": "junit",
+   "binary": "tests/core/resonant_core_tests",
+   "project": "tests/core/core_tests.pro",
+   "groups": {
+    "unit": {
+     "tiers": [
+      "t1"
+     ],
+     "expected_seconds": 5
+    }
+   },
+   "inputs": [
+    "examples/**"
+   ]
+  },
+  {
+   "id": "app",
+   "kind": "binary",
+   "results": "junit",
+   "binary": "tests/app/resonant_app_tests",
+   "project": "tests/app/app_tests.pro",
+   "groups": {
+    "gui": {
+     "tiers": [
+      "t2"
+     ],
+     "wrapper": [
+      "xvfb-run",
+      "-a",
+      "-s",
+      "-screen 0 1600x1000x24"
+     ],
+     "requires": [
+      "exe:xvfb-run"
+     ],
+     "expected_seconds": 20
+    }
+   }
+  },
+  {
+   "id": "cmake",
+   "kind": "command",
+   "results": "exit",
+   "command": [
+    "bash",
+    "tools/verify_cmake_build.sh"
+   ],
+   "inputs": [
+    "CMakeLists.txt",
+    "src/**",
+    "tests/**",
+    "third_party/**",
+    "tools/verify_cmake_build.sh"
+   ],
+   "requires": [
+    "exe:cmake",
+    "exe:xvfb-run"
+   ],
+   "groups": {
+    "build_and_ctest": {
+     "tiers": [
+      "t2"
+     ],
+     "exclusive": true,
+     "expected_seconds": 120
+    }
+   }
+  },
+  {
+   "id": "layering",
+   "kind": "command",
+   "results": "exit",
+   "command": [
+    "python3",
+    "tools/check_layering.py"
+   ],
+   "groups": {
+    "rules": {
+     "tiers": [
+      "t0"
+     ],
+     "expected_seconds": 1
+    }
+   },
+   "inputs": [
+    "tools/check_layering.py",
+    "src/**"
+   ]
   }
  ],
  "live_scripts": {
