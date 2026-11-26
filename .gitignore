@@ -1,0 +1,11 @@
+# development-control system runtime state (scripts/devsys.py init)
+.agent/state/claims/
+.agent/state/runtime/
+/.audit/runs/
+/tmp/
+__pycache__/
+*.pyc
+/build/
+
+# framework source checkout (separate repository)
+/auto_ci_cd/

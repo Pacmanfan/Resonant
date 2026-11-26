@@ -1,0 +1,394 @@
+{
+  "request_id": "REQ-CHAT-20261126-002",
+  "source": "chat",
+  "type": "FEATURE",
+  "priority": "NORMAL",
+  "created": "2026-11-26T15:11:33-05:00",
+  "created_utc": "2026-11-26T20:11:33+00:00",
+  "id_date": "2026-11-26",
+  "timezone": "EST (UTC-05:00)",
+  "status": "inbox",
+  "original_text": "# PROMPT 6 \u2014 RESONANT: V0.1 APPLICATION FOUNDATION IMPLEMENTATION\n\nYou are implementing **RESONANT \u2014 Wave Field Engineering Studio**, a serious scientific and engineering application for modeling, simulating, visualizing, and eventually manipulating physical wave phenomena.\n\nThis is the first substantive implementation milestone.\n\nThe architecture and project requirements should already have been documented in the preceding planning phase. Before writing code, inspect those documents and the existing repository. Treat the approved architecture and recorded decisions as authoritative unless you identify a concrete technical problem.\n\n## 1. Mission\n\nBuild a functional, extensible desktop application foundation using:\n\n- C++20\n- Qt 6\n- CMake\n- OpenGL 4.5 Core\n- Eigen where needed\n- GoogleTest for C++ tests\n\nPython integration, advanced numerical solvers, and hardware control are not part of this milestone.\n\nThe objective is to establish a robust application that can host the future physics, geometry, simulation, and experimental subsystems.\n\nDo not build a mockup. The application must compile, launch, interact correctly, save projects, and pass its tests.\n\n## 2. Initial repository and environment audit\n\nBefore modifying anything:\n\n1. Inspect the complete repository structure.\n2. Read the project vision, architecture, geometry/materials, physics architecture, roadmap, and decisions documents.\n3. Inspect the installed compiler, CMake, Qt 6, OpenGL drivers, and available dependencies.\n4. Identify the target operating system and build environment.\n5. Review existing code and determine whether any implementation already exists.\n6. Record dependency versions and licensing considerations.\n\nProduce a short implementation plan and identify any architectural conflicts before proceeding.\n\nDo not silently change previously approved architectural decisions.\n\n## 3. Application structure\n\nImplement the foundational application using clear subsystem boundaries.\n\nThe application should have distinct modules for:\n\n- Application lifecycle and configuration.\n- Main window and user interface.\n- Scene management.\n- Geometry.\n- Materials.\n- Rendering.\n- Project persistence.\n- Simulation configuration and job management.\n- Logging and diagnostics.\n- Testing.\n\nUse the architecture's approved directory structure. Avoid monolithic classes, global mutable state, and unnecessary coupling.\n\nKeep the core scene and data model independent of Qt wherever practical. Qt should primarily provide the desktop application and user interface.\n\n## 4. Main application window\n\nCreate a polished, functional engineering workspace.\n\nThe initial layout should include:\n\n**Main viewport**\n- Central interactive 3D viewport.\n- Perspective camera.\n- Grid and coordinate axes.\n- Camera orbit, pan, and zoom.\n- Selection of scene objects.\n- Visual feedback for selected objects.\n\n**Scene hierarchy**\n- Tree view of scene objects.\n- Object selection.\n- Visibility toggles.\n- Expandable groups.\n- Rename support.\n- Context menu for adding and removing objects.\n\n**Properties panel**\n- Selected object name and type.\n- Position.\n- Rotation.\n- Scale.\n- Geometry parameters where applicable.\n- Material assignment.\n- Visibility.\n\n**Bottom analysis area**\n- Dockable panel.\n- Initial tabs for Console, Diagnostics, and Simulation Status.\n- Prepare the interface for future plots, field analysis, and measurement results.\n\n**Menus and toolbars**\n- File.\n- Edit.\n- View.\n- Scene.\n- Geometry.\n- Materials.\n- Simulation.\n- Tools.\n- Help.\n\nImplement working actions where applicable. Do not create decorative buttons that do nothing.\n\nUse Qt dock widgets so the user can rearrange the workspace. Persist workspace layout between sessions.\n\n## 5. OpenGL rendering foundation\n\nImplement a real OpenGL 4.5 Core rendering subsystem.\n\nRequirements:\n\n- Use modern OpenGL.\n- No fixed-function pipeline.\n- No immediate-mode rendering.\n- Keep rendering independent from scene data.\n- Implement a clear renderer initialization and shutdown lifecycle.\n- Handle viewport resizing.\n- Support depth testing, camera matrices, and shader management.\n- Include a basic lighting model.\n- Render a ground grid and coordinate axes.\n- Render basic geometry.\n- Support object selection highlighting.\n- Support camera navigation.\n\nCreate reusable rendering components rather than placing all rendering code inside the viewport widget.\n\nThe rendering system must eventually support:\n- Large simulation datasets.\n- Volumetric field visualization.\n- Animated wave propagation.\n- Isosurfaces.\n- Cross sections.\n- Scalar and vector field rendering.\n\nDo not implement these advanced features yet. Ensure the rendering architecture can accommodate them.\n\nIf OpenGL 4.5 is unavailable on the target environment, report the limitation and propose a documented fallback rather than silently changing the requirement.\n\n## 6. Scene and geometry foundation\n\nImplement a basic scene graph.\n\nEvery scene object must have:\n\n- Stable unique identifier.\n- Display name.\n- Object type.\n- Local transform.\n- World transform.\n- Visibility state.\n- Parent/child relationship where appropriate.\n- Optional geometry reference.\n- Optional material reference.\n\nImplement the initial geometry primitives:\n\n- Box.\n- Sphere.\n- Cylinder.\n- Cone.\n- Plane.\n- Disc.\n- Ellipsoid.\n\nAdd parametric geometry support where practical.\n\nEach primitive must have editable parameters and a functioning viewport representation.\n\nImplement object operations:\n\n- Create.\n- Select.\n- Rename.\n- Move.\n- Rotate.\n- Scale.\n- Duplicate.\n- Delete.\n- Hide/show.\n\nImplement basic undo/redo using a deliberate command or transaction architecture.\n\nDo not conflate the rendered mesh with the underlying engineering geometry. Keep that distinction explicit in the data model.\n\n## 7. Coordinate system and units\n\nUse the established world coordinate convention:\n\n- X: horizontal.\n- Y: depth.\n- Z: vertical.\n\nUse SI units internally.\n\nThe user interface may display convenient units, but conversions must occur at well-defined boundaries.\n\nEstablish consistent conventions for:\n- Position.\n- Rotation.\n- Scale.\n- Angles.\n- Frequency.\n- Time.\n- Length.\n- Material properties.\n\nAvoid implicit unit conversions and ambiguous angle conventions.\n\n## 8. Materials foundation\n\nImplement the material data model and an initial material browser/editor.\n\nMaterials must support:\n\n- Stable ID.\n- Name.\n- Description.\n- Physics domain applicability.\n- Domain-specific property sets.\n- Source/provenance metadata.\n- Validity ranges.\n- Optional frequency-dependent properties.\n\nCreate initial example materials for:\n- Air.\n- Water.\n- Aluminum.\n- Steel.\n- Copper.\n- Glass.\n- Acrylic.\n- Concrete.\n- Rubber.\n- Wood.\n\nDo not fabricate authoritative physical constants.\n\nIf illustrative values are needed for early demonstrations, clearly mark them as illustrative and identify their limitations.\n\nThe material architecture must support separate acoustic, mechanical, and electromagnetic property definitions without forcing unrelated properties into a universal structure.\n\n## 9. Project persistence\n\nImplement native Resonant project save/load.\n\nThe project must preserve:\n\n- Scene hierarchy.\n- Object IDs.\n- Geometry definitions and parameters.\n- Object transforms.\n- Material definitions and references.\n- Visibility.\n- Workspace-independent scene configuration.\n- Application/project version.\n- Unit conventions.\n- Future-compatible metadata.\n\nUse JSON for project metadata and configuration, with a strategy for external or binary assets as needed.\n\nRequirements:\n\n- Save project.\n- Save As.\n- Open project.\n- New project.\n- Detect unsaved changes.\n- Prompt before discarding modifications.\n- Handle missing or invalid files gracefully.\n- Validate project data before loading.\n- Preserve stable IDs.\n- Support schema/version migration.\n\nDo not serialize transient OpenGL objects or GUI widget state into the scientific scene model.\n\n## 10. Simulation foundation\n\nDo not implement a real physics solver in this milestone.\n\nHowever, establish the interfaces needed for future simulation.\n\nImplement:\n\n- Simulation configuration data structure.\n- Solver/domain identifiers.\n- Simulation job abstraction.\n- Job states: queued, running, completed, failed, cancelled.\n- Progress reporting.\n- Cancellation interface.\n- Result metadata.\n- Logging and error reporting.\n\nThe application must remain responsive during future long-running simulations. Design the job system accordingly, even if the initial implementation only includes a simple demonstrator job.\n\nDo not create fake scientific results or represent a placeholder calculation as a physical simulation.\n\n## 11. Logging and diagnostics\n\nImplement structured application logging.\n\nCapture:\n- Startup and shutdown.\n- Dependency and graphics initialization.\n- Project loading and saving.\n- Scene modifications where useful.\n- Simulation job lifecycle.\n- Errors and exceptions.\n\nProvide a visible diagnostics/console panel.\n\nErrors should be informative and actionable.\n\nAvoid silently swallowing exceptions or returning success after failed operations.\n\n## 12. Testing\n\nUse GoogleTest.\n\nAt minimum, test:\n\n- Scene object creation.\n- Stable IDs.\n- Transform calculations.\n- Parent/child relationships.\n- Geometry parameter validation.\n- Material creation and validation.\n- Project serialization and deserialization.\n- Invalid project handling.\n- Version compatibility behavior.\n- Simulation job state transitions.\n- Undo/redo behavior.\n\nSeparate tests for core data models from GUI and rendering tests.\n\nThe core data model should be testable without launching the GUI or requiring an OpenGL context.\n\n## 13. User experience and quality\n\nThe application should look and behave like a professional engineering tool.\n\nAvoid:\n- Generic placeholder interfaces.\n- Unnecessary decorative elements.\n- Oversized controls.\n- Excessive dialogs.\n- Hardcoded demonstration scenes presented as real projects.\n- Features that appear functional but are not implemented.\n\nUse consistent terminology, sensible defaults, keyboard shortcuts for common operations, and clear feedback for user actions.\n\nThe interface should be designed for technical work involving complex scenes, many emitters, geometry, materials, and eventually large simulation datasets.\n\n## 14. Build and developer experience\n\nProvide:\n\n- A clean CMake configuration.\n- Clear separation of application and core libraries.\n- Reproducible dependency configuration.\n- Debug and Release build support.\n- A documented build procedure.\n- A documented test procedure.\n- Useful compiler warnings.\n- No unnecessary compiler-warning suppression.\n\nDo not introduce a dependency merely because it is convenient. Document why each dependency is needed and its licensing implications.\n\nDo not make the project dependent on a particular developer's machine paths.\n\n## 15. Documentation\n\nCreate or update:\n\n- README.md\n- BUILDING.md\n- IMPLEMENTATION_STATUS.md\n- DECISIONS.md\n- Any necessary module-level documentation.\n\nDocument the implemented architecture and any deviations from the approved design.\n\nIMPLEMENTATION_STATUS.md must distinguish clearly between:\n- Implemented and tested.\n- Implemented but not fully tested.\n- Partially implemented.\n- Not implemented.\n- Deferred intentionally.\n\n## 16. Implementation sequence\n\nWork incrementally in this order:\n\n**Phase A \u2014 Build foundation**\n- CMake project.\n- Core library.\n- Application executable.\n- Dependency setup.\n- Basic test infrastructure.\n\n**Phase B \u2014 Application shell**\n- Main window.\n- Dockable panels.\n- Menus and actions.\n- Workspace persistence.\n\n**Phase C \u2014 Rendering**\n- OpenGL initialization.\n- Shader management.\n- Camera.\n- Grid and axes.\n- Basic geometry rendering.\n\n**Phase D \u2014 Scene model**\n- Scene graph.\n- Stable object IDs.\n- Transforms.\n- Geometry primitives.\n- Selection and object operations.\n- Undo/redo.\n\n**Phase E \u2014 Materials**\n- Material data structures.\n- Initial library.\n- Material editor.\n- Assignment to scene objects.\n\n**Phase F \u2014 Persistence**\n- Project serialization.\n- Save/load.\n- Validation.\n- Version handling.\n\n**Phase G \u2014 Simulation infrastructure**\n- Job abstraction.\n- State transitions.\n- Progress and cancellation.\n- Diagnostics.\n\n**Phase H \u2014 Verification**\n- Full test suite.\n- Clean build.\n- Manual application testing.\n- Documentation.\n- Final implementation report.\n\nDo not attempt to implement every phase in one enormous source file or one unreviewable change.\n\n## 17. Acceptance criteria\n\nThis milestone is complete only when all of the following work:\n\n1. The application builds from a clean build directory.\n2. The application launches successfully.\n3. The main workspace is functional.\n4. The user can create a new project.\n5. The user can create and manipulate primitive geometry.\n6. Scene hierarchy and properties remain synchronized.\n7. Geometry renders correctly in the 3D viewport.\n8. The user can create and assign materials.\n9. Project save/load preserves the scene accurately.\n10. Unsaved changes are handled correctly.\n11. Undo/redo works for supported scene operations.\n12. Diagnostics report meaningful application information.\n13. The simulation job infrastructure can execute, report, and cancel a demonstrator job without pretending to perform real physics.\n14. Automated tests pass.\n15. Documentation accurately reflects the implementation.\n\n## 18. Final report\n\nWhen finished, provide a concise but substantive report containing:\n\n- What was implemented.\n- Repository structure and major modules.\n- Important architectural decisions.\n- Dependencies and versions.\n- Build instructions.\n- Test results.\n- Manual verification results.\n- Known limitations.\n- Deferred features.\n- Any deviations from the approved architecture.\n- Recommended next implementation milestone.\n\nInclude actual command output or test evidence where practical.\n\nDo not claim something works merely because its code was written.\n\n## 19. Critical development rules\n\n- Do not implement physics solvers prematurely.\n- Do not compromise the modular architecture for short-term convenience.\n- Do not mix rendering code with scientific calculations.\n- Do not make Qt a mandatory dependency of the core data model.\n- Do not introduce fake scientific results.\n- Do not silently substitute placeholder implementations for requested functionality.\n- Do not add hardware output in this milestone.\n- Do not build unnecessary abstractions without a clear future use.\n- Keep code readable, testable, and maintainable.\n- Preserve existing approved documentation and decisions.\n- Record significant architectural decisions in DECISIONS.md.\n\n**The goal is a real, working engineering application foundation\u2014not a prototype screenshot.**",
+  "file": "requests/inbox/2026-11-26-prompt-6-resonant-v0-1-applica-req-chat-20261126-002.md",
+  "attachments": [],
+  "context": "Second ticket, submitted by the user in chat (submit-only; the user asked not to claim or process tickets yet). Builds on REQ-CHAT-20261126-001 (project vision). Open conflict to resolve before processing: this ticket specifies CMake and GoogleTest, while the repository was bootstrapped earlier in the same session with build.system=qmake and the user chose Qt Test; it also refers to planning documents (architecture, geometry/materials, physics architecture, roadmap, decisions) that do not exist in the repository yet.",
+  "text_sha256": "4ac6ce1f31708a25b43d1f09a3d8ec84cac042b80b08ad06a896618f9ce2aa26",
+  "classification": {
+    "proposed_type": "FEATURE",
+    "proposed_source": "override",
+    "normalized_type": "FEATURE",
+    "heuristic_type": "BUILD",
+    "final_type": "FEATURE",
+    "confidence": "high",
+    "validation": "PASS",
+    "classifier_reason": "override FEATURE accepted (text alone suggests BUILD: build/compile/link failure in the request statement)",
+    "correction_reason": null,
+    "normalization_note": null,
+    "evidence": [
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "implementing",
+        "strength": "strong",
+        "note": "",
+        "sentence": "You are implementing **RESONANT"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "milestone",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This is the first substantive implementation milestone."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "Build a ",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Build a functional, extensible desktop application foundation using:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "integration",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Python integration, advanced numerical solvers, and hardware control are not part of this milestone."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "milestone",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Python integration, advanced numerical solvers, and hardware control are not part of this milestone."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "objective",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The objective is to establish a robust application that can host the future physics, geometry, simulation, and experimental subsystems."
+      },
+      {
+        "category": "BUILD",
+        "where": "head",
+        "phrase": "Do not build",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not build a mockup."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "build a ",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not build a mockup."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "roadmap",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Read the project vision, architecture, geometry/materials, physics architecture, roadmap, and decisions documents."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Produce",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Produce a short implementation plan and identify any architectural conflicts before proceeding."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement the foundational application using clear subsystem boundaries."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "provide",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Qt should primarily provide the desktop application and user interface."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Create a polished, functional engineering workspace."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "should include",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The initial layout should include:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "adding",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Context menu for adding and removing objects."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement working actions where applicable."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not create decorative buttons that do nothing."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "user can",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Use Qt dock widgets so the user can rearrange the workspace."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement a real OpenGL 4.5 Core rendering subsystem."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement a clear renderer initialization and shutdown lifecycle."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support depth testing, camera matrices, and shader management."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support object selection highlighting."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support camera navigation."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Create reusable rendering components rather than placing all rendering code inside the viewport widget."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "reusable",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Create reusable rendering components rather than placing all rendering code inside the viewport widget."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not implement these advanced features yet."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "features",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not implement these advanced features yet."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement a basic scene graph."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement the initial geometry primitives:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Add",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Add parametric geometry support where practical."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement object operations:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Create."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement basic undo/redo using a deliberate command or transaction architecture."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement the material data model and an initial material browser/editor."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "must support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Materials must support:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Create initial example materials for:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "must support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The material architecture must support separate acoustic, mechanical, and electromagnetic property definitions without forcing unrelated properties into a universal structure."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement native Resonant project save/load."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "New project",
+        "strength": "strong",
+        "note": "",
+        "sentence": "New project."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support schema/version migration."
+      }
+    ],
+    "scores": {
+      "FEATURE": {
+        "head": 6,
+        "body": 61
+      },
+      "BUG": {
+        "head": 1,
+        "body": 7
+      },
+      "CRASH": {
+        "head": 0,
+        "body": 0
+      },
+      "REGRESSION": {
+        "head": 0,
+        "body": 0
+      },
+      "PERFORMANCE": {
+        "head": 0,
+        "body": 0
+      },
+      "REFACTOR": {
+        "head": 0,
+        "body": 4
+      },
+      "BUILD": {
+        "head": 1,
+        "body": 1
+      },
+      "DOCUMENTATION": {
+        "head": 0,
+        "body": 13
+      },
+      "INVESTIGATION": {
+        "head": 0,
+        "body": 2
+      },
+      "PROCESS-CHANGE": {
+        "head": 0,
+        "body": 0
+      }
+    },
+    "evidence_total": 96,
+    "validator": "scripts/request_classification.py"
+  }
+}

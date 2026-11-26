@@ -1,0 +1,394 @@
+{
+  "request_id": "REQ-CHAT-20261126-003",
+  "source": "chat",
+  "type": "FEATURE",
+  "priority": "NORMAL",
+  "created": "2026-11-26T15:13:49-05:00",
+  "created_utc": "2026-11-26T20:13:49+00:00",
+  "id_date": "2026-11-26",
+  "timezone": "EST (UTC-05:00)",
+  "status": "inbox",
+  "original_text": "# PROMPT 7 \u2014 RESONANT: ACOUSTIC PHYSICS ENGINE AND WAVE-FIELD SIMULATION\n\nYou are continuing development of **RESONANT \u2014 Wave Field Engineering Studio**.\n\nThis milestone introduces the first real physics domain: **acoustic wave simulation**.\n\nThe objective is to transform the application from a general-purpose engineering scene editor into a functional acoustic wave-field design and experimentation platform.\n\nThis is not a visualization mockup. Implement real, mathematically grounded acoustic calculations and connect them to the existing scene, geometry, material, simulation, and rendering architectures.\n\nBuild on the existing codebase. Do not replace or unnecessarily redesign the application foundation.\n\n---\n\n## 1. Mission and scope\n\nImplement a modular acoustic physics subsystem capable of:\n\n- Defining acoustic emitters.\n- Creating and configuring emitter arrays.\n- Calculating acoustic propagation.\n- Modeling interference and superposition.\n- Calculating phase and time-delay compensation.\n- Focusing acoustic energy at specified locations.\n- Defining multiple target locations.\n- Calculating acoustic fields across 2D and 3D regions.\n- Visualizing pressure, amplitude, phase, and intensity.\n- Comparing different emitter configurations.\n- Saving and reproducing simulation configurations.\n\nThe initial implementation should prioritize frequency-domain analytical acoustics.\n\nDo not attempt to implement a complete general-purpose acoustics solver in this milestone.\n\nThe architecture must permit later integration of FDTD, FEM, BEM, transient propagation, diffraction, reflections, and more advanced physical models.\n\n## 2. Acoustic physics architecture\n\nCreate a dedicated acoustic physics module within the existing modular architecture.\n\nSeparate:\n\n- Acoustic domain data.\n- Acoustic source definitions.\n- Propagation models.\n- Field calculations.\n- Focusing algorithms.\n- Simulation configuration.\n- Numerical execution.\n- Result storage.\n- Visualization interfaces.\n\nDo not place physics calculations in Qt widgets or OpenGL rendering code.\n\nThe acoustic engine must be usable independently of the GUI.\n\nUse Eigen for numerical operations where appropriate.\n\nKeep solver implementations interchangeable through well-defined interfaces.\n\nAt minimum, define interfaces for:\n\n- Analytical propagation.\n- Point-source propagation.\n- Directional-source propagation.\n- Array-factor calculations.\n- Acoustic field evaluation.\n- Inverse field design.\n\nThe initial implementation should use the analytical propagation approach described below.\n\n## 3. Acoustic emitter model\n\nIntroduce a first-class scene object called an **Acoustic Emitter**.\n\nEach emitter must support:\n\n- Stable ID.\n- Position.\n- Orientation.\n- Operating frequency.\n- Output amplitude.\n- Initial phase.\n- Time delay.\n- Waveform designation.\n- Directivity model.\n- Active/inactive state.\n- Optional physical dimensions.\n- Optional assigned material or transducer profile.\n\nSupport at least these source models:\n\n1. Idealized omnidirectional point source.\n2. Directional point source.\n3. Simple piston source approximation where practical.\n\nClearly distinguish idealized mathematical emitters from physical transducers.\n\nDo not assume every physical transducer behaves like an ideal point source.\n\nThe emitter data model must eventually support measured frequency response, phase response, directivity, impedance, and calibration data.\n\n### Emitter orientation\n\nEmitter orientation must affect directional radiation models.\n\nDefine a consistent local forward axis and document it.\n\nUse explicit coordinate transforms between local emitter space and world space.\n\n## 4. Emitter arrays\n\nImplement an **Acoustic Array** scene object.\n\nAn array is a collection of independently configurable emitters.\n\nSupport these parametric array layouts:\n\n- Linear.\n- Rectangular planar.\n- Circular.\n- Cylindrical.\n- Spherical.\n- Custom/manual placement.\n\nProvide array configuration controls:\n\n- Number of elements.\n- Element spacing.\n- Array dimensions.\n- Array center.\n- Array orientation.\n- Element frequency.\n- Element amplitude.\n- Element phase.\n- Element delay.\n- Element activation.\n\nFor planar arrays, allow horizontal and vertical element counts and spacing to be configured independently.\n\nFor circular arrays, support radius and element count.\n\nFor spherical arrays, support a reasonable initial distribution algorithm and document its limitations.\n\nAllow individual elements to be selected and modified after array generation.\n\nChanging an array parameter should update its generated geometry and emitter positions predictably.\n\nDo not destroy individual element settings unnecessarily when changing array parameters. Define and document how generated array configuration interacts with per-element overrides.\n\n## 5. Acoustic material properties\n\nConnect the acoustic subsystem to the existing material architecture.\n\nSupport acoustic properties including:\n\n- Density.\n- Speed of sound.\n- Acoustic impedance.\n- Attenuation.\n- Absorption.\n- Frequency dependence where available.\n- Temperature dependence where available.\n\nFor the initial homogeneous-medium analytical solver, use an explicitly defined propagation medium.\n\nStart with air and water as supported examples.\n\nAllow the user to configure temperature and other relevant medium parameters when supported by the chosen model.\n\nDo not assume that the properties of the material assigned to a solid object automatically define the propagation medium.\n\nDistinguish:\n\n- Propagation medium.\n- Solid material.\n- Reflector material.\n- Transducer material.\n\nFor this milestone, solid geometry may be present in the scene without necessarily influencing the calculated acoustic field.\n\nClearly indicate when the simulation is using a free-field approximation and ignoring object interactions.\n\nDo not pretend to simulate reflection, transmission, refraction, or scattering when those mechanisms are not implemented.\n\n## 6. Analytical acoustic propagation\n\nImplement a real frequency-domain acoustic propagation model.\n\nFor a harmonic point source in a homogeneous free-field medium, use an appropriate Green's function formulation.\n\nA representative pressure-field model is:\n\n\\[\np_i(\\mathbf{x}) =\nA_i \\frac{e^{-jkr_i}}{r_i}\n\\]\n\nwhere:\n\n- \\(A_i\\) represents the source's complex amplitude under the selected normalization.\n- \\(r_i\\) is the distance from emitter \\(i\\) to the evaluation point.\n- \\(k=2\\pi f/c\\) is the acoustic wavenumber.\n- \\(f\\) is frequency.\n- \\(c\\) is sound speed.\n\nThe total complex pressure field is obtained by superposition:\n\n\\[\np(\\mathbf{x})=\\sum_{i=1}^{N}p_i(\\mathbf{x})\n\\]\n\nImplement this model with explicit documentation of:\n\n- Source amplitude normalization.\n- Pressure units.\n- Phase convention.\n- Frequency convention.\n- Propagation assumptions.\n- Validity limitations.\n- Treatment of near-source singularities.\n\nDo not use the simplified equation without considering source normalization and units.\n\nImplement a consistent reference-amplitude convention so that changing emitter count does not silently change the meaning of displayed amplitude.\n\nProvide an appropriate near-field handling strategy. Do not allow division by zero or numerical instability when an evaluation point coincides with an emitter.\n\n### Propagation model options\n\nThe initial engine should support:\n\n- Ideal spherical spreading.\n- Optional attenuation.\n- Optional source directivity.\n- Complex phase propagation.\n- Multiple-source superposition.\n\nUse a well-defined propagation interface so additional models can be added later.\n\n## 7. Acoustic field calculations\n\nImplement a reusable acoustic field evaluator.\n\nIt must calculate field quantities at arbitrary world coordinates.\n\nSupport:\n\n- Complex acoustic pressure.\n- Pressure magnitude.\n- Pressure phase.\n- RMS pressure under the documented harmonic convention.\n- Time-averaged intensity where the required assumptions are satisfied.\n\nFor a progressive plane-wave approximation in a homogeneous medium, intensity can be related to pressure using acoustic impedance. Do not blindly apply that relationship to arbitrary standing-wave or reactive near-field conditions.\n\nWhere the simple relationship is not valid, either implement the necessary particle-velocity calculation or clearly label the result as an approximation.\n\nMaintain SI units internally.\n\nThe user interface should clearly distinguish:\n\n- Pressure amplitude.\n- RMS pressure.\n- Sound pressure level.\n- Intensity.\n- Relative normalized field strength.\n\nNever label relative amplitude as absolute acoustic pressure.\n\n## 8. Acoustic focusing\n\nImplement the first real active acoustic focusing system.\n\nThe user must be able to select a target point in the 3D viewport or enter its coordinates numerically.\n\nFor an emitter at \\(\\mathbf{x}_i\\) and target \\(\\mathbf{x}_t\\):\n\n\\[\nr_i=\\|\\mathbf{x}_t-\\mathbf{x}_i\\|\n\\]\n\nCalculate propagation distance and phase compensation for every emitter.\n\nSupport two distinct control strategies:\n\n**Narrowband phase focusing**\n- Calculate per-element phase compensation at a selected frequency.\n- Respect the engine's phase sign convention.\n- Allow amplitude control separately.\n\n**True time-delay focusing**\n- Calculate relative propagation delays.\n- Support broadband-compatible delay control conceptually and in the source configuration.\n- Do not represent a fixed phase shift as a true broadband time delay.\n\nProvide a configurable focus operation.\n\nThe user should be able to:\n\n1. Select an array.\n2. Specify a target location.\n3. Choose phase or time-delay control.\n4. Calculate element settings.\n5. Apply the settings.\n6. Run a field simulation.\n7. Inspect the resulting focus.\n\nDo not guarantee a perfect focus. The actual field must be calculated from the propagation model.\n\nSupport optional amplitude weighting and tapering.\n\n## 9. Multiple targets and field constraints\n\nIntroduce a target-field model.\n\nTargets should eventually support:\n\n- Single points.\n- Multiple points.\n- Lines.\n- Planes.\n- Surfaces.\n- Volumetric regions.\n- Desired pressure amplitude.\n- Desired phase.\n- Field suppression regions.\n\nFor this milestone, implement point targets and multiple point targets.\n\nProvide the data model for the additional target types without pretending they are already solved.\n\nAllow users to assign target priorities or weights where appropriate.\n\nDesign the target representation so future inverse-design algorithms can use it directly.\n\n## 10. Initial inverse-design solver\n\nImplement a first inverse-design capability for multiple target points.\n\nConstruct a propagation matrix:\n\n\\[\nH_{mi}=G(\\mathbf{x}_m,\\mathbf{x}_i)\n\\]\n\nwhere \\(G\\) is the selected propagation response between emitter \\(i\\) and target point \\(m\\).\n\nSolve for complex emitter weights:\n\n\\[\nHw \\approx b\n\\]\n\nwhere:\n\n- \\(H\\) is the propagation matrix.\n- \\(w\\) is the vector of emitter drive weights.\n- \\(b\\) is the desired complex field at the targets.\n\nImplement a least-squares solution using Eigen.\n\nSupport regularization where appropriate:\n\n\\[\n\\min_w \\|Hw-b\\|_2^2+\\lambda\\|w\\|_2^2\n\\]\n\nRequirements:\n\n- Numerically stable solution.\n- Configurable regularization.\n- Error reporting.\n- Residual measurement.\n- Per-element complex weights.\n- Conversion into amplitude and phase settings.\n- Configurable amplitude limits.\n- Clear indication when requested targets cannot be achieved accurately.\n\nDo not use explicit matrix inversion when a numerically stable decomposition or solver is appropriate.\n\nFor this milestone, prioritize amplitude-and-phase control. Phase-only optimization can be added as a later enhancement.\n\n## 11. Simulation region and sampling\n\nIntroduce a simulation-region object.\n\nSupport:\n\n- 2D XY plane.\n- 2D XZ plane.\n- 2D YZ plane.\n- Arbitrary 2D plane where practical.\n- 3D rectangular volume.\n\nAllow the user to configure:\n\n- Region origin.\n- Dimensions.\n- Sampling resolution.\n- Frequency.\n- Propagation medium.\n- Selected emitters or array.\n- Calculation model.\n\nProvide preflight validation.\n\nEstimate:\n\n- Number of evaluation points.\n- Memory consumption.\n- Expected computational workload.\n- Potentially excessive resolution.\n\nDo not allow an accidental enormous simulation to exhaust system memory.\n\nImplement cancellation and progress reporting for long-running field calculations.\n\nThe GUI must remain responsive.\n\n## 12. Rendering and visualization\n\nConnect calculated acoustic fields to the OpenGL rendering subsystem.\n\nThe viewport must visualize actual numerical results.\n\nImplement:\n\n**2D field visualization**\n- Pressure magnitude.\n- Pressure phase.\n- Relative intensity.\n- Cross-sectional field maps.\n\n**3D field visualization**\n- Sampled volumetric field.\n- Slices through the volume.\n- Adjustable slice positions.\n- Isosurfaces or other useful volumetric representations where practical.\n\n**Animation**\n- Harmonic instantaneous pressure visualization.\n- Animation driven by calculated complex field values.\n- User-adjustable animation frequency or playback speed.\n\nAnimation must not require recalculating the entire field at every frame. Use the stored frequency-domain solution where applicable.\n\nSupport color-scale controls and normalization modes.\n\nClearly identify whether the visualization shows absolute or normalized values.\n\nKeep numerical computation separate from rendering. Changing camera position, color map, or slice visibility must not trigger unnecessary physics recalculation.\n\n## 13. Analysis and measurements\n\nIntroduce an initial acoustic analysis panel.\n\nDisplay:\n\n- Selected frequency.\n- Propagation medium.\n- Number of active emitters.\n- Simulation dimensions.\n- Sampling resolution.\n- Maximum pressure magnitude.\n- RMS pressure where supported.\n- Relative peak location.\n- Target-point values.\n- Solver execution time.\n- Model assumptions.\n\nImplement point probes.\n\nA user should be able to place a probe in the scene and inspect calculated field quantities at that location.\n\nAllow probe results to be exported in a documented machine-readable format.\n\n## 14. Simulation reproducibility\n\nEvery simulation result must retain enough metadata to reproduce it.\n\nStore:\n\n- Project ID.\n- Simulation ID.\n- Solver type and version.\n- Acoustic model.\n- Frequency.\n- Medium properties.\n- Emitter configurations.\n- Array configuration.\n- Target definitions.\n- Simulation-region definition.\n- Sampling resolution.\n- Numerical parameters.\n- Execution time.\n- Model assumptions.\n- Relevant software version.\n\nChanging the scene after a simulation must not silently alter the historical result.\n\nResults should be associated with the configuration that produced them.\n\nAllow the user to run multiple simulations and compare results.\n\n## 15. Performance and numerical quality\n\nThe initial solver should be optimized sensibly, without premature complexity.\n\nRequirements:\n\n- Use efficient numerical loops.\n- Use Eigen where appropriate.\n- Avoid unnecessary allocations.\n- Parallelize independent field evaluation points where beneficial.\n- Keep computation off the GUI thread.\n- Support cancellation.\n- Monitor memory use.\n- Avoid excessive copies of large field arrays.\n\nImplement numerical validation tests.\n\nInclude tests for:\n\n- Single-source spherical propagation.\n- Distance-dependent amplitude behavior.\n- Phase progression.\n- Two-source constructive interference.\n- Two-source destructive interference.\n- Symmetric array behavior.\n- Focus delay calculations.\n- Focus phase calculations.\n- Multiple-target least squares.\n- Regularization behavior.\n- Field-grid dimensions.\n- Numerical stability near emitters.\n\nUse analytical expectations or independently derived reference calculations wherever possible.\n\nDo not validate a calculation solely by comparing two code paths that share the same implementation.\n\n## 16. User interface integration\n\nIntegrate acoustic functionality into the existing application.\n\nAdd suitable workspace panels or dockable views for:\n\n- Acoustic emitter properties.\n- Array configuration.\n- Acoustic medium selection.\n- Target definition.\n- Focusing controls.\n- Simulation configuration.\n- Field analysis.\n- Probe inspection.\n\nContext-sensitive properties should appear when an acoustic emitter, array, target, or probe is selected.\n\nSupport sensible workflows rather than requiring the user to navigate multiple unrelated dialogs.\n\nThe interface must clearly communicate which objects are emitters, which are targets, which define simulation regions, and which are visualization objects.\n\n## 17. Example projects\n\nCreate a small set of real, reproducible example projects.\n\nAt minimum:\n\n**Example A \u2014 Two-source interference**\n- Two coherent acoustic emitters.\n- Configurable separation.\n- Demonstration of constructive and destructive interference.\n\n**Example B \u2014 Linear array**\n- Parametric linear array.\n- Adjustable frequency and element spacing.\n- Field visualization.\n\n**Example C \u2014 Focused planar array**\n- Planar array.\n- Single point target.\n- Calculated phase compensation.\n- Field simulation showing the resulting focus.\n\n**Example D \u2014 Multiple target points**\n- Planar array.\n- Multiple target locations.\n- Inverse-design solution.\n- Field comparison against the requested target values.\n\nAll examples must use real calculations from the implemented engine.\n\nClearly label assumptions and limitations.\n\n## 18. Documentation\n\nCreate or update:\n\n- ACOUSTIC_ENGINE.md\n- ACOUSTIC_MODELS.md\n- ACOUSTIC_ARRAYS.md\n- ACOUSTIC_FOCUSING.md\n- ACOUSTIC_INVERSE_DESIGN.md\n- ACOUSTIC_VALIDATION.md\n- IMPLEMENTATION_STATUS.md\n- DECISIONS.md\n\nDocument mathematical conventions, units, assumptions, numerical methods, and known limitations.\n\nInclude equations and examples.\n\n## 19. Implementation sequence\n\nWork in manageable stages.\n\n**Phase A \u2014 Acoustic domain model**\n- Acoustic emitters.\n- Acoustic arrays.\n- Medium properties.\n- Target points.\n- Simulation configuration.\n\n**Phase B \u2014 Analytical propagation**\n- Green's function.\n- Spherical spreading.\n- Phase propagation.\n- Attenuation.\n- Directivity.\n- Superposition.\n\n**Phase C \u2014 Array generation**\n- Linear.\n- Rectangular planar.\n- Circular.\n- Spherical.\n- Custom.\n\n**Phase D \u2014 Focusing**\n- Point-target phase compensation.\n- Time-delay compensation.\n- Apply settings to arrays.\n- Validate resulting field.\n\n**Phase E \u2014 Field evaluation**\n- 2D sampling.\n- 3D sampling.\n- Simulation job integration.\n- Progress and cancellation.\n\n**Phase F \u2014 Inverse design**\n- Propagation matrix.\n- Least-squares solution.\n- Regularization.\n- Multiple target points.\n- Result validation.\n\n**Phase G \u2014 Visualization**\n- 2D field maps.\n- 3D field visualization.\n- Phase display.\n- Animation.\n- Probe support.\n\n**Phase H \u2014 Verification**\n- Unit tests.\n- Analytical validation.\n- Example projects.\n- Performance checks.\n- Documentation.\n\nDo not skip validation to accelerate implementation.\n\n## 20. Acceptance criteria\n\nThis milestone is complete only when:\n\n1. A user can create an acoustic emitter.\n2. A user can create a parametric acoustic array.\n3. Individual emitters can be configured.\n4. A user can configure the propagation medium.\n5. The engine calculates a real complex acoustic field.\n6. Two-source interference behaves correctly.\n7. The user can create and select a target point.\n8. The engine calculates focusing phase compensation.\n9. The user can apply focusing settings to an array.\n10. A simulation demonstrates the resulting field.\n11. The user can calculate 2D field maps.\n12. The user can calculate a manageable 3D field volume.\n13. The user can inspect pressure and phase.\n14. The user can run a multiple-target inverse-design calculation.\n15. Simulation jobs support progress and cancellation.\n16. Results retain reproducibility metadata.\n17. Example projects work.\n18. Automated tests pass.\n19. Numerical validation results are documented.\n20. The existing application foundation remains functional.\n\n## 21. Critical development rules\n\n- Implement actual acoustic mathematics, not visual approximations presented as physics.\n- Keep acoustic physics independent from GUI and rendering.\n- Do not claim solid geometry influences acoustic propagation until the relevant interaction model exists.\n- Do not confuse phase shifts with true time delays.\n- Do not confuse pressure amplitude with RMS pressure or intensity.\n- Do not assume all transducers are ideal point sources.\n- Do not silently normalize absolute quantities into relative values.\n- Do not fabricate material properties or experimental results.\n- Preserve reproducibility.\n- Record architectural decisions.\n- Keep the implementation modular and testable.\n- Do not break previously working functionality.\n\n**The goal is a functional acoustic wave-field engineering system: create sources, configure arrays, calculate propagation, focus energy, solve multiple targets, and inspect the resulting three-dimensional field.**",
+  "file": "requests/inbox/2026-11-26-prompt-7-resonant-acoustic-phy-req-chat-20261126-003.md",
+  "attachments": [],
+  "context": "Third ticket, submitted by the user in chat (submit-only; the user asked not to claim or process tickets yet). Depends on REQ-CHAT-20261126-002 (V0.1 application foundation), which must be completed first: this ticket builds on its scene, geometry, material, simulation-job and rendering subsystems. Product vision: REQ-CHAT-20261126-001.",
+  "text_sha256": "e5cfb77fa90b7b163744286d2259424479f53ec59285cb2f2c9de5e19dad1c2c",
+  "classification": {
+    "proposed_type": "FEATURE",
+    "proposed_source": "override",
+    "normalized_type": "FEATURE",
+    "heuristic_type": "FEATURE",
+    "final_type": "FEATURE",
+    "confidence": "high",
+    "validation": "PASS",
+    "classifier_reason": "request statement is framed as feature: Creating, Implement, implement, integration",
+    "correction_reason": null,
+    "normalization_note": null,
+    "evidence": [
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "milestone",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This milestone introduces the first real physics domain: **acoustic wave simulation**."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "introduces",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This milestone introduces the first real physics domain: **acoustic wave simulation**."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "objective",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The objective is to transform the application from a general-purpose engineering scene editor into a functional acoustic wave-field design and experimentation platform."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement real, mathematically grounded acoustic calculations and connect them to the existing scene, geometry, material, simulation, and rendering architectures."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Build",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Build on the existing codebase."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement a modular acoustic physics subsystem capable of:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "Creating",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Creating and configuring emitter arrays."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not attempt to implement a complete general-purpose acoustics solver in this milestone."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "milestone",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not attempt to implement a complete general-purpose acoustics solver in this milestone."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "integration",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The architecture must permit later integration of FDTD, FEM, BEM, transient propagation, diffraction, reflections, and more advanced physical models."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Create a dedicated acoustic physics module within the existing modular architecture."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "should use",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The initial implementation should use the analytical propagation approach described below."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Introduce",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Introduce a first-class scene object called an **Acoustic Emitter**."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "first-class",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Introduce a first-class scene object called an **Acoustic Emitter**."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "must support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Each emitter must support:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support at least these source models:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement an **Acoustic Array** scene object."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "configurable",
+        "strength": "strong",
+        "note": "",
+        "sentence": "An array is a collection of independently configurable emitters."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support these parametric array layouts:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Provide",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Provide array configuration controls:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "allow",
+        "strength": "strong",
+        "note": "",
+        "sentence": "For planar arrays, allow horizontal and vertical element counts and spacing to be configured independently."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Allow",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Allow individual elements to be selected and modified after array generation."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support acoustic properties including:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Allow",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Allow the user to configure temperature and other relevant medium parameters when supported by the chosen model."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "milestone",
+        "strength": "strong",
+        "note": "",
+        "sentence": "For this milestone, solid geometry may be present in the scene without necessarily influencing the calculated acoustic field."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement a real frequency-domain acoustic propagation model."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement this model with explicit documentation of:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement a consistent reference-amplitude convention so that changing emitter count does not silently change the meaning of displayed amplitude."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Provide",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Provide an appropriate near-field handling strategy."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "allow",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not allow division by zero or numerical instability when an evaluation point coincides with an emitter."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "should support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The initial engine should support:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "added",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Use a well-defined propagation interface so additional models can be added later."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement a reusable acoustic field evaluator."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "reusable",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement a reusable acoustic field evaluator."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Where the simple relationship is not valid, either implement the necessary particle-velocity calculation or clearly label the result as an approximation."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement the first real active acoustic focusing system."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "must be able",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The user must be able to select a target point in the 3D viewport or enter its coordinates numerically."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support two distinct control strategies:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Allow",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Allow amplitude control separately."
+      }
+    ],
+    "scores": {
+      "FEATURE": {
+        "head": 5,
+        "body": 91
+      },
+      "BUG": {
+        "head": 0,
+        "body": 8
+      },
+      "CRASH": {
+        "head": 0,
+        "body": 0
+      },
+      "REGRESSION": {
+        "head": 0,
+        "body": 0
+      },
+      "PERFORMANCE": {
+        "head": 0,
+        "body": 3
+      },
+      "REFACTOR": {
+        "head": 0,
+        "body": 0
+      },
+      "BUILD": {
+        "head": 0,
+        "body": 0
+      },
+      "DOCUMENTATION": {
+        "head": 0,
+        "body": 8
+      },
+      "INVESTIGATION": {
+        "head": 0,
+        "body": 9
+      },
+      "PROCESS-CHANGE": {
+        "head": 0,
+        "body": 1
+      }
+    },
+    "evidence_total": 125,
+    "validator": "scripts/request_classification.py"
+  }
+}

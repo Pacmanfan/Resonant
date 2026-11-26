@@ -1,0 +1,394 @@
+{
+  "request_id": "REQ-CHAT-20261126-004",
+  "source": "chat",
+  "type": "FEATURE",
+  "priority": "NORMAL",
+  "created": "2026-11-26T15:14:43-05:00",
+  "created_utc": "2026-11-26T20:14:43+00:00",
+  "id_date": "2026-11-26",
+  "timezone": "EST (UTC-05:00)",
+  "status": "inbox",
+  "original_text": "# PROMPT 8 \u2014 RESONANT: PASSIVE WAVE MANIPULATION, ACOUSTIC REFLECTORS, LENSES AND GEOMETRY-BASED FOCUSING\n\nYou are continuing development of **RESONANT \u2014 Wave Field Engineering Studio**.\n\nThis milestone introduces **passive physical wave manipulation**: using geometry, materials, and structural design to control how acoustic energy propagates through space.\n\nThe objective is to let users design physical structures that focus, redirect, concentrate, distribute, guide, or suppress acoustic energy.\n\nThis capability must integrate with the existing geometry system, material library, acoustic physics engine, simulation infrastructure, and 3D visualization system.\n\nDo not replace the existing acoustic engine. Extend it through well-defined interfaces and additional propagation models.\n\nThis is a scientific engineering capability, not a collection of decorative shapes with assumed focal properties.\n\n---\n\n## 1. Mission\n\nImplement a modular system called **Wave Manipulators**.\n\nWave Manipulators are physical structures designed to influence wave propagation through geometry, material properties, boundary conditions, or combinations of these mechanisms.\n\nThe initial focus is acoustic manipulation.\n\nThe architecture must eventually accommodate mechanical and electromagnetic wave manipulation without forcing all physical domains into the same equations or solver implementations.\n\nSupport three distinct manipulation strategies:\n\n**Passive manipulation**\n- Wave control through physical geometry and material properties.\n- No electronically controlled emitter phase or amplitude adjustments required.\n\n**Active manipulation**\n- Wave control through independently controlled emitters.\n- Uses amplitude, phase, timing, and waveform adjustments.\n\n**Hybrid manipulation**\n- Combines active emitter control with passive physical structures.\n\nThe user must be able to compare these approaches using the same target field and evaluation criteria.\n\n## 2. Wave Manipulator architecture\n\nCreate a dedicated Wave Manipulator subsystem.\n\nEach manipulator should have:\n\n- Stable ID.\n- Name.\n- Manipulator category.\n- Physical geometry reference.\n- Material assignments.\n- Transform.\n- Domain applicability.\n- Configuration parameters.\n- Boundary-condition information where relevant.\n- Optional simulation-specific properties.\n- Design and provenance metadata.\n\nSeparate the conceptual design object from its actual geometry and simulation representation.\n\nA manipulator may consist of:\n- One continuous surface.\n- A solid volume.\n- Multiple geometric components.\n- Multiple materials.\n- Layered or composite structures.\n- Periodic or repeating structures.\n\nThe architecture must support parametric designs and arbitrary custom geometry.\n\nAvoid creating one enormous class with every possible physical parameter.\n\nUse domain-specific extensions and solver-specific representations.\n\n## 3. Initial manipulator categories\n\nImplement the following conceptual categories:\n\n### A. Reflectors\n\n- Parabolic reflectors.\n- Elliptical reflectors.\n- Spherical reflectors.\n- Cylindrical reflectors.\n- Flat reflectors.\n- Custom reflector surfaces.\n\n### B. Acoustic lenses\n\n- Convex lenses.\n- Concave lenses.\n- Plano-convex lenses.\n- Plano-concave lenses.\n- Biconvex lenses.\n- Biconcave lenses.\n- Custom freeform lenses.\n\n### C. Waveguides\n\n- Straight waveguides.\n- Curved waveguides.\n- Tapered waveguides.\n- Branching waveguides.\n- Custom cross-section waveguides.\n\n### D. Resonant structures\n\n- Resonant cavities.\n- Helmholtz resonators.\n- Quarter-wave resonators.\n- Layered resonant structures.\n- Tunable cavity geometries.\n\n### E. Diffraction and engineered structures\n\n- Apertures.\n- Slits.\n- Perforated structures.\n- Periodic structures.\n- Phased geometric surfaces.\n- Metamaterial-inspired structures.\n- Phononic-crystal-inspired structures.\n\nThe initial implementation does not need to provide a complete physical solver for every category.\n\nHowever, the data model, geometry representation, and user interface should be designed to grow into these capabilities.\n\nClearly distinguish supported physical simulation from geometry-only design and future capabilities.\n\n## 4. Geometry-driven focal design\n\nA primary requirement is the ability to create a physical shape intended to focus acoustic energy at a specified point or region.\n\nThe user should be able to:\n\n1. Select a wave manipulator category.\n2. Specify the intended focal point.\n3. Specify the source position or source arrangement.\n4. Define the physical dimensions and constraints.\n5. Select material properties.\n6. Generate or modify the geometry.\n7. Run an appropriate simulation.\n8. Evaluate the actual resulting acoustic field.\n9. Compare the achieved focus against the intended target.\n\nSupport geometric parameters including:\n\n- Aperture diameter or width.\n- Aperture height.\n- Focal distance.\n- Curvature.\n- Surface profile.\n- Thickness.\n- Offset.\n- Orientation.\n- Material.\n- Layer count where applicable.\n\nThe geometry generator must use real mathematical definitions.\n\nFor example, implement a parabolic surface using an appropriate parametric representation.\n\nDo not simply create a generic bowl and label it parabolic.\n\nFor an ideal parabolic reflector, document the coordinate convention, focal location, and relationship between curvature and focal length.\n\nThe system must make clear which geometric design assumptions are idealized.\n\n## 5. Elliptical reflector design\n\nImplement an elliptical reflector generator.\n\nAn ellipse has two focal points.\n\nAllow the user to specify:\n\n- First focal point.\n- Second focal point.\n- Major axis.\n- Minor axis.\n- Aperture limits.\n- Reflector thickness.\n- Material.\n- Orientation.\n\nFor an ideal ellipse, a wave originating at one focus can be reflected toward the other under the appropriate reflection assumptions.\n\nGenerate the actual elliptical geometry from the selected parameters.\n\nAllow both two-dimensional elliptical cross-sections and three-dimensional revolved or extruded implementations where appropriate.\n\nProvide a useful visualization of the two focal locations.\n\nThe user should be able to place a source at one focus and an evaluation target at the other.\n\nDo not guarantee perfect focusing in a real physical simulation. The actual result depends on frequency, aperture, wavelength, source directivity, boundary conditions, and material behavior.\n\n## 6. Acoustic lens design\n\nImplement parametric acoustic lens geometry.\n\nThe lens model must distinguish between:\n\n- Physical shape.\n- Lens material.\n- Surrounding propagation medium.\n- Acoustic properties.\n- Frequency-dependent behavior.\n\nProvide controls for:\n\n- Lens thickness.\n- Curvature.\n- Diameter or aperture.\n- Material.\n- Source location.\n- Intended focal distance.\n- Orientation.\n\nAllow the user to design a lens to focus or redirect an incident acoustic wave.\n\nWhere practical, provide an analytical first-order design estimate based on sound-speed contrast and geometry.\n\nClearly distinguish this approximate estimate from a full-wave solution.\n\nDo not assume optical lens equations are automatically valid for all acoustic lens configurations.\n\nThe physical model must account for the relevant acoustic impedance and sound-speed relationships when implementing transmission and refraction.\n\n## 7. Waveguide design\n\nIntroduce a parametric waveguide model.\n\nSupport:\n\n- Circular cross-section.\n- Rectangular cross-section.\n- Elliptical cross-section.\n- Custom cross-section.\n- Straight and curved paths.\n- Tapered geometry.\n\nProvide geometry controls for:\n\n- Length.\n- Width.\n- Height.\n- Radius.\n- Bend radius.\n- Wall thickness.\n- Cross-sectional profile.\n- Material.\n- Boundary properties.\n\nThe initial release may focus on geometry creation and basic analytical modal estimates where appropriate.\n\nPrepare for later numerical waveguide simulation.\n\nDo not claim arbitrary waveguides are physically modeled merely because their geometry is visible.\n\n## 8. Resonant cavities\n\nIntroduce resonant cavity design objects.\n\nSupport initial geometry for:\n\n- Rectangular cavities.\n- Cylindrical cavities.\n- Spherical cavities.\n- Custom enclosed volumes.\n\nAllow users to configure dimensions, material properties, and boundary characteristics.\n\nWhere applicable, calculate analytical resonant-frequency estimates for idealized geometries.\n\nDocument the assumptions behind these estimates.\n\nPrepare for later eigenmode and full-wave numerical analysis.\n\nThe system should eventually support mode visualization, nodal regions, antinodes, and frequency-response curves.\n\n## 9. Geometry and material interaction\n\nExtend the existing acoustic material architecture.\n\nThe simulation must distinguish between:\n\n- Propagation medium.\n- Reflector material.\n- Lens material.\n- Waveguide wall material.\n- Cavity boundary material.\n- Absorptive or damping material.\n\nWhere supported, model:\n\n- Acoustic impedance.\n- Density.\n- Sound speed.\n- Absorption.\n- Attenuation.\n- Transmission.\n- Reflection.\n- Frequency dependence.\n- Boundary impedance.\n\nDo not invent physical constants.\n\nMaterial properties must have provenance and validity information.\n\nSupport idealized boundary conditions where necessary, including:\n\n- Rigid boundary.\n- Pressure-release boundary.\n- Impedance boundary.\n- Absorbing boundary.\n\nClearly identify approximations and unsupported boundary behaviors.\n\n## 10. Physical solver integration\n\nThe current analytical free-field acoustic solver is not sufficient for all passive structures.\n\nIntroduce solver selection based on the physical problem.\n\nInvestigate and integrate appropriate numerical approaches.\n\nPotential methods include:\n\n- Geometrical acoustics and ray tracing.\n- Image-source approximations.\n- Boundary element methods.\n- Finite element methods.\n- Finite-difference time-domain methods.\n- Angular spectrum propagation.\n- Modal analysis.\n\nDo not attempt to force every method into one universal solver.\n\nChoose the method according to:\n- Frequency.\n- Wavelength.\n- Geometry.\n- Material behavior.\n- Boundary conditions.\n- Required accuracy.\n- Computational cost.\n\nFor the first implementation, prioritize a practical route to real reflector simulation.\n\nA reasonable staged approach is:\n\n1. Validate ideal reflector geometry analytically.\n2. Implement a suitable ray-based approximation for reflector behavior.\n3. Establish a full-wave solver integration strategy.\n4. Implement or integrate a numerical solver for selected structures.\n5. Validate numerical results against analytical and independent reference cases.\n\nDo not present ray tracing as a full-wave solution.\n\nRay methods may be appropriate for some high-frequency, large-geometry scenarios but can fail when diffraction, interference, or wavelength-scale features matter.\n\nThe user interface must identify the selected solver and its assumptions.\n\n## 11. Passive focusing\n\nImplement passive focal evaluation.\n\nFor each passive manipulator, allow the user to specify:\n\n- Source location.\n- Source frequency.\n- Source orientation.\n- Source model.\n- Target region.\n- Propagation medium.\n\nCalculate or simulate the resulting field using the appropriate available model.\n\nMeasure:\n\n- Peak field location.\n- Peak field magnitude.\n- Focal-region dimensions where meaningful.\n- Focal displacement from the intended target.\n- Sidelobe behavior where applicable.\n- Energy distribution.\n- Efficiency metrics where physically meaningful.\n\nDo not use a single universal definition of focusing efficiency across unrelated physical configurations.\n\nDocument the calculation and units for every reported metric.\n\n## 12. Hybrid active/passive focusing\n\nIntegrate Wave Manipulators with the active acoustic focusing system from Prompt 7.\n\nAllow users to combine:\n\n- Parametric emitter arrays.\n- Individually controlled emitters.\n- Passive reflectors.\n- Acoustic lenses.\n- Waveguides.\n- Other supported structures.\n\nThe workflow should be:\n\n1. Create an emitter or array.\n2. Add a physical wave manipulator.\n3. Configure the geometry and material.\n4. Define one or more target points or regions.\n5. Select active control strategy.\n6. Calculate emitter phase, amplitude, and timing.\n7. Simulate the combined system.\n8. Evaluate the resulting field.\n\nThe propagation solver must account for the supported physical interaction between emitters and manipulator geometry.\n\nDo not simply calculate a free-field array and overlay a reflector mesh.\n\nIf the current solver cannot account for a particular interaction, state that limitation and prevent misleading hybrid results.\n\n## 13. Geometry optimization\n\nIntroduce the architecture for geometry-based optimization.\n\nThe long-term objective is to allow users to specify a desired acoustic field and have Resonant search for physical geometry that produces it.\n\nSupport optimization variables such as:\n\n- Reflector curvature.\n- Focal distance.\n- Aperture.\n- Surface profile.\n- Lens thickness.\n- Lens curvature.\n- Waveguide dimensions.\n- Cavity dimensions.\n- Material selection where appropriate.\n- Layer thickness.\n- Structural periodicity.\n\nDefine optimization objectives such as:\n\n- Maximize pressure at a target.\n- Minimize focal-region width.\n- Reduce sidelobes.\n- Improve field uniformity.\n- Minimize unwanted field regions.\n- Improve energy concentration.\n- Minimize material volume.\n- Respect manufacturing constraints.\n\nFor this milestone, establish the optimizer interfaces and implement a limited demonstration using a tractable analytical or ray-based model.\n\nDo not attempt expensive unrestricted topology optimization prematurely.\n\n## 14. Manufacturing and geometry constraints\n\nPrepare for manufacturable physical designs.\n\nSupport constraints including:\n\n- Minimum wall thickness.\n- Maximum dimensions.\n- Minimum feature size.\n- Minimum curvature radius.\n- Layer thickness.\n- Material availability.\n- Symmetry.\n- Periodicity.\n- Mesh quality.\n\nKeep manufacturing constraints separate from physical simulation parameters.\n\nEventually, users should be able to optimize a structure while enforcing fabrication constraints.\n\nDo not silently modify geometry to satisfy constraints. Report violations and proposed corrections.\n\n## 15. Visualization\n\nExtend the OpenGL viewport to visualize physical wave manipulators and their acoustic behavior.\n\nImplement:\n\n- Reflector geometry.\n- Lens geometry.\n- Waveguide geometry.\n- Cavity geometry.\n- Material visualization.\n- Focal-point markers.\n- Source and target markers.\n- Wave propagation paths where appropriate.\n- Field slices.\n- Pressure distribution.\n- Phase distribution.\n- Before/after comparison.\n\nSupport visual distinction between:\n\n- Physical geometry.\n- Generated simulation mesh.\n- Numerical field data.\n- Intended focal points.\n- Calculated focal locations.\n\nThe user must be able to see where the actual simulated field differs from the intended result.\n\nDo not use decorative wave graphics as substitutes for calculated data.\n\n## 16. Comparison and analysis\n\nImplement a comparison workflow for:\n\n- Free-field propagation.\n- Active focusing.\n- Passive focusing.\n- Hybrid focusing.\n\nAllow the user to compare multiple design configurations.\n\nWhere supported, calculate and display:\n\n- Peak pressure.\n- Peak location.\n- Focal width.\n- Focal displacement.\n- Sidelobe level.\n- Field uniformity.\n- Efficiency.\n- Computational cost.\n\nUse metrics only when physically meaningful for the selected solver and domain.\n\nRetain the original simulation configuration for each comparison.\n\n## 17. Example projects\n\nCreate reproducible demonstration projects.\n\n**Example A \u2014 Parabolic reflector**\n- Point source.\n- Parametric parabolic reflector.\n- Intended focal region.\n- Simulated field.\n- Focal-location analysis.\n\n**Example B \u2014 Elliptical reflector**\n- Source at first focus.\n- Target at second focus.\n- Reflector geometry.\n- Field visualization.\n\n**Example C \u2014 Acoustic lens**\n- Source.\n- Lens geometry.\n- Surrounding medium.\n- Intended focal point.\n- Calculated or simulated result using an explicitly documented model.\n\n**Example D \u2014 Hybrid focusing**\n- Planar emitter array.\n- Passive reflector.\n- Target point.\n- Active phase compensation.\n- Combined field evaluation.\n\n**Example E \u2014 Geometry optimization**\n- Parametric reflector.\n- Adjustable curvature or focal length.\n- Target field objective.\n- Optimization result.\n- Comparison against the original design.\n\nEvery example must use the actual implemented physics model.\n\nClearly label analytical, approximate, and full-wave results.\n\n## 18. Validation\n\nImplement validation cases for:\n\n- Parabolic geometry and focal properties.\n- Ellipse geometry and focal relationships.\n- Reflection direction under idealized assumptions.\n- Lens geometry.\n- Basic impedance relationships.\n- Boundary-condition behavior where implemented.\n- Ray-based propagation.\n- Numerical solver behavior where integrated.\n- Passive focusing.\n- Hybrid focusing.\n\nUse independent analytical references wherever possible.\n\nFor numerical solvers, include convergence and mesh-refinement studies.\n\nDemonstrate that results improve or stabilize as numerical resolution increases.\n\nDocument known limitations.\n\n## 19. Documentation\n\nCreate or update:\n\n- WAVE_MANIPULATORS.md\n- REFLECTOR_DESIGN.md\n- ACOUSTIC_LENSES.md\n- WAVEGUIDES.md\n- RESONANT_CAVITIES.md\n- PASSIVE_FOCUSING.md\n- HYBRID_FOCUSING.md\n- GEOMETRY_OPTIMIZATION.md\n- PASSIVE_WAVE_VALIDATION.md\n- IMPLEMENTATION_STATUS.md\n- DECISIONS.md\n\nDocument equations, geometry conventions, physical assumptions, solver selection, and numerical limitations.\n\n## 20. Implementation sequence\n\n**Phase A \u2014 Wave Manipulator architecture**\n- Domain model.\n- Manipulator identifiers.\n- Geometry references.\n- Material relationships.\n- Solver interfaces.\n\n**Phase B \u2014 Parametric reflector geometry**\n- Parabolic.\n- Elliptical.\n- Spherical.\n- Cylindrical.\n- Custom surfaces.\n\n**Phase C \u2014 Passive acoustic modeling**\n- Boundary conditions.\n- Reflection behavior.\n- Ray-based approximation.\n- Analytical validation.\n\n**Phase D \u2014 Acoustic lens design**\n- Parametric lens geometry.\n- Material relationships.\n- Analytical estimates.\n- Initial physical modeling.\n\n**Phase E \u2014 Waveguides and cavities**\n- Geometry generators.\n- Basic analytical estimates.\n- Solver integration interfaces.\n\n**Phase F \u2014 Hybrid focusing**\n- Emitter arrays.\n- Passive structures.\n- Active compensation.\n- Combined field calculation.\n\n**Phase G \u2014 Geometry optimization**\n- Design variables.\n- Objectives.\n- Constraints.\n- Initial optimizer.\n- Result comparison.\n\n**Phase H \u2014 Validation and documentation**\n- Tests.\n- Numerical validation.\n- Example projects.\n- Performance assessment.\n- Documentation.\n\nImplement incrementally. Do not attempt to implement every solver and manipulator type in a single development pass.\n\n## 21. Acceptance criteria\n\nThis milestone is complete only when:\n\n1. Users can create Wave Manipulator objects.\n2. Users can generate parametric parabolic reflectors.\n3. Users can generate parametric elliptical reflectors.\n4. Focal geometry is mathematically correct.\n5. Users can create and configure acoustic lenses.\n6. Material assignments are associated with the appropriate physical models.\n7. The application distinguishes supported physical calculations from geometry-only features.\n8. At least one passive reflector propagation model produces real calculated field results.\n9. The calculated focal behavior can be validated.\n10. Users can inspect the resulting field in the 3D viewport.\n11. Passive focusing can be compared with free-field propagation.\n12. The architecture supports hybrid active/passive focusing.\n13. At least one hybrid example produces physically meaningful calculated results.\n14. Geometry optimization can demonstrate an actual objective-driven improvement.\n15. Numerical limitations and assumptions are documented.\n16. Automated tests pass.\n17. Existing active acoustic focusing remains functional.\n18. All example projects are reproducible.\n\n## 22. Critical development rules\n\n- Geometry alone is not proof of physical focusing.\n- Do not assume an ideal reflector remains ideal under every frequency and source condition.\n- Do not treat ray tracing as full-wave simulation.\n- Do not apply optical lens equations indiscriminately to acoustics.\n- Do not pretend unsupported material interactions are simulated.\n- Do not claim hybrid focusing works if the solver ignores the passive structure.\n- Do not fabricate material data.\n- Preserve the distinction between design intent and calculated physical behavior.\n- Keep solver implementations modular.\n- Preserve the existing acoustic engine.\n- Validate numerical results independently.\n- Record architectural decisions and limitations.\n\n**The goal is to make Resonant capable of designing and evaluating physical structures that manipulate acoustic energy: reflectors, lenses, waveguides, cavities, and hybrid active/passive systems. The geometry must be real, the calculations must be grounded in physics, and the resulting field must be measurable and verifiable.**",
+  "file": "requests/inbox/2026-11-26-prompt-8-resonant-passive-wave-req-chat-20261126-004.md",
+  "attachments": [],
+  "context": "Fourth ticket, submitted by the user in chat (submit-only; the user asked not to claim or process tickets yet). Depends on REQ-CHAT-20261126-003 (acoustic physics engine, 'Prompt 7'), which in turn depends on REQ-CHAT-20261126-002 (V0.1 application foundation). Product vision: REQ-CHAT-20261126-001.",
+  "text_sha256": "8a3354f5d8518d4308534f0138bd09332d89391eebbba785b3c310f07536413c",
+  "classification": {
+    "proposed_type": "FEATURE",
+    "proposed_source": "override",
+    "normalized_type": "FEATURE",
+    "heuristic_type": "FEATURE",
+    "final_type": "FEATURE",
+    "confidence": "high",
+    "validation": "PASS",
+    "classifier_reason": "request statement is framed as feature: Implement, Support, must be able",
+    "correction_reason": null,
+    "normalization_note": null,
+    "evidence": [
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "milestone",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This milestone introduces **passive physical wave manipulation**: using geometry, materials, and structural design to control how acoustic energy propagates through space."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "introduces",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This milestone introduces **passive physical wave manipulation**: using geometry, materials, and structural design to control how acoustic energy propagates through space."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "objective",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The objective is to let users design physical structures that focus, redirect, concentrate, distribute, guide, or suppress acoustic energy."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capability",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This capability must integrate with the existing geometry system, material library, acoustic physics engine, simulation infrastructure, and 3D visualization system."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "integrate",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This capability must integrate with the existing geometry system, material library, acoustic physics engine, simulation infrastructure, and 3D visualization system."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Extend",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Extend it through well-defined interfaces and additional propagation models."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capability",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This is a scientific engineering capability, not a collection of decorative shapes with assumed focal properties."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement a modular system called **Wave Manipulators**."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support three distinct manipulation strategies:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "must be able",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The user must be able to compare these approaches using the same target field and evaluation criteria."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Create a dedicated Wave Manipulator subsystem."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Design",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Design and provenance metadata."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "must support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The architecture must support parametric designs and arbitrary custom geometry."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "creating",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Avoid creating one enormous class with every possible physical parameter."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement the following conceptual categories:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "need to",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The initial implementation does not need to provide a complete physical solver for every category."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "provide",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The initial implementation does not need to provide a complete physical solver for every category."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capabilities",
+        "strength": "strong",
+        "note": "",
+        "sentence": "However, the data model, geometry representation, and user interface should be designed to grow into these capabilities."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capabilities",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Clearly distinguish supported physical simulation from geometry-only design and future capabilities."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "ability to",
+        "strength": "strong",
+        "note": "",
+        "sentence": "A primary requirement is the ability to create a physical shape intended to focus acoustic energy at a specified point or region."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "A primary requirement is the ability to create a physical shape intended to focus acoustic energy at a specified point or region."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "should be able to",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The user should be able to:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Generate",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Generate or modify the geometry."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support geometric parameters including:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "must use",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The geometry generator must use real mathematical definitions."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "For example, implement a parabolic surface using an appropriate parametric representation."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not simply create a generic bowl and label it parabolic."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement an elliptical reflector generator."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Allow",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Allow the user to specify:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Generate",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Generate the actual elliptical geometry from the selected parameters."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Allow",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Allow both two-dimensional elliptical cross-sections and three-dimensional revolved or extruded implementations where appropriate."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Provide",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Provide a useful visualization of the two focal locations."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "should be able to",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The user should be able to place a source at one focus and an evaluation target at the other."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement parametric acoustic lens geometry."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Provide",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Provide controls for:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Allow",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Allow the user to design a lens to focus or redirect an incident acoustic wave."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "provide",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Where practical, provide an analytical first-order design estimate based on sound-speed contrast and geometry."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "implementing",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The physical model must account for the relevant acoustic impedance and sound-speed relationships when implementing transmission and refraction."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Introduce",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Introduce a parametric waveguide model."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support:"
+      }
+    ],
+    "scores": {
+      "FEATURE": {
+        "head": 3,
+        "body": 90
+      },
+      "BUG": {
+        "head": 0,
+        "body": 5
+      },
+      "CRASH": {
+        "head": 0,
+        "body": 0
+      },
+      "REGRESSION": {
+        "head": 0,
+        "body": 0
+      },
+      "PERFORMANCE": {
+        "head": 0,
+        "body": 4
+      },
+      "REFACTOR": {
+        "head": 1,
+        "body": 16
+      },
+      "BUILD": {
+        "head": 0,
+        "body": 0
+      },
+      "DOCUMENTATION": {
+        "head": 0,
+        "body": 7
+      },
+      "INVESTIGATION": {
+        "head": 2,
+        "body": 11
+      },
+      "PROCESS-CHANGE": {
+        "head": 0,
+        "body": 0
+      }
+    },
+    "evidence_total": 139,
+    "validator": "scripts/request_classification.py"
+  }
+}
