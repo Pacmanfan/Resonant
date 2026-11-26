@@ -36,7 +36,8 @@ A higher layer may use a lower one; never the reverse.
 | `commands` | undoable commands and the undo/redo stack |
 | `project` | the project document, JSON persistence, validation, schema versions and migration |
 | `simulation` | simulation configuration, solver/domain identifiers, jobs (states, progress, cancellation), result metadata |
-| physics domains | one module per domain — `acoustics` first — with sources, propagation models, field evaluation, inverse design and numerical solvers |
+| `acoustics` | the acoustic domain: emitters, arrays, targets, probes, regions; medium; propagation models; field evaluation; focusing; inverse design; field jobs and results (`docs/acoustics/`) |
+| later physics domains | one module per domain, each with its own equations, property sets and solvers |
 
 ## Rendering and application (`src/render`, `src/app`)
 
@@ -45,11 +46,13 @@ A higher layer may use a lower one; never the reverse.
 | `render/Camera` | orbit camera mathematics and pick rays; no OpenGL calls |
 | `render/ShaderLibrary`, `render/GpuMesh` | shader programs with reported build errors; meshes and line buffers on the GPU |
 | `render/RenderLayer`, `render/Layers` | a frame is a sequence of layers: grid and axes, lit meshes, marker lines; new visualizations are new layers |
+| `render/FieldLayer` | draws a complex field on a grid (plane or volume slices) from a texture; quantity, scale and animation phase are uniforms |
 | `render/Renderer` | lifecycle (initialize, resize, render, shutdown), requires OpenGL 4.5 Core |
 | `app/DocumentController` | the project, the command stack, the selection and the jobs; the only path from the user interface to the core |
 | `app/SceneRenderBridge` | scene objects to draw items; cached display meshes; picking |
 | `app/ViewportWidget` | the OpenGL widget: navigation and selection input |
 | `app/SceneTreePanel`, `app/PropertiesPanel`, `app/AnalysisPanel`, `app/MaterialsDialog` | the panels and the material editor |
+| `app/AcousticController`, `app/AcousticsPanel`, `app/AcousticEditors`, `app/FieldAnalysisPanel`, `app/AcousticMarkers` | the acoustic user interface: creating objects, focusing, inverse design, running and displaying fields, analysis |
 | `app/DisplayUnits` | the single boundary between displayed units and SI |
 | `app/MainWindow` | wires the actions of `forms/MainWindow.ui` to the controller |
 

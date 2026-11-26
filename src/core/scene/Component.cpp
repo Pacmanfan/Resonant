@@ -4,9 +4,19 @@
 
 namespace resonant {
 
+// Defined by the modules that own component types. Registration is explicit
+// because a static library drops self-registering objects nobody references.
+namespace acoustics {
+void registerAcousticComponents(ComponentRegistry& registry);
+}
+
 ComponentRegistry& ComponentRegistry::instance()
 {
-    static ComponentRegistry registry;
+    static ComponentRegistry registry = [] {
+        ComponentRegistry created;
+        acoustics::registerAcousticComponents(created);
+        return created;
+    }();
     return registry;
 }
 

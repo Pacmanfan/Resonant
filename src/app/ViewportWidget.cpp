@@ -36,6 +36,13 @@ void ViewportWidget::setController(DocumentController* controller)
     refresh();
 }
 
+void ViewportWidget::setField(const render::ComplexFieldGrid& grid, const render::FieldDisplay& display)
+{
+    renderer_.field().setField(grid);
+    renderer_.field().setDisplay(display);
+    update();
+}
+
 void ViewportWidget::refresh()
 {
     frameStale_ = true;

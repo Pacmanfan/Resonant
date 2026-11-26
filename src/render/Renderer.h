@@ -4,6 +4,7 @@
 // and knows nothing about scene objects or widgets.
 #pragma once
 
+#include "FieldLayer.h"
 #include "Layers.h"
 
 #include <QOpenGLContext>
@@ -37,6 +38,7 @@ public:
     const GridLayer& grid() const { return *grid_; }
     MeshLayer& meshes() { return *meshes_; }
     LineLayer& lines() { return *lines_; }
+    FieldLayer& field() { return *field_; }
 
     // Adds a layer drawn after the built-in ones. If the renderer is
     // already initialized the layer is initialized at once (the context
@@ -49,6 +51,7 @@ private:
     GridLayer* grid_ = nullptr;
     MeshLayer* meshes_ = nullptr;
     LineLayer* lines_ = nullptr;
+    FieldLayer* field_ = nullptr;
     std::vector<std::unique_ptr<RenderLayer>> layers_;
     int width_ = 1;
     int height_ = 1;

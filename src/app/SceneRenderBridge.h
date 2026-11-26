@@ -11,6 +11,7 @@
 
 #include <QList>
 
+#include <functional>
 #include <unordered_map>
 
 class SceneRenderBridge {
@@ -28,6 +29,15 @@ public:
         std::shared_ptr<const resonant::TriangleMesh> mesh;
         resonant::Mat4 model;
     };
+
+    // Adds what an object needs beyond its own geometry: markers for
+    // objects without a shape (emitters, targets, probes), outlines, axes.
+    // A decorator appends draw items and lines to the frame and, for what
+    // should be clickable, pickables. Domain user interfaces install them.
+    using Decorator = std::function<void(const resonant::Scene& scene, const resonant::SceneObject& object,
+                                         const resonant::Mat4& world, bool selected, Frame& frame,
+                                         std::vector<Pickable>& pickables)>;
+    void addDecorator(Decorator decorator) { decorators_.push_back(std::move(decorator)); }
 
     Frame build(const resonant::Scene& scene, const QList<resonant::Id>& selection);
     const std::vector<Pickable>& pickables() const { return pickables_; }
@@ -47,4 +57,5 @@ private:
 
     std::unordered_map<resonant::Id, CachedMesh> cache_;
     std::vector<Pickable> pickables_;
+    std::vector<Decorator> decorators_;
 };

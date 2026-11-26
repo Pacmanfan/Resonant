@@ -26,9 +26,6 @@ SceneRenderBridge::Frame SceneRenderBridge::build(const Scene& scene, const QLis
         alive.insert(object.id());
         if (!scene.isEffectivelyVisible(object))
             return;
-        const auto mesh = meshFor(object);
-        if (!mesh || mesh->empty())
-            return;
 
         // An object is drawn selected when it or one of its ancestors is.
         bool selected = false;
@@ -36,21 +33,32 @@ SceneRenderBridge::Frame SceneRenderBridge::build(const Scene& scene, const QLis
             if (selection.contains(node->id()))
                 selected = true;
 
-        render::DrawItem item;
-        item.mesh = mesh;
-        item.model = scene.worldMatrix(object);
-        item.selected = selected;
-        frame.items.push_back(item);
-        pickables_.push_back({object.id(), mesh, item.model});
+        const Mat4 world = scene.worldMatrix(object);
+        const size_t firstItem = frame.items.size();
+        if (const auto mesh = meshFor(object); mesh && !mesh->empty()) {
+            render::DrawItem item;
+            item.mesh = mesh;
+            item.model = world;
+            item.selected = selected;
+            frame.items.push_back(item);
+            pickables_.push_back({object.id(), mesh, world});
+        }
+        for (const Decorator& decorator : decorators_)
+            decorator(scene, object, world, selected, frame, pickables_);
 
-        const Aabb local = mesh->bounds();
-        for (int corner = 0; corner < 8; ++corner) {
-            const Vec3 point((corner & 1) ? local.max.x() : local.min.x(), (corner & 2) ? local.max.y() : local.min.y(),
-                             (corner & 4) ? local.max.z() : local.min.z());
-            const Vec3 world = transformPoint(item.model, point);
-            frame.bounds.extend(world);
-            if (selected)
-                frame.selectionBounds.extend(world);
+        // Everything drawn for this object counts towards the bounds.
+        for (size_t i = firstItem; i < frame.items.size(); ++i) {
+            const render::DrawItem& item = frame.items[i];
+            const Aabb local = item.mesh->bounds();
+            for (int corner = 0; corner < 8; ++corner) {
+                const Vec3 point((corner & 1) ? local.max.x() : local.min.x(),
+                                 (corner & 2) ? local.max.y() : local.min.y(),
+                                 (corner & 4) ? local.max.z() : local.min.z());
+                const Vec3 worldPoint = transformPoint(item.model, point);
+                frame.bounds.extend(worldPoint);
+                if (selected)
+                    frame.selectionBounds.extend(worldPoint);
+            }
         }
     });
 

@@ -13,7 +13,10 @@
 #include <functional>
 #include <memory>
 
+class AcousticController;
+class AcousticsPanel;
 class AnalysisPanel;
+class FieldAnalysisPanel;
 class DisplayUnits;
 class DocumentController;
 class PropertiesPanel;
@@ -36,6 +39,9 @@ public:
     SceneTreePanel& sceneTree();
     PropertiesPanel& properties();
     AnalysisPanel& analysis();
+    AcousticController& acoustics() { return *acoustics_; }
+    AcousticsPanel& acousticsPanel();
+    FieldAnalysisPanel& fieldAnalysis() { return *fieldAnalysis_; }
     QAction* action(const QString& objectName) const;
 
     // File operations without dialogs (the dialog-driven actions call these).
@@ -61,6 +67,7 @@ protected:
 
 private:
     void connectActions();
+    void connectAcoustics();
     void updateDocumentState();
     void updateSelectionState();
     void fillAssignMaterialMenu();
@@ -74,6 +81,8 @@ private:
     std::unique_ptr<Ui::MainWindow> ui_;
     DocumentController* controller_ = nullptr;
     DisplayUnits* units_ = nullptr;
+    AcousticController* acoustics_ = nullptr;
+    FieldAnalysisPanel* fieldAnalysis_ = nullptr;
     QActionGroup* unitGroup_ = nullptr;
     QByteArray defaultLayout_;
     QString graphicsDescription_ = QStringLiteral("not initialized yet");

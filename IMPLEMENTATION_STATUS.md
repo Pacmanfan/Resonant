@@ -10,7 +10,7 @@ states:
 * **Deferred** — deliberately left to a later milestone, with the reason.
 
 Milestones and the requests that deliver them are in
-`docs/architecture/roadmap.md`. Last updated for REQ-CHAT-20261126-002.
+`docs/architecture/roadmap.md`. Last updated for REQ-CHAT-20261126-003.
 
 ## Application foundation (V0.1) — `docs/requirements/application_foundation.md`
 
@@ -51,13 +51,46 @@ Milestones and the requests that deliver them are in
 | Structured logging, Console panel, Diagnostics panel | Tested | |
 | Example project `examples/foundation/primitives.resonant` | Tested | loaded by a test |
 
+## Acoustic engine — `docs/requirements/acoustics.md`, `docs/acoustics/`
+
+| Capability | State | Notes |
+|---|---|---|
+| Acoustic emitter object (frequency, amplitude, phase, delay, directivity, active, radius) | Tested | radiates along local +Z |
+| Directivity: omnidirectional, cardioid family, baffled circular piston | Tested | the piston pattern is a far-field formula used at all distances |
+| Measured transducer response, phase response, impedance, calibration | Missing | an emitter can be marked as a physical transducer and name a profile; nothing is modelled from it |
+| Waveform other than a sinusoid | Missing | the field is a single-frequency harmonic solution; the waveform field is a label |
+| Arrays: linear, planar, circular, cylindrical, spherical, custom | Tested | spherical is a full-sphere Fibonacci lattice |
+| Per-element overrides that survive layout changes | Tested | keyed by element index |
+| Selecting one array element in the viewport | Missing | elements are edited in the array editor's table (first 512) |
+| Propagation medium: ideal-gas air, nominal water, custom | Tested | temperature dependence for air only; attenuation is one user-entered coefficient |
+| Analytical free-field propagation, superposition | Tested | see `docs/acoustics/ACOUSTIC_VALIDATION.md` |
+| Reflection, transmission, refraction, diffraction, scattering | Missing | objects do not affect the field; every result states this |
+| Pressure, magnitude, phase, RMS, SPL | Tested | |
+| Active intensity from particle velocity | Tested | exact for omnidirectional sources, approximate with directivity (flagged) |
+| Focusing by phase and by true time delay; tapers | Tested | |
+| Target points, weights, suppression | Tested | |
+| Line, plane, surface, volume targets | Partial | stored in the data model; no solver uses them, and they are reported as unused |
+| Inverse design for multiple point targets (regularized least squares) | Tested | amplitude and phase control at one frequency |
+| Phase-only inverse design | Missing | |
+| Field regions: planes XY / XZ / YZ, rotated planes, volumes | Tested | |
+| Preflight estimate, memory limit, resolution warnings | Tested | |
+| Multi-threaded, cancellable field job with progress | Tested | |
+| Field maps and volume slices: magnitude, phase, instantaneous, relative intensity | Tested | |
+| Animation of instantaneous pressure from the stored field | Tested | |
+| Isosurfaces, volume rendering | Missing | |
+| Colour scale: normalized or absolute, stated in words | Tested | no colour-bar legend is drawn in the viewport yet |
+| Field analysis panel, probes, CSV / JSON export | Tested | |
+| Result metadata, results as snapshots, several results per session | Tested | |
+| Side-by-side or difference view of two results | Missing | results are compared by switching between them |
+| Saving sampled fields in the project | Deferred | the project stores configuration and run records; fields are recomputed (binary storage comes with the numerical-solver milestone) |
+| Example projects A to D | Tested | |
+
 ## Not part of any completed milestone
 
 | Capability | State | Notes |
 |---|---|---|
-| Any physics solver (acoustic, mechanical, electromagnetic) | Missing | requests 003 to 007 |
-| Emitters, arrays, targets, probes, simulation regions | Missing | request 003 |
-| Field visualization | Missing | request 003 |
+| Numerical (full-wave) acoustic solvers | Missing | request 005 |
+| Mechanical and electromagnetic solvers | Missing | requests 006 and 007 |
 | Wave manipulators, reflectors, lenses | Missing | request 004 |
 | Geometry import from CAD or mesh files | Missing | no request covers it yet; it is part of V1 (RES-PRODUCT-015) |
 | Python scripting | Missing | request 010 |

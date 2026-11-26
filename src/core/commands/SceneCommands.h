@@ -105,3 +105,33 @@ private:
 };
 
 }  // namespace resonant
+
+namespace resonant {
+
+class Project;
+
+// Replaces one entry of a project's "extensions" (project-level settings of
+// a feature, such as the acoustic medium). Undo restores the previous
+// entry, or removes it when there was none.
+class SetProjectExtensionCommand final : public Command {
+public:
+    using Changed = std::function<void()>;
+
+    SetProjectExtensionCommand(Project& project, std::string key, std::string newJsonText, std::string description,
+                               Changed changed = {});
+
+    std::string description() const override { return description_; }
+    Status execute() override;
+    Status undo() override;
+
+private:
+    Project& project_;
+    std::string key_;
+    std::string newText_;   // JSON text, so this header needs no JSON type
+    std::string oldText_;
+    bool hadOld_ = false;
+    std::string description_;
+    Changed changed_;
+};
+
+}  // namespace resonant

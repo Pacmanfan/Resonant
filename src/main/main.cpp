@@ -1,6 +1,9 @@
 // Resonant - Wave Field Engineering Studio. Program entry point.
 #include "Application.h"
+#include "AcousticController.h"
+#include "AcousticsPanel.h"
 #include "MainWindow.h"
+#include "ViewportWidget.h"
 #include "foundation/Log.h"
 
 #include <QApplication>
@@ -31,6 +34,10 @@ int main(int argc, char** argv)
         QStringLiteral("screenshot"),
         QStringLiteral("Save an image of the main window to <file> once it is shown, then exit."), QStringLiteral("file"));
     parser.addOption(screenshotOption);
+    const QCommandLineOption runFieldOption(
+        QStringLiteral("run-field"),
+        QStringLiteral("Run the field simulation of the project's first field region after opening it."));
+    parser.addOption(runFieldOption);
     parser.process(application);
 
     int result = 0;
@@ -44,7 +51,7 @@ int main(int argc, char** argv)
                 QMessageBox::critical(&window, QStringLiteral("Could not open the project"),
                                       QString::fromStdString(status.message()));
         }
-        if (parser.isSet(screenshotOption)) {
+        const auto capture = [&window, &parser, &screenshotOption] {
             // Let the window lay out and the viewport draw before capturing.
             const QString file = parser.value(screenshotOption);
             QTimer::singleShot(1500, &window, [&window, file] {
@@ -55,6 +62,19 @@ int main(int argc, char** argv)
                 window.close();
                 QApplication::exit(saved ? 0 : 1);
             });
+        };
+        bool waitingForField = false;
+        if (parser.isSet(runFieldOption)) {
+            window.viewport().frameAll();
+            waitingForField = window.acousticsPanel().runSimulation();
+            if (!waitingForField)
+                resonant::logError("application", "--run-field: the project has no field region that can be simulated");
+        }
+        if (parser.isSet(screenshotOption)) {
+            if (waitingForField)
+                QObject::connect(&window.acoustics(), &AcousticController::resultsChanged, &window, capture);
+            else
+                capture();
         }
         result = QApplication::exec();
     }

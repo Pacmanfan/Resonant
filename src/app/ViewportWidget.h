@@ -24,6 +24,9 @@ public:
 
     resonant::render::Camera& camera() { return camera_; }
     resonant::render::Renderer& renderer() { return renderer_; }
+    SceneRenderBridge& bridge() { return bridge_; }
+    // The field to display (an empty grid hides it) and how.
+    void setField(const resonant::render::ComplexFieldGrid& grid, const resonant::render::FieldDisplay& display);
     bool graphicsReady() const { return renderer_.isInitialized(); }
     QString graphicsError() const { return graphicsError_; }
 

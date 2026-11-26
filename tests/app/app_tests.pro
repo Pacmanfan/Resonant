@@ -18,3 +18,6 @@ RESONANT_LIBS = $$OUT_PWD/../../src/app/libresonant_app.a $$OUT_PWD/../../src/re
     $$OUT_PWD/../../src/core/libresonant_core.a $$OUT_PWD/../../third_party/libresonant_gtest.a
 LIBS += $$RESONANT_LIBS
 PRE_TARGETDEPS += $$RESONANT_LIBS
+
+# Lets the tests find the example projects.
+DEFINES += RESONANT_SOURCE_DIR=\\\"$$clean_path($$PWD/../..)\\\"

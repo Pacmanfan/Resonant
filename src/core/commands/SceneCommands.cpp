@@ -138,3 +138,41 @@ Status SetMaterialLibraryCommand::undo()
 }
 
 }  // namespace resonant
+
+#include "project/Project.h"
+
+namespace resonant {
+
+SetProjectExtensionCommand::SetProjectExtensionCommand(Project& project, std::string key, std::string newJsonText,
+                                                       std::string description, Changed changed)
+    : project_(project), key_(std::move(key)), newText_(std::move(newJsonText)),
+      description_(std::move(description)), changed_(std::move(changed))
+{
+}
+
+Status SetProjectExtensionCommand::execute()
+{
+    nlohmann::json value = nlohmann::json::parse(newText_, nullptr, false);
+    if (value.is_discarded())
+        return Status::failure("the new settings are not valid JSON");
+    const auto it = project_.extensions.find(key_);
+    hadOld_ = it != project_.extensions.end();
+    oldText_ = hadOld_ ? it->dump() : std::string();
+    project_.extensions[key_] = std::move(value);
+    if (changed_)
+        changed_();
+    return Status::success();
+}
+
+Status SetProjectExtensionCommand::undo()
+{
+    if (hadOld_)
+        project_.extensions[key_] = nlohmann::json::parse(oldText_);
+    else
+        project_.extensions.erase(key_);
+    if (changed_)
+        changed_();
+    return Status::success();
+}
+
+}  // namespace resonant

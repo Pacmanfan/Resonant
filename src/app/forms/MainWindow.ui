@@ -80,6 +80,29 @@
     <addaction name="menuAssignMaterial"/>
     <addaction name="actionClearMaterial"/>
    </widget>
+   <widget class="QMenu" name="menuAcoustics">
+    <property name="title"><string>&amp;Acoustics</string></property>
+    <widget class="QMenu" name="menuAddArray">
+     <property name="title"><string>Add &amp;Array</string></property>
+     <addaction name="actionAddLinearArray"/>
+     <addaction name="actionAddPlanarArray"/>
+     <addaction name="actionAddCircularArray"/>
+     <addaction name="actionAddCylindricalArray"/>
+     <addaction name="actionAddSphericalArray"/>
+     <addaction name="actionAddCustomArray"/>
+    </widget>
+    <addaction name="actionAddEmitter"/>
+    <addaction name="menuAddArray"/>
+    <addaction name="actionAddTarget"/>
+    <addaction name="actionAddProbe"/>
+    <addaction name="separator"/>
+    <addaction name="actionAddFieldPlane"/>
+    <addaction name="actionAddFieldVolume"/>
+    <addaction name="separator"/>
+    <addaction name="actionFocusArray"/>
+    <addaction name="actionSolveInverse"/>
+    <addaction name="actionRunField"/>
+   </widget>
    <widget class="QMenu" name="menuSimulation">
     <property name="title"><string>S&amp;imulation</string></property>
     <addaction name="actionRunDemonstrator"/>
@@ -109,6 +132,7 @@
    <addaction name="menuScene"/>
    <addaction name="menuGeometry"/>
    <addaction name="menuMaterials"/>
+   <addaction name="menuAcoustics"/>
    <addaction name="menuSimulation"/>
    <addaction name="menuTools"/>
    <addaction name="menuHelp"/>
@@ -150,6 +174,19 @@
    <addaction name="actionFrameSelection"/>
    <addaction name="actionShowGrid"/>
   </widget>
+  <widget class="QToolBar" name="acousticsToolBar">
+   <property name="windowTitle"><string>Acoustics</string></property>
+   <property name="toolButtonStyle"><enum>Qt::ToolButtonTextOnly</enum></property>
+   <attribute name="toolBarArea"><enum>TopToolBarArea</enum></attribute>
+   <attribute name="toolBarBreak"><bool>true</bool></attribute>
+   <addaction name="actionAddEmitter"/>
+   <addaction name="actionAddPlanarArray"/>
+   <addaction name="actionAddTarget"/>
+   <addaction name="actionAddProbe"/>
+   <addaction name="actionAddFieldPlane"/>
+   <addaction name="separator"/>
+   <addaction name="actionRunField"/>
+  </widget>
   <widget class="QDockWidget" name="sceneDock">
    <property name="windowTitle"><string>Scene</string></property>
    <attribute name="dockWidgetArea"><number>1</number></attribute>
@@ -164,6 +201,11 @@
    <property name="windowTitle"><string>Analysis</string></property>
    <attribute name="dockWidgetArea"><number>8</number></attribute>
    <widget class="AnalysisPanel" name="analysisPanel"/>
+  </widget>
+  <widget class="QDockWidget" name="acousticsDock">
+   <property name="windowTitle"><string>Acoustics</string></property>
+   <attribute name="dockWidgetArea"><number>2</number></attribute>
+   <widget class="AcousticsPanel" name="acousticsPanel"/>
   </widget>
   <action name="actionNew">
    <property name="text"><string>&amp;New Project</string></property>
@@ -402,12 +444,84 @@
    <property name="toolTip"><string>About the Qt toolkit</string></property>
    <property name="statusTip"><string>About the Qt toolkit</string></property>
   </action>
+  <action name="actionAddEmitter">
+   <property name="text"><string>&amp;Emitter</string></property>
+   <property name="toolTip"><string>Add an acoustic emitter</string></property>
+   <property name="statusTip"><string>Add an acoustic emitter</string></property>
+  </action>
+  <action name="actionAddLinearArray">
+   <property name="text"><string>&amp;Linear Array</string></property>
+   <property name="toolTip"><string>Add a linear emitter array</string></property>
+   <property name="statusTip"><string>Add a linear emitter array</string></property>
+  </action>
+  <action name="actionAddPlanarArray">
+   <property name="text"><string>&amp;Planar Array</string></property>
+   <property name="toolTip"><string>Add a rectangular planar emitter array</string></property>
+   <property name="statusTip"><string>Add a rectangular planar emitter array</string></property>
+  </action>
+  <action name="actionAddCircularArray">
+   <property name="text"><string>&amp;Circular Array</string></property>
+   <property name="toolTip"><string>Add a circular emitter array</string></property>
+   <property name="statusTip"><string>Add a circular emitter array</string></property>
+  </action>
+  <action name="actionAddCylindricalArray">
+   <property name="text"><string>C&amp;ylindrical Array</string></property>
+   <property name="toolTip"><string>Add a cylindrical emitter array</string></property>
+   <property name="statusTip"><string>Add a cylindrical emitter array</string></property>
+  </action>
+  <action name="actionAddSphericalArray">
+   <property name="text"><string>&amp;Spherical Array</string></property>
+   <property name="toolTip"><string>Add a spherical emitter array</string></property>
+   <property name="statusTip"><string>Add a spherical emitter array</string></property>
+  </action>
+  <action name="actionAddCustomArray">
+   <property name="text"><string>Custo&amp;m Array</string></property>
+   <property name="toolTip"><string>Add an array with manually placed elements</string></property>
+   <property name="statusTip"><string>Add an array with manually placed elements</string></property>
+  </action>
+  <action name="actionAddTarget">
+   <property name="text"><string>&amp;Target Point</string></property>
+   <property name="toolTip"><string>Add a target point for focusing and inverse design</string></property>
+   <property name="statusTip"><string>Add a target point for focusing and inverse design</string></property>
+  </action>
+  <action name="actionAddProbe">
+   <property name="text"><string>Pro&amp;be</string></property>
+   <property name="toolTip"><string>Add a probe that reports field quantities at a point</string></property>
+   <property name="statusTip"><string>Add a probe that reports field quantities at a point</string></property>
+  </action>
+  <action name="actionAddFieldPlane">
+   <property name="text"><string>Field P&amp;lane</string></property>
+   <property name="toolTip"><string>Add a plane over which the field is sampled</string></property>
+   <property name="statusTip"><string>Add a plane over which the field is sampled</string></property>
+  </action>
+  <action name="actionAddFieldVolume">
+   <property name="text"><string>Field &amp;Volume</string></property>
+   <property name="toolTip"><string>Add a volume over which the field is sampled</string></property>
+   <property name="statusTip"><string>Add a volume over which the field is sampled</string></property>
+  </action>
+  <action name="actionFocusArray">
+   <property name="text"><string>&amp;Focus Array on Target...</string></property>
+   <property name="toolTip"><string>Calculate phase or time-delay focusing for an array</string></property>
+   <property name="statusTip"><string>Calculate phase or time-delay focusing for an array</string></property>
+  </action>
+  <action name="actionSolveInverse">
+   <property name="text"><string>Solve &amp;Inverse Design...</string></property>
+   <property name="toolTip"><string>Solve for array strengths that meet the target points</string></property>
+   <property name="statusTip"><string>Solve for array strengths that meet the target points</string></property>
+  </action>
+  <action name="actionRunField">
+   <property name="text"><string>&amp;Run Field Simulation</string></property>
+   <property name="toolTip"><string>Calculate the field over the chosen region</string></property>
+   <property name="statusTip"><string>Calculate the field over the chosen region</string></property>
+   <property name="shortcut"><string>F5</string></property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget><class>ViewportWidget</class><extends>QWidget</extends><header>ViewportWidget.h</header><container>1</container></customwidget>
   <customwidget><class>SceneTreePanel</class><extends>QWidget</extends><header>SceneTreePanel.h</header><container>1</container></customwidget>
   <customwidget><class>PropertiesPanel</class><extends>QWidget</extends><header>PropertiesPanel.h</header><container>1</container></customwidget>
   <customwidget><class>AnalysisPanel</class><extends>QWidget</extends><header>AnalysisPanel.h</header><container>1</container></customwidget>
+  <customwidget><class>AcousticsPanel</class><extends>QWidget</extends><header>AcousticsPanel.h</header><container>1</container></customwidget>
  </customwidgets>
  <resources/>
  <connections/>

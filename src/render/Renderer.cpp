@@ -24,10 +24,13 @@ Renderer::Renderer()
     auto grid = std::make_unique<GridLayer>();
     auto meshes = std::make_unique<MeshLayer>();
     auto lines = std::make_unique<LineLayer>();
+    auto field = std::make_unique<FieldLayer>();
+    field_ = field.get();
     grid_ = grid.get();
     meshes_ = meshes.get();
     lines_ = lines.get();
     layers_.push_back(std::move(grid));
+    layers_.push_back(std::move(field));
     layers_.push_back(std::move(meshes));
     layers_.push_back(std::move(lines));
 }

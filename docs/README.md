@@ -23,6 +23,7 @@ docs/architecture/              current system explanation
   normative requirement owners and IDs. See `docs/requirements/development_operations.md` for lifecycle rules (REQ-DEVOPS-001..050).
 * `docs/requirements/product.md` — the product vision and product requirements of Resonant (RES-PRODUCT-001..016).
 * `docs/requirements/application_foundation.md` — the V0.1 application foundation (RES-APP-001..020).
+* `docs/requirements/acoustics.md` — the acoustic physics engine (RES-ACOUSTIC-001..020); `docs/acoustics/ACOUSTIC_ENGINE.md`, `docs/acoustics/ACOUSTIC_MODELS.md` (equations, conventions, units), `docs/acoustics/ACOUSTIC_ARRAYS.md`, `docs/acoustics/ACOUSTIC_FOCUSING.md`, `docs/acoustics/ACOUSTIC_INVERSE_DESIGN.md`, `docs/acoustics/ACOUSTIC_VALIDATION.md` (numerical evidence).
 * `BUILDING.md` (repository root) — build and test procedure for CMake and qmake; `IMPLEMENTATION_STATUS.md` — what is implemented, tested, partial, missing or deferred; `DECISIONS.md` — reading guide to the application's decision records; `examples/README.md` — example projects.
 * `docs/architecture/README.md` — current architecture and subsystem map; `docs/architecture/overview.md` (layers, modules, conventions), `docs/architecture/roadmap.md` (milestones).
 * `docs/decisions/README.md` — active ADRs; historical records are under

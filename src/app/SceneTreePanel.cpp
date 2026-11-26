@@ -24,9 +24,12 @@ QString idOf(const QTreeWidgetItem* item)
 SceneTreePanel::SceneTreePanel(QWidget* parent) : QWidget(parent), ui_(std::make_unique<Ui::SceneTreePanel>())
 {
     ui_->setupUi(this);
-    ui_->tree->header()->setSectionResizeMode(0, QHeaderView::Stretch);
-    ui_->tree->header()->setSectionResizeMode(1, QHeaderView::ResizeToContents);
+    // The name gets the room; a long type description is elided, with the
+    // full text in its tool tip.
     ui_->tree->header()->setStretchLastSection(false);
+    ui_->tree->header()->setSectionResizeMode(0, QHeaderView::Stretch);
+    ui_->tree->header()->setSectionResizeMode(1, QHeaderView::Interactive);
+    ui_->tree->header()->resizeSection(1, 105);
 
     connect(ui_->tree, &QTreeWidget::itemSelectionChanged, this, &SceneTreePanel::syncSelectionToController);
     connect(ui_->tree, &QTreeWidget::itemChanged, this, [this](QTreeWidgetItem* item, int column) {
@@ -87,6 +90,7 @@ void SceneTreePanel::updateItem(QTreeWidgetItem* item, const SceneObject& object
     updating_ = true;
     item->setText(0, QString::fromStdString(object.state.name));
     item->setText(1, objectTypeLabel(object));
+    item->setToolTip(1, objectTypeLabel(object));
     item->setCheckState(0, object.state.visible ? Qt::Checked : Qt::Unchecked);
     item->setToolTip(0, object.state.visible ? QString() : QStringLiteral("Hidden"));
     updating_ = wasUpdating;

@@ -1,6 +1,11 @@
 #include "MainWindow.h"
 
 #include "AboutDialog.h"
+#include "AcousticController.h"
+#include "AcousticEditors.h"
+#include "AcousticMarkers.h"
+#include "AcousticsPanel.h"
+#include "FieldAnalysisPanel.h"
 #include "AnalysisPanel.h"
 #include "DisplayUnits.h"
 #include "DocumentController.h"
@@ -31,7 +36,7 @@ QString projectFilter()
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), ui_(std::make_unique<Ui::MainWindow>()), controller_(new DocumentController(this)),
-      units_(new DisplayUnits(this))
+      units_(new DisplayUnits(this)), acoustics_(new AcousticController(controller_, this))
 {
     ui_->setupUi(this);
 
@@ -46,10 +51,12 @@ MainWindow::MainWindow(QWidget* parent)
     ui_->menuPanels->addAction(ui_->sceneDock->toggleViewAction());
     ui_->menuPanels->addAction(ui_->propertiesDock->toggleViewAction());
     ui_->menuPanels->addAction(ui_->analysisDock->toggleViewAction());
+    ui_->menuPanels->addAction(ui_->acousticsDock->toggleViewAction());
     ui_->menuPanels->addSeparator();
     ui_->menuPanels->addAction(ui_->fileToolBar->toggleViewAction());
     ui_->menuPanels->addAction(ui_->geometryToolBar->toggleViewAction());
     ui_->menuPanels->addAction(ui_->viewToolBar->toggleViewAction());
+    ui_->menuPanels->addAction(ui_->acousticsToolBar->toggleViewAction());
 
     unitGroup_ = new QActionGroup(this);
     unitGroup_->addAction(ui_->actionUnitsMeters)->setData(static_cast<int>(units::LengthUnit::Meter));
@@ -81,6 +88,7 @@ MainWindow::MainWindow(QWidget* parent)
     ui_->scenePanel->setContextMenu(contextMenu);
 
     connectActions();
+    connectAcoustics();
 
     unsavedChangesPrompt = [this] {
         return QMessageBox::warning(this, QStringLiteral("Unsaved changes"),
@@ -97,7 +105,9 @@ MainWindow::MainWindow(QWidget* parent)
     };
 
     // A workspace where the viewport dominates.
-    resizeDocks({ui_->sceneDock, ui_->propertiesDock}, {280, 340}, Qt::Horizontal);
+    tabifyDockWidget(ui_->propertiesDock, ui_->acousticsDock);
+    ui_->propertiesDock->raise();
+    resizeDocks({ui_->sceneDock, ui_->propertiesDock}, {280, 380}, Qt::Horizontal);
     resizeDocks({ui_->analysisDock}, {220}, Qt::Vertical);
     defaultLayout_ = saveState();
     updateDocumentState();
@@ -111,6 +121,7 @@ ViewportWidget& MainWindow::viewport() { return *ui_->viewport; }
 SceneTreePanel& MainWindow::sceneTree() { return *ui_->scenePanel; }
 PropertiesPanel& MainWindow::properties() { return *ui_->propertiesPanel; }
 AnalysisPanel& MainWindow::analysis() { return *ui_->analysisPanel; }
+AcousticsPanel& MainWindow::acousticsPanel() { return *ui_->acousticsPanel; }
 
 QAction* MainWindow::action(const QString& objectName) const
 {
@@ -256,6 +267,61 @@ void MainWindow::connectActions()
         QMessageBox::critical(this, QStringLiteral("3D graphics are unavailable"),
                               message + QStringLiteral("\n\nThe viewport will stay empty. Projects can still be "
                                                        "opened, edited through the panels and saved."));
+    });
+}
+
+void MainWindow::connectAcoustics()
+{
+    using resonant::acoustics::ArrayLayout;
+    using resonant::acoustics::RegionKind;
+
+    ui_->viewport->bridge().addDecorator(makeAcousticDecorator());
+    ui_->propertiesPanel->addComponentEditorFactory(makeAcousticEditorFactory(*acoustics_));
+    ui_->acousticsPanel->setController(acoustics_, units_);
+    fieldAnalysis_ = new FieldAnalysisPanel(ui_->analysisPanel);
+    fieldAnalysis_->setController(acoustics_, units_);
+    ui_->analysisPanel->addTab(fieldAnalysis_, QStringLiteral("Field Analysis"));
+
+    const auto created = [this](const Result<Id>& result) {
+        if (!result)
+            showFailure(QString::fromStdString(result.message()));
+        else
+            ui_->viewport->frameAll();
+    };
+    connect(ui_->actionAddEmitter, &QAction::triggered, this, [this, created] { created(acoustics_->addEmitter()); });
+    const std::pair<QAction*, ArrayLayout> arrays[] = {
+        {ui_->actionAddLinearArray, ArrayLayout::Linear},           {ui_->actionAddPlanarArray, ArrayLayout::RectangularPlanar},
+        {ui_->actionAddCircularArray, ArrayLayout::Circular},       {ui_->actionAddCylindricalArray, ArrayLayout::Cylindrical},
+        {ui_->actionAddSphericalArray, ArrayLayout::Spherical},     {ui_->actionAddCustomArray, ArrayLayout::Custom}};
+    for (const auto& [action, layout] : arrays)
+        connect(action, &QAction::triggered, this, [this, created, layout] { created(acoustics_->addArray(layout)); });
+    connect(ui_->actionAddTarget, &QAction::triggered, this, [this, created] { created(acoustics_->addTarget()); });
+    connect(ui_->actionAddProbe, &QAction::triggered, this, [this, created] { created(acoustics_->addProbe()); });
+    connect(ui_->actionAddFieldPlane, &QAction::triggered, this, [this, created] { created(acoustics_->addRegion(RegionKind::PlaneXZ)); });
+    connect(ui_->actionAddFieldVolume, &QAction::triggered, this, [this, created] { created(acoustics_->addRegion(RegionKind::Volume)); });
+
+    const auto showAcoustics = [this](const char* tab) {
+        ui_->acousticsDock->show();
+        ui_->acousticsDock->raise();
+        ui_->acousticsPanel->showTab(QString::fromLatin1(tab));
+    };
+    connect(ui_->actionFocusArray, &QAction::triggered, this, [showAcoustics] { showAcoustics("focusTab"); });
+    connect(ui_->actionSolveInverse, &QAction::triggered, this, [showAcoustics] { showAcoustics("inverseTab"); });
+    connect(ui_->actionRunField, &QAction::triggered, this, [this, showAcoustics] {
+        showAcoustics("simulationTab");
+        if (ui_->acousticsPanel->runSimulation()) {
+            ui_->analysisDock->show();
+            ui_->analysisPanel->showSimulationStatus();
+        }
+    });
+
+    connect(acoustics_, &AcousticController::message, this, &MainWindow::showFailure);
+    connect(acoustics_, &AcousticController::displayChanged, this, [this] {
+        ui_->viewport->setField(acoustics_->displayGrid(), acoustics_->display());
+    });
+    connect(acoustics_, &AcousticController::resultsChanged, this, [this] {
+        if (acoustics_->displayedResult())
+            ui_->analysisPanel->showTab(fieldAnalysis_);
     });
 }
 
