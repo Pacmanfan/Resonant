@@ -1,0 +1,169 @@
+{
+ "run_id": "20261126T151921-3033606",
+ "runner_version": 2,
+ "started_at": "2026-11-26T20:19:21.890862+00:00",
+ "wall_seconds": 0.1,
+ "tier": "t2",
+ "scope": "affected",
+ "changes_from": "request 2026-11-26-resonant-project-vision-and-pr-req-chat-20261126-001.md",
+ "changed": [
+  "docs/README.md",
+  "docs/architecture/README.md",
+  "docs/architecture/overview.md",
+  "docs/architecture/roadmap.md",
+  "docs/decisions/ADR-000204-technology-stack-and-dual-build-system.md",
+  "docs/decisions/ADR-000205-layered-architecture-and-physics-domains.md",
+  "docs/decisions/decisions.txt",
+  "docs/requirements/product.md",
+  "docs/requirements/requirements.txt",
+  "requests/inbox/2026-11-26-resonant-project-vision-and-pr-req-chat-20261126-001.json",
+  "requests/inbox/2026-11-26-resonant-project-vision-and-pr-req-chat-20261126-001.md",
+  "requests/processing/2026-11-26-resonant-project-vision-and-pr-req-chat-20261126-001.json",
+  "requests/processing/2026-11-26-resonant-project-vision-and-pr-req-chat-20261126-001.md",
+  "work/active/WORK-000001-record-the-resonant-product-vision-archi.md",
+  "work/work.txt"
+ ],
+ "unmapped": [],
+ "head": "cce83b42aaac5f6b697906b7aec1045888430b3e",
+ "describe": "cce83b4",
+ "provenance": {
+  "dirty": true,
+  "dirty_paths": 7,
+  "diff_sha256": "72e3d225b6c683948a7d9607ab5d2ee7506d336b7e4a56ec28406c8c75161574",
+  "python": "3.12.3",
+  "platform": "Linux-7.0.0-43-generic-x86_64-with-glibc2.39",
+  "git": "git version 2.43.0",
+  "manifest_sha256": "5d300824ee592bf4da0e93a1343c02ac758f689500a24d2471de3236501dbca4",
+  "config_sha256": "373797242bd5edccb39ec6184d416ba85a780c7f323ef80920326b005964964a",
+  "build_system": "qmake"
+ },
+ "build_dir": "/home/dev/Resonant/build/debug",
+ "jobs": 8,
+ "host": "dev",
+ "request": "2026-11-26-resonant-project-vision-and-pr-req-chat-20261126-001.md",
+ "request_fingerprint": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "request_code_paths": [],
+ "allow_stale": false,
+ "classification": "PASS",
+ "warnings": [],
+ "groups": [
+  {
+   "suite": "devsys",
+   "group": "structure",
+   "shards": 1,
+   "statuses": [
+    "PASS"
+   ],
+   "seconds": 0.11581759015098214,
+   "wall": 0.11581759015098214,
+   "cases": 0,
+   "failed": [],
+   "flaky": [],
+   "expected": [],
+   "detail": [],
+   "reasons": [
+    "t0 (always)"
+   ],
+   "command": "python3 scripts/devsys.py verify-structure",
+   "status": "PASS"
+  },
+  {
+   "suite": "audits",
+   "group": "drift",
+   "shards": 1,
+   "statuses": [
+    "PASS"
+   ],
+   "seconds": 0.11581347300671041,
+   "wall": 0.11581347300671041,
+   "cases": 0,
+   "failed": [],
+   "flaky": [],
+   "expected": [],
+   "detail": [],
+   "reasons": [
+    "t0 (always)"
+   ],
+   "command": "python3 scripts/drift_detect.py",
+   "status": "PASS"
+  },
+  {
+   "suite": "audits",
+   "group": "doc_integrity",
+   "shards": 1,
+   "statuses": [
+    "PASS"
+   ],
+   "seconds": 0.0644440611358732,
+   "wall": 0.0644440611358732,
+   "cases": 0,
+   "failed": [],
+   "flaky": [],
+   "expected": [],
+   "detail": [],
+   "reasons": [
+    "t0 (always)"
+   ],
+   "command": "python3 scripts/doc_integrity.py",
+   "status": "PASS"
+  },
+  {
+   "suite": "audits",
+   "group": "invariants",
+   "shards": 1,
+   "statuses": [
+    "PASS"
+   ],
+   "seconds": 0.06464973301626742,
+   "wall": 0.06464973301626742,
+   "cases": 0,
+   "failed": [],
+   "flaky": [],
+   "expected": [],
+   "detail": [],
+   "reasons": [
+    "t0 (always)"
+   ],
+   "command": "python3 scripts/invariant_check.py",
+   "status": "PASS"
+  }
+ ],
+ "jobs_detail": [
+  {
+   "label": "devsys/structure",
+   "status": "PASS",
+   "seconds": 0.12,
+   "rc": 0,
+   "detail": "",
+   "log": "/home/dev/Resonant/tmp/tr/21-3033606/001/output.log",
+   "cases": []
+  },
+  {
+   "label": "audits/drift",
+   "status": "PASS",
+   "seconds": 0.12,
+   "rc": 0,
+   "detail": "",
+   "log": "/home/dev/Resonant/tmp/tr/21-3033606/003/output.log",
+   "cases": []
+  },
+  {
+   "label": "audits/doc_integrity",
+   "status": "PASS",
+   "seconds": 0.06,
+   "rc": 0,
+   "detail": "",
+   "log": "/home/dev/Resonant/tmp/tr/21-3033606/004/output.log",
+   "cases": []
+  },
+  {
+   "label": "audits/invariants",
+   "status": "PASS",
+   "seconds": 0.06,
+   "rc": 0,
+   "detail": "",
+   "log": "/home/dev/Resonant/tmp/tr/21-3033606/002/output.log",
+   "cases": []
+  }
+ ]
+}

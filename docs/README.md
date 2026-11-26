@@ -1,4 +1,4 @@
-# <PROJECT> Documentation — Canonical Entry Point
+# Resonant Documentation — Canonical Entry Point
 
 This is the canonical documentation root. Read `AGENTS.md` first for the
 operating constitution, then use this map:
@@ -21,7 +21,8 @@ docs/architecture/              current system explanation
 * `README.md` (repository root) — a short orientation for a first visit: what the system is, getting started, the panels. It points here; this file stays the canonical entry point (REQ-DEVOPS-011).
 * `docs/requirements/README.md` and `docs/requirements/requirements.txt` —
   normative requirement owners and IDs. See `docs/requirements/development_operations.md` for lifecycle rules (REQ-DEVOPS-001..050).
-* `docs/architecture/README.md` — current architecture and subsystem map (PROJECT-SPECIFIC).
+* `docs/requirements/product.md` — the product vision and product requirements of Resonant (RES-PRODUCT-001..016).
+* `docs/architecture/README.md` — current architecture and subsystem map; `docs/architecture/overview.md` (layers, modules, conventions), `docs/architecture/roadmap.md` (milestones).
 * `docs/decisions/README.md` — active ADRs; historical records are under
   `docs/history/decisions/`.
 * `CI_CD.md` — technical map of the development-control system as implemented (components, lifecycle, state, verification).
