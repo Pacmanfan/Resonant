@@ -1,0 +1,153 @@
+{
+  "request_id": "REQ-AUTO-20261126-001",
+  "source": "automation",
+  "type": "DOCUMENTATION",
+  "priority": "HIGH",
+  "created": "2026-11-26T23:40:47-05:00",
+  "created_utc": "2026-11-27T04:40:47+00:00",
+  "id_date": "2026-11-26",
+  "timezone": "EST (UTC-05:00)",
+  "status": "completed",
+  "original_text": "Commit the compute-backend documents that the REQ-CHAT-20261126-014 commit (7b6ab48) left out: docs/compute/ACCELERATION_AUDIT.md, docs/compute/COMPUTE_BACKENDS.md, docs/decisions/ADR-000212-compute-backends.md and docs/requirements/compute.md were written for that request but never registered as its paths, so they stayed untracked while committed files (requirements and decision manifests, docs/README.md, BUILDING.md, IMPLEMENTATION_STATUS.md, DECISIONS.md) already refer to them.",
+  "file": "requests/inbox/2026-11-26-commit-the-compute-backend-doc-req-auto-20261126-001.md",
+  "attachments": [],
+  "context": "Found by the agent after pushing 7b6ab48: git status showed the four files untracked. A completed request cannot take new paths (claim.py: no claim), so this follow-up commits them.",
+  "text_sha256": "389a590fc48c3f7a831bc55e7aaebde378d7676dbab815fc748dbae17a4838a8",
+  "classification": {
+    "proposed_type": "DOCUMENTATION",
+    "proposed_source": "override",
+    "normalized_type": "DOCUMENTATION",
+    "heuristic_type": "DOCUMENTATION",
+    "final_type": "DOCUMENTATION",
+    "confidence": "high",
+    "validation": "PASS",
+    "classifier_reason": "request statement is framed as documentation: README, docs, documents",
+    "correction_reason": null,
+    "normalization_note": null,
+    "evidence": [
+      {
+        "category": "DOCUMENTATION",
+        "where": "head",
+        "phrase": "documents",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Commit the compute-backend documents that the REQ-CHAT-20261126-014 commit (7b6ab48) left out: docs/compute/ACCELERATION_AUDIT.md, docs/compute/COMPUTE_BACKENDS.md, docs/decisions/ADR-000212-compute-b"
+      },
+      {
+        "category": "DOCUMENTATION",
+        "where": "head",
+        "phrase": "docs",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Commit the compute-backend documents that the REQ-CHAT-20261126-014 commit (7b6ab48) left out: docs/compute/ACCELERATION_AUDIT.md, docs/compute/COMPUTE_BACKENDS.md, docs/decisions/ADR-000212-compute-b"
+      },
+      {
+        "category": "DOCUMENTATION",
+        "where": "head",
+        "phrase": "docs",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Commit the compute-backend documents that the REQ-CHAT-20261126-014 commit (7b6ab48) left out: docs/compute/ACCELERATION_AUDIT.md, docs/compute/COMPUTE_BACKENDS.md, docs/decisions/ADR-000212-compute-b"
+      },
+      {
+        "category": "DOCUMENTATION",
+        "where": "head",
+        "phrase": "docs",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Commit the compute-backend documents that the REQ-CHAT-20261126-014 commit (7b6ab48) left out: docs/compute/ACCELERATION_AUDIT.md, docs/compute/COMPUTE_BACKENDS.md, docs/decisions/ADR-000212-compute-b"
+      },
+      {
+        "category": "DOCUMENTATION",
+        "where": "head",
+        "phrase": "docs",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Commit the compute-backend documents that the REQ-CHAT-20261126-014 commit (7b6ab48) left out: docs/compute/ACCELERATION_AUDIT.md, docs/compute/COMPUTE_BACKENDS.md, docs/decisions/ADR-000212-compute-b"
+      },
+      {
+        "category": "DOCUMENTATION",
+        "where": "head",
+        "phrase": "docs",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Commit the compute-backend documents that the REQ-CHAT-20261126-014 commit (7b6ab48) left out: docs/compute/ACCELERATION_AUDIT.md, docs/compute/COMPUTE_BACKENDS.md, docs/decisions/ADR-000212-compute-b"
+      },
+      {
+        "category": "DOCUMENTATION",
+        "where": "head",
+        "phrase": "README",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Commit the compute-backend documents that the REQ-CHAT-20261126-014 commit (7b6ab48) left out: docs/compute/ACCELERATION_AUDIT.md, docs/compute/COMPUTE_BACKENDS.md, docs/decisions/ADR-000212-compute-b"
+      }
+    ],
+    "scores": {
+      "FEATURE": {
+        "head": 0,
+        "body": 0
+      },
+      "BUG": {
+        "head": 0,
+        "body": 0
+      },
+      "CRASH": {
+        "head": 0,
+        "body": 0
+      },
+      "REGRESSION": {
+        "head": 0,
+        "body": 0
+      },
+      "PERFORMANCE": {
+        "head": 0,
+        "body": 0
+      },
+      "REFACTOR": {
+        "head": 0,
+        "body": 0
+      },
+      "BUILD": {
+        "head": 0,
+        "body": 0
+      },
+      "DOCUMENTATION": {
+        "head": 7,
+        "body": 0
+      },
+      "INVESTIGATION": {
+        "head": 0,
+        "body": 0
+      },
+      "PROCESS-CHANGE": {
+        "head": 1,
+        "body": 0
+      }
+    },
+    "evidence_total": 8,
+    "validator": "scripts/request_classification.py"
+  },
+  "links": {
+    "work": [
+      "WORK-000010"
+    ]
+  },
+  "commits": [],
+  "resolution": {
+    "from": "processing",
+    "to": "completed",
+    "at": "2026-11-27T04:41:25.859654+00:00",
+    "by": "agent-dev-20261126151713-76f632",
+    "gates": [
+      {
+        "work": "WORK-000010",
+        "at": "2026-11-27T04:41:25.694016+00:00",
+        "verdict": "PASS",
+        "request_fingerprint": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "test_runs": [
+          "20261126T234114-562538"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,28 @@
+{
+ "work": "WORK-000010",
+ "runs": [
+  {
+   "at": "2026-11-27T04:41:25.694016+00:00",
+   "verdict": "PASS",
+   "gate_version": 3,
+   "work": "WORK-000010",
+   "request": "2026-11-26-commit-the-compute-backend-doc-req-auto-20261126-001.md",
+   "request_id": "REQ-AUTO-20261126-001",
+   "request_fingerprint": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "request_code_paths": [],
+   "test_runs": [
+    "20261126T234114-562538"
+   ],
+   "evidence": [
+    "VER-000010"
+   ],
+   "head": "7b6ab4828f8d8e7713548b37f7bc7099285c5487",
+   "agent_id": "agent-dev-20261126151713-76f632",
+   "fails": [],
+   "warns": [
+    "20 unowned change(s) in the tree (not this request's; never committed by it)"
+   ],
+   "passes": 15
+  }
+ ]
+}
