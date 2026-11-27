@@ -1,7 +1,7 @@
 # Resonant — Architecture Overview
 
 **Status:** current. Decisions: ADR-000204 (stack, build systems),
-ADR-000205 (layers, domains), ADR-000207 (acoustics), ADR-000208 (manipulators), ADR-000209 (full-wave solver). Requirements: `docs/requirements/product.md`.
+ADR-000205 (layers, domains), ADR-000207 (acoustics), ADR-000208 (manipulators), ADR-000209 (full-wave solver), ADR-000210 (mechanics). Requirements: `docs/requirements/product.md`.
 
 This document describes the architecture every milestone builds on. Each
 subsystem gets its own document in this directory when it is implemented;
@@ -40,6 +40,9 @@ A higher layer may use a lower one; never the reverse.
 | `manipulators` | passive wave manipulators: design component, reflector / lens / waveguide / cavity geometry, analytical estimates, the reflector field model, rays, focus metrics, geometry optimization (`docs/manipulators/`) |
 | `fdtd` | the full-wave acoustic solver: staggered-grid FDTD core, signals, spectra, simulation geometry, setup from a project, results (`docs/advanced_acoustics/`) |
 | `solvers` | declarations of what each solver represents, and the assessment of a problem against them |
+| `dsp` | signals over time and spectra, shared by every domain |
+| `mechanics` | the mechanical domain: elastic materials, structural idealization, finite elements, eigensolver, static / modal / harmonic / transient analyses, actuators, sensors, targets, targeting, horns, periodic rods, measured data (`docs/mechanics/`) |
+| `coupling` | the only code that uses two domains: sound radiated by vibrating plates |
 | later physics domains | one module per domain, each with its own equations, property sets and solvers |
 
 ## Rendering and application (`src/render`, `src/app`)
@@ -58,6 +61,7 @@ A higher layer may use a lower one; never the reverse.
 | `app/AcousticController`, `app/AcousticsPanel`, `app/AcousticEditors`, `app/FieldAnalysisPanel`, `app/AcousticMarkers` | the acoustic user interface: creating objects, focusing, inverse design, running and displaying fields, analysis |
 | `app/ManipulatorController`, `app/ManipulatorEditor` | adding manipulators, their property editor, focal markers and ray paths, reflector optimization |
 | `app/FdtdController`, `app/FdtdPanel`, `app/TimeSignalPanel`, `app/PlotWidget` | the full-wave solver's settings, preflight, runs, recorded signals and spectra |
+| `app/MechanicsController`, `app/MechanicsPanel`, `app/MechanicalEditor`, `app/MechanicsMarkers`, `render/ScalarMeshLayer` | mechanical objects, analyses, results, deformed display |
 | `app/DisplayUnits` | the single boundary between displayed units and SI |
 | `app/MainWindow` | wires the actions of `forms/MainWindow.ui` to the controller |
 

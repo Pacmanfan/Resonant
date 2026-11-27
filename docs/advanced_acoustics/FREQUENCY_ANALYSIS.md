@@ -1,6 +1,6 @@
 # Frequency Analysis
 
-**Status:** current for REQ-CHAT-20261126-005. Code: `fdtd/Spectrum.h`.
+**Status:** current for REQ-CHAT-20261126-005. Code: `src/core/dsp/Spectrum.h` (shared by every domain since REQ-CHAT-20261126-006).
 
 The spectrum of a probe's recorded pressure, by a radix-2 FFT written for
 this purpose (no FFT library is used; none was installed, and probe

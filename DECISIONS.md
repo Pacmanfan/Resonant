@@ -14,6 +14,7 @@ development-control system, not the application.
 | [ADR-000207](docs/decisions/ADR-000207-acoustic-engine-design.md) | Acoustic conventions (`e^{+jωt}`, peak amplitudes), source strength as pressure at 1 m, explicit medium, one propagation interface, near-source clamping, intensity from particle velocity, arrays as one object with overrides, phase and delay focusing as distinct settings, SVD inverse design, results as snapshots, display from stored data | M2 |
 | [ADR-000208](docs/decisions/ADR-000208-wave-manipulators-and-reflector-model.md) | Manipulators as scene objects with design data, parametric geometry and a separate simulation representation; support levels; a Kirchhoff reflector model as a selectable propagation model; the field model as a recorded project setting; rays as a geometric aid; minimal optimization interfaces; constraints as checks | M3 |
 | [ADR-000209](docs/decisions/ADR-000209-full-wave-fdtd-solver.md) | Staggered-grid FDTD as the first full-wave solver, validated as a scene-independent core; split-field PML; calibrated soft sources; 2D as a stated different problem; simulation geometry from definitions; solids as fluids; steady state as an ordinary field result; a solver registry that assesses and never selects; refuse rather than degrade | M4 |
+| [ADR-000210](docs/decisions/ADR-000210-mechanical-domain.md) | Mechanical domain with an own finite-element core; explicit idealizations; frame, ACM plate, membrane and hexahedral elements; Lanczos eigensolver with residuals; explicit damping models; Newmark transients; shared dsp module; separate coupling module | M5 |
 
 ## Deviations from requests
 
@@ -25,3 +26,4 @@ Recorded in the decision that caused them:
 * The deviations of the acoustic engine from its request are listed at the end of ADR-000207.
 * The deviations of passive wave manipulation from its request are listed in ADR-000208.
 * The deviations of the full-wave solver milestone from its request are listed in ADR-000209.
+* The deviations of the mechanical milestone from its request are listed in ADR-000210.

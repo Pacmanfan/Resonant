@@ -35,7 +35,7 @@ SceneRenderBridge::Frame SceneRenderBridge::build(const Scene& scene, const QLis
 
         const Mat4 world = scene.worldMatrix(object);
         const size_t firstItem = frame.items.size();
-        if (const auto mesh = meshFor(object); mesh && !mesh->empty()) {
+        if (const auto mesh = meshFor(object); mesh && !mesh->empty() && !(replaced_ && replaced_(object.id()))) {
             render::DrawItem item;
             item.mesh = mesh;
             item.model = world;

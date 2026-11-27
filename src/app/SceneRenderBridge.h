@@ -38,6 +38,10 @@ public:
                                          const resonant::Mat4& world, bool selected, Frame& frame,
                                          std::vector<Pickable>& pickables)>;
     void addDecorator(Decorator decorator) { decorators_.push_back(std::move(decorator)); }
+    // Objects for which this returns true are not drawn with their own mesh
+    // (their decorators still run): a domain shows something in their place,
+    // such as a deformed structure.
+    void setReplaced(std::function<bool(const resonant::Id&)> replaced) { replaced_ = std::move(replaced); }
 
     Frame build(const resonant::Scene& scene, const QList<resonant::Id>& selection);
     const std::vector<Pickable>& pickables() const { return pickables_; }
@@ -58,4 +62,5 @@ private:
     std::unordered_map<resonant::Id, CachedMesh> cache_;
     std::vector<Pickable> pickables_;
     std::vector<Decorator> decorators_;
+    std::function<bool(const resonant::Id&)> replaced_;
 };

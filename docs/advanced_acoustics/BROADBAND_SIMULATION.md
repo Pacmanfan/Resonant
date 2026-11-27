@@ -1,6 +1,6 @@
 # Transient and Broadband Signals
 
-**Status:** current for REQ-CHAT-20261126-005. Code: `fdtd/Waveform.h`.
+**Status:** current for REQ-CHAT-20261126-005. Code: `src/core/dsp/Waveform.h` (shared by every domain since REQ-CHAT-20261126-006).
 
 A signal is a dimensionless function `w(t)`, zero before `t = 0`, of peak
 magnitude about one. An emitter multiplies it by its amplitude and shifts

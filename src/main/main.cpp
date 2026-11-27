@@ -5,6 +5,8 @@
 #include "FdtdController.h"
 #include "FdtdPanel.h"
 #include "MainWindow.h"
+#include "MechanicsController.h"
+#include "MechanicsPanel.h"
 #include "ViewportWidget.h"
 #include "foundation/Log.h"
 
@@ -44,6 +46,11 @@ int main(int argc, char** argv)
         QStringLiteral("run-full-wave"),
         QStringLiteral("Run the full-wave (FDTD) solver on the project's first field region after opening it."));
     parser.addOption(runFullWaveOption);
+    const QCommandLineOption runMechanicsOption(
+        QStringLiteral("run-mechanics"),
+        QStringLiteral("Run a mechanical analysis (modal, harmonic, transient or static) of the project's first structure after opening it."),
+        QStringLiteral("analysis"));
+    parser.addOption(runMechanicsOption);
     parser.process(application);
 
     int result = 0;
@@ -83,8 +90,23 @@ int main(int argc, char** argv)
             if (!waitingForFullWave)
                 resonant::logError("application", "--run-full-wave: " + window.fullWavePanel().statusText().toStdString());
         }
+        bool waitingForMechanics = false;
+        if (parser.isSet(runMechanicsOption)) {
+            window.viewport().frameAll();
+            const QString analysis = parser.value(runMechanicsOption);
+            MechanicsPanel& panel = window.mechanicsPanel();
+            waitingForMechanics = analysis == QLatin1String("modal")       ? panel.runModal()
+                                  : analysis == QLatin1String("harmonic")  ? panel.runHarmonic()
+                                  : analysis == QLatin1String("transient") ? panel.runTransient()
+                                  : analysis == QLatin1String("static")    ? panel.runStatic()
+                                                                           : false;
+            if (!waitingForMechanics)
+                resonant::logError("application", "--run-mechanics: " + panel.statusText().toStdString());
+        }
         if (parser.isSet(screenshotOption)) {
-            if (waitingForFullWave)
+            if (waitingForMechanics)
+                QObject::connect(&window.mechanics(), &MechanicsController::resultsChanged, &window, capture);
+            else if (waitingForFullWave)
                 QObject::connect(&window.fullWave(), &FdtdController::resultsChanged, &window, capture);
             else if (waitingForField)
                 QObject::connect(&window.acoustics(), &AcousticController::resultsChanged, &window, capture);

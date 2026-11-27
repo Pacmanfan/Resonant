@@ -14,11 +14,17 @@
 // what to change.
 #include "acoustics/FieldGrid.h"
 #include "fdtd/FdtdRun.h"
-#include "fdtd/Spectrum.h"
+#include "dsp/Spectrum.h"
 #include "project/Project.h"
 #include "solvers/SolverRegistry.h"
 
 namespace resonant::fdtd {
+
+using dsp::Spectrum;
+using dsp::Window;
+using dsp::SpectralPeak;
+using dsp::computeSpectrum;
+using dsp::findPeaks;
 
 inline constexpr const char* kFdtdSolverId = "acoustic.fdtd.staggered";
 inline constexpr const char* kFdtdSolverVersion = "1";

@@ -1,10 +1,10 @@
-#include "fdtd/Spectrum.h"
+#include "dsp/Spectrum.h"
 
 #include <algorithm>
 #include <cmath>
 #include <cstdio>
 
-namespace resonant::fdtd {
+namespace resonant::dsp {
 namespace {
 constexpr double pi = 3.14159265358979323846;
 }
@@ -114,4 +114,4 @@ std::vector<SpectralPeak> findPeaks(const Spectrum& spectrum, double minRelative
     return peaks;
 }
 
-}  // namespace resonant::fdtd
+}  // namespace resonant::dsp

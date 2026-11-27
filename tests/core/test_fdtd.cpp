@@ -2,7 +2,7 @@
 // references. docs/advanced_acoustics/ACOUSTIC_VALIDATION.md records the
 // results; every tolerance here is stated there.
 #include "fdtd/FdtdRun.h"
-#include "fdtd/Spectrum.h"
+#include "dsp/Spectrum.h"
 
 #include <gtest/gtest.h>
 #include <nlohmann/json.hpp>
@@ -11,6 +11,7 @@
 
 using namespace resonant;
 using namespace resonant::fdtd;
+using namespace resonant::dsp;
 
 namespace {
 

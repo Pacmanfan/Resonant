@@ -5,6 +5,7 @@
 #pragma once
 
 #include "FieldLayer.h"
+#include "ScalarMeshLayer.h"
 #include "Layers.h"
 
 #include <QOpenGLContext>
@@ -39,6 +40,8 @@ public:
     MeshLayer& meshes() { return *meshes_; }
     LineLayer& lines() { return *lines_; }
     FieldLayer& field() { return *field_; }
+    ScalarMeshLayer& scalarMesh() { return *scalarMesh_; }
+    const ScalarMeshLayer& scalarMesh() const { return *scalarMesh_; }
 
     // Adds a layer drawn after the built-in ones. If the renderer is
     // already initialized the layer is initialized at once (the context
@@ -52,6 +55,7 @@ private:
     MeshLayer* meshes_ = nullptr;
     LineLayer* lines_ = nullptr;
     FieldLayer* field_ = nullptr;
+    ScalarMeshLayer* scalarMesh_ = nullptr;
     std::vector<std::unique_ptr<RenderLayer>> layers_;
     int width_ = 1;
     int height_ = 1;

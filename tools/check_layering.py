@@ -5,6 +5,16 @@
                 src/render or src/app
     src/render  includes nothing from src/app
 
+and the domain rules of ADR-000210 and later decisions:
+
+    physics domains (acoustics with its manipulators and fdtd solver,
+    mechanics, electromagnetics) do not include each other; only
+    src/core/coupling may use two domains
+
+and one build rule: no two sources of one library or test target share a
+file name (qmake writes every object of a target into one directory, so
+the second would overwrite the first).
+
 Exit status 0 when the rules hold, 1 with one line per violation otherwise.
 """
 import re
@@ -39,6 +49,32 @@ def violations():
             match = INCLUDE.match(line)
             if match and (match.group(1).startswith("app/") or match.group(1) in APP_HEADERS):
                 found.append(f"{path.relative_to(ROOT)}:{number}: the render library must not include <{match.group(1)}>")
+    # Domains do not include each other.
+    domains = {"acoustics": "acoustic", "manipulators": "acoustic", "fdtd": "acoustic", "solvers": "acoustic",
+               "mechanics": "mechanical", "electromagnetics": "electromagnetic"}
+    for path in sorted((ROOT / "src" / "core").rglob("*")):
+        if path.suffix not in (".h", ".cpp"):
+            continue
+        module = path.relative_to(ROOT / "src" / "core").parts[0]
+        own = domains.get(module)
+        if own is None:
+            continue
+        for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+            match = INCLUDE.match(line)
+            if not match:
+                continue
+            other = domains.get(match.group(1).split("/", 1)[0])
+            if other is not None and other != own:
+                found.append(f"{path.relative_to(ROOT)}:{number}: the {own} domain must not include <{match.group(1)}> "
+                             f"(the {other} domain); put cross-domain code in src/core/coupling")
+    # Unique source file names per target.
+    for target in (ROOT / "src" / "core", ROOT / "src" / "render", ROOT / "src" / "app", ROOT / "tests" / "core", ROOT / "tests" / "app"):
+        seen = {}
+        for path in sorted(target.rglob("*.cpp")):
+            if path.name in seen:
+                found.append(f"{path.relative_to(ROOT)}: has the same file name as {seen[path.name].relative_to(ROOT)} in the "
+                             f"same target; qmake would overwrite one object file with the other")
+            seen.setdefault(path.name, path)
     return found
 
 

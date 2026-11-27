@@ -1,4 +1,4 @@
-#include "fdtd/Waveform.h"
+#include "dsp/Waveform.h"
 
 #include <nlohmann/json.hpp>
 
@@ -7,7 +7,7 @@
 #include <cstdio>
 #include <limits>
 
-namespace resonant::fdtd {
+namespace resonant::dsp {
 namespace {
 
 constexpr double pi = 3.14159265358979323846;
@@ -272,4 +272,4 @@ Result<Waveform> waveformFromJson(const nlohmann::json& value)
     return w;
 }
 
-}  // namespace resonant::fdtd
+}  // namespace resonant::dsp

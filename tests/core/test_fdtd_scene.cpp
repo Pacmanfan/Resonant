@@ -209,7 +209,8 @@ TEST(FdtdSolidModel, EveryGeometryKindWithABodyHasAnInsideTest)
                         EXPECT_LE(q.norm(), r * (1.0 + 1e-9)) << kind->id;
                     }
                 }
-        EXPECT_GT(inside, 0u) << kind->id;
+        // Slender bodies (rods) can fall between the samples; they contain their own axis.
+        EXPECT_TRUE(inside > 0u || model->contains(Vec3::Zero())) << kind->id;
     }
 }
 

@@ -109,7 +109,7 @@ TEST(MaterialLibrary, ExampleLibraryHasTheTenMaterialsMarkedIllustrative)
         EXPECT_TRUE(material->validate().ok()) << name;
         EXPECT_TRUE(material->appliesTo(PhysicsDomain::Acoustic)) << name;
     }
-    EXPECT_EQ(library.materials().size(), 10u);
+    EXPECT_EQ(library.materials().size(), 18u);
 
     // No example value may pass as authoritative.
     for (const Material& material : library.materials()) {

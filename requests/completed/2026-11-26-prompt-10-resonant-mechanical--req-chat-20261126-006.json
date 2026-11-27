@@ -1,0 +1,417 @@
+{
+  "request_id": "REQ-CHAT-20261126-006",
+  "source": "chat",
+  "type": "FEATURE",
+  "priority": "NORMAL",
+  "created": "2026-11-26T15:33:35-05:00",
+  "created_utc": "2026-11-26T20:33:35+00:00",
+  "id_date": "2026-11-26",
+  "timezone": "EST (UTC-05:00)",
+  "status": "completed",
+  "original_text": "# PROMPT 10 \u2014 RESONANT: MECHANICAL WAVES, STRUCTURAL VIBRATION AND ELASTICITY SIMULATION\n\nYou are continuing development of **RESONANT \u2014 Wave Field Engineering Studio**.\n\nThis milestone introduces the second major physics domain: **mechanical waves and structural vibration**.\n\nThe objective is to transform Resonant into a platform capable of designing, analyzing, and optimizing mechanical structures that transmit, reflect, concentrate, distribute, or suppress vibration and mechanical wave energy.\n\nThis includes vibration through solids, structural resonance, plates, membranes, beams, shells, mechanical actuators, and coupled structures.\n\nBuild on the existing application, geometry, material, simulation, visualization, and solver architectures.\n\nDo not replace the existing acoustic subsystem. Mechanical physics must be implemented as a distinct domain with its own governing equations, material models, boundary conditions, and numerical methods.\n\n---\n\n## 1. Mission and objectives\n\nImplement a modular mechanical physics subsystem supporting:\n\n- Elastic wave propagation.\n- Structural vibration.\n- Mechanical resonance.\n- Standing waves in solids.\n- Flexural waves in plates.\n- Longitudinal and transverse waves.\n- Torsional vibration.\n- Beam and rod vibration.\n- Membrane vibration.\n- Shell and plate vibration.\n- Structural modal analysis.\n- Forced response.\n- Frequency response.\n- Transient excitation.\n- Damping and energy dissipation.\n- Mechanical wave focusing and manipulation.\n- Mechanical metamaterials and periodic structures.\n- Coupled mechanical and acoustic behavior where supported.\n\nThe initial priority is a functional structural mechanics and modal analysis workflow.\n\nThe system should eventually support realistic mechanical wave-field engineering, including the ability to design structures that concentrate vibration at selected locations or suppress unwanted vibration elsewhere.\n\nDo not attempt to implement every mechanical phenomenon in one milestone.\n\nPrioritize scientifically validated capabilities.\n\n## 2. Mechanical physics architecture\n\nCreate a dedicated mechanical physics subsystem.\n\nKeep the mechanical domain independent from acoustic and electromagnetic physics.\n\nThe subsystem should include:\n\n- Mechanical domain data models.\n- Structural geometry.\n- Mechanical materials.\n- Mechanical boundary conditions.\n- Structural meshes.\n- Mechanical source definitions.\n- Mechanical solver interfaces.\n- Modal analysis.\n- Forced-response analysis.\n- Transient simulation.\n- Mechanical field evaluation.\n- Mechanical optimization.\n- Result storage and visualization.\n\nThe mechanical subsystem may reuse generic application infrastructure, including:\n\n- Scene management.\n- Geometry.\n- Units.\n- Material metadata.\n- Mesh infrastructure.\n- Simulation job management.\n- Rendering.\n- Project persistence.\n- Result storage.\n\nDo not reuse acoustic equations or solver implementations where the underlying physics differs.\n\n## 3. Mechanical material models\n\nExtend the material system with mechanical properties.\n\nSupport:\n\n- Density.\n- Young's modulus.\n- Shear modulus.\n- Bulk modulus.\n- Poisson's ratio.\n- Damping.\n- Elasticity.\n- Anisotropy where supported.\n- Frequency dependence where supported.\n- Temperature dependence where supported.\n- Plasticity as a future extension.\n- Viscoelastic behavior as a future extension.\n\nSupport common engineering materials:\n\n- Aluminum.\n- Steel.\n- Stainless steel.\n- Copper.\n- Brass.\n- Titanium.\n- Glass.\n- Acrylic.\n- ABS.\n- PLA.\n- Nylon.\n- Polycarbonate.\n- Rubber.\n- Wood.\n- Concrete.\n- Ceramics.\n- Composite materials.\n\nDo not invent authoritative material constants.\n\nMaterial records must identify:\n- Source.\n- Provenance.\n- Measurement or reference conditions.\n- Validity ranges.\n- Units.\n- Confidence or quality metadata where available.\n\nSupport isotropic materials initially.\n\nPrepare the architecture for orthotropic and anisotropic materials, particularly fiber-reinforced composites.\n\nDo not treat all plastics, metals, or composites as mechanically interchangeable.\n\n## 4. Mechanical wave models\n\nImplement the appropriate mechanical wave equations.\n\nFor an elastic solid, establish a mathematically correct continuum mechanics foundation.\n\nA representative linear elastodynamic formulation is:\n\n\\[\n\\rho\\frac{\\partial^2\\mathbf{u}}{\\partial t^2}\n=\n\\nabla\\cdot\\boldsymbol{\\sigma}\n+\n\\mathbf{f}\n\\]\n\nwhere:\n\n- \\(\\rho\\) is material density.\n- \\(\\mathbf{u}\\) is displacement.\n- \\(\\boldsymbol{\\sigma}\\) is the stress tensor.\n- \\(\\mathbf{f}\\) is body force per unit volume.\n\nFor linear elasticity:\n\n\\[\n\\boldsymbol{\\sigma}\n=\n\\mathbf{C}:\\boldsymbol{\\varepsilon}\n\\]\n\nwhere:\n\n- \\(\\mathbf{C}\\) is the constitutive elasticity tensor.\n- \\(\\boldsymbol{\\varepsilon}\\) is strain.\n\nFor isotropic small-strain elasticity, use an appropriate constitutive relationship based on Lam\u00e9 parameters or equivalent elastic constants.\n\nImplement consistent definitions and units.\n\nSupport:\n\n- Longitudinal waves.\n- Transverse/shear waves.\n- Flexural waves where applicable.\n- Torsional waves in suitable structures.\n\nDistinguish bulk elastic waves from structural bending waves.\n\nDo not use one simplified scalar wave equation to represent all mechanical vibration phenomena.\n\n## 5. Mechanical source and actuator model\n\nIntroduce a first-class **Mechanical Actuator** object.\n\nEach actuator should support:\n\n- Stable ID.\n- Position or attachment region.\n- Orientation.\n- Excitation frequency.\n- Amplitude.\n- Phase.\n- Time delay.\n- Waveform.\n- Force or displacement excitation.\n- Active/inactive state.\n- Mechanical coupling properties.\n- Optional physical dimensions.\n- Optional actuator response model.\n\nSupport initial excitation types:\n\n- Point force.\n- Distributed force.\n- Prescribed displacement.\n- Prescribed velocity.\n- Harmonic excitation.\n- Transient pulse.\n- Frequency sweep.\n\nPrepare for physical actuator models such as:\n\n- Electromagnetic shakers.\n- Piezoelectric actuators.\n- Voice-coil actuators.\n- Ultrasonic mechanical transducers.\n- Electromechanical vibration devices.\n\nDo not assume an actuator's commanded signal directly produces an ideal mechanical force or displacement.\n\nKeep actuator drive electronics and physical response as distinct concepts.\n\n## 6. Structural geometry\n\nConnect the mechanical subsystem to the existing engineering geometry architecture.\n\nSupport mechanical analysis of:\n\n- Beams.\n- Rods.\n- Shafts.\n- Plates.\n- Membranes.\n- Shells.\n- Solid volumes.\n- Frames.\n- Trusses.\n- Layered structures.\n- Composite structures.\n\nImplement appropriate structural representations.\n\nDistinguish:\n- CAD geometry.\n- Engineering geometry.\n- Structural idealization.\n- Simulation mesh.\n\nAllow users to identify appropriate idealizations.\n\nFor example:\n- A slender structure may be represented as a beam.\n- A thin structure may be represented as a plate or shell.\n- A general solid requires a suitable volume formulation.\n\nDo not automatically convert arbitrary geometry into a beam, plate, or shell without explaining the approximation.\n\nProvide geometric properties such as:\n- Length.\n- Cross-sectional area.\n- Thickness.\n- Curvature.\n- Section properties.\n- Orientation.\n- Material regions.\n\n## 7. Structural analysis foundations\n\nImplement a structural mechanics foundation capable of calculating mechanical deformation and vibration.\n\nSupport appropriate formulations for:\n\n- Static structural response.\n- Linear elasticity.\n- Small displacement.\n- Small strain.\n- Dynamic structural response.\n\nStatic analysis is useful for establishing deformation and stiffness before vibration calculations.\n\nImplement the necessary structural degrees of freedom and constraints for each selected element formulation.\n\nWhere a structural formulation is not implemented, do not expose it as a functioning solver option.\n\nClearly distinguish static structural analysis from dynamic wave propagation.\n\n## 8. Modal analysis\n\nImplement structural modal analysis.\n\nThis is a core capability.\n\nCalculate natural frequencies and mode shapes using the appropriate generalized eigenvalue problem:\n\n\\[\n\\mathbf{K}\\boldsymbol{\\phi}\n=\n\\omega^2\\mathbf{M}\\boldsymbol{\\phi}\n\\]\n\nwhere:\n\n- \\(\\mathbf{K}\\) is the structural stiffness matrix.\n- \\(\\mathbf{M}\\) is the mass matrix.\n- \\(\\boldsymbol{\\phi}\\) is a mode shape.\n- \\(\\omega\\) is angular natural frequency.\n\nSupport:\n\n- Natural frequencies.\n- Mode shapes.\n- Displacement distributions.\n- Nodal regions.\n- Antinodes.\n- Modal participation where appropriate.\n\nAllow users to select individual modes and visualize their deformation.\n\nProvide mode animation with adjustable playback speed.\n\nDo not confuse a visually amplified mode shape with actual physical displacement.\n\nDisplay the visualization scale factor separately from the physical amplitude.\n\nFor simple structures, compare numerical modal results against analytical solutions.\n\nExamples include:\n- Fixed-free beam.\n- Simply supported beam.\n- Fixed-fixed beam.\n- Rectangular membrane.\n- Simple plate configurations.\n\nDocument boundary-condition assumptions.\n\n## 9. Frequency response and forced vibration\n\nImplement forced-response analysis.\n\nAllow the user to excite structures using mechanical actuators.\n\nSupport harmonic excitation and frequency sweeps.\n\nCalculate frequency response at selected points and regions.\n\nDisplay:\n\n- Displacement amplitude.\n- Velocity amplitude.\n- Acceleration amplitude.\n- Stress response where supported.\n- Phase response.\n- Resonance peaks.\n- Damping effects.\n\nSupport frequency-response functions between actuator input and measurement locations.\n\nAllow users to compare multiple actuator positions and excitation strategies.\n\nImplement physically appropriate damping models.\n\nBegin with practical linear damping formulations.\n\nClearly identify whether damping is:\n- Modal.\n- Proportional/Rayleigh.\n- Material-based.\n- Structural loss-factor based.\n\nDo not apply arbitrary damping to obtain visually convenient results.\n\n## 10. Transient mechanical simulation\n\nImplement time-domain mechanical simulation.\n\nSupport:\n\n- Impulse excitation.\n- Short-duration force pulses.\n- Sinusoidal excitation.\n- Burst excitation.\n- Sweeps.\n- Custom sampled waveforms.\n\nCalculate time-dependent:\n\n- Displacement.\n- Velocity.\n- Acceleration.\n- Stress and strain where supported.\n- Mechanical energy quantities where supported.\n\nImplement a numerically stable time integration method appropriate to the selected structural formulation.\n\nInvestigate methods such as:\n\n- Newmark-beta.\n- Generalized-alpha.\n- Central difference.\n- Other suitable explicit or implicit integration schemes.\n\nThe solver must expose its stability and accuracy limitations.\n\nSupport recording at selected locations and regions rather than requiring every degree of freedom to be stored at every timestep.\n\n## 11. Mechanical field quantities\n\nIntroduce a mechanical field representation.\n\nSupport:\n\n**Displacement**\n- X displacement.\n- Y displacement.\n- Z displacement.\n- Displacement magnitude.\n\n**Velocity**\n- Particle velocity components.\n- Velocity magnitude.\n\n**Acceleration**\n- Acceleration components.\n- Acceleration magnitude.\n\n**Strain**\n- Normal strain.\n- Shear strain.\n- Principal strain where supported.\n\n**Stress**\n- Normal stress.\n- Shear stress.\n- Principal stress where supported.\n- Von Mises stress for appropriate isotropic material assumptions.\n\n**Energy**\n- Kinetic energy.\n- Strain energy.\n- Energy dissipation where supported.\n\nClearly distinguish vector quantities from scalar magnitudes.\n\nUse SI units internally.\n\nDo not present stress or strain results for a model that only calculates displacement.\n\n## 12. Mechanical wave propagation\n\nImplement mechanical wave propagation in appropriate structural models.\n\nSupport initial demonstrations of:\n\n- Longitudinal propagation through rods.\n- Transverse propagation through beams.\n- Flexural propagation through plates.\n- Membrane wave propagation.\n- Standing-wave formation.\n- Wave reflection at supported structural boundaries.\n\nSupport propagation through multiple connected structural regions where implemented.\n\nAccount for material transitions and mechanical impedance where the selected model supports them.\n\nDo not assume a mechanical wave in a solid behaves like an acoustic wave in air.\n\nDocument the relevant wave speeds, modes, and dispersion relationships.\n\n## 13. Mechanical wave manipulators\n\nConnect the mechanical subsystem to the existing Wave Manipulator architecture.\n\nIntroduce mechanically focused design structures.\n\nSupport design concepts including:\n\n- Mechanical horns.\n- Tapered waveguides.\n- Resonant plates.\n- Resonant membranes.\n- Mechanical resonators.\n- Vibration concentrators.\n- Mechanical impedance transformers.\n- Phononic crystals.\n- Periodic mechanical structures.\n- Locally resonant metamaterials.\n- Mechanical isolation structures.\n- Vibration suppression structures.\n\nThe objective is to allow users to design geometry that controls mechanical energy propagation.\n\nThe physical model must account for the actual structural geometry, material properties, and boundary conditions.\n\nDo not simply apply acoustic reflector assumptions to mechanical structures.\n\nFor example, a mechanical horn should be analyzed using an appropriate structural or waveguide model, not treated as a decorative tapered object.\n\n## 14. Mechanical focusing and energy concentration\n\nIntroduce mechanical focusing and vibration concentration.\n\nThe user should be able to define:\n\n- A target location.\n- A target region.\n- Desired displacement amplitude.\n- Desired vibration frequency.\n- Desired phase where applicable.\n- Suppression regions.\n- Mechanical constraints.\n\nSupport multiple actuator configurations.\n\nCalculate the mechanical response produced by the selected structure and actuator arrangement.\n\nWhere mathematically appropriate, introduce inverse-design methods.\n\nFor a linear frequency-domain system, a general representation is:\n\n\\[\n\\mathbf{D}(\\omega)\\mathbf{u}=\\mathbf{f}\n\\]\n\nwhere:\n\n- \\(\\mathbf{D}(\\omega)\\) is the dynamic stiffness operator.\n- \\(\\mathbf{u}\\) is the displacement response.\n- \\(\\mathbf{f}\\) is the applied excitation.\n\nUse an appropriate formulation for the selected structural model.\n\nDevelop optimization approaches that can adjust actuator inputs or structural parameters to meet target displacement and suppression constraints.\n\nDo not assume every target distribution is physically achievable.\n\nReport residual error, constraints, and numerical limitations.\n\n## 15. Mechanical metamaterials and phononic crystals\n\nPrepare for mechanical metamaterial design.\n\nSupport geometric representation of:\n\n- Periodic unit cells.\n- Repeating lattices.\n- Locally resonant inclusions.\n- Layered periodic structures.\n- Phononic crystal arrangements.\n\nPrepare analysis capabilities for:\n\n- Dispersion relations.\n- Band structures.\n- Stop bands.\n- Pass bands.\n- Wave attenuation.\n- Mode localization.\n\nFor periodic structures, investigate appropriate unit-cell and Bloch-periodic formulations.\n\nDo not claim a band gap based solely on observing low displacement in one transient simulation.\n\nValidate band structure calculations against appropriate analytical or independent numerical references.\n\nThis is a major future capability; prioritize architecture and one tractable demonstration over an incomplete general metamaterials engine.\n\n## 16. Mechanical and acoustic coupling\n\nPrepare a coupled physics architecture.\n\nMechanical vibration can radiate acoustic energy, and acoustic pressure can excite mechanical structures.\n\nSupport the conceptual coupling between:\n\n- Structural vibration.\n- Acoustic pressure.\n- Fluid loading.\n- Transducer vibration.\n- Acoustic radiation.\n\nPotential applications include:\n- Loudspeaker diaphragms.\n- Ultrasonic transducers.\n- Vibrating plates radiating sound.\n- Acoustic excitation of structures.\n- Coupled fluid-structure systems.\n\nDo not implement one-way or two-way coupling without explicitly defining its physical assumptions.\n\nFor initial development, implement a documented one-way coupling demonstration if practical.\n\nPrepare for two-way fluid-structure interaction as a later advanced capability.\n\n## 17. Numerical solver strategy\n\nUse appropriate numerical methods for mechanical problems.\n\nInvestigate and integrate established methods such as:\n\n- Finite Element Method.\n- Structural beam and shell elements.\n- Finite Difference methods where appropriate.\n- Spectral element methods.\n- Modal superposition.\n- Reduced-order models.\n- Boundary element methods for selected radiation problems.\n\nOpen-source tools such as Gmsh and suitable established numerical libraries may be considered.\n\nInvestigate integration with mature external structural solvers where they provide meaningful value.\n\nDo not assume the acoustic FDTD implementation is suitable for general solid mechanics.\n\nFor each solver, document:\n- Governing equations.\n- Degrees of freedom.\n- Element formulations.\n- Material assumptions.\n- Boundary conditions.\n- Numerical stability.\n- Convergence requirements.\n- Supported physical effects.\n\nBegin with a validated linear-elastic structural FEM implementation or integration.\n\nDo not attempt nonlinear contact, plasticity, or fracture mechanics in this milestone.\n\n## 18. Mesh and resource management\n\nExtend the simulation mesh infrastructure for structural mechanics.\n\nSupport:\n\n- Beam meshes.\n- Surface meshes.\n- Shell meshes.\n- Volume meshes.\n- Material regions.\n- Structural constraints.\n- Actuator attachment regions.\n- Probe locations.\n\nProvide mesh quality checks.\n\nPreflight estimates must consider:\n- Degrees of freedom.\n- Element count.\n- Matrix storage.\n- Solver memory.\n- Expected computational cost.\n- Eigenvalue count.\n- Time integration requirements.\n\nSupport sparse matrix representations and sparse solvers.\n\nDo not construct unnecessarily dense matrices for large structural systems.\n\nProvide cancellation and progress reporting for expensive simulations.\n\n## 19. Visualization\n\nExtend the OpenGL viewport to visualize actual mechanical simulation results.\n\nImplement:\n\n**Structural visualization**\n- Original geometry.\n- Deformed geometry.\n- Adjustable deformation scale.\n- Displacement magnitude.\n- Stress distribution.\n- Strain distribution.\n- Velocity and acceleration where available.\n\n**Modal visualization**\n- Selected mode shape.\n- Animated vibration.\n- Nodal regions.\n- Antinodes.\n- Frequency labels.\n\n**Wave visualization**\n- Transient mechanical waves.\n- Standing waves.\n- Flexural wave patterns.\n- Propagation through structures.\n\n**Analysis visualization**\n- Frequency-response curves.\n- Mode frequency tables.\n- Probe waveforms.\n- Stress and displacement plots.\n- Energy distribution.\n- Comparison of simulation configurations.\n\nDo not display unsupported field quantities.\n\nAlways distinguish the undeformed physical geometry from the visually amplified deformation.\n\nVisualization must use stored numerical results and should not trigger recalculation when only display settings change.\n\n## 20. Experimental measurement and calibration preparation\n\nPrepare mechanical simulations for future experimental comparison.\n\nIntroduce data structures for:\n\n- Accelerometer measurements.\n- Displacement measurements.\n- Strain gauge measurements.\n- Force measurements.\n- Frequency-response measurements.\n- Sensor position and orientation.\n- Calibration information.\n\nSupport importing measured data from documented formats such as CSV.\n\nAllow measured and simulated frequency-response curves to be compared.\n\nDo not claim automated hardware acquisition in this milestone.\n\nThe architecture must eventually support sensor calibration and experimental model updating.\n\n## 21. Performance and computational backends\n\nBegin with a correct CPU implementation.\n\nInvestigate:\n\n- Sparse matrix optimization.\n- Eigenvalue solver performance.\n- OpenMP.\n- SIMD.\n- GPU compute.\n- Reduced-order modeling.\n- Modal superposition.\n\nKeep the mechanical physics model independent of its execution backend.\n\nValidate accelerated implementations against the reference CPU implementation.\n\nDo not compromise numerical accuracy without explicitly reporting it.\n\n## 22. Example projects\n\nCreate reproducible demonstration projects.\n\n**Example A \u2014 Vibrating beam**\n- Aluminum or steel beam.\n- Defined support conditions.\n- Modal analysis.\n- First several natural frequencies.\n- Mode-shape visualization.\n\n**Example B \u2014 Vibrating plate**\n- Rectangular plate.\n- Configurable thickness.\n- Modal analysis.\n- Nodal and antinodal visualization.\n\n**Example C \u2014 Forced resonance**\n- Structural model.\n- Mechanical actuator.\n- Frequency sweep.\n- Frequency-response plot.\n- Resonance identification.\n\n**Example D \u2014 Transient vibration**\n- Mechanical impulse.\n- Time-domain simulation.\n- Displacement and velocity visualization.\n- Probe recordings.\n\n**Example E \u2014 Mechanical wave propagation**\n- Rod or beam.\n- Transient excitation.\n- Propagating and reflected waves.\n\n**Example F \u2014 Vibration concentration**\n- Structural geometry.\n- Multiple actuators.\n- Defined target location.\n- Optimized or adjusted actuator inputs.\n- Measured target response.\n\n**Example G \u2014 Phononic structure**\n- Periodic mechanical unit cell.\n- Dispersion or band-structure analysis where implemented.\n- Stop-band demonstration.\n\nAll examples must use actual implemented mechanical calculations.\n\n## 23. Validation and numerical credibility\n\nImplement a rigorous mechanical validation program.\n\nValidate:\n\n- Linear elasticity.\n- Beam deformation.\n- Plate deformation.\n- Natural frequencies.\n- Mode shapes.\n- Forced harmonic response.\n- Damping behavior.\n- Transient integration.\n- Energy behavior.\n- Structural wave propagation.\n- Material transitions where supported.\n- Mesh convergence.\n- Time-step convergence.\n- Eigenvalue solver accuracy.\n\nUse analytical solutions for simple structures wherever possible.\n\nCompare against independently established reference results.\n\nDocument:\n- Numerical error.\n- Mesh resolution.\n- Solver tolerances.\n- Boundary conditions.\n- Material parameters.\n- Validity assumptions.\n\nDo not use visually plausible deformation as proof of mechanical accuracy.\n\n## 24. Documentation\n\nCreate or update:\n\n- MECHANICAL_PHYSICS.md\n- STRUCTURAL_MECHANICS.md\n- MECHANICAL_MATERIALS.md\n- MODAL_ANALYSIS.md\n- FORCED_RESPONSE.md\n- TRANSIENT_VIBRATION.md\n- MECHANICAL_WAVE_PROPAGATION.md\n- MECHANICAL_FOCUSING.md\n- PHONONIC_STRUCTURES.md\n- FLUID_STRUCTURE_COUPLING.md\n- MECHANICAL_VALIDATION.md\n- IMPLEMENTATION_STATUS.md\n- DECISIONS.md\n\nDocument equations, material assumptions, element formulations, boundary conditions, numerical methods, and limitations.\n\n## 25. Implementation sequence\n\n**Phase A \u2014 Mechanical domain architecture**\n- Domain models.\n- Material properties.\n- Actuator models.\n- Structural representations.\n- Solver interfaces.\n\n**Phase B \u2014 Structural mechanics foundation**\n- Linear elasticity.\n- Structural mesh.\n- Boundary conditions.\n- Static analysis.\n- Validation.\n\n**Phase C \u2014 Modal analysis**\n- Mass matrix.\n- Stiffness matrix.\n- Eigenvalue solution.\n- Mode visualization.\n- Analytical comparisons.\n\n**Phase D \u2014 Forced response**\n- Harmonic excitation.\n- Frequency sweeps.\n- Damping.\n- Frequency-response plots.\n\n**Phase E \u2014 Transient vibration**\n- Time integration.\n- Actuator waveforms.\n- Displacement and velocity recording.\n- Probe support.\n\n**Phase F \u2014 Mechanical wave propagation**\n- Beam and rod waves.\n- Plate and membrane models where practical.\n- Wave reflection.\n- Standing-wave behavior.\n\n**Phase G \u2014 Mechanical wave manipulation**\n- Resonators.\n- Mechanical horns.\n- Vibration concentrators.\n- Phononic structures.\n\n**Phase H \u2014 Optimization and coupling**\n- Actuator optimization.\n- Structural parameter optimization.\n- Initial acoustic coupling.\n\n**Phase I \u2014 Performance and validation**\n- Sparse solvers.\n- Resource management.\n- Numerical validation.\n- Example projects.\n- Documentation.\n\nWork incrementally. A validated structural FEM and modal-analysis workflow is more valuable than numerous partially implemented mechanical features.\n\n## 26. Acceptance criteria\n\nThis milestone is complete only when:\n\n1. Mechanical physics is a distinct modular domain.\n2. Mechanical material properties are supported.\n3. Mechanical actuator objects can be created and configured.\n4. Structural geometry can be prepared for mechanical analysis.\n5. Linear-elastic structural analysis works.\n6. Modal analysis calculates natural frequencies and mode shapes.\n7. Forced-response analysis works for supported structures.\n8. Frequency sweeps produce meaningful response curves.\n9. At least one transient vibration simulation works.\n10. Mechanical field quantities are visualized correctly.\n11. Results distinguish physical displacement from visualization scaling.\n12. Mechanical wave behavior is demonstrated in at least one validated structural model.\n13. The architecture supports future mechanical wave manipulation.\n14. At least one target-driven vibration optimization demonstration works if the selected model supports it.\n15. Results retain reproducibility metadata.\n16. Analytical or independent numerical validation is documented.\n17. Automated tests pass.\n18. Simulation resource consumption is estimated and controlled.\n19. Existing acoustic capabilities remain functional.\n20. Documentation clearly identifies implemented and deferred capabilities.\n\n## 27. Critical development rules\n\n- Mechanical physics must remain separate from acoustic physics.\n- Do not treat solid mechanics as a scalar acoustic wave equation.\n- Do not confuse structural modal analysis with transient wave propagation.\n- Do not claim unsupported anisotropic, nonlinear, or viscoelastic behavior.\n- Do not fabricate material properties.\n- Do not ignore structural boundary conditions.\n- Do not display stress or strain if the solver does not calculate them.\n- Do not present amplified deformation as actual displacement.\n- Do not use dense numerical methods unnecessarily.\n- Validate numerical methods against independent references.\n- Preserve the existing acoustic subsystem.\n- Keep solver and rendering architectures modular.\n- Maintain reproducibility.\n- Record important architectural decisions.\n\n**The goal is to make Resonant a serious mechanical wave and structural vibration engineering environment: model structures, calculate their resonances, excite them, observe how mechanical energy propagates, and design geometries and actuator arrangements that control the resulting vibration.**",
+  "file": "requests/inbox/2026-11-26-prompt-10-resonant-mechanical--req-chat-20261126-006.md",
+  "attachments": [],
+  "context": "Sixth ticket, submitted by the user in chat while REQ-CHAT-20261126-002 was being processed, with the instruction to process it in order (after REQ-CHAT-20261126-005). Second physics domain; builds on the application foundation (002), the wave-manipulator architecture (004) and the solver framework (005). Standing operator instructions for all tickets: keep qmake support in addition to CMake; Qt user interfaces use .ui files.",
+  "text_sha256": "113eacf165f3aa940eab673e1f19a93745011bc83d268344c3d838e8ff79de39",
+  "classification": {
+    "proposed_type": "FEATURE",
+    "proposed_source": "override",
+    "normalized_type": "FEATURE",
+    "heuristic_type": "FEATURE",
+    "final_type": "FEATURE",
+    "confidence": "high",
+    "validation": "PASS",
+    "classifier_reason": "request statement is framed as feature: Implement, ability to, capabilities, implement",
+    "correction_reason": null,
+    "normalization_note": null,
+    "evidence": [
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "milestone",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This milestone introduces the second major physics domain: **mechanical waves and structural vibration**."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "introduces",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This milestone introduces the second major physics domain: **mechanical waves and structural vibration**."
+      },
+      {
+        "category": "PERFORMANCE",
+        "where": "body",
+        "phrase": "optimizing",
+        "strength": "weak",
+        "note": "enumeration",
+        "sentence": "The objective is to transform Resonant into a platform capable of designing, analyzing, and optimizing mechanical structures that transmit, reflect, concentrate, distribute, or suppress vibration and "
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "objective",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The objective is to transform Resonant into a platform capable of designing, analyzing, and optimizing mechanical structures that transmit, reflect, concentrate, distribute, or suppress vibration and "
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Build",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Build on the existing application, geometry, material, simulation, visualization, and solver architectures."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement a modular mechanical physics subsystem supporting:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "ability to",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The system should eventually support realistic mechanical wave-field engineering, including the ability to design structures that concentrate vibration at selected locations or suppress unwanted vibra"
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not attempt to implement every mechanical phenomenon in one milestone."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "milestone",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not attempt to implement every mechanical phenomenon in one milestone."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "capabilities",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Prioritize scientifically validated capabilities."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Create a dedicated mechanical physics subsystem."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "should include",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The subsystem should include:"
+      },
+      {
+        "category": "PERFORMANCE",
+        "where": "body",
+        "phrase": "optimization",
+        "strength": "weak",
+        "note": "bullet",
+        "sentence": "Mechanical optimization."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "reuse",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The mechanical subsystem may reuse generic application infrastructure, including:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "reuse",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not reuse acoustic equations or solver implementations where the underlying physics differs."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Extend",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Extend the material system with mechanical properties."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support common engineering materials:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support isotropic materials initially."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement the appropriate mechanical wave equations."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement consistent definitions and units."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Introduce",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Introduce a first-class **Mechanical Actuator** object."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "first-class",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Introduce a first-class **Mechanical Actuator** object."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "should support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Each actuator should support:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support initial excitation types:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support mechanical analysis of:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement appropriate structural representations."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Allow",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Allow users to identify appropriate idealizations."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Provide",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Provide geometric properties such as:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement a structural mechanics foundation capable of calculating mechanical deformation and vibration."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support appropriate formulations for:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement the necessary structural degrees of freedom and constraints for each selected element formulation."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "expose",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Where a structural formulation is not implemented, do not expose it as a functioning solver option."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement structural modal analysis."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capability",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This is a core capability."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Allow",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Allow users to select individual modes and visualize their deformation."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Provide",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Provide mode animation with adjustable playback speed."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement forced-response analysis."
+      }
+    ],
+    "scores": {
+      "FEATURE": {
+        "head": 5,
+        "body": 93
+      },
+      "BUG": {
+        "head": 0,
+        "body": 2
+      },
+      "CRASH": {
+        "head": 0,
+        "body": 0
+      },
+      "REGRESSION": {
+        "head": 0,
+        "body": 0
+      },
+      "PERFORMANCE": {
+        "head": 0,
+        "body": 7
+      },
+      "REFACTOR": {
+        "head": 0,
+        "body": 10
+      },
+      "BUILD": {
+        "head": 0,
+        "body": 0
+      },
+      "DOCUMENTATION": {
+        "head": 0,
+        "body": 8
+      },
+      "INVESTIGATION": {
+        "head": 0,
+        "body": 14
+      },
+      "PROCESS-CHANGE": {
+        "head": 0,
+        "body": 1
+      }
+    },
+    "evidence_total": 140,
+    "validator": "scripts/request_classification.py"
+  },
+  "links": {
+    "work": [
+      "WORK-000006"
+    ]
+  },
+  "commits": [],
+  "resolution": {
+    "from": "processing",
+    "to": "completed",
+    "at": "2026-11-27T02:16:17.971789+00:00",
+    "by": "agent-dev-20261126151713-76f632",
+    "gates": [
+      {
+        "work": "WORK-000006",
+        "at": "2026-11-27T02:16:17.799707+00:00",
+        "verdict": "PASS",
+        "request_fingerprint": "399c4b35e6f8ff708da333d03665f0551466e54028a7ef8c5358b4dd2a39d8c2",
+        "test_runs": [
+          "20261126T210629-3989299"
+        ]
+      }
+    ]
+  }
+}

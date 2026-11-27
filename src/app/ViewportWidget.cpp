@@ -43,6 +43,19 @@ void ViewportWidget::setField(const render::ComplexFieldGrid& grid, const render
     update();
 }
 
+void ViewportWidget::setScalarMesh(std::shared_ptr<const render::ScalarMesh> mesh, std::vector<render::LineItem> lines)
+{
+    renderer_.scalarMesh().setMesh(std::move(mesh));
+    extraLines_ = std::move(lines);
+    frameStale_ = true;
+    update();
+}
+
+const render::ScalarMesh* ViewportWidget::scalarMesh() const
+{
+    return renderer_.scalarMesh().mesh();
+}
+
 void ViewportWidget::refresh()
 {
     frameStale_ = true;
@@ -55,7 +68,9 @@ void ViewportWidget::rebuildFrame()
         return;
     frame_ = bridge_.build(controller_->scene(), controller_->selection());
     renderer_.meshes().setItems(frame_.items);
-    renderer_.lines().setLines(frame_.lines);
+    std::vector<render::LineItem> lines = frame_.lines;
+    lines.insert(lines.end(), extraLines_.begin(), extraLines_.end());
+    renderer_.lines().setLines(lines);
     frameStale_ = false;
 }
 

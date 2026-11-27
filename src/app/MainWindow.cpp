@@ -9,6 +9,10 @@
 #include "FdtdController.h"
 #include "FdtdPanel.h"
 #include "ManipulatorController.h"
+#include "MechanicalEditor.h"
+#include "MechanicsController.h"
+#include "MechanicsMarkers.h"
+#include "MechanicsPanel.h"
 #include "TimeSignalPanel.h"
 #include "ManipulatorEditor.h"
 #include "AnalysisPanel.h"
@@ -58,6 +62,7 @@ MainWindow::MainWindow(QWidget* parent)
     ui_->menuPanels->addAction(ui_->analysisDock->toggleViewAction());
     ui_->menuPanels->addAction(ui_->acousticsDock->toggleViewAction());
     ui_->menuPanels->addAction(ui_->solverDock->toggleViewAction());
+    ui_->menuPanels->addAction(ui_->mechanicsDock->toggleViewAction());
     ui_->menuPanels->addSeparator();
     ui_->menuPanels->addAction(ui_->fileToolBar->toggleViewAction());
     ui_->menuPanels->addAction(ui_->geometryToolBar->toggleViewAction());
@@ -97,6 +102,7 @@ MainWindow::MainWindow(QWidget* parent)
     connectAcoustics();
     connectManipulators();
     connectFullWave();
+    connectMechanics();
 
     unsavedChangesPrompt = [this] {
         return QMessageBox::warning(this, QStringLiteral("Unsaved changes"),
@@ -115,6 +121,7 @@ MainWindow::MainWindow(QWidget* parent)
     // A workspace where the viewport dominates.
     tabifyDockWidget(ui_->propertiesDock, ui_->acousticsDock);
     tabifyDockWidget(ui_->acousticsDock, ui_->solverDock);
+    tabifyDockWidget(ui_->solverDock, ui_->mechanicsDock);
     ui_->propertiesDock->raise();
     resizeDocks({ui_->sceneDock, ui_->propertiesDock}, {280, 380}, Qt::Horizontal);
     resizeDocks({ui_->analysisDock}, {220}, Qt::Vertical);
@@ -385,6 +392,89 @@ void MainWindow::connectFullWave()
         if (!fdtd_->results().empty())
             ui_->analysisPanel->showTab(timeSignals_);
     });
+}
+
+MechanicsPanel& MainWindow::mechanicsPanel()
+{
+    return *ui_->mechanicsPanel;
+}
+
+void MainWindow::connectMechanics()
+{
+    using resonant::mechanics::Analysis;
+    using resonant::mechanics::Idealization;
+    mechanics_ = new MechanicsController(controller_, acoustics_, this);
+    ui_->mechanicsPanel->setControllers(mechanics_, acoustics_);
+    ui_->viewport->bridge().addDecorator(makeMechanicsDecorator());
+    ui_->viewport->bridge().setReplaced([this](const resonant::Id& id) { return id == mechanics_->displayedStructure(); });
+    ui_->propertiesPanel->addComponentEditorFactory(makeMechanicalEditorFactory(*acoustics_, *mechanics_));
+
+    const auto showPanel = [this] {
+        ui_->mechanicsDock->show();
+        ui_->mechanicsDock->raise();
+    };
+    const std::pair<QAction*, Idealization> idealizations[] = {{ui_->actionMakeBeam, Idealization::Beam},
+                                                               {ui_->actionMakePlate, Idealization::Plate},
+                                                               {ui_->actionMakeMembrane, Idealization::Membrane},
+                                                               {ui_->actionMakeSolid, Idealization::Solid}};
+    for (const auto& [action, idealization] : idealizations)
+        connect(action, &QAction::triggered, this, [this, showPanel, idealization] {
+            const resonant::Id id = controller_->primarySelection();
+            if (const resonant::Status status = mechanics_->makeStructural(id, idealization); !status) {
+                showFailure(QString::fromStdString(status.message()));
+                return;
+            }
+            showPanel();
+            ui_->mechanicsPanel->selectStructure(id);
+            ui_->mechanicsPanel->check();
+        });
+    // New markers go on the selected structure, or the one chosen in the panel.
+    const auto structureForMarker = [this] {
+        const resonant::Id selected = controller_->primarySelection();
+        const resonant::SceneObject* object = controller_->scene().find(selected);
+        if (object && dynamic_cast<const resonant::mechanics::StructureComponent*>(object->state.component.get()))
+            return selected;
+        return ui_->mechanicsPanel->selectedStructure();
+    };
+    const auto created = [this](const resonant::Result<resonant::Id>& result) {
+        if (!result)
+            showFailure(QString::fromStdString(result.message()));
+    };
+    connect(ui_->actionAddActuator, &QAction::triggered, this, [this, created, structureForMarker] { created(mechanics_->addActuator(structureForMarker())); });
+    connect(ui_->actionAddSensor, &QAction::triggered, this, [this, created, structureForMarker] { created(mechanics_->addSensor(structureForMarker())); });
+    connect(ui_->actionAddVibrationTarget, &QAction::triggered, this,
+            [this, created, structureForMarker] { created(mechanics_->addTarget(structureForMarker())); });
+    connect(ui_->actionAddHorn, &QAction::triggered, this, [this, created] {
+        created(mechanics_->addRod("rod.horn"));
+        ui_->viewport->frameAll();
+    });
+    connect(ui_->actionAddPeriodicRod, &QAction::triggered, this, [this, created] {
+        created(mechanics_->addRod("rod.periodic"));
+        ui_->viewport->frameAll();
+    });
+    const std::pair<QAction*, const char*> runs[] = {{ui_->actionRunModal, "modesTab"},
+                                                     {ui_->actionRunHarmonic, "harmonicTab"},
+                                                     {ui_->actionRunTransient, "transientTab"},
+                                                     {ui_->actionRunStatic, "staticTab"}};
+    for (const auto& [action, tab] : runs)
+        connect(action, &QAction::triggered, this, [this, showPanel, structureForMarker, tab = QString::fromLatin1(tab)] {
+            showPanel();
+            if (const resonant::Id id = structureForMarker(); !id.isNull())
+                ui_->mechanicsPanel->selectStructure(id);
+            ui_->mechanicsPanel->showTab(tab);
+            const bool started = tab == QLatin1String("modesTab")      ? ui_->mechanicsPanel->runModal()
+                                 : tab == QLatin1String("harmonicTab") ? ui_->mechanicsPanel->runHarmonic()
+                                 : tab == QLatin1String("transientTab") ? ui_->mechanicsPanel->runTransient()
+                                                                        : ui_->mechanicsPanel->runStatic();
+            if (started) {
+                ui_->analysisDock->show();
+                ui_->analysisPanel->showSimulationStatus();
+            }
+        });
+    connect(mechanics_, &MechanicsController::displayChanged, this, [this] {
+        ui_->viewport->setScalarMesh(mechanics_->displayMesh(), mechanics_->displayLines());
+    });
+    connect(mechanics_, &MechanicsController::message, this, &MainWindow::showFailure);
 }
 
 void MainWindow::updateDocumentState()

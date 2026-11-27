@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 
-namespace resonant::fdtd {
+namespace resonant::dsp {
 
 enum class WaveformKind {
     Continuous,     // sinusoid switched on with a smooth ramp
@@ -58,4 +58,4 @@ struct Waveform {
 nlohmann::json toJson(const Waveform& waveform);
 Result<Waveform> waveformFromJson(const nlohmann::json& value);
 
-}  // namespace resonant::fdtd
+}  // namespace resonant::dsp

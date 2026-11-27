@@ -260,6 +260,6 @@ TEST(Project, NewProjectHasExampleMaterialsAndAnEmptyScene)
     EXPECT_EQ(project->name, "Fresh");
     EXPECT_FALSE(project->id.isNull());
     EXPECT_EQ(project->scene.objectCount(), 0u);
-    EXPECT_EQ(project->materials.materials().size(), 10u);
+    EXPECT_EQ(project->materials.materials().size(), 18u);
     EXPECT_NE(Project::createNew()->id, project->id);
 }

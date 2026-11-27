@@ -14,7 +14,7 @@
 #include <string>
 #include <vector>
 
-namespace resonant::fdtd {
+namespace resonant::dsp {
 
 enum class Window { Rectangular, Hann };
 
@@ -65,4 +65,4 @@ struct SpectralPeak {
 std::vector<SpectralPeak> findPeaks(const Spectrum& spectrum, double minRelative = 0.05, double minHz = 0.0,
                                     double maxHz = std::numeric_limits<double>::infinity());
 
-}  // namespace resonant::fdtd
+}  // namespace resonant::dsp

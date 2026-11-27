@@ -20,7 +20,7 @@
 //
 // This file knows nothing about scenes: a GridSpec is a complete numerical
 // problem. FdtdSetup.h builds one from a project.
-#include "fdtd/Waveform.h"
+#include "dsp/Waveform.h"
 #include "foundation/Result.h"
 
 #include <array>
@@ -30,6 +30,12 @@
 #include <vector>
 
 namespace resonant::fdtd {
+
+// Signals and spectra are shared by every physics domain (src/core/dsp).
+using dsp::Waveform;
+using dsp::WaveformKind;
+using dsp::waveformFromJson;
+using dsp::waveformKindFromString;
 
 enum class BoundaryKind {
     Rigid,            // normal velocity zero at the face

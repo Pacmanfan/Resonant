@@ -1,5 +1,6 @@
 #include "fdtd/SolidModel.h"
 
+#include <algorithm>
 #include <cmath>
 
 namespace resonant::fdtd {
@@ -170,6 +171,29 @@ std::optional<SolidModel> solidModelOf(const Geometry& g, double minThickness)
             return x >= s && x <= w && std::abs(q.y()) <= h && q.z() <= 0.0 && q.z() >= -t;
         };
         model.boundingRadius = std::hypot(w, h) + t;
+    } else if (kind == "rod.horn" || kind == "rod.periodic") {
+        // Circular rods along Z (geometry kinds of the mechanical module,
+        // described here from their parameters).
+        const bool periodic = kind == "rod.periodic";
+        const double length = periodic ? p("cells") * (p("lengthA") + p("lengthB")) : p("length");
+        const auto radiusAt = [&g, periodic, length](double z) {
+            const double s = std::clamp(z / length + 0.5, 0.0, 1.0);
+            if (periodic) {
+                const double a = g.parameter("lengthA"), b = g.parameter("lengthB");
+                return std::fmod(s * length, a + b) < a ? g.parameter("radiusA") : g.parameter("radiusB");
+            }
+            const double r1 = g.parameter("inputRadius"), r2 = g.parameter("outputRadius");
+            switch (std::lround(g.parameter("profile"))) {
+            case 0: return r1 + (r2 - r1) * s;
+            case 1: return r1 * std::pow(r2 / r1, s);
+            default: return s < 0.5 ? r1 : r2;
+            }
+        };
+        model.contains = [radiusAt, length](const Vec3& q) {
+            return std::abs(q.z()) <= 0.5 * length && std::hypot(q.x(), q.y()) <= radiusAt(q.z());
+        };
+        const double largest = periodic ? std::max(p("radiusA"), p("radiusB")) : std::max(p("inputRadius"), p("outputRadius"));
+        model.boundingRadius = std::hypot(largest, 0.5 * length);
     } else {
         return std::nullopt;
     }

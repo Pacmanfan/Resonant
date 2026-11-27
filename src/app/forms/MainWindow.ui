@@ -124,6 +124,25 @@
     <addaction name="separator"/>
     <addaction name="actionShowRays"/>
    </widget>
+   <widget class="QMenu" name="menuMechanics">
+    <property name="title"><string>Mec&amp;hanics</string></property>
+    <addaction name="actionMakeBeam"/>
+    <addaction name="actionMakePlate"/>
+    <addaction name="actionMakeMembrane"/>
+    <addaction name="actionMakeSolid"/>
+    <addaction name="separator"/>
+    <addaction name="actionAddActuator"/>
+    <addaction name="actionAddSensor"/>
+    <addaction name="actionAddVibrationTarget"/>
+    <addaction name="separator"/>
+    <addaction name="actionAddHorn"/>
+    <addaction name="actionAddPeriodicRod"/>
+    <addaction name="separator"/>
+    <addaction name="actionRunModal"/>
+    <addaction name="actionRunHarmonic"/>
+    <addaction name="actionRunTransient"/>
+    <addaction name="actionRunStatic"/>
+   </widget>
    <widget class="QMenu" name="menuSimulation">
     <property name="title"><string>S&amp;imulation</string></property>
     <addaction name="actionRunFullWave"/>
@@ -157,6 +176,7 @@
    <addaction name="menuMaterials"/>
    <addaction name="menuAcoustics"/>
    <addaction name="menuManipulators"/>
+   <addaction name="menuMechanics"/>
    <addaction name="menuSimulation"/>
    <addaction name="menuTools"/>
    <addaction name="menuHelp"/>
@@ -230,6 +250,11 @@
    <property name="windowTitle"><string>Acoustics</string></property>
    <attribute name="dockWidgetArea"><number>2</number></attribute>
    <widget class="AcousticsPanel" name="acousticsPanel"/>
+  </widget>
+  <widget class="QDockWidget" name="mechanicsDock">
+   <property name="windowTitle"><string>Mechanics</string></property>
+   <attribute name="dockWidgetArea"><number>2</number></attribute>
+   <widget class="MechanicsPanel" name="mechanicsPanel"/>
   </widget>
   <widget class="QDockWidget" name="solverDock">
    <property name="windowTitle"><string>Full-Wave Solver</string></property>
@@ -544,6 +569,71 @@
    <property name="statusTip"><string>Calculate the field over the chosen region</string></property>
    <property name="shortcut"><string>F5</string></property>
   </action>
+  <action name="actionMakeBeam">
+   <property name="text"><string>Make &amp;Beam</string></property>
+   <property name="toolTip"><string>Idealize the selected box, cylinder or rod as a beam</string></property>
+   <property name="statusTip"><string>Idealize the selected box, cylinder or rod as a beam</string></property>
+  </action>
+  <action name="actionMakePlate">
+   <property name="text"><string>Make &amp;Plate</string></property>
+   <property name="toolTip"><string>Idealize the selected box or plane as a thin plate</string></property>
+   <property name="statusTip"><string>Idealize the selected box or plane as a thin plate</string></property>
+  </action>
+  <action name="actionMakeMembrane">
+   <property name="text"><string>Make &amp;Membrane</string></property>
+   <property name="toolTip"><string>Idealize the selected box or plane as a pre-tensioned membrane</string></property>
+   <property name="statusTip"><string>Idealize the selected box or plane as a pre-tensioned membrane</string></property>
+  </action>
+  <action name="actionMakeSolid">
+   <property name="text"><string>Make &amp;Solid</string></property>
+   <property name="toolTip"><string>Idealize the selected box as a three-dimensional elastic solid</string></property>
+   <property name="statusTip"><string>Idealize the selected box as a three-dimensional elastic solid</string></property>
+  </action>
+  <action name="actionAddActuator">
+   <property name="text"><string>Add &amp;Actuator</string></property>
+   <property name="toolTip"><string>Add a force actuator on the selected structure</string></property>
+   <property name="statusTip"><string>Add a force actuator on the selected structure</string></property>
+  </action>
+  <action name="actionAddSensor">
+   <property name="text"><string>Add &amp;Sensor</string></property>
+   <property name="toolTip"><string>Add a measurement point on the selected structure</string></property>
+   <property name="statusTip"><string>Add a measurement point on the selected structure</string></property>
+  </action>
+  <action name="actionAddVibrationTarget">
+   <property name="text"><string>Add Vibration &amp;Target</string></property>
+   <property name="toolTip"><string>Add a point where a vibration amplitude is wanted</string></property>
+   <property name="statusTip"><string>Add a point where a vibration amplitude is wanted</string></property>
+  </action>
+  <action name="actionAddHorn">
+   <property name="text"><string>Add &amp;Horn</string></property>
+   <property name="toolTip"><string>Add a stepped horn (velocity transformer), idealized as a steel beam</string></property>
+   <property name="statusTip"><string>Add a stepped horn (velocity transformer), idealized as a steel beam</string></property>
+  </action>
+  <action name="actionAddPeriodicRod">
+   <property name="text"><string>Add Periodic &amp;Rod</string></property>
+   <property name="toolTip"><string>Add a periodic rod (phononic structure), idealized as a steel beam</string></property>
+   <property name="statusTip"><string>Add a periodic rod (phononic structure), idealized as a steel beam</string></property>
+  </action>
+  <action name="actionRunModal">
+   <property name="text"><string>Calculate &amp;Modes</string></property>
+   <property name="toolTip"><string>Natural frequencies and mode shapes of the selected structure</string></property>
+   <property name="statusTip"><string>Natural frequencies and mode shapes of the selected structure</string></property>
+  </action>
+  <action name="actionRunHarmonic">
+   <property name="text"><string>Calculate &amp;Frequency Response</string></property>
+   <property name="toolTip"><string>Harmonic response of the selected structure</string></property>
+   <property name="statusTip"><string>Harmonic response of the selected structure</string></property>
+  </action>
+  <action name="actionRunTransient">
+   <property name="text"><string>Run &amp;Transient Analysis</string></property>
+   <property name="toolTip"><string>Time-domain response of the selected structure</string></property>
+   <property name="statusTip"><string>Time-domain response of the selected structure</string></property>
+  </action>
+  <action name="actionRunStatic">
+   <property name="text"><string>Calculate &amp;Static Deformation</string></property>
+   <property name="toolTip"><string>Static deformation of the selected structure</string></property>
+   <property name="statusTip"><string>Static deformation of the selected structure</string></property>
+  </action>
   <action name="actionRunFullWave">
    <property name="text"><string>Run &amp;Full-Wave Simulation</string></property>
    <property name="toolTip"><string>Run the time-domain full-wave solver on the chosen region</string></property>
@@ -622,6 +712,7 @@
   <customwidget><class>SceneTreePanel</class><extends>QWidget</extends><header>SceneTreePanel.h</header><container>1</container></customwidget>
   <customwidget><class>PropertiesPanel</class><extends>QWidget</extends><header>PropertiesPanel.h</header><container>1</container></customwidget>
   <customwidget><class>AnalysisPanel</class><extends>QWidget</extends><header>AnalysisPanel.h</header><container>1</container></customwidget>
+  <customwidget><class>MechanicsPanel</class><extends>QWidget</extends><header>MechanicsPanel.h</header><container>1</container></customwidget>
   <customwidget><class>FdtdPanel</class><extends>QWidget</extends><header>FdtdPanel.h</header><container>1</container></customwidget>
   <customwidget><class>AcousticsPanel</class><extends>QWidget</extends><header>AcousticsPanel.h</header><container>1</container></customwidget>
  </customwidgets>

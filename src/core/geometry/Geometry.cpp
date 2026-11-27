@@ -12,8 +12,9 @@ const ParameterDef* GeometryKind::findParameter(std::string_view key) const
     return it == parameters.end() ? nullptr : &*it;
 }
 
-// Defined by the module that owns the wave-manipulator kinds.
+// Defined by the modules that own the wave-manipulator and mechanical kinds.
 void registerManipulatorGeometry(GeometryRegistry& registry);
+void registerMechanicalGeometry(GeometryRegistry& registry);
 
 GeometryRegistry& GeometryRegistry::instance()
 {
@@ -21,6 +22,7 @@ GeometryRegistry& GeometryRegistry::instance()
         GeometryRegistry created;
         registerPrimitiveGeometry(created);
         registerManipulatorGeometry(created);
+        registerMechanicalGeometry(created);
         return created;
     }();
     return registry;

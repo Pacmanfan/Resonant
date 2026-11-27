@@ -25,13 +25,16 @@ Renderer::Renderer()
     auto meshes = std::make_unique<MeshLayer>();
     auto lines = std::make_unique<LineLayer>();
     auto field = std::make_unique<FieldLayer>();
+    auto scalarMesh = std::make_unique<ScalarMeshLayer>();
     field_ = field.get();
+    scalarMesh_ = scalarMesh.get();
     grid_ = grid.get();
     meshes_ = meshes.get();
     lines_ = lines.get();
     layers_.push_back(std::move(grid));
     layers_.push_back(std::move(field));
     layers_.push_back(std::move(meshes));
+    layers_.push_back(std::move(scalarMesh));
     layers_.push_back(std::move(lines));
 }
 

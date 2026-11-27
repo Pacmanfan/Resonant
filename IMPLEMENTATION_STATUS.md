@@ -10,7 +10,7 @@ states:
 * **Deferred** — deliberately left to a later milestone, with the reason.
 
 Milestones and the requests that deliver them are in
-`docs/architecture/roadmap.md`. Last updated for REQ-CHAT-20261126-005.
+`docs/architecture/roadmap.md`. Last updated for REQ-CHAT-20261126-006.
 
 ## Application foundation (V0.1) — `docs/requirements/application_foundation.md`
 
@@ -37,7 +37,7 @@ Milestones and the requests that deliver them are in
 | Undo / redo of every scene and material edit | Tested | |
 | SI units internally; display length unit m / cm / mm / in; angles in degrees | Tested | |
 | Material model: per-domain property sets, provenance, validity range, frequency tables | Tested | |
-| Example material library (ten materials) | Tested | every value is illustrative, not authoritative |
+| Example material library (eighteen materials) | Tested | every value is illustrative, not authoritative |
 | Material browser / editor, assignment to objects | Tested | frequency tables can be stored and loaded but not edited in the dialog |
 | Editing temperature validity ranges and frequency tables in the dialog | Missing | |
 | Project save / load (JSON), Save As, New | Tested | atomic save |
@@ -166,3 +166,32 @@ Milestones and the requests that deliver them are in
 | FEM, BEM, angular spectrum, pseudospectral solvers | Missing | |
 | Nonlinear, thermoviscous, streaming, cavitation effects | Missing | requirements for each are listed in `ADVANCED_ACOUSTICS.md` |
 | Example projects A (2D, 3D), B to G in `examples/advanced_acoustics` | Tested | |
+
+## Mechanical waves and structural vibration — `docs/requirements/mechanics.md`, `docs/mechanics/`
+
+| Capability | State | Notes |
+|---|---|---|
+| Separate mechanical module; signals shared through `src/core/dsp`; coupling module | Tested | |
+| Isotropic elastic materials (E, nu, rho, loss factor) with derived constants | Tested | anisotropic, viscoelastic, frequency- and temperature-dependent behaviour: Missing |
+| Material library: stainless steel, brass, titanium, ABS, PLA, nylon, polycarbonate, alumina added | Tested | illustrative values; composites not included (need orthotropy) |
+| Structural idealization chosen by the user, explained, with warnings | Tested | boxes, cylinders, planes, horns, periodic rods; other geometry refused |
+| Euler-Bernoulli 3D frame element | Tested | shear deformation and rotary inertia neglected (stated) |
+| Kirchhoff plate (ACM rectangle) | Tested | out-of-plane bending only; thin plates |
+| Pre-tensioned membrane | Tested | frequencies validated; no stress |
+| Trilinear hexahedral solid | Partial | exact in tension; too stiff in bending unless finely meshed (measured and stated) |
+| Shells, multi-member frames, trusses, layered and composite structures | Missing | |
+| Mesh generation for arbitrary geometry; Gmsh | Missing | structured meshes only |
+| Static analysis with stresses | Tested | beam, plate, solid; refuses structures that are not held |
+| Modal analysis: frequencies, shapes, effective mass, residuals | Tested | dense and shift-invert Lanczos |
+| Harmonic analysis: direct and modal superposition, Rayleigh / loss factor / modal damping | Tested | |
+| Transient analysis: Newmark, actuator signals and delays, sensors, snapshots, energy | Tested | stress and strain histories not recorded |
+| Actuator, sensor, vibration-target objects; property editor; markers | Tested | prescribed displacement / velocity and physical actuator response models: Missing |
+| Deformed display with separate visual magnification, outline, animation, colour by quantity | Tested | strain not displayed |
+| Frequency-response plots with mode markers; transient plots; mode table | Tested | |
+| Measured frequency responses from CSV, stored and compared | Tested | no hardware acquisition |
+| Vibration targeting (actuator inputs by regularized least squares), applied undoably | Tested | structural parameter optimization: request 009 |
+| Horn geometry (conical, exponential, stepped) | Tested | analysed as a member of varying section |
+| Periodic rod: longitudinal Bloch band structure, stop bands, finite-rod attenuation | Tested | 2D/3D phononic crystals, locally resonant metamaterials: Missing |
+| One-way sound radiation from plates and membranes (Rayleigh) | Tested | two-way fluid-structure interaction: Missing |
+| Threads, SIMD, GPU backends | Missing | single-threaded sparse direct solvers |
+| Example projects A to H in `examples/mechanics` | Tested | |

@@ -19,6 +19,8 @@ class AnalysisPanel;
 class FieldAnalysisPanel;
 class ManipulatorController;
 class FdtdController;
+class MechanicsController;
+class MechanicsPanel;
 class FdtdPanel;
 class TimeSignalPanel;
 class DisplayUnits;
@@ -48,6 +50,8 @@ public:
     FieldAnalysisPanel& fieldAnalysis() { return *fieldAnalysis_; }
     ManipulatorController& manipulators() { return *manipulators_; }
     FdtdController& fullWave() { return *fdtd_; }
+    MechanicsController& mechanics() { return *mechanics_; }
+    MechanicsPanel& mechanicsPanel();
     FdtdPanel& fullWavePanel();
     TimeSignalPanel& timeSignals() { return *timeSignals_; }
     QAction* action(const QString& objectName) const;
@@ -78,6 +82,7 @@ private:
     void connectAcoustics();
     void connectManipulators();
     void connectFullWave();
+    void connectMechanics();
     void updateDocumentState();
     void updateSelectionState();
     void fillAssignMaterialMenu();
@@ -95,6 +100,7 @@ private:
     FieldAnalysisPanel* fieldAnalysis_ = nullptr;
     ManipulatorController* manipulators_ = nullptr;
     FdtdController* fdtd_ = nullptr;
+    MechanicsController* mechanics_ = nullptr;
     TimeSignalPanel* timeSignals_ = nullptr;
     QActionGroup* unitGroup_ = nullptr;
     QByteArray defaultLayout_;

@@ -27,6 +27,10 @@ public:
     SceneRenderBridge& bridge() { return bridge_; }
     // The field to display (an empty grid hides it) and how.
     void setField(const resonant::render::ComplexFieldGrid& grid, const resonant::render::FieldDisplay& display);
+    // A coloured surface drawn in world coordinates (a deformed structure), and
+    // lines drawn with it (its undeformed outline). Null clears both.
+    void setScalarMesh(std::shared_ptr<const resonant::render::ScalarMesh> mesh, std::vector<resonant::render::LineItem> lines = {});
+    const resonant::render::ScalarMesh* scalarMesh() const;
     bool graphicsReady() const { return renderer_.isInitialized(); }
     QString graphicsError() const { return graphicsError_; }
 
@@ -71,6 +75,7 @@ private:
     SceneRenderBridge bridge_;
     SceneRenderBridge::Frame frame_;
     bool frameStale_ = true;
+    std::vector<resonant::render::LineItem> extraLines_;
     QString graphicsError_;
     QMetaObject::Connection contextConnection_;
 

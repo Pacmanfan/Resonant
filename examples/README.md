@@ -24,6 +24,14 @@ silently go stale.
 | `advanced_acoustics/e-resonant-cavity.resonant` | a rigid 40 x 30 mm cavity excited by a broadband pulse; the probe's spectrum shows its resonances | full-wave, 2D, 30 cells per wavelength, rigid domain, 10 ms |
 | `advanced_acoustics/f-passive-focusing.resonant` | a parabolic reflector focusing an emitter 150 mm away | full-wave, 2D: the reflector is a trough of that cross-section |
 | `advanced_acoustics/g-hybrid-focusing.resonant` | an 8-element array focused through a parabolic reflector, phases obtained from the full-wave solver by reciprocity | full-wave, 2D; phases valid at 40 kHz |
+| `mechanics/a-vibrating-beam.resonant` | an aluminium cantilever 500 x 30 x 5 mm | Euler-Bernoulli beam; run modal analysis (Mechanics menu) |
+| `mechanics/b-vibrating-plate.resonant` | a simply supported aluminium plate 400 x 300 x 2 mm | Kirchhoff plate; modes show nodal lines with the signed out-of-plane colouring |
+| `mechanics/c-forced-resonance.resonant` | the cantilever with an ideal force at the tip and two accelerometers; sweep 5 - 500 Hz | loss factor 0.02; the force is applied as set (no shaker model) |
+| `mechanics/d-transient-vibration.resonant` | a clamped steel plate struck by a Ricker force pulse | Newmark integration, light Rayleigh damping |
+| `mechanics/e-wave-propagation.resonant` | a free steel rod 2 m long, axial force pulse, two sensors | rod theory; the pulse returns from the free end |
+| `mechanics/f-vibration-concentration.resonant` | four actuators on a plate, one 10 um target and two quiet points at 150 Hz, with solved inputs | harmonic, loss factor 0.01 |
+| `mechanics/g-phononic-rod.resonant` | a steel rod of 8 cells of two diameters | longitudinal waves; band structure from the Mechanics panel |
+| `mechanics/h-stepped-horn.resonant` | a stepped titanium horn 20 / 10 mm | half-wave axial mode with displacement gain 4 |
 
 Run **Acoustics > Run Field Simulation** (F5) after opening an acoustic
 example: the sampled field is not stored in the project file. The acoustic
@@ -34,3 +42,7 @@ and compared with it on every test run; the manipulator examples likewise
 The full-wave examples are run with **Simulation > Run Full-Wave
 Simulation** (F6); their solver settings are stored in the project. They
 are generated and checked by `tests/core/test_fdtd_scene.cpp`.
+
+The mechanics examples are run from the Mechanics menu or panel; their
+analysis settings are stored in the project. They are generated and checked
+by `tests/core/test_mechanics_scene.cpp`.
