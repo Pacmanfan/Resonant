@@ -6,7 +6,7 @@
 **Requirements:** RES-OPT-001, RES-OPT-002, RES-OPT-003, RES-OPT-004, RES-OPT-005, RES-OPT-006, RES-OPT-007, RES-OPT-008, RES-OPT-009, RES-OPT-010, RES-OPT-011, RES-OPT-012, RES-OPT-013, RES-OPT-014, RES-OPT-015, RES-OPT-016, RES-OPT-017, RES-OPT-018, RES-OPT-019, RES-OPT-020, RES-OPT-021, RES-OPT-022, RES-OPT-023, RES-OPT-024, RES-OPT-025
 **Decision:** ADR-000214
 **Evidence:** VER-000012
-**Test-Run:** 20261127T121503-2819155
+**Test-Run:** 20261127T122051-2851810
 **Test-Suites:** core, app, cmake, layering, audits
 
 ## Scope
@@ -50,9 +50,10 @@ optimization framework with acoustic, mechanical and electromagnetic adapters, t
   against phase steering, Dolph-Chebyshev sidelobes, nulls, dipole resonance, exact fields against the array factor, capabilities),
   `test_optimization_examples.cpp` (7 examples run with the physics), `tests/app/test_optimization_ui.cpp` (6 GUI tests),
   shared fixtures `tests/core/OptimizationFixtures.h`.
-- t2 run 20261127T121503-2819155: PASS (core 349 cases, app 87 cases, CMake build and ctest, layering, drift, doc integrity,
-  invariants), after an earlier t2 run 20261127T121027-2794331 that also passed and preceded a small panel fix (the adapter is
-  rebound on every editor refresh). `scripts.tests.test_root_readme` passed (README at 80 lines). The Studio was also driven
+- t2 run 20261127T122051-2851810: PASS (core 349 cases, app 87 cases, CMake build and ctest, layering, drift, doc integrity,
+  invariants) on the final code. Earlier t2 runs 20261127T121027-2794331 and 20261127T121503-2819155 also passed; after them the
+  panel rebinds the adapter on every editor refresh, the checkpoint directory is created only when a run writes into it (a
+  query had created it), and the GUI tests save examples into a temporary directory so checkpoints never land in the source tree. `scripts.tests.test_root_readme` passed (README at 80 lines). The Studio was also driven
   headless: `resonant examples/optimization/f-sidelobe-reduction.resonant --run-optimization first --screenshot` ran 1600
   candidates and showed them in the candidate browser.
 - Bugs found by the new tests and fixed: names with '/' swallowed divisions in expressions (now bracketed ids); candidates were

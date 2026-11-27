@@ -158,7 +158,6 @@ std::string OptimizationController::checkpointFile(const std::string& runId) con
         return {};
     const QFileInfo file(document_->filePath());
     const QString dir = file.absolutePath() + QLatin1Char('/') + file.completeBaseName() + QStringLiteral(".optimization");
-    QDir().mkpath(dir);
     return (dir + QLatin1Char('/') + QString::fromStdString(runId) + QStringLiteral(".checkpoint.json")).toStdString();
 }
 
@@ -184,7 +183,11 @@ Status OptimizationController::launch(OptimizationProblem problem, RunOptions op
     };
     if (problem.algorithm.checkpointEvery <= 0)
         problem.algorithm.checkpointEvery = 10;
-    job_ = std::make_shared<OptimizationJob>(problem, ev.take(), options, checkpointFile(runId));
+    // The checkpoint directory is created only when a run writes into it (a query never creates it).
+    const std::string file = checkpointFile(runId);
+    if (!file.empty())
+        QDir().mkpath(QFileInfo(QString::fromStdString(file)).absolutePath());
+    job_ = std::make_shared<OptimizationJob>(problem, ev.take(), options, file);
     jobId_ = document_->submitJob(job_);
     shownCandidates_ = 0;
     progress_ = 0.0;

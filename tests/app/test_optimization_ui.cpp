@@ -49,12 +49,13 @@ protected:
     }
     OptimizationController& optimization() { return window_->optimization(); }
     OptimizationPanel& panel() { return window_->optimizationPanel(); }
-    void openExample(const char* file, bool save = false)
+    // Opens an example and saves it into a temporary directory, so checkpoints
+    // (written next to the project) never land in the source tree.
+    void openExample(const char* file)
     {
         const auto source = std::filesystem::path(RESONANT_SOURCE_DIR) / "examples" / "optimization" / file;
         ASSERT_TRUE(window_->openProjectFile(QString::fromStdString(source.string())).ok());
-        if (save)
-            ASSERT_TRUE(window_->saveProjectToFile(dir_.filePath(QString::fromLatin1(file))).ok());
+        ASSERT_TRUE(window_->saveProjectToFile(dir_.filePath(QString::fromLatin1(file))).ok());
     }
     nlohmann::json design() { return designSnapshot(window_->controller().project())["scene"]; }
     std::unique_ptr<MainWindow> window_;
@@ -111,7 +112,7 @@ TEST_F(OptimizationUiTest, ARunIsABackgroundJobAndTheDesignIsUnchangedUntilACand
 
 TEST_F(OptimizationUiTest, StoppingKeepsACheckpointAndResumingFinishesTheRun)
 {
-    openExample("d-mechanical-resonator.resonant", true);
+    openExample("d-mechanical-resonator.resonant");
     const std::string problem = optimization().workspace().problems.front().id;
     panel().selectProblem(problem);
     QSignalSpy changed(&optimization(), &OptimizationController::candidatesChanged);
@@ -178,15 +179,16 @@ TEST_F(OptimizationUiTest, ExportWritesTheCandidateRecordAndItsGeometryMeshes)
     const RunRecord run = optimization().workspace().runs.back();
     ASSERT_TRUE(run.best.has_value());
     const Candidate& best = run.candidates[*run.best];
-    ASSERT_TRUE(optimization().exportCandidate(run.runId, best.id, dir_.path()).ok());
-    const std::filesystem::path dir(dir_.path().toStdString());
+    const QString exportDir = dir_.filePath(QStringLiteral("export"));
+    ASSERT_TRUE(optimization().exportCandidate(run.runId, best.id, exportDir).ok());
+    const std::filesystem::path dir(exportDir.toStdString());
     EXPECT_TRUE(std::filesystem::exists(dir / (best.id + ".json")));
     bool stl = false;
     for (const auto& entry : std::filesystem::directory_iterator(dir))
         stl = stl || entry.path().extension() == ".stl";
     EXPECT_TRUE(stl);
-    ASSERT_TRUE(optimization().exportRun(run.runId, dir_.filePath(QStringLiteral("run.csv"))).ok());
-    ASSERT_TRUE(optimization().exportRun(run.runId, dir_.filePath(QStringLiteral("run.json"))).ok());
+    ASSERT_TRUE(optimization().exportRun(run.runId, exportDir + QStringLiteral("/run.csv")).ok());
+    ASSERT_TRUE(optimization().exportRun(run.runId, exportDir + QStringLiteral("/run.json")).ok());
     EXPECT_TRUE(runRecordFromJson(nlohmann::json::parse(std::ifstream(dir / "run.json"))).ok());
 }
 
