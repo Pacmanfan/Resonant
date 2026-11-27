@@ -15,6 +15,7 @@
 #include "render/Layers.h"
 
 #include <QObject>
+#include <QPointer>
 #include <QString>
 #include <QStringList>
 #include <QTimer>
@@ -104,6 +105,9 @@ private:
     void finishRun();
 
     DocumentController* document_;
+    // Null once the document is gone: Qt deletes the main window's children in creation
+    // order, so the document (and its job manager, which ends every job) may go first.
+    QPointer<DocumentController> documentAlive_;
     std::shared_ptr<resonant::experiments::DeviceRegistry> registry_;
     QString discoveryReport_;
     std::map<std::string, resonant::experiments::OutputAuthorization> authorizations_;

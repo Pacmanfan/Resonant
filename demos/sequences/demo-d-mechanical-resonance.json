@@ -1,0 +1,158 @@
+{
+ "format": "resonant.demo-sequence",
+ "version": 1,
+ "id": "demo-d-mechanical-resonance",
+ "sequenceVersion": "1",
+ "name": "D. Mechanical resonance",
+ "steps": [
+  {
+   "id": "open",
+   "action": "open-project",
+   "description": "Open the vibrating beam example",
+   "params": {
+    "path": "examples/mechanics/a-vibrating-beam.resonant"
+   },
+   "expect": {
+    "object": "ex-me-beam"
+   },
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "layout",
+   "action": "workspace",
+   "description": "The Mechanics panel",
+   "params": {
+    "panel": "mechanics",
+    "docks": [
+     "scene",
+     "properties"
+    ],
+    "tab": "modesTab"
+   },
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "camera",
+   "action": "camera",
+   "description": "Frame the beam",
+   "params": {
+    "preset": "frame-all",
+    "yaw": -60,
+    "pitch": 25
+   },
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "modal",
+   "action": "run",
+   "description": "Modal analysis: natural frequencies and shapes",
+   "params": {
+    "what": "mechanics.modal",
+    "structure": "ex-me-beam"
+   },
+   "timeoutSeconds": 300,
+   "expect": {
+    "minModes": 3
+   }
+  },
+  {
+   "id": "mode1",
+   "action": "show",
+   "description": "First bending mode",
+   "params": {
+    "panel": "mechanics",
+    "domain": "mechanics",
+    "result": 0,
+    "item": 0
+   },
+   "notes": "The first mode: the tip moves most. About 16 Hz for this beam.",
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "explain-mode1",
+   "action": "pause",
+   "description": "The first natural frequency: the beam bends once, the tip moves most.",
+   "params": {
+    "text": "The first natural frequency: the beam bends once, the tip moves most."
+   },
+   "notes": "",
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "mode2",
+   "action": "show",
+   "description": "Second mode",
+   "params": {
+    "panel": "mechanics",
+    "domain": "mechanics",
+    "result": 0,
+    "item": 1
+   },
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "mode3",
+   "action": "show",
+   "description": "Third mode",
+   "params": {
+    "panel": "mechanics",
+    "domain": "mechanics",
+    "result": 0,
+    "item": 2
+   },
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "explain-modes",
+   "action": "pause",
+   "description": "Higher modes bend more times, at higher frequencies.",
+   "params": {
+    "text": "Higher modes bend more times, at higher frequencies."
+   },
+   "notes": "",
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "open-forced",
+   "action": "open-project",
+   "description": "The same beam with a shaker at the tip",
+   "params": {
+    "path": "examples/mechanics/c-forced-resonance.resonant"
+   },
+   "expect": {
+    "object": "ex-me-actuator"
+   },
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "harmonic-tab",
+   "action": "workspace",
+   "description": "The harmonic (forced response) tab",
+   "params": {
+    "panel": "mechanics",
+    "tab": "harmonicTab"
+   },
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "harmonic",
+   "action": "run",
+   "description": "Forced response over frequency",
+   "params": {
+    "what": "mechanics.harmonic",
+    "structure": "ex-me-beam"
+   },
+   "timeoutSeconds": 300
+  },
+  {
+   "id": "explain-resonance",
+   "action": "pause",
+   "description": "The response peaks at the natural frequencies: resonance.",
+   "params": {
+    "text": "The response peaks at the natural frequencies: resonance."
+   },
+   "notes": "",
+   "timeoutSeconds": 60
+  }
+ ]
+}

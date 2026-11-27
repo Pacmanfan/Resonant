@@ -1,0 +1,14 @@
+{
+  "id": "examples.workflow-pack",
+  "name": "Example workflow pack",
+  "version": "1.0.0",
+  "author": "Resonant examples",
+  "description": "Workflow templates added by a plugin: an acoustic array-spacing sweep and an antenna frequency check.",
+  "license": "same as Resonant",
+  "resonant": {"min": "0.1.0", "max": "0.99.99"},
+  "apiVersion": 1,
+  "kind": "workflows",
+  "entry": "workflows",
+  "provides": ["workflow-template"],
+  "permissions": ["adds objects to the project a workflow runs on", "writes files into the workflow's output folder"]
+}

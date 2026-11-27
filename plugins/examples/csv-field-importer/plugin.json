@@ -1,0 +1,15 @@
+{
+  "id": "examples.csv-field-importer",
+  "name": "CSV field importer",
+  "version": "1.0.0",
+  "author": "Resonant examples",
+  "description": "A measurement importer: reads a CSV of measured pressure magnitudes at points (x, y, z, magnitude in Pa) and compares them with the project's free-field model at the same points. The bundled file is SYNTHETIC example data, not a measurement.",
+  "license": "same as Resonant",
+  "resonant": {"min": "0.1.0", "max": "0.99.99"},
+  "apiVersion": 1,
+  "kind": "python",
+  "entry": "importer.py",
+  "requires": ["python"],
+  "provides": ["measurement-importer"],
+  "permissions": ["reads the file you choose", "reads the open project"]
+}

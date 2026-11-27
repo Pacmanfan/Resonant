@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>WorkflowsDialog</class>
+ <widget class="QDialog" name="WorkflowsDialog">
+  <property name="geometry"><rect><x>0</x><y>0</y><width>900</width><height>600</height></rect></property>
+  <property name="windowTitle"><string>Workflows</string></property>
+  <layout class="QVBoxLayout" name="mainLayout">
+   <item>
+    <widget class="QSplitter" name="splitter">
+     <property name="orientation"><enum>Qt::Horizontal</enum></property>
+     <widget class="QWidget" name="listPane">
+      <layout class="QVBoxLayout" name="listLayout">
+       <item><widget class="QLabel" name="listLabel"><property name="text"><string>Workflow templates</string></property></widget></item>
+       <item><widget class="QListWidget" name="workflowList"/></item>
+       <item><widget class="QLabel" name="historyLabel"><property name="text"><string>Runs in this project</string></property></widget></item>
+       <item><widget class="QListWidget" name="historyList"/></item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="detailPane">
+      <layout class="QVBoxLayout" name="detailLayout">
+       <item><widget class="QTextBrowser" name="descriptionView"><property name="maximumSize"><size><width>16777215</width><height>150</height></size></property></widget></item>
+       <item><widget class="QLabel" name="parametersLabel"><property name="text"><string>Parameters (JSON values: numbers, text in quotes, lists in [ ])</string></property></widget></item>
+       <item>
+        <widget class="QTableWidget" name="parametersTable">
+         <property name="columnCount"><number>3</number></property>
+         <column><property name="text"><string>Parameter</string></property></column>
+         <column><property name="text"><string>Value</string></property></column>
+         <column><property name="text"><string>Unit</string></property></column>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="outputLayout">
+         <item><widget class="QLabel" name="outputLabel"><property name="text"><string>Output folder:</string></property></widget></item>
+         <item><widget class="QLineEdit" name="outputEdit"/></item>
+         <item><widget class="QPushButton" name="browseButton"><property name="text"><string>Browse...</string></property></widget></item>
+        </layout>
+       </item>
+       <item><widget class="QCheckBox" name="applyCheck"><property name="text"><string>Apply the workflow's changes to the project (one undoable step)</string></property><property name="checked"><bool>true</bool></property></widget></item>
+       <item>
+        <layout class="QHBoxLayout" name="runLayout">
+         <item><widget class="QPushButton" name="runButton"><property name="text"><string>Run</string></property></widget></item>
+         <item><widget class="QPushButton" name="stopButton"><property name="text"><string>Stop</string></property></widget></item>
+         <item><widget class="QProgressBar" name="progressBar"><property name="value"><number>0</number></property></widget></item>
+        </layout>
+       </item>
+       <item><widget class="QPlainTextEdit" name="resultView"><property name="readOnly"><bool>true</bool></property></widget></item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="standardButtons"><set>QDialogButtonBox::Close|QDialogButtonBox::Help</set></property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection><sender>buttonBox</sender><signal>rejected()</signal><receiver>WorkflowsDialog</receiver><slot>reject()</slot></connection>
+ </connections>
+</ui>

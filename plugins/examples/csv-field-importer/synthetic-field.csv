@@ -1,0 +1,6 @@
+x,y,z,magnitude
+# SYNTHETIC example data for the importer (not a measurement): magnitudes in Pa of one 1 Pa (at 1 m) emitter at the origin with 2 percent noise.
+0.0,0.0,0.05,20.4
+0.0,0.0,0.1,9.8
+0.0,0.0,0.2,5.05
+0.0,0.0,0.4,2.48

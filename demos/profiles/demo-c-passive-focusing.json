@@ -1,0 +1,44 @@
+{
+ "format": "resonant.demo-profile",
+ "version": 1,
+ "id": "demo-c-passive-focusing",
+ "name": "C. Passive acoustic focusing",
+ "description": "A parabolic reflector gathers the sound of a distant source into its focus: focusing by geometry and material, no array needed.",
+ "audience": "acoustic engineers, product designers",
+ "domain": "acoustic",
+ "status": "available",
+ "project": "examples/manipulators/a-parabolic-reflector.resonant",
+ "workspace": "acoustics",
+ "requires": [],
+ "data": [],
+ "sequence": "demos/sequences/demo-c-passive-focusing.json",
+ "expected": [
+  "a pressure maximum at the reflector's geometric focus"
+ ],
+ "camera": {},
+ "visualization": {
+  "acoustics": "decibels"
+ },
+ "screenshots": [
+  "acoustic-reflector-field.png"
+ ],
+ "notes": "demos/presenter_notes/demo-c-passive-focusing.md",
+ "durationMinutes": 5,
+ "completion": [
+  "every step done",
+  "a field result"
+ ],
+ "limitations": [
+  "Kirchhoff physical optics: no edge diffraction beyond the approximation, no multiple reflections"
+ ],
+ "remaining": [],
+ "story": {
+  "problem": "Concentrate sound without an array: with a shaped, reflecting surface.",
+  "configure": "A parabolic aluminium reflector, a source 1 m away on its axis, a field plane through the focus.",
+  "calculate": "The field scattered by the reflector with the Kirchhoff (physical-optics) reflector model plus the incident field.",
+  "meaning": "The reflector's surface sends the reflected waves to one point: the geometric focus of the parabola.",
+  "inspect": "The reflector's geometry and material in the property editor; the field in decibels; the probe at the focus.",
+  "value": "Passive focusing is cheap and robust; Resonant shows how well a given shape and size focus at a given frequency.",
+  "assumptions": "Kirchhoff approximation: the surface is large compared to the wavelength, no multiple reflections, rigid reflector."
+ }
+}

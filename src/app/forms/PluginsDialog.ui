@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>PluginsDialog</class>
+ <widget class="QDialog" name="PluginsDialog">
+  <property name="geometry"><rect><x>0</x><y>0</y><width>860</width><height>560</height></rect></property>
+  <property name="windowTitle"><string>Plugins</string></property>
+  <layout class="QVBoxLayout" name="mainLayout">
+   <item>
+    <widget class="QLabel" name="warningLabel">
+     <property name="wordWrap"><bool>true</bool></property>
+     <property name="text"><string>&lt;b&gt;Plugins are programs.&lt;/b&gt; A plugin runs with your permissions and is not sandboxed: it can read and write your files. Enable only plugins you trust. Plugins never start a physical output: outputs always need your explicit authorization in the Experiments panel. A change takes effect when the plugins are reloaded.</string></property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTableWidget" name="pluginTable">
+     <property name="columnCount"><number>6</number></property>
+     <property name="selectionBehavior"><enum>QAbstractItemView::SelectRows</enum></property>
+     <property name="selectionMode"><enum>QAbstractItemView::SingleSelection</enum></property>
+     <property name="editTriggers"><set>QAbstractItemView::NoEditTriggers</set></property>
+     <column><property name="text"><string>Enabled</string></property></column>
+     <column><property name="text"><string>Plugin</string></property></column>
+     <column><property name="text"><string>Version</string></property></column>
+     <column><property name="text"><string>Kind</string></property></column>
+     <column><property name="text"><string>State</string></property></column>
+     <column><property name="text"><string>Details</string></property></column>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTextBrowser" name="detailsView">
+     <property name="maximumSize"><size><width>16777215</width><height>170</height></size></property>
+    </widget>
+   </item>
+   <item><widget class="QLabel" name="pathsLabel"><property name="wordWrap"><bool>true</bool></property><property name="text"><string/></property></widget></item>
+   <item>
+    <layout class="QHBoxLayout" name="buttonLayout">
+     <item><widget class="QPushButton" name="reloadButton"><property name="text"><string>Reload Plugins</string></property></widget></item>
+     <item>
+      <widget class="QDialogButtonBox" name="buttonBox">
+       <property name="standardButtons"><set>QDialogButtonBox::Close|QDialogButtonBox::Help</set></property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection><sender>buttonBox</sender><signal>rejected()</signal><receiver>PluginsDialog</receiver><slot>reject()</slot></connection>
+ </connections>
+</ui>

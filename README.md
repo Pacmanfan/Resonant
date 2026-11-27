@@ -37,10 +37,11 @@ discover is something you can trust.
   beside the simulation; outputs only ever start when you authorize them.
 * **Designing by goal** — say what you want (a focus, a resonance, a beam)
   and Resonant searches, simulates and compares candidate designs for you.
-* **Coming next** — Python scripting and guided demos.
+* **Script it, extend it** — a Python API and console, replayable
+  workflows, plugins, an offline help with F1 everywhere, and Demo Studio
+  for repeatable, presenter-ready demonstrations.
 
-`IMPLEMENTATION_STATUS.md` is the honest, capability-by-capability record;
-`examples/README.md` lists ready-to-open projects for every area.
+`IMPLEMENTATION_STATUS.md` is the honest record; `examples/README.md` lists projects.
 
 ![A vibrating plate's first mode](docs/images/plate-mode.png)
 
@@ -52,8 +53,8 @@ cmake -S . -B build/release -G Ninja -DCMAKE_BUILD_TYPE=Release && cmake --build
 ./build/release/src/app/resonant examples/mechanics/b-vibrating-plate.resonant
 ```
 
-It needs C++20, Qt 6, Eigen 3.4 and OpenGL 4.5. qmake builds the same
-targets (`project.pro`); `BUILDING.md` covers both, the tests included.
+It needs C++20, Qt 6, Eigen 3.4 and OpenGL 4.5 (Python 3 and pybind11 for
+scripting); qmake builds the same targets, `BUILDING.md` covers both.
 
 ## How it grows
 
@@ -74,7 +75,6 @@ python3 scripts/msg.py panels         # where the panels are right now
 
 ## Documents
 
-* `docs/README.md` — the documentation map; `docs/requirements/product.md` — the vision.
-* `docs/architecture/overview.md` — architecture; `DECISIONS.md` — decisions.
+* `docs/README.md` — the map; `docs/architecture/overview.md`, `DECISIONS.md`.
 * `AGENTS.md` — the rules every agent follows;
   `docs/process/agent-coordination.md` — roster, messages and panels.

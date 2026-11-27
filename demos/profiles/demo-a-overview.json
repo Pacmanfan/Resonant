@@ -1,0 +1,49 @@
+{
+ "format": "resonant.demo-profile",
+ "version": 1,
+ "id": "demo-a-overview",
+ "name": "A. Resonant overview",
+ "description": "A tour of one real project: the scene, the 3D viewport, a calculated field, and where mechanics and electromagnetics live.",
+ "audience": "new users, managers, first-time viewers",
+ "domain": "cross-domain",
+ "status": "available",
+ "project": "examples/acoustics/c-focused-planar-array.resonant",
+ "workspace": "acoustics",
+ "requires": [],
+ "data": [],
+ "sequence": "demos/sequences/demo-a-overview.json",
+ "expected": [
+  "a focal spot on the field plane at the target, about 6 cm in front of the array",
+  "a saved copy of the project in the run folder"
+ ],
+ "camera": {
+  "preset": "frame-all",
+  "yaw": -90,
+  "pitch": 10
+ },
+ "visualization": {
+  "acoustics": "decibels"
+ },
+ "screenshots": [
+  "main-window-overview.png"
+ ],
+ "notes": "demos/presenter_notes/demo-a-overview.md",
+ "durationMinutes": 5,
+ "completion": [
+  "every step done",
+  "the field result exists"
+ ],
+ "limitations": [
+  "free-field model only (no reflections)"
+ ],
+ "remaining": [],
+ "story": {
+  "problem": "Engineers who shape waves need one place to build a design, calculate what it does and see it.",
+  "configure": "Nothing: the demonstration opens a saved project with a focused planar array, a target and a field plane.",
+  "calculate": "The free-field pressure of the 64 elements on the field plane (analytical superposition of point sources).",
+  "meaning": "The bright spot is where the elements' waves arrive in phase: the focus the array was set up for.",
+  "inspect": "The scene tree lists the objects; the property editor shows the selected array; the viewport shows the field in 3D.",
+  "value": "Design, simulation and results stay in one project file, for acoustics, mechanics and electromagnetics alike.",
+  "assumptions": "Free field (no walls), linear acoustics, ideal point-source elements at 40 kHz in air."
+ }
+}

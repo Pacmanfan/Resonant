@@ -1,0 +1,15 @@
+{
+  "id": "examples.spiral-array-generator",
+  "name": "Fermat-spiral array generator",
+  "version": "1.0.0",
+  "author": "Resonant examples",
+  "description": "Adds an acoustic array whose elements lie on a Fermat (sunflower) spiral: an aperiodic layout without grating lobes.",
+  "license": "same as Resonant",
+  "resonant": {"min": "0.1.0", "max": "0.99.99"},
+  "apiVersion": 1,
+  "kind": "python",
+  "entry": "spiral.py",
+  "requires": ["python"],
+  "provides": ["geometry-generator"],
+  "permissions": ["adds objects to the open project (as one undoable change)"]
+}

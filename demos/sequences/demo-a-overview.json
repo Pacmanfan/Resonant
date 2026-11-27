@@ -1,0 +1,152 @@
+{
+ "format": "resonant.demo-sequence",
+ "version": 1,
+ "id": "demo-a-overview",
+ "sequenceVersion": "1",
+ "name": "A. Resonant overview",
+ "steps": [
+  {
+   "id": "open",
+   "action": "open-project",
+   "description": "Open the focused planar array example",
+   "params": {
+    "path": "examples/acoustics/c-focused-planar-array.resonant"
+   },
+   "expect": {
+    "object": "ex-c-array"
+   },
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "layout",
+   "action": "workspace",
+   "description": "A clean layout: scene tree, properties, acoustics",
+   "params": {
+    "panel": "acoustics",
+    "docks": [
+     "scene",
+     "properties",
+     "analysis"
+    ],
+    "tab": "focusTab"
+   },
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "camera",
+   "action": "camera",
+   "description": "Frame the scene from the side",
+   "params": {
+    "preset": "frame-all",
+    "yaw": -60,
+    "pitch": 22
+   },
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "select",
+   "action": "select",
+   "description": "Select the array: its properties appear on the right",
+   "params": {
+    "object": "ex-c-array"
+   },
+   "notes": "Point at the element table: 8 x 8 elements, 4.3 mm apart, each with its own phase.",
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "explain-scene",
+   "action": "pause",
+   "description": "The scene tree holds every object: the array, the focus target and the field plane.",
+   "params": {
+    "text": "The scene tree holds every object: the array, the focus target and the field plane."
+   },
+   "notes": "",
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "field",
+   "action": "run",
+   "description": "Calculate the pressure field on the plane",
+   "params": {
+    "what": "acoustics.field",
+    "region": "ex-c-region"
+   },
+   "timeoutSeconds": 120,
+   "expect": {
+    "acousticResults": 1
+   }
+  },
+  {
+   "id": "decibels",
+   "action": "visualization",
+   "description": "Show the field in decibels",
+   "params": {
+    "domain": "acoustics",
+    "quantity": "decibels"
+   },
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "view-field",
+   "action": "camera",
+   "description": "Look at the focal plane",
+   "params": {
+    "preset": "frame-all",
+    "yaw": -90,
+    "pitch": 10
+   },
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "explain-field",
+   "action": "pause",
+   "description": "The bright spot is the focus: every element's wave arrives there in phase.",
+   "params": {
+    "text": "The bright spot is the focus: every element's wave arrives there in phase."
+   },
+   "notes": "",
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "mechanics",
+   "action": "workspace",
+   "description": "The same project hosts mechanical studies",
+   "params": {
+    "panel": "mechanics",
+    "tab": "modesTab"
+   },
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "em",
+   "action": "workspace",
+   "description": "... and electromagnetic ones",
+   "params": {
+    "panel": "em",
+    "tab": "patternTab"
+   },
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "save",
+   "action": "project-action",
+   "description": "Save a copy of the project (project management)",
+   "params": {
+    "id": "project.save",
+    "params": {
+     "path": "overview-copy.resonant"
+    }
+   },
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "help",
+   "action": "help",
+   "description": "Every panel has its help page (F1)",
+   "params": {
+    "topic": "gs.introduction"
+   },
+   "timeoutSeconds": 60
+  }
+ ]
+}

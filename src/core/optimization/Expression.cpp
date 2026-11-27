@@ -26,7 +26,7 @@ public:
 
     Result<NodePtr> parse()
     {
-        NodePtr node = expression();
+        NodePtr node = logicalOr();
         skip();
         if (!error_.empty())
             return Result<NodePtr>::failure(error_);
@@ -66,6 +66,40 @@ private:
         return make(std::move(n));
     }
 
+    // Logical and comparison levels (1 = true, 0 = false).
+    NodePtr logicalOr()
+    {
+        NodePtr left = logicalAnd();
+        while (error_.empty() && acceptToken("||"))
+            left = binary('|', left, logicalAnd());
+        return left;
+    }
+    NodePtr logicalAnd()
+    {
+        NodePtr left = comparison();
+        while (error_.empty() && acceptToken("&&"))
+            left = binary('&', left, comparison());
+        return left;
+    }
+    NodePtr comparison()
+    {
+        NodePtr left = expression();
+        static const std::pair<const char*, char> ops[] = {{"<=", 'l'}, {">=", 'g'}, {"==", 'e'}, {"!=", 'n'}, {"<", '<'}, {">", '>'}};
+        for (const auto& [token, code] : ops)
+            if (acceptToken(token))
+                return binary(code, left, expression());
+        return left;
+    }
+    bool acceptToken(const char* token)
+    {
+        skip();
+        const size_t n = std::char_traits<char>::length(token);
+        if (text_.compare(pos_, n, token) == 0) {
+            pos_ += n;
+            return true;
+        }
+        return false;
+    }
     NodePtr expression()
     {
         NodePtr left = term();
@@ -94,6 +128,15 @@ private:
     }
     NodePtr factor()
     {
+        skip();
+        if (pos_ < text_.size() && text_[pos_] == '!' && (pos_ + 1 >= text_.size() || text_[pos_ + 1] != '=')) {
+            ++pos_;
+            Expression::Node n;
+            n.kind = Expression::Node::Kind::Unary;
+            n.op = '!';
+            n.children = {factor()};
+            return make(std::move(n));
+        }
         if (accept('-')) {
             Expression::Node n;
             n.kind = Expression::Node::Kind::Unary;
@@ -118,7 +161,7 @@ private:
         }
         const char c = text_[pos_];
         if (accept('(')) {
-            NodePtr inner = expression();
+            NodePtr inner = logicalOr();
             if (!accept(')'))
                 fail("missing ')'");
             return inner;
@@ -159,7 +202,7 @@ private:
                 n.name = name;
                 if (!accept(')')) {
                     do
-                        n.children.push_back(expression());
+                        n.children.push_back(logicalOr());
                     while (error_.empty() && accept(','));
                     if (!accept(')'))
                         fail("missing ')' after the arguments of " + name);
@@ -212,7 +255,7 @@ Result<double> eval(const Expression::Node& node, const std::map<std::string, do
         auto a = eval(*node.children[0], values);
         if (!a)
             return a;
-        return -a.value();
+        return node.op == '!' ? (a.value() == 0.0 ? 1.0 : 0.0) : -a.value();
     }
     case Kind::Binary: {
         auto a = eval(*node.children[0], values);
@@ -227,6 +270,14 @@ Result<double> eval(const Expression::Node& node, const std::map<std::string, do
         case '*': return a.value() * b.value();
         case '/': return a.value() / b.value();
         case '^': return std::pow(a.value(), b.value());
+        case '<': return a.value() < b.value() ? 1.0 : 0.0;
+        case '>': return a.value() > b.value() ? 1.0 : 0.0;
+        case 'l': return a.value() <= b.value() ? 1.0 : 0.0;
+        case 'g': return a.value() >= b.value() ? 1.0 : 0.0;
+        case 'e': return a.value() == b.value() ? 1.0 : 0.0;
+        case 'n': return a.value() != b.value() ? 1.0 : 0.0;
+        case '&': return a.value() != 0.0 && b.value() != 0.0 ? 1.0 : 0.0;
+        case '|': return a.value() != 0.0 || b.value() != 0.0 ? 1.0 : 0.0;
         default: return Result<double>::failure("unknown operator");
         }
     }

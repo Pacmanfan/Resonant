@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>HelpWindow</class>
+ <widget class="QWidget" name="HelpWindow">
+  <property name="geometry"><rect><x>0</x><y>0</y><width>1100</width><height>760</height></rect></property>
+  <property name="windowTitle"><string>Resonant Help</string></property>
+  <layout class="QVBoxLayout" name="mainLayout" stretch="0,1,0">
+   <property name="leftMargin"><number>4</number></property>
+   <property name="topMargin"><number>4</number></property>
+   <property name="rightMargin"><number>4</number></property>
+   <property name="bottomMargin"><number>4</number></property>
+   <item>
+    <layout class="QHBoxLayout" name="toolLayout">
+     <item><widget class="QToolButton" name="backButton"><property name="text"><string>Back</string></property><property name="toolTip"><string>Back (Alt+Left)</string></property></widget></item>
+     <item><widget class="QToolButton" name="forwardButton"><property name="text"><string>Forward</string></property><property name="toolTip"><string>Forward (Alt+Right)</string></property></widget></item>
+     <item><widget class="QToolButton" name="homeButton"><property name="text"><string>Home</string></property></widget></item>
+     <item><widget class="QToolButton" name="previousButton"><property name="text"><string>Previous</string></property><property name="toolTip"><string>The previous topic in reading order</string></property></widget></item>
+     <item><widget class="QToolButton" name="nextButton"><property name="text"><string>Next</string></property><property name="toolTip"><string>The next topic in reading order</string></property></widget></item>
+     <item><widget class="QLabel" name="breadcrumbLabel"><property name="text"><string/></property><property name="sizePolicy"><sizepolicy hsizetype="Expanding" vsizetype="Preferred"><horstretch>1</horstretch><verstretch>0</verstretch></sizepolicy></property></widget></item>
+     <item><widget class="QLabel" name="tocLabel"><property name="text"><string>On this page:</string></property></widget></item>
+     <item><widget class="QComboBox" name="tocCombo"><property name="minimumSize"><size><width>220</width><height>0</height></size></property></widget></item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QSplitter" name="splitter">
+     <property name="orientation"><enum>Qt::Horizontal</enum></property>
+     <widget class="QTabWidget" name="navTabs">
+      <property name="currentIndex"><number>0</number></property>
+      <widget class="QWidget" name="contentsTab">
+       <attribute name="title"><string>Contents</string></attribute>
+       <layout class="QVBoxLayout" name="contentsLayout">
+        <item><widget class="QTreeWidget" name="contentsTree"><property name="headerHidden"><bool>true</bool></property><column><property name="text"><string>Topic</string></property></column></widget></item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="searchTab">
+       <attribute name="title"><string>Search</string></attribute>
+       <layout class="QVBoxLayout" name="searchLayout">
+        <item><widget class="QLineEdit" name="searchEdit"><property name="placeholderText"><string>Search the help (offline)</string></property><property name="clearButtonEnabled"><bool>true</bool></property></widget></item>
+        <item><widget class="QListWidget" name="resultsList"/></item>
+        <item><widget class="QLabel" name="resultsLabel"><property name="text"><string/></property></widget></item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QTextBrowser" name="articleView">
+      <property name="openLinks"><bool>false</bool></property>
+     </widget>
+    </widget>
+   </item>
+   <item><widget class="QLabel" name="statusLabel"><property name="text"><string/></property></widget></item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

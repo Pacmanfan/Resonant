@@ -1,0 +1,140 @@
+{
+ "format": "resonant.demo-manifest",
+ "version": 1,
+ "note": "The demonstrations, their dependencies and expected outputs. Runs write their manifests and screenshots to the user's data folder, never here.",
+ "demos": [
+  {
+   "id": "demo-a-overview",
+   "name": "A. Resonant overview",
+   "status": "available",
+   "project": "examples/acoustics/c-focused-planar-array.resonant",
+   "requires": [],
+   "data": [],
+   "expected": [
+    "a focal spot on the field plane at the target, about 6 cm in front of the array",
+    "a saved copy of the project in the run folder"
+   ],
+   "screenshots": [
+    "main-window-overview.png"
+   ],
+   "steps": 13
+  },
+  {
+   "id": "demo-b-acoustic-focusing",
+   "name": "B. Acoustic focusing",
+   "status": "available",
+   "project": "examples/acoustics/b-linear-array.resonant",
+   "requires": [],
+   "data": [],
+   "expected": [
+    "after focusing, the field maximum lies at the target",
+    "the focused peak pressure is several times the uniform one"
+   ],
+   "screenshots": [
+    "acoustic-array-setup.png",
+    "acoustic-focal-field.png"
+   ],
+   "steps": 11
+  },
+  {
+   "id": "demo-c-passive-focusing",
+   "name": "C. Passive acoustic focusing",
+   "status": "available",
+   "project": "examples/manipulators/a-parabolic-reflector.resonant",
+   "requires": [],
+   "data": [],
+   "expected": [
+    "a pressure maximum at the reflector's geometric focus"
+   ],
+   "screenshots": [
+    "acoustic-reflector-field.png"
+   ],
+   "steps": 8
+  },
+  {
+   "id": "demo-d-mechanical-resonance",
+   "name": "D. Mechanical resonance",
+   "status": "available",
+   "project": "examples/mechanics/a-vibrating-beam.resonant",
+   "requires": [],
+   "data": [],
+   "expected": [
+    "first natural frequency about 16 Hz",
+    "a frequency response with peaks at the natural frequencies"
+   ],
+   "screenshots": [
+    "mechanical-modal-analysis.png"
+   ],
+   "steps": 13
+  },
+  {
+   "id": "demo-e-rf-antennas",
+   "name": "E. RF antenna engineering",
+   "status": "available",
+   "project": "examples/electromagnetics/a-half-wave-dipole.resonant",
+   "requires": [],
+   "data": [],
+   "expected": [
+    "dipole impedance near 73 + j42 ohm and directivity near 2.15 dBi",
+    "the array beam moves from (30°, 45°) to broadside"
+   ],
+   "screenshots": [
+    "antenna-radiation-pattern.png",
+    "em-array-steering.png"
+   ],
+   "steps": 12
+  },
+  {
+   "id": "demo-f-inverse-design",
+   "name": "F. Inverse design",
+   "status": "available",
+   "project": "examples/optimization/a-acoustic-focal-array.resonant",
+   "requires": [],
+   "data": [],
+   "expected": [
+    "the best candidate's objective exceeds the initial design's",
+    "a design revision is recorded"
+   ],
+   "screenshots": [
+    "optimization-studio.png"
+   ],
+   "steps": 10
+  },
+  {
+   "id": "demo-g-experimental-correlation",
+   "name": "G. Experimental correlation",
+   "status": "partial",
+   "project": "examples/experiments/rf_experiments.resonant",
+   "requires": [],
+   "data": [
+    "examples/experiments/rlc_antenna_and_line.s2p (SYNTHETIC)"
+   ],
+   "expected": [
+    "a measurement record of the imported S11",
+    "a comparison record with error metrics"
+   ],
+   "screenshots": [
+    "experiment-workspace.png"
+   ],
+   "steps": 7
+  },
+  {
+   "id": "demo-h-python-automation",
+   "name": "H. Python automation",
+   "status": "available",
+   "project": "examples/acoustics/b-linear-array.resonant",
+   "requires": [
+    "python"
+   ],
+   "data": [],
+   "expected": [
+    "the console prints the peak pressure and exports python-field.csv",
+    "the target 'Python focus' appears in the scene"
+   ],
+   "screenshots": [
+    "python-console.png"
+   ],
+   "steps": 8
+  }
+ ]
+}

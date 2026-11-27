@@ -19,6 +19,7 @@
 #include "optimization/Surrogate.h"
 
 #include <QObject>
+#include <QPointer>
 #include <QString>
 #include <QTimer>
 
@@ -90,6 +91,9 @@ private:
     const resonant::optimization::RunRecord* findRun(const resonant::optimization::OptimizationWorkspace& w, const std::string& runId) const;
 
     DocumentController* document_;
+    // Null once the document is gone: Qt deletes the main window's children in creation
+    // order, so the document (and its job manager, which ends every job) may go first.
+    QPointer<DocumentController> documentAlive_;
     QTimer timer_;
     std::shared_ptr<resonant::optimization::OptimizationJob> job_;
     resonant::Id jobId_;

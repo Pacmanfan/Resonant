@@ -1,0 +1,78 @@
+{
+ "format": "resonant.help-categories",
+ "version": 1,
+ "categories": [
+  {
+   "folder": "getting-started",
+   "id": "gs",
+   "title": "Getting Started",
+   "summary": "First launch, projects, the interface, navigation and units."
+  },
+  {
+   "folder": "core-concepts",
+   "id": "concepts",
+   "title": "Core Concepts",
+   "summary": "The scene, geometry, materials, sources, arrays, targets, manipulators, sensors, regions, meshes and solvers."
+  },
+  {
+   "folder": "acoustics",
+   "id": "acoustics",
+   "title": "Acoustic Engineering",
+   "summary": "Sound fields: sources, arrays, focusing, reflectors, lenses, full-wave simulation and field analysis."
+  },
+  {
+   "folder": "mechanics",
+   "id": "mechanics",
+   "title": "Mechanical Engineering",
+   "summary": "Structures and vibration: modal analysis, forced response, waves, resonators."
+  },
+  {
+   "folder": "electromagnetics",
+   "id": "em",
+   "title": "Electromagnetic Engineering",
+   "summary": "Antennas, arrays, radiation patterns, beamforming, impedance, lines, waveguides and solvers."
+  },
+  {
+   "folder": "simulation",
+   "id": "sim",
+   "title": "Simulation",
+   "summary": "How solvers are chosen, resolved, checked and compared."
+  },
+  {
+   "folder": "experiments",
+   "id": "exp",
+   "title": "Experiments and Hardware",
+   "summary": "Devices, acquisition, calibration, measurements, uncertainty, correlation and safety."
+  },
+  {
+   "folder": "optimization",
+   "id": "opt",
+   "title": "Optimization",
+   "summary": "Design variables, objectives, constraints, algorithms and the Optimization Studio."
+  },
+  {
+   "folder": "python",
+   "id": "py",
+   "title": "Python and Automation",
+   "summary": "The Python API, console, script editor, workflows and plugins."
+  },
+  {
+   "folder": "ui",
+   "id": "ui",
+   "title": "User Interface Reference",
+   "summary": "Windows, panels, editors, the viewport, shortcuts, help and Demo Studio."
+  },
+  {
+   "folder": "troubleshooting",
+   "id": "trouble",
+   "title": "Troubleshooting",
+   "summary": "What to do when something does not work."
+  },
+  {
+   "folder": "reference",
+   "id": "ref",
+   "title": "Technical Reference",
+   "summary": "Units, conventions, formats, assumptions, limits and APIs."
+  }
+ ]
+}

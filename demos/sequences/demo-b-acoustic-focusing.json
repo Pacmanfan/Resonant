@@ -1,0 +1,147 @@
+{
+ "format": "resonant.demo-sequence",
+ "version": 1,
+ "id": "demo-b-acoustic-focusing",
+ "sequenceVersion": "1",
+ "name": "B. Acoustic focusing",
+ "steps": [
+  {
+   "id": "open",
+   "action": "open-project",
+   "description": "Open the linear array example",
+   "params": {
+    "path": "examples/acoustics/b-linear-array.resonant"
+   },
+   "expect": {
+    "object": "ex-b-array"
+   },
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "layout",
+   "action": "workspace",
+   "description": "Acoustics panel and properties",
+   "params": {
+    "panel": "acoustics",
+    "docks": [
+     "scene",
+     "properties",
+     "analysis"
+    ],
+    "tab": "simulationTab"
+   },
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "camera",
+   "action": "camera",
+   "description": "Frame the scene",
+   "params": {
+    "preset": "frame-all",
+    "yaw": -90,
+    "pitch": 10
+   },
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "uniform",
+   "action": "run",
+   "description": "Field with every element in phase (uniform excitation)",
+   "params": {
+    "what": "acoustics.field",
+    "region": "ex-b-region"
+   },
+   "timeoutSeconds": 120,
+   "notes": "A broad beam straight ahead: no focus."
+  },
+  {
+   "id": "decibels",
+   "action": "visualization",
+   "description": "Decibels show the beam and sidelobes",
+   "params": {
+    "domain": "acoustics",
+    "quantity": "decibels"
+   },
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "explain-uniform",
+   "action": "pause",
+   "description": "In phase, the array makes a beam, not a spot.",
+   "params": {
+    "text": "In phase, the array makes a beam, not a spot."
+   },
+   "notes": "",
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "target",
+   "action": "project-action",
+   "description": "Add a focus target 5 cm in front of the array",
+   "params": {
+    "id": "scene.add",
+    "params": {
+     "type": "target",
+     "id": "demo-b-focus",
+     "name": "Focus",
+     "position": [
+      0.0,
+      0.0,
+      0.05
+     ]
+    }
+   },
+   "expect": {
+    "object": "demo-b-focus"
+   },
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "focus",
+   "action": "project-action",
+   "description": "Focus the array on the target by phase",
+   "params": {
+    "id": "acoustics.focus",
+    "params": {
+     "array": "ex-b-array",
+     "target": "demo-b-focus",
+     "control": "phase"
+    }
+   },
+   "expect": {
+    "undoAvailable": true
+   },
+   "notes": "Each element gets the phase that makes its wave arrive in step with the others at the target.",
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "focused",
+   "action": "run",
+   "description": "Field of the focused array",
+   "params": {
+    "what": "acoustics.field",
+    "region": "ex-b-region"
+   },
+   "timeoutSeconds": 120
+  },
+  {
+   "id": "inspect",
+   "action": "show",
+   "description": "The Field Analysis summary compares the results",
+   "params": {
+    "panel": "analysis"
+   },
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "explain-focus",
+   "action": "pause",
+   "description": "Now the energy is concentrated at the target: a focus several times stronger than the beam.",
+   "params": {
+    "text": "Now the energy is concentrated at the target: a focus several times stronger than the beam."
+   },
+   "notes": "",
+   "timeoutSeconds": 60
+  }
+ ]
+}

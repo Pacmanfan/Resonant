@@ -1,0 +1,48 @@
+{
+ "format": "resonant.demo-profile",
+ "version": 1,
+ "id": "demo-g-experimental-correlation",
+ "name": "G. Experimental correlation",
+ "description": "A reflection measurement (Touchstone S-parameters, clearly labelled synthetic) is imported and compared with a dipole's simulated reflection.",
+ "audience": "test engineers, RF engineers",
+ "domain": "experimental",
+ "status": "partial",
+ "project": "examples/experiments/rf_experiments.resonant",
+ "workspace": "experiments",
+ "requires": [],
+ "data": [
+  "examples/experiments/rlc_antenna_and_line.s2p (SYNTHETIC)"
+ ],
+ "sequence": "demos/sequences/demo-g-experimental-correlation.json",
+ "expected": [
+  "a measurement record of the imported S11",
+  "a comparison record with error metrics"
+ ],
+ "camera": {},
+ "visualization": {},
+ "screenshots": [
+  "experiment-workspace.png"
+ ],
+ "notes": "demos/presenter_notes/demo-g-experimental-correlation.md",
+ "durationMinutes": 5,
+ "completion": [
+  "every step done"
+ ],
+ "limitations": [
+  "the data is synthetic",
+  "no calibration is applied to the imported data"
+ ],
+ "remaining": [
+  "applying a calibration record to the data before the comparison",
+  "a live acquisition: every bundled experiment drives outputs, which a demonstration never authorizes"
+ ],
+ "story": {
+  "problem": "Check a design against measurements: how far is the model from what the instrument recorded?",
+  "configure": "An RF experiment, an antenna in the scene to compare with, and a measurement file to import.",
+  "calculate": "The antenna's simulated input reflection over the measured frequencies and the difference to the measured S11.",
+  "meaning": "Where the curves agree the model explains the measurement; the error metrics say by how much they differ.",
+  "inspect": "The measurement in the Experiments panel and the comparison's metrics (in the run manifest and the panel's report).",
+  "value": "Measured and simulated data are compared in one project, with the data's origin recorded.",
+  "assumptions": "The imported file is SYNTHETIC example data generated from a series RLC model, not a measurement; the dipole is the analytical model."
+ }
+}

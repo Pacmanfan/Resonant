@@ -1,0 +1,99 @@
+{
+ "format": "resonant.demo-sequence",
+ "version": 1,
+ "id": "demo-h-python-automation",
+ "sequenceVersion": "1",
+ "name": "H. Python automation",
+ "steps": [
+  {
+   "id": "open",
+   "action": "open-project",
+   "description": "Open the linear array example",
+   "params": {
+    "path": "examples/acoustics/b-linear-array.resonant"
+   },
+   "expect": {
+    "object": "ex-b-array"
+   },
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "layout",
+   "action": "workspace",
+   "description": "The Python console",
+   "params": {
+    "panel": "python",
+    "docks": [
+     "scene",
+     "properties"
+    ]
+   },
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "explain-console",
+   "action": "pause",
+   "description": "`project` in the console is a copy of the open project.",
+   "params": {
+    "text": "`project` in the console is a copy of the open project."
+   },
+   "notes": "",
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "script",
+   "action": "python",
+   "description": "Run a script: add a target, focus, calculate, export, apply",
+   "params": {
+    "code": "import os\nimport resonant\narray = project.object(\"ex-b-array\")\ntarget = resonant.scene.add_target(project, \"Python focus\", position=(0.0, 0.0, 0.05), object_id=\"demo-h-focus\")\nresonant.acoustics.focus(project, array, target)\nfield = resonant.acoustics.field(project, project.object(\"ex-b-region\"))\npeak = resonant.analysis.peak(field)\nprint(f\"peak |p| on the plane: {peak['max_pressure']:.1f} Pa\")\nresonant.io.export_field_csv(field, os.path.join(r\"${runDirectory}\", \"python-field.csv\"))\nprint(\"exported python-field.csv\")\napp.apply(project, \"Python: focus the array on a new target\")\n",
+    "label": "demo H"
+   },
+   "timeoutSeconds": 120,
+   "expect": {
+    "object": "demo-h-focus",
+    "consoleContains": "exported python-field.csv"
+   }
+  },
+  {
+   "id": "field-panel",
+   "action": "workspace",
+   "description": "Recalculate in the application",
+   "params": {
+    "panel": "acoustics",
+    "tab": "simulationTab"
+   },
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "field",
+   "action": "run",
+   "description": "The application's field of the scripted design",
+   "params": {
+    "what": "acoustics.field",
+    "region": "ex-b-region"
+   },
+   "timeoutSeconds": 120
+  },
+  {
+   "id": "camera",
+   "action": "camera",
+   "description": "Frame the field",
+   "params": {
+    "preset": "frame-all",
+    "yaw": -90,
+    "pitch": 10
+   },
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "explain-undo",
+   "action": "pause",
+   "description": "Edit > Undo would remove the script's change in one step.",
+   "params": {
+    "text": "Edit > Undo would remove the script's change in one step."
+   },
+   "notes": "",
+   "timeoutSeconds": 60
+  }
+ ]
+}

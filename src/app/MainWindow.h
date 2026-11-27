@@ -7,6 +7,7 @@
 #include "foundation/Id.h"
 #include "foundation/Result.h"
 
+#include <QJsonArray>
 #include <QMainWindow>
 #include <QMessageBox>
 
@@ -34,7 +35,24 @@ class DocumentController;
 class PropertiesPanel;
 class SceneTreePanel;
 class ViewportWidget;
+class PythonConsole;
+class PythonSession;
+class ScriptEditor;
+class HelpWindow;
+class PluginsDialog;
+class WorkflowsDialog;
+class DemoController;
+class DemoStudioPanel;
+class PresenterOverlay;
 class QActionGroup;
+class QDialog;
+class QDockWidget;
+namespace resonant {
+class Project;
+namespace plugins {
+class PluginManager;
+}
+}  // namespace resonant
 namespace Ui {
 class MainWindow;
 }
@@ -68,6 +86,35 @@ public:
     TimeSignalPanel& timeSignals() { return *timeSignals_; }
     QAction* action(const QString& objectName) const;
 
+    // Python (ADR-000215): one worker process shared by the console and the editor.
+    PythonSession& pythonSession() { return *python_; }
+    PythonConsole& pythonConsole();
+    void showPythonConsole();
+    bool startPython();  // starts the worker; the console gets the project when it is ready
+    ScriptEditor& scriptEditor();  // created on first use
+    // Applies a changed copy of the project (a script's, a plugin's or a
+    // workflow's result) as ONE undoable change.
+    resonant::Status applyProjectCopy(const resonant::Project& changed, const QString& description);
+
+    // Help: the window (created on first use), a topic, the topic of the widget with focus or under the mouse.
+    HelpWindow& helpWindow();
+    void showHelp(const QString& topic);
+    void showContextHelp();
+
+    // Plugins and workflows.
+    resonant::plugins::PluginManager& plugins() { return *plugins_; }
+    void reloadPlugins();
+    PluginsDialog* showPluginsDialog();      // non-modal; closes with the window
+    WorkflowsDialog* showWorkflowsDialog();  // non-modal, kept while the window lives
+    QDialog* showMaterialsDialog();          // non-modal view of the library (screenshots)
+
+    // Demo Studio and presenter mode.
+    DemoController& demos() { return *demos_; }
+    DemoStudioPanel& demoStudioPanel();
+    PresenterOverlay& presenterOverlay();
+    void setPresenterMode(bool on);
+    bool presenterMode() const { return presenter_; }
+
     // File operations without dialogs (the dialog-driven actions call these).
     resonant::Status openProjectFile(const QString& path);
     resonant::Status saveProjectToFile(const QString& path);
@@ -98,6 +145,11 @@ private:
     void connectElectromagnetics();
     void connectExperiments();
     void connectOptimization();
+    void connectAutomation();
+    void connectHelp();
+    void connectDemos();
+    void fillExtensionsMenu();
+    void callExtension(const QString& pluginId, const QString& extensionId, const QString& kind);
     void updateDocumentState();
     void updateSelectionState();
     void fillAssignMaterialMenu();
@@ -121,6 +173,16 @@ private:
     OptimizationController* optimization_ = nullptr;
     TimeSignalPanel* timeSignals_ = nullptr;
     QActionGroup* unitGroup_ = nullptr;
+    PythonSession* python_ = nullptr;
+    ScriptEditor* scriptEditor_ = nullptr;
+    HelpWindow* helpWindow_ = nullptr;
+    WorkflowsDialog* workflowsDialog_ = nullptr;
+    std::unique_ptr<resonant::plugins::PluginManager> plugins_;
+    QJsonArray pythonExtensions_;
+    DemoController* demos_ = nullptr;
+    bool presenter_ = false;
+    QByteArray presenterSavedState_;
+    bool presenterMenuVisible_ = true;
     QByteArray defaultLayout_;
     QString graphicsDescription_ = QStringLiteral("not initialized yet");
 };

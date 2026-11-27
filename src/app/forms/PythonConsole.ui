@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>PythonConsole</class>
+ <widget class="QWidget" name="PythonConsole">
+  <property name="geometry"><rect><x>0</x><y>0</y><width>640</width><height>360</height></rect></property>
+  <property name="windowTitle"><string>Python Console</string></property>
+  <layout class="QVBoxLayout" name="mainLayout">
+   <property name="leftMargin"><number>4</number></property>
+   <property name="topMargin"><number>4</number></property>
+   <property name="rightMargin"><number>4</number></property>
+   <property name="bottomMargin"><number>4</number></property>
+   <item>
+    <layout class="QHBoxLayout" name="toolLayout">
+     <item>
+      <widget class="QLabel" name="statusLabel">
+       <property name="text"><string>Python: not started</string></property>
+       <property name="sizePolicy"><sizepolicy hsizetype="Expanding" vsizetype="Preferred"><horstretch>1</horstretch><verstretch>0</verstretch></sizepolicy></property>
+      </widget>
+     </item>
+     <item><widget class="QPushButton" name="runButton"><property name="text"><string>Run</string></property><property name="toolTip"><string>Run the input (Enter; Shift+Enter for a new line)</string></property></widget></item>
+     <item><widget class="QPushButton" name="stopButton"><property name="text"><string>Stop</string></property><property name="toolTip"><string>Interrupt the running code (KeyboardInterrupt)</string></property></widget></item>
+     <item><widget class="QPushButton" name="sendProjectButton"><property name="text"><string>Send Project</string></property><property name="toolTip"><string>Give the console a fresh copy of the open project as `project`</string></property></widget></item>
+     <item><widget class="QPushButton" name="runFileButton"><property name="text"><string>Run File...</string></property><property name="toolTip"><string>Run a Python script file in the console</string></property></widget></item>
+     <item><widget class="QPushButton" name="restartButton"><property name="text"><string>Restart</string></property><property name="toolTip"><string>Start a fresh Python worker (forgets every variable)</string></property></widget></item>
+     <item><widget class="QPushButton" name="clearButton"><property name="text"><string>Clear</string></property></widget></item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QPlainTextEdit" name="outputView">
+     <property name="readOnly"><bool>true</bool></property>
+     <property name="lineWrapMode"><enum>QPlainTextEdit::WidgetWidth</enum></property>
+     <property name="sizePolicy"><sizepolicy hsizetype="Expanding" vsizetype="Expanding"><horstretch>0</horstretch><verstretch>3</verstretch></sizepolicy></property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="inputLayout">
+     <item>
+      <widget class="QLabel" name="promptLabel">
+       <property name="text"><string>&gt;&gt;&gt;</string></property>
+       <property name="alignment"><set>Qt::AlignTop</set></property>
+      </widget>
+     </item>
+     <item>
+      <widget class="CodeEditor" name="inputEdit">
+       <property name="maximumSize"><size><width>16777215</width><height>110</height></size></property>
+       <property name="toolTip"><string>Python input: Enter runs, Shift+Enter adds a line, Tab completes, Up/Down recall history, name? shows documentation</string></property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget><class>CodeEditor</class><extends>QPlainTextEdit</extends><header>CodeEditor.h</header></customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

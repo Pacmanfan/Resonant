@@ -61,7 +61,8 @@ const Candidate* findCandidate(const RunRecord& run, const std::string& id)
 
 }  // namespace
 
-OptimizationController::OptimizationController(DocumentController* document, QObject* parent) : QObject(parent), document_(document)
+OptimizationController::OptimizationController(DocumentController* document, QObject* parent)
+    : QObject(parent), document_(document), documentAlive_(document)
 {
     timer_.setInterval(200);
     connect(&timer_, &QTimer::timeout, this, &OptimizationController::poll);
@@ -75,7 +76,7 @@ OptimizationController::OptimizationController(DocumentController* document, QOb
 
 OptimizationController::~OptimizationController()
 {
-    if (job_)
+    if (job_ && documentAlive_)
         document_->jobs().cancel(jobId_);
 }
 
@@ -242,7 +243,7 @@ Status OptimizationController::resume(const std::string& runId)
 
 void OptimizationController::stop()
 {
-    if (job_)
+    if (job_ && documentAlive_)
         document_->jobs().cancel(jobId_);
 }
 

@@ -1,0 +1,1 @@
+{"id": "test.bad-native", "version": "1.0.0", "resonant": {"min": "0.1.0", "max": "0.99.99"}, "apiVersion": 1, "kind": "native", "entry": "libbroken.so"}

@@ -1,0 +1,146 @@
+{
+ "format": "resonant.demo-sequence",
+ "version": 1,
+ "id": "demo-e-rf-antennas",
+ "sequenceVersion": "1",
+ "name": "E. RF antenna engineering",
+ "steps": [
+  {
+   "id": "open",
+   "action": "open-project",
+   "description": "Open the half-wave dipole example",
+   "params": {
+    "path": "examples/electromagnetics/a-half-wave-dipole.resonant"
+   },
+   "expect": {
+    "object": "ex-ea-dipole"
+   },
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "layout",
+   "action": "workspace",
+   "description": "The Electromagnetics panel",
+   "params": {
+    "panel": "em",
+    "docks": [
+     "scene",
+     "properties"
+    ],
+    "tab": "impedanceTab"
+   },
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "analyse",
+   "action": "run",
+   "description": "Impedance and directivity of the dipole",
+   "params": {
+    "what": "em.analyse",
+    "object": "ex-ea-dipole"
+   },
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "pattern",
+   "action": "run",
+   "description": "The dipole's radiation pattern in 3D",
+   "params": {
+    "what": "em.pattern",
+    "object": "ex-ea-dipole"
+   },
+   "timeoutSeconds": 120
+  },
+  {
+   "id": "camera",
+   "action": "camera",
+   "description": "Frame the pattern",
+   "params": {
+    "preset": "frame-all",
+    "yaw": -60,
+    "pitch": 20
+   },
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "explain-dipole",
+   "action": "pause",
+   "description": "A doughnut: no radiation along the wire, most broadside.",
+   "params": {
+    "text": "A doughnut: no radiation along the wire, most broadside."
+   },
+   "notes": "",
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "open-array",
+   "action": "open-project",
+   "description": "An 8 x 8 phased array",
+   "params": {
+    "path": "examples/electromagnetics/d-phased-array-steering.resonant"
+   },
+   "expect": {
+    "object": "ex-ed-array"
+   },
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "array-pattern",
+   "action": "run",
+   "description": "Its pattern, steered as saved (30°, 45°)",
+   "params": {
+    "what": "em.pattern",
+    "object": "ex-ed-array"
+   },
+   "timeoutSeconds": 120
+  },
+  {
+   "id": "steer",
+   "action": "project-action",
+   "description": "Steer the beam to broadside by phase",
+   "params": {
+    "id": "em.steer",
+    "params": {
+     "array": "ex-ed-array",
+     "thetaDeg": 0,
+     "phiDeg": 0
+    }
+   },
+   "expect": {
+    "undoAvailable": true
+   },
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "broadside",
+   "action": "run",
+   "description": "The broadside pattern",
+   "params": {
+    "what": "em.pattern",
+    "object": "ex-ed-array"
+   },
+   "timeoutSeconds": 120
+  },
+  {
+   "id": "camera-array",
+   "action": "camera",
+   "description": "Frame the array pattern",
+   "params": {
+    "preset": "frame-all",
+    "yaw": -60,
+    "pitch": 25
+   },
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "explain-steering",
+   "action": "pause",
+   "description": "Same array, new phases: the beam moved. Steering widens it a little.",
+   "params": {
+    "text": "Same array, new phases: the beam moved. Steering widens it a little."
+   },
+   "notes": "",
+   "timeoutSeconds": 60
+  }
+ ]
+}

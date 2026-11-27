@@ -30,9 +30,32 @@
 #include "PropertiesPanel.h"
 #include "SceneTreePanel.h"
 #include "ViewportWidget.h"
+#include "DemoController.h"
+#include "DemoStudioPanel.h"
+#include "HelpTopics.h"
+#include "HelpWindow.h"
+#include "PluginsDialog.h"
+#include "PresenterOverlay.h"
+#include "PythonConsole.h"
+#include "PythonSession.h"
+#include "ResourcePaths.h"
+#include "ScriptEditor.h"
+#include "WorkflowsDialog.h"
+#include "commands/ProjectChange.h"
 #include "foundation/Log.h"
+#include "foundation/Version.h"
+#include "plugins/PluginManager.h"
 #include "project/ProjectSerializer.h"
 #include "ui_MainWindow.h"
+
+#include <QApplication>
+#include <QCursor>
+#include <QDockWidget>
+#include <QInputDialog>
+#include <QJsonDocument>
+#include <QMenuBar>
+#include <QToolBar>
+#include <QTimer>
 
 #include <QActionGroup>
 #include <QCloseEvent>
@@ -74,6 +97,8 @@ MainWindow::MainWindow(QWidget* parent)
     ui_->menuPanels->addAction(ui_->emDock->toggleViewAction());
     ui_->menuPanels->addAction(ui_->experimentsDock->toggleViewAction());
     ui_->menuPanels->addAction(ui_->optimizationDock->toggleViewAction());
+    ui_->menuPanels->addAction(ui_->pythonConsoleDock->toggleViewAction());
+    ui_->menuPanels->addAction(ui_->demoStudioDock->toggleViewAction());
     ui_->menuPanels->addSeparator();
     ui_->menuPanels->addAction(ui_->fileToolBar->toggleViewAction());
     ui_->menuPanels->addAction(ui_->geometryToolBar->toggleViewAction());
@@ -117,6 +142,9 @@ MainWindow::MainWindow(QWidget* parent)
     connectElectromagnetics();
     connectExperiments();
     connectOptimization();
+    connectAutomation();
+    connectHelp();
+    connectDemos();
 
     unsavedChangesPrompt = [this] {
         return QMessageBox::warning(this, QStringLiteral("Unsaved changes"),
@@ -139,7 +167,12 @@ MainWindow::MainWindow(QWidget* parent)
     tabifyDockWidget(ui_->mechanicsDock, ui_->emDock);
     tabifyDockWidget(ui_->emDock, ui_->experimentsDock);
     tabifyDockWidget(ui_->experimentsDock, ui_->optimizationDock);
+    tabifyDockWidget(ui_->optimizationDock, ui_->demoStudioDock);
+    tabifyDockWidget(ui_->analysisDock, ui_->pythonConsoleDock);
+    ui_->demoStudioDock->hide();
+    ui_->presenterDock->hide();
     ui_->propertiesDock->raise();
+    ui_->analysisDock->raise();
     resizeDocks({ui_->sceneDock, ui_->propertiesDock}, {280, 380}, Qt::Horizontal);
     resizeDocks({ui_->analysisDock}, {220}, Qt::Vertical);
     defaultLayout_ = saveState();
@@ -781,4 +814,421 @@ void MainWindow::closeEvent(QCloseEvent* event)
     saveWorkspace();
     controller_->cancelAllJobs();
     event->accept();
+}
+
+// --- Python, plugins and workflows (ADR-000215) ------------------------------
+
+PythonConsole& MainWindow::pythonConsole() { return *ui_->pythonConsole; }
+DemoStudioPanel& MainWindow::demoStudioPanel() { return *ui_->demoStudioPanel; }
+PresenterOverlay& MainWindow::presenterOverlay() { return *ui_->presenterOverlay; }
+
+namespace {
+QJsonObject projectAsJson(const Project& project)
+{
+    return QJsonDocument::fromJson(QByteArray::fromStdString(serializeProject(project).dump())).object();
+}
+}  // namespace
+
+void MainWindow::connectAutomation()
+{
+    python_ = new PythonSession(this);
+    ui_->pythonConsole->setSession(python_);
+    ui_->pythonConsole->setProjectProvider([this] { return projectAsJson(controller_->project()); });
+    connect(python_, &PythonSession::applyRequested, this, [this](int, const QJsonObject& project, const QString& description) {
+        auto loaded = deserializeProject(nlohmann::json::parse(QJsonDocument(project).toJson(QJsonDocument::Compact).toStdString()));
+        if (!loaded) {
+            ui_->pythonConsole->appendOutput(QStringLiteral("app.apply: the project could not be read: %1\n").arg(QString::fromStdString(loaded.message())),
+                                             QStringLiteral("error"));
+            return;
+        }
+        const Status s = applyProjectCopy(*loaded.value().project, description.isEmpty() ? QStringLiteral("Script changes") : description);
+        ui_->pythonConsole->appendOutput(s ? QStringLiteral("(applied to the project: \"%1\"; Edit > Undo reverts it)\n").arg(description)
+                                           : QStringLiteral("app.apply failed: %1\n").arg(QString::fromStdString(s.message())),
+                                         s ? QStringLiteral("info") : QStringLiteral("error"));
+    });
+    connect(python_, &PythonSession::pullRequested, ui_->pythonConsole, [this] { ui_->pythonConsole->sendProject(true); });
+    connect(python_, &PythonSession::statusMessage, this, [this](const QString& text) { statusBar()->showMessage(text, 8000); });
+    connect(python_, &PythonSession::readyChanged, this, [this](bool ready) {
+        if (!ready || !plugins_)
+            return;
+        // Enabled Python plugins are loaded into the worker when it starts.
+        QJsonArray dirs;
+        for (const auto& d : plugins_->readyPythonPlugins())
+            dirs.append(QString::fromStdString(d.string()));
+        if (!dirs.isEmpty())
+            python_->request({{QStringLiteral("op"), QStringLiteral("load_plugins")}, {QStringLiteral("plugins"), dirs}});
+    });
+    connect(python_, &PythonSession::received, this, [this](int, const QJsonObject& m) {
+        if (m.value(QStringLiteral("type")).toString() != QLatin1String("plugins"))
+            return;
+        pythonExtensions_ = {};
+        for (const auto& v : m.value(QStringLiteral("plugins")).toArray()) {
+            const QJsonObject p = v.toObject();
+            // The worker names a plugin by its directory; find its manifest.
+            std::string id;
+            for (const auto& r : plugins_->plugins())
+                if (QString::fromStdString(r.manifest.directory.string()) == p.value(QStringLiteral("directory")).toString())
+                    id = r.manifest.id;
+            if (id.empty())
+                continue;
+            if (p.value(QStringLiteral("ok")).toBool()) {
+                std::vector<std::string> names;
+                for (const auto& e : p.value(QStringLiteral("extensions")).toArray()) {
+                    QJsonObject ext = e.toObject();
+                    names.push_back(ext.value(QStringLiteral("id")).toString().toStdString());
+                    ext.insert(QStringLiteral("plugin"), QString::fromStdString(id));
+                    pythonExtensions_.append(ext);
+                }
+                plugins_->markLoaded(id, names);
+            } else {
+                plugins_->markFailed(id, p.value(QStringLiteral("error")).toString().toStdString());
+                logError("plugins", id + ": " + p.value(QStringLiteral("error")).toString().toStdString());
+            }
+        }
+        fillExtensionsMenu();
+    });
+    connect(ui_->actionShowPythonConsole, &QAction::triggered, this, &MainWindow::showPythonConsole);
+    connect(ui_->actionScriptEditor, &QAction::triggered, this, [this] {
+        scriptEditor().show();
+        scriptEditor().raise();
+        scriptEditor().activateWindow();
+    });
+    connect(ui_->actionWorkflows, &QAction::triggered, this, &MainWindow::showWorkflowsDialog);
+    connect(ui_->actionPlugins, &QAction::triggered, this, &MainWindow::showPluginsDialog);
+
+    const ResourcePaths paths = ResourcePaths::locate();
+    plugins_ = std::make_unique<plugins::PluginManager>(
+        plugins::PluginManager::standardSearchPaths(paths.resourceRoot.isEmpty() ? std::filesystem::path()
+                                                                                : std::filesystem::path(paths.resourceRoot.toStdString()) / "plugins" / "examples"),
+        plugins::PluginManager::standardConfigFile(), kApplicationVersion);
+    reloadPlugins();
+}
+
+bool MainWindow::startPython()
+{
+    if (python_->isRunning())
+        return true;
+    if (!python_->start()) {
+        ui_->pythonConsole->appendOutput(python_->startupError() + QLatin1Char('\n'), QStringLiteral("error"));
+        return false;
+    }
+    return true;
+}
+
+void MainWindow::showPythonConsole()
+{
+    ui_->pythonConsoleDock->show();
+    ui_->pythonConsoleDock->raise();
+    startPython();
+    ui_->pythonConsole->setFocus();
+}
+
+ScriptEditor& MainWindow::scriptEditor()
+{
+    if (!scriptEditor_) {
+        scriptEditor_ = new ScriptEditor(this);
+        scriptEditor_->setWindowFlag(Qt::Window);
+        scriptEditor_->setSession(python_);
+        scriptEditor_->setDocument(controller_);
+        scriptEditor_->setStarter([this] { return startPython(); });
+        connect(scriptEditor_, &ScriptEditor::helpRequested, this, &MainWindow::showHelp);
+    }
+    return *scriptEditor_;
+}
+
+Status MainWindow::applyProjectCopy(const Project& changed, const QString& description)
+{
+    auto change = projectChangeCommand(controller_->project(), changed, description.toStdString());
+    if (!change)
+        return Status::failure(change.message());
+    for (const std::string& n : change.value().notApplied)
+        logWarning("automation", description.toStdString() + ": not applied: " + n);
+    if (change.value().empty()) {
+        statusBar()->showMessage(QStringLiteral("%1: nothing changed").arg(description), 6000);
+        return Status::success();
+    }
+    const ProjectChange& c = change.value();
+    const QString summary = QStringLiteral("%1: %2 added, %3 removed, %4 changed, %5 moved%6%7")
+                                .arg(description)
+                                .arg(c.added)
+                                .arg(c.removed)
+                                .arg(c.changed)
+                                .arg(c.moved)
+                                .arg(c.materials ? QStringLiteral(", materials") : QString())
+                                .arg(c.extensions ? QStringLiteral(", %1 setting(s)").arg(c.extensions) : QString());
+    const bool settings = c.extensions > 0;
+    if (Status s = controller_->pushCommand(std::move(change.value().command)); !s)
+        return s;
+    if (settings) {
+        // Project-level settings changed: the panels re-read them.
+        emit acoustics_->settingsChanged();
+        emit mechanics_->settingsChanged();
+        emit em_->settingsChanged();
+        emit fdtd_->settingsChanged();
+        emit optimization_->problemsChanged();
+        emit experiments_->experimentsChanged();
+    }
+    statusBar()->showMessage(summary + QStringLiteral(" (undoable)"), 8000);
+    logInfo("automation", summary.toStdString());
+    return Status::success();
+}
+
+void MainWindow::reloadPlugins()
+{
+    std::vector<std::string> capabilities;
+    if (!python_->interpreter().isEmpty() && !ResourcePaths::locate().pythonPackage.isEmpty())
+        capabilities.push_back("python");
+    plugins_->discover(capabilities);
+    plugins_->loadEnabled();
+    for (const auto& r : plugins_->plugins())
+        if (r.state == plugins::PluginState::Failed || r.state == plugins::PluginState::Invalid)
+            logWarning("plugins", r.manifest.id + ": " + std::string(plugins::toString(r.state)) + " - " + r.message);
+        else if (r.state == plugins::PluginState::Loaded)
+            logInfo("plugins", r.manifest.id + ": " + r.message);
+    pythonExtensions_ = {};
+    if (!plugins_->readyPythonPlugins().empty()) {
+        if (python_->isReady()) {
+            QJsonArray dirs;
+            for (const auto& d : plugins_->readyPythonPlugins())
+                dirs.append(QString::fromStdString(d.string()));
+            python_->request({{QStringLiteral("op"), QStringLiteral("load_plugins")}, {QStringLiteral("plugins"), dirs}});
+        } else
+            QTimer::singleShot(0, this, [this] { startPython(); });  // enabled Python plugins load in the worker
+    }
+    fillExtensionsMenu();
+}
+
+void MainWindow::fillExtensionsMenu()
+{
+    QMenu* menu = ui_->menuExtensions;
+    menu->clear();
+    for (const auto& v : pythonExtensions_) {
+        const QJsonObject e = v.toObject();
+        const QString kind = e.value(QStringLiteral("kind")).toString();
+        const QString label = kind == QLatin1String("geometry-generator") ? QStringLiteral("Generate: %1")
+                              : kind == QLatin1String("analysis")         ? QStringLiteral("Analyse: %1")
+                                                                          : QStringLiteral("Import: %1");
+        QAction* a = menu->addAction(label.arg(e.value(QStringLiteral("title")).toString()));
+        a->setToolTip(QStringLiteral("From the plugin %1").arg(e.value(QStringLiteral("plugin")).toString()));
+        connect(a, &QAction::triggered, this, [this, e, kind] {
+            callExtension(e.value(QStringLiteral("plugin")).toString(), e.value(QStringLiteral("id")).toString(), kind);
+        });
+    }
+    if (menu->isEmpty())
+        menu->addAction(QStringLiteral("(no extensions: enable plugins in Tools > Plugins)"))->setEnabled(false);
+}
+
+void MainWindow::callExtension(const QString& pluginId, const QString& extensionId, const QString& kind)
+{
+    if (!python_->isReady()) {
+        showFailure(QStringLiteral("The Python worker is not ready yet"));
+        return;
+    }
+    QJsonObject params;
+    if (kind == QLatin1String("measurement-importer")) {
+        const QString file = QFileDialog::getOpenFileName(this, QStringLiteral("Import Measurement"), defaultDirectory());
+        if (file.isEmpty())
+            return;
+        params.insert(QStringLiteral("path"), file);
+    } else if (kind == QLatin1String("geometry-generator")) {
+        QJsonObject defaults;
+        for (const auto& v : pythonExtensions_)
+            if (v.toObject().value(QStringLiteral("id")).toString() == extensionId) {
+                const QJsonObject declared = v.toObject().value(QStringLiteral("parameters")).toObject();
+                for (auto it = declared.begin(); it != declared.end(); ++it)
+                    defaults.insert(it.key(), it.value().toObject().value(QStringLiteral("default")));
+            }
+        bool ok = false;
+        const QString text = QInputDialog::getMultiLineText(this, QStringLiteral("Generator Parameters"), QStringLiteral("Parameters (JSON):"),
+                                                            QString::fromUtf8(QJsonDocument(defaults).toJson()), &ok);
+        if (!ok)
+            return;
+        params = QJsonDocument::fromJson(text.toUtf8()).object();
+    }
+    showPythonConsole();
+    ui_->pythonConsole->sendProject(false);
+    ui_->pythonConsole->appendOutput(QStringLiteral(">>> # extension %1/%2\n").arg(pluginId, extensionId), QStringLiteral("echo"));
+    const int id = python_->request({{QStringLiteral("op"), QStringLiteral("call")}, {QStringLiteral("plugin"), pluginId},
+                                     {QStringLiteral("extension"), extensionId}, {QStringLiteral("params"), params}});
+    auto connection = std::make_shared<QMetaObject::Connection>();
+    *connection = connect(python_, &PythonSession::received, this, [this, id, connection](int rid, const QJsonObject& m) {
+        if (rid != id)
+            return;
+        const QString type = m.value(QStringLiteral("type")).toString();
+        if (type == QLatin1String("result"))
+            ui_->pythonConsole->appendOutput(QString::fromUtf8(QJsonDocument::fromVariant(m.value(QStringLiteral("value")).toVariant()).toJson()) +
+                                             QLatin1Char('\n'));
+        else if (type == QLatin1String("error"))
+            ui_->pythonConsole->appendOutput(m.value(QStringLiteral("traceback")).toString() + m.value(QStringLiteral("message")).toString() +
+                                                 QLatin1Char('\n'),
+                                             QStringLiteral("error"));
+        else if (type == QLatin1String("done"))
+            disconnect(*connection);
+    });
+}
+
+PluginsDialog* MainWindow::showPluginsDialog()
+{
+    auto* dialog = new PluginsDialog(*plugins_, [this] { reloadPlugins(); }, this);
+    dialog->setAttribute(Qt::WA_DeleteOnClose);
+    connect(dialog, &PluginsDialog::helpRequested, this, &MainWindow::showHelp);
+    dialog->show();
+    return dialog;
+}
+
+WorkflowsDialog* MainWindow::showWorkflowsDialog()
+{
+    if (!workflowsDialog_) {
+        workflowsDialog_ = new WorkflowsDialog(*controller_, [this](const Project& p, const QString& d) { return applyProjectCopy(p, d); }, this);
+        connect(workflowsDialog_, &WorkflowsDialog::helpRequested, this, &MainWindow::showHelp);
+    }
+    workflowsDialog_->show();
+    workflowsDialog_->raise();
+    return workflowsDialog_;
+}
+
+QDialog* MainWindow::showMaterialsDialog()
+{
+    auto* dialog = new MaterialsDialog(controller_->project().materials, this);
+    dialog->setAttribute(Qt::WA_DeleteOnClose);
+    dialog->show();
+    return dialog;
+}
+
+// --- help --------------------------------------------------------------------
+
+void MainWindow::connectHelp()
+{
+    connect(ui_->actionContextHelp, &QAction::triggered, this, &MainWindow::showContextHelp);
+    connect(ui_->actionHelpContents, &QAction::triggered, this, [this] { showHelp(QString::fromLatin1(HelpTopics::kHome)); });
+    connect(ui_->actionKeyboardShortcuts, &QAction::triggered, this, [this] { showHelp(QStringLiteral("ui.shortcuts")); });
+    connect(ui_->actionSearchHelp, &QAction::triggered, this, [this] {
+        HelpWindow& help = helpWindow();
+        if (help.currentTopic().isEmpty())
+            help.home();
+        help.show();
+        help.raise();
+        help.search(QString());
+        if (auto* edit = help.findChild<QLineEdit*>(QStringLiteral("searchEdit"))) {
+            if (auto* tabs = help.findChild<QTabWidget*>(QStringLiteral("navTabs")))
+                tabs->setCurrentIndex(1);
+            edit->setFocus();
+        }
+    });
+    // F1 also works in the floating windows that belong to this one.
+    ui_->actionContextHelp->setShortcutContext(Qt::ApplicationShortcut);
+}
+
+HelpWindow& MainWindow::helpWindow()
+{
+    if (!helpWindow_) {
+        helpWindow_ = new HelpWindow(this);
+        helpWindow_->resize(1100, 760);
+        helpWindow_->load(ResourcePaths::locate().help);
+    }
+    return *helpWindow_;
+}
+
+void MainWindow::showHelp(const QString& topic)
+{
+    HelpWindow& help = helpWindow();
+    if (help.isLoaded())
+        help.showTopic(topic.isEmpty() ? QString::fromLatin1(HelpTopics::kHome) : topic);
+    help.show();
+    help.raise();
+    help.activateWindow();
+}
+
+void MainWindow::showContextHelp()
+{
+    QWidget* w = QApplication::focusWidget();
+    if (!w)
+        w = focusWidget();  // the window's focus child, also when the window is not active
+    if (!w || w == this || (helpWindow_ && helpWindow_->isAncestorOf(w)))
+        w = QApplication::widgetAt(QCursor::pos());
+    if (w && helpWindow_ && (w == helpWindow_ || helpWindow_->isAncestorOf(w)))
+        w = nullptr;
+    showHelp(w ? HelpTopics::topicFor(w) : QString::fromLatin1(HelpTopics::kHome));
+}
+
+// --- Demo Studio and presenter mode -------------------------------------------
+
+void MainWindow::connectDemos()
+{
+    demos_ = new DemoController(*this, this);
+    demos_->setResourceRoot(ResourcePaths::locate().resourceRoot);
+    ui_->demoStudioPanel->setController(demos_);
+    ui_->demoStudioPanel->setConfirmation([this] { return confirmDiscardChanges(); });
+    ui_->demoStudioPanel->setPresenterSwitch([this](bool on) { setPresenterMode(on); });
+    connect(ui_->actionShowDemoStudio, &QAction::triggered, this, [this] {
+        ui_->demoStudioDock->show();
+        ui_->demoStudioDock->raise();
+    });
+    connect(ui_->actionPresenterMode, &QAction::toggled, this, [this](bool on) {
+        if (on != presenter_)
+            setPresenterMode(on);
+    });
+    PresenterOverlay* overlay = ui_->presenterOverlay;
+    connect(overlay, &PresenterOverlay::nextRequested, demos_, &DemoController::next);
+    connect(overlay, &PresenterOverlay::pauseToggled, this, [this](bool pause) {
+        if (pause)
+            demos_->pause();
+        else
+            demos_->resume();
+    });
+    connect(overlay, &PresenterOverlay::restartRequested, demos_, &DemoController::restart);
+    connect(overlay, &PresenterOverlay::exitRequested, this, [this] { setPresenterMode(false); });
+    connect(demos_, &DemoController::runStarted, this, [this, overlay] {
+        overlay->setTitle(QString::fromStdString(demos_->profile() ? demos_->profile()->name : demos_->sequence().name));
+    });
+    connect(demos_, &DemoController::stepStarted, this, [this, overlay](int index) {
+        const auto& step = demos_->sequence().steps[static_cast<size_t>(index)];
+        overlay->setStep(index, demos_->stepCount(), QString::fromStdString(step.description), QString::fromStdString(step.notes));
+    });
+    connect(demos_, &DemoController::waitingForPresenter, this, [overlay](int, const QString& text) {
+        overlay->setWaiting(true);
+        if (!text.isEmpty())
+            overlay->setStep(-1, 0, text, {});
+    });
+    connect(demos_, &DemoController::stateChanged, this, [this, overlay] { overlay->setPaused(demos_->isPaused()); });
+    connect(demos_, &DemoController::runFinished, this, [overlay](const QString& status, const QString& message) { overlay->setFinished(status, message); });
+}
+
+void MainWindow::setPresenterMode(bool on)
+{
+    if (on == presenter_)
+        return;
+    presenter_ = on;
+    if (on) {
+        // A clean layout: the viewport and the presenter bar; nothing is closed or lost.
+        presenterSavedState_ = saveState();
+        presenterMenuVisible_ = menuBar()->isVisible();
+        for (QDockWidget* d : findChildren<QDockWidget*>())
+            if (d != ui_->presenterDock)
+                d->hide();
+        for (QToolBar* t : findChildren<QToolBar*>())
+            t->hide();
+        menuBar()->hide();
+        statusBar()->hide();
+        ui_->presenterDock->show();
+        // The bar takes only the height it needs; the viewport gets the rest.
+        QTimer::singleShot(0, this, [this] {
+            resizeDocks({ui_->presenterDock}, {ui_->presenterOverlay->sizeHint().height() + 24}, Qt::Vertical);
+        });
+        logInfo("demo", "presenter mode on (Esc or Exit Presenter Mode returns to the normal layout)");
+    } else {
+        ui_->presenterDock->hide();
+        restoreState(presenterSavedState_);
+        ui_->presenterDock->hide();
+        menuBar()->setVisible(presenterMenuVisible_);
+        statusBar()->show();
+        logInfo("demo", "presenter mode off");
+    }
+    const QSignalBlocker block(ui_->actionPresenterMode);
+    ui_->actionPresenterMode->setChecked(on);
+    // The F11 / presenter actions still work without the menu bar.
+    if (on) {
+        addAction(ui_->actionPresenterMode);
+        addAction(ui_->actionContextHelp);
+    }
 }

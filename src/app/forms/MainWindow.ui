@@ -197,12 +197,29 @@
      <addaction name="actionUnitsMillimeters"/>
      <addaction name="actionUnitsInches"/>
     </widget>
+    <widget class="QMenu" name="menuExtensions">
+     <property name="title"><string>E&amp;xtensions</string></property>
+    </widget>
+    <addaction name="actionShowPythonConsole"/>
+    <addaction name="actionScriptEditor"/>
+    <addaction name="actionWorkflows"/>
+    <addaction name="actionPlugins"/>
+    <addaction name="menuExtensions"/>
+    <addaction name="separator"/>
+    <addaction name="actionShowDemoStudio"/>
+    <addaction name="actionPresenterMode"/>
+    <addaction name="separator"/>
     <addaction name="menuDisplayUnits"/>
     <addaction name="separator"/>
     <addaction name="actionClearConsole"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title"><string>&amp;Help</string></property>
+    <addaction name="actionContextHelp"/>
+    <addaction name="actionHelpContents"/>
+    <addaction name="actionSearchHelp"/>
+    <addaction name="actionKeyboardShortcuts"/>
+    <addaction name="separator"/>
     <addaction name="actionAbout"/>
     <addaction name="actionAboutQt"/>
    </widget>
@@ -317,6 +334,65 @@
    <attribute name="dockWidgetArea"><number>2</number></attribute>
    <widget class="FdtdPanel" name="fdtdPanel"/>
   </widget>
+  <widget class="QDockWidget" name="pythonConsoleDock">
+   <property name="windowTitle"><string>Python Console</string></property>
+   <attribute name="dockWidgetArea"><number>8</number></attribute>
+   <widget class="PythonConsole" name="pythonConsole"/>
+  </widget>
+  <widget class="QDockWidget" name="demoStudioDock">
+   <property name="windowTitle"><string>Demo Studio</string></property>
+   <attribute name="dockWidgetArea"><number>2</number></attribute>
+   <widget class="DemoStudioPanel" name="demoStudioPanel"/>
+  </widget>
+  <widget class="QDockWidget" name="presenterDock">
+   <property name="windowTitle"><string>Presenter</string></property>
+   <property name="features"><set>QDockWidget::NoDockWidgetFeatures</set></property>
+   <attribute name="dockWidgetArea"><number>8</number></attribute>
+   <widget class="PresenterOverlay" name="presenterOverlay"/>
+  </widget>
+  <action name="actionShowPythonConsole">
+   <property name="text"><string>&amp;Python Console</string></property>
+   <property name="toolTip"><string>Show the Python console (the open project as `project`, the resonant API)</string></property>
+   <property name="shortcut"><string>Ctrl+Shift+P</string></property>
+  </action>
+  <action name="actionScriptEditor">
+   <property name="text"><string>Script &amp;Editor...</string></property>
+   <property name="toolTip"><string>Write, open and run Python scripts</string></property>
+  </action>
+  <action name="actionWorkflows">
+   <property name="text"><string>&amp;Workflows...</string></property>
+   <property name="toolTip"><string>Run a workflow template (acoustic, mechanical, electromagnetic, optimization) on the project</string></property>
+  </action>
+  <action name="actionPlugins">
+   <property name="text"><string>P&amp;lugins...</string></property>
+   <property name="toolTip"><string>See, enable and disable plugins</string></property>
+  </action>
+  <action name="actionShowDemoStudio">
+   <property name="text"><string>&amp;Demo Studio</string></property>
+   <property name="toolTip"><string>Run repeatable demonstrations of Resonant's capabilities</string></property>
+  </action>
+  <action name="actionPresenterMode">
+   <property name="text"><string>Presenter &amp;Mode</string></property>
+   <property name="toolTip"><string>A clean layout for presenting and recording (Esc leaves it; the project is kept)</string></property>
+   <property name="checkable"><bool>true</bool></property>
+   <property name="shortcut"><string>F11</string></property>
+  </action>
+  <action name="actionContextHelp">
+   <property name="text"><string>&amp;Context Help</string></property>
+   <property name="toolTip"><string>Help about the panel or editor you are working in</string></property>
+   <property name="shortcut"><string>F1</string></property>
+  </action>
+  <action name="actionHelpContents">
+   <property name="text"><string>Help &amp;Contents</string></property>
+   <property name="shortcut"><string>Ctrl+F1</string></property>
+  </action>
+  <action name="actionSearchHelp">
+   <property name="text"><string>&amp;Search Help...</string></property>
+   <property name="shortcut"><string>Shift+F1</string></property>
+  </action>
+  <action name="actionKeyboardShortcuts">
+   <property name="text"><string>&amp;Keyboard Shortcuts</string></property>
+  </action>
   <action name="actionNew">
    <property name="text"><string>&amp;New Project</string></property>
    <property name="toolTip"><string>Create a new project</string></property>
@@ -890,6 +966,9 @@
   <customwidget><class>OptimizationPanel</class><extends>QWidget</extends><header>OptimizationPanel.h</header><container>1</container></customwidget>
   <customwidget><class>FdtdPanel</class><extends>QWidget</extends><header>FdtdPanel.h</header><container>1</container></customwidget>
   <customwidget><class>AcousticsPanel</class><extends>QWidget</extends><header>AcousticsPanel.h</header><container>1</container></customwidget>
+  <customwidget><class>PythonConsole</class><extends>QWidget</extends><header>PythonConsole.h</header><container>1</container></customwidget>
+  <customwidget><class>DemoStudioPanel</class><extends>QWidget</extends><header>DemoStudioPanel.h</header><container>1</container></customwidget>
+  <customwidget><class>PresenterOverlay</class><extends>QWidget</extends><header>PresenterOverlay.h</header><container>1</container></customwidget>
  </customwidgets>
  <resources/>
  <connections/>

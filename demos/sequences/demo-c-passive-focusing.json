@@ -1,0 +1,96 @@
+{
+ "format": "resonant.demo-sequence",
+ "version": 1,
+ "id": "demo-c-passive-focusing",
+ "sequenceVersion": "1",
+ "name": "C. Passive acoustic focusing",
+ "steps": [
+  {
+   "id": "open",
+   "action": "open-project",
+   "description": "Open the parabolic reflector example",
+   "params": {
+    "path": "examples/manipulators/a-parabolic-reflector.resonant"
+   },
+   "expect": {
+    "object": "ex-ma-reflector"
+   },
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "layout",
+   "action": "workspace",
+   "description": "Scene, properties and acoustics",
+   "params": {
+    "panel": "properties",
+    "docks": [
+     "scene",
+     "acoustics",
+     "analysis"
+    ]
+   },
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "select",
+   "action": "select",
+   "description": "The reflector: a paraboloid of aluminium",
+   "params": {
+    "object": "ex-ma-reflector"
+   },
+   "notes": "Show its focal length and diameter, and its material (aluminium) in the property editor.",
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "camera",
+   "action": "camera",
+   "description": "Frame the reflector and the field plane",
+   "params": {
+    "preset": "frame-all",
+    "yaw": -90,
+    "pitch": 15
+   },
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "explain-setup",
+   "action": "pause",
+   "description": "A source 1 m away lights the reflector; the plane cuts through its focus.",
+   "params": {
+    "text": "A source 1 m away lights the reflector; the plane cuts through its focus."
+   },
+   "notes": "",
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "field",
+   "action": "run",
+   "description": "Calculate the field with the reflector model",
+   "params": {
+    "what": "acoustics.field",
+    "region": "ex-ma-region"
+   },
+   "timeoutSeconds": 300
+  },
+  {
+   "id": "decibels",
+   "action": "visualization",
+   "description": "Show the field in decibels",
+   "params": {
+    "domain": "acoustics",
+    "quantity": "decibels"
+   },
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "explain-field",
+   "action": "pause",
+   "description": "The reflected waves meet at the focus: a bright spot where the probe sits.",
+   "params": {
+    "text": "The reflected waves meet at the focus: a bright spot where the probe sits."
+   },
+   "notes": "",
+   "timeoutSeconds": 60
+  }
+ ]
+}

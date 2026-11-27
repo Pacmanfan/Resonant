@@ -1,0 +1,2 @@
+{"id": "test.broken-python", "name": "Broken Python plugin (test)", "version": "1.0.0", "description": "Deliberately fails in register() to test failure reporting.",
+ "resonant": {"min": "0.1.0", "max": "0.99.99"}, "apiVersion": 1, "kind": "python", "entry": "broken.py", "requires": ["python"], "provides": ["analysis"]}

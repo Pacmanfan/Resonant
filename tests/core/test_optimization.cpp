@@ -182,6 +182,9 @@ TEST(OptimizationDesign, ExpressionsParseEvaluateAndReportErrors)
     EXPECT_FALSE(Expression::parse("foo(1)").ok());
     EXPECT_FALSE(Expression::parse("1/0").value().evaluate({}).ok());  // not finite
     EXPECT_NEAR(Expression::parse("-pi/2").value().evaluate({}).value(), -std::numbers::pi / 2, 1e-15);
+    EXPECT_DOUBLE_EQ(Expression::parse("a > 1 && !(b == 2) || 0").value().evaluate({{"a", 2.0}, {"b", 3.0}}).value(), 1.0);
+    EXPECT_DOUBLE_EQ(Expression::parse("a <= 1").value().evaluate({{"a", 2.0}}).value(), 0.0);
+    EXPECT_DOUBLE_EQ(Expression::parse("a != 2").value().evaluate({{"a", 2.0}}).value(), 0.0);
     auto bracketed = Expression::parse("[object/a1/geometry/aperture] - 4 * [object/a1/geometry/focalLength]");
     ASSERT_TRUE(bracketed.ok()) << bracketed.message();
     EXPECT_EQ(bracketed.value().names().size(), 2u);

@@ -1,0 +1,15 @@
+{
+  "id": "examples.array-report",
+  "name": "Array report",
+  "version": "1.0.0",
+  "author": "Resonant examples",
+  "description": "An analysis extension: for every acoustic and electromagnetic array, the element count, aperture, smallest spacing in wavelengths with a grating-lobe warning, and the directivity and sidelobe level of electromagnetic arrays.",
+  "license": "same as Resonant",
+  "resonant": {"min": "0.1.0", "max": "0.99.99"},
+  "apiVersion": 1,
+  "kind": "python",
+  "entry": "report.py",
+  "requires": ["python"],
+  "provides": ["analysis"],
+  "permissions": ["reads the open project"]
+}

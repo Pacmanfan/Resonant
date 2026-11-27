@@ -1,0 +1,44 @@
+{
+ "format": "resonant.demo-profile",
+ "version": 1,
+ "id": "demo-e-rf-antennas",
+ "name": "E. RF antenna engineering",
+ "description": "A half-wave dipole's impedance and 3D radiation pattern, then an 8 x 8 phased array steered to another direction.",
+ "audience": "RF engineers, antenna designers",
+ "domain": "electromagnetic",
+ "status": "available",
+ "project": "examples/electromagnetics/a-half-wave-dipole.resonant",
+ "workspace": "em",
+ "requires": [],
+ "data": [],
+ "sequence": "demos/sequences/demo-e-rf-antennas.json",
+ "expected": [
+  "dipole impedance near 73 + j42 ohm and directivity near 2.15 dBi",
+  "the array beam moves from (30°, 45°) to broadside"
+ ],
+ "camera": {},
+ "visualization": {},
+ "screenshots": [
+  "antenna-radiation-pattern.png",
+  "em-array-steering.png"
+ ],
+ "notes": "demos/presenter_notes/demo-e-rf-antennas.md",
+ "durationMinutes": 6,
+ "completion": [
+  "every step done"
+ ],
+ "limitations": [
+  "no mutual coupling between array elements",
+  "far-field patterns only"
+ ],
+ "remaining": [],
+ "story": {
+  "problem": "Know how an antenna is matched and where it radiates, and point an array's beam without moving it.",
+  "configure": "A copper half-wave dipole at 1 GHz; then a planar array whose elements' phases are set for a direction.",
+  "calculate": "The dipole's induced-EMF impedance and directivity and its pattern; the array factor pattern before and after steering.",
+  "meaning": "The dipole radiates a doughnut around its axis (about 2.15 dBi); the array concentrates power into a steerable beam.",
+  "inspect": "The impedance report, the pattern summary (directivity, beamwidth, sidelobes) and the 3D pattern in the viewport.",
+  "value": "The beam is steered by phases alone, and the cost (lower directivity, larger beamwidth) is shown.",
+  "assumptions": "Thin-wire sinusoidal-current dipole; array factor of identical elements without mutual coupling; far field."
+ }
+}

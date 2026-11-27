@@ -1,0 +1,3 @@
+{
+  "enabled": ["examples.array-report", "examples.workflow-pack", "test.broken-python"]
+}

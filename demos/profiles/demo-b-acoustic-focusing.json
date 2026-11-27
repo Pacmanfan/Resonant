@@ -1,0 +1,47 @@
+{
+ "format": "resonant.demo-profile",
+ "version": 1,
+ "id": "demo-b-acoustic-focusing",
+ "name": "B. Acoustic focusing",
+ "description": "A 16-element linear array, first with all elements in phase, then focused by phase on a target: the same hardware, a different field.",
+ "audience": "acoustic engineers, ultrasound and haptics designers",
+ "domain": "acoustic",
+ "status": "available",
+ "project": "examples/acoustics/b-linear-array.resonant",
+ "workspace": "acoustics",
+ "requires": [],
+ "data": [],
+ "sequence": "demos/sequences/demo-b-acoustic-focusing.json",
+ "expected": [
+  "after focusing, the field maximum lies at the target",
+  "the focused peak pressure is several times the uniform one"
+ ],
+ "camera": {},
+ "visualization": {
+  "acoustics": "decibels"
+ },
+ "screenshots": [
+  "acoustic-array-setup.png",
+  "acoustic-focal-field.png"
+ ],
+ "notes": "demos/presenter_notes/demo-b-acoustic-focusing.md",
+ "durationMinutes": 6,
+ "completion": [
+  "every step done",
+  "two field results"
+ ],
+ "limitations": [
+  "free-field model only",
+  "ideal element directivity"
+ ],
+ "remaining": [],
+ "story": {
+  "problem": "Concentrate ultrasound at a chosen point (haptics, levitation, sensing) with a fixed array.",
+  "configure": "A focus target 5 cm in front of the array, then the focusing command (phase control).",
+  "calculate": "The element phases that make the waves arrive in phase at the target, and the pressure field before and after.",
+  "meaning": "Uniform excitation makes a broad beam; focusing makes a tight, much stronger spot where the target is.",
+  "inspect": "The field in decibels on the plane, and the Field Analysis summary (peak, focal size) of each result.",
+  "value": "The phases are calculated, not guessed, and the result is checked by a field calculation of the whole array.",
+  "assumptions": "Free field, omnidirectional point-source elements, phase control at one frequency (40 kHz)."
+ }
+}

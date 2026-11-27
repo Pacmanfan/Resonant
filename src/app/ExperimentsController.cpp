@@ -101,7 +101,7 @@ Result<Experiment> fromTemplate(const std::string& templateId, const std::string
 }  // namespace
 
 ExperimentsController::ExperimentsController(DocumentController* document, QObject* parent)
-    : QObject(parent), document_(document), registry_(std::make_shared<DeviceRegistry>())
+    : QObject(parent), document_(document), documentAlive_(document), registry_(std::make_shared<DeviceRegistry>())
 {
     hardware::registerHardwareDrivers(*registry_);
     connect(document_, &DocumentController::jobChanged, this, &ExperimentsController::onJobChanged);
@@ -124,7 +124,7 @@ ExperimentsController::~ExperimentsController()
 {
     if (runner_)
         runner_->cancel();
-    if (!jobId_.isNull())
+    if (!jobId_.isNull() && documentAlive_)
         document_->jobs().wait(jobId_, std::chrono::seconds(10));
     for (const auto& [id, a] : authorizations_)
         OutputAuthority::instance().release(a);

@@ -1,0 +1,96 @@
+{
+ "format": "resonant.demo-sequence",
+ "version": 1,
+ "id": "demo-g-experimental-correlation",
+ "sequenceVersion": "1",
+ "name": "G. Experimental correlation",
+ "steps": [
+  {
+   "id": "open",
+   "action": "open-project",
+   "description": "Open the RF experiments example (a copy in the run folder)",
+   "params": {
+    "path": "examples/experiments/rf_experiments.resonant",
+    "copyToRunDirectory": true
+   },
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "layout",
+   "action": "workspace",
+   "description": "The Experiments panel",
+   "params": {
+    "panel": "experiments",
+    "docks": [
+     "scene"
+    ]
+   },
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "antenna",
+   "action": "project-action",
+   "description": "Add the antenna whose model the measurement is compared with",
+   "params": {
+    "id": "scene.add",
+    "params": {
+     "type": "antenna",
+     "id": "demo-g-dipole",
+     "name": "Dipole under test",
+     "kind": "antenna.dipole",
+     "parameters": {
+      "length": 0.145,
+      "wireRadius": 0.001
+     },
+     "material": "mat-copper"
+    }
+   },
+   "expect": {
+    "object": "demo-g-dipole"
+   },
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "import",
+   "action": "experiment-data",
+   "description": "Import the reflection data (synthetic example file)",
+   "params": {
+    "op": "import-touchstone",
+    "experiment": "ex-exp-s11",
+    "file": "examples/experiments/rlc_antenna_and_line.s2p"
+   },
+   "notes": "Say it plainly: this file is synthetic example data, labelled as such in its header.",
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "explain-import",
+   "action": "pause",
+   "description": "The imported S11 is stored as a measurement record of the experiment.",
+   "params": {
+    "text": "The imported S11 is stored as a measurement record of the experiment."
+   },
+   "notes": "",
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "compare",
+   "action": "experiment-data",
+   "description": "Compare it with the simulated reflection of the dipole",
+   "params": {
+    "op": "compare",
+    "experiment": "ex-exp-s11"
+   },
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "explain-compare",
+   "action": "pause",
+   "description": "The metrics show how far the model is from the data, frequency by frequency.",
+   "params": {
+    "text": "The metrics show how far the model is from the data, frequency by frequency."
+   },
+   "notes": "",
+   "timeoutSeconds": 60
+  }
+ ]
+}

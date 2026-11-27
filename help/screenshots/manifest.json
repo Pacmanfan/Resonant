@@ -1,0 +1,1143 @@
+{
+ "format": "resonant.screenshot-manifest",
+ "version": 1,
+ "note": "Captured from the running application by its own commands: resonant --capture-screenshots help/screenshots/manifest.json (docs/help/SCREENSHOT_CAPTURE_SYSTEM.md). Each entry's 'steps' are Demo Studio steps; 'capture' says what is grabbed. Paths are relative to the source tree; the environment applies before the window exists.",
+ "screenshots": [
+  {
+   "name": "main-window-overview.png",
+   "page": "ui.main-window",
+   "description": "The main window with the focused planar array example after a field calculation: menus, toolbars, scene tree, viewport, properties and panels (numbered callouts in the annotated copy).",
+   "steps": [
+    {
+     "id": "open",
+     "action": "open-project",
+     "description": "Open c-focused-planar-array.resonant",
+     "params": {
+      "path": "examples/acoustics/c-focused-planar-array.resonant"
+     }
+    },
+    {
+     "id": "layout",
+     "action": "workspace",
+     "description": "Layout",
+     "params": {
+      "panel": "acoustics",
+      "docks": [
+       "scene",
+       "properties",
+       "python"
+      ],
+      "windowSize": [
+       1600,
+       1000
+      ],
+      "tab": "focusTab"
+     }
+    },
+    {
+     "id": "select",
+     "action": "select",
+     "description": "Select",
+     "params": {
+      "object": "ex-c-array"
+     }
+    },
+    {
+     "id": "field",
+     "action": "run",
+     "description": "Field",
+     "params": {
+      "what": "acoustics.field",
+      "region": "ex-c-region"
+     },
+     "timeoutSeconds": 300
+    },
+    {
+     "id": "decibels",
+     "action": "visualization",
+     "description": "Decibels",
+     "params": {
+      "domain": "acoustics",
+      "quantity": "decibels"
+     }
+    },
+    {
+     "id": "camera",
+     "action": "camera",
+     "description": "Camera",
+     "params": {
+      "preset": "frame-all",
+      "yaw": -60,
+      "pitch": 22
+     }
+    }
+   ],
+   "title": "Resonant: the main window",
+   "capture": {
+    "target": "window",
+    "annotations": [
+     {
+      "x": 0.72,
+      "y": 0.012,
+      "text": "Menus"
+     },
+     {
+      "x": 0.63,
+      "y": 0.047,
+      "text": "Toolbars"
+     },
+     {
+      "x": 0.07,
+      "y": 0.25,
+      "text": "Scene tree"
+     },
+     {
+      "x": 0.22,
+      "y": 0.16,
+      "text": "3D viewport"
+     },
+     {
+      "x": 0.8,
+      "y": 0.55,
+      "text": "Properties and panels"
+     },
+     {
+      "x": 0.35,
+      "y": 0.86,
+      "text": "Python console and log"
+     }
+    ]
+   }
+  },
+  {
+   "name": "viewport-3d.png",
+   "page": "ui.viewport",
+   "description": "The 3D viewport alone: the array, its focus target and the calculated pressure magnitude on the field plane.",
+   "steps": [
+    {
+     "id": "open",
+     "action": "open-project",
+     "description": "Open c-focused-planar-array.resonant",
+     "params": {
+      "path": "examples/acoustics/c-focused-planar-array.resonant"
+     }
+    },
+    {
+     "id": "layout",
+     "action": "workspace",
+     "description": "Layout",
+     "params": {
+      "panel": "viewport",
+      "docks": [
+       "scene"
+      ],
+      "windowSize": [
+       1600,
+       1000
+      ]
+     }
+    },
+    {
+     "id": "field",
+     "action": "run",
+     "description": "Field",
+     "params": {
+      "what": "acoustics.field",
+      "region": "ex-c-region"
+     },
+     "timeoutSeconds": 300
+    },
+    {
+     "id": "decibels",
+     "action": "visualization",
+     "description": "Decibels",
+     "params": {
+      "domain": "acoustics",
+      "quantity": "decibels"
+     }
+    },
+    {
+     "id": "camera",
+     "action": "camera",
+     "description": "Camera",
+     "params": {
+      "preset": "frame-all",
+      "yaw": -60,
+      "pitch": 22
+     }
+    }
+   ],
+   "title": "The 3D viewport",
+   "capture": {
+    "target": "viewport"
+   }
+  },
+  {
+   "name": "scene-hierarchy.png",
+   "page": "ui.scene-hierarchy",
+   "description": "The scene tree of the planar array example.",
+   "steps": [
+    {
+     "id": "open",
+     "action": "open-project",
+     "description": "Open c-focused-planar-array.resonant",
+     "params": {
+      "path": "examples/acoustics/c-focused-planar-array.resonant"
+     }
+    },
+    {
+     "id": "layout",
+     "action": "workspace",
+     "description": "Layout",
+     "params": {
+      "panel": "scene",
+      "docks": [
+       "scene",
+       "properties"
+      ],
+      "windowSize": [
+       1600,
+       1000
+      ]
+     }
+    },
+    {
+     "id": "select",
+     "action": "select",
+     "description": "Select",
+     "params": {
+      "object": "ex-c-array"
+     }
+    }
+   ],
+   "title": "The scene tree",
+   "capture": {
+    "target": "scene"
+   }
+  },
+  {
+   "name": "property-editor.png",
+   "page": "ui.property-editors",
+   "description": "The property editor of a selected acoustic array.",
+   "steps": [
+    {
+     "id": "open",
+     "action": "open-project",
+     "description": "Open c-focused-planar-array.resonant",
+     "params": {
+      "path": "examples/acoustics/c-focused-planar-array.resonant"
+     }
+    },
+    {
+     "id": "layout",
+     "action": "workspace",
+     "description": "Layout",
+     "params": {
+      "panel": "properties",
+      "docks": [
+       "scene",
+       "properties"
+      ],
+      "windowSize": [
+       1600,
+       1000
+      ]
+     }
+    },
+    {
+     "id": "select",
+     "action": "select",
+     "description": "Select",
+     "params": {
+      "object": "ex-c-array"
+     }
+    }
+   ],
+   "title": "The property editor",
+   "capture": {
+    "target": "properties"
+   }
+  },
+  {
+   "name": "material-editor.png",
+   "page": "concepts.materials",
+   "description": "The material library dialog with a material selected.",
+   "steps": [
+    {
+     "id": "open",
+     "action": "open-project",
+     "description": "Open c-focused-planar-array.resonant",
+     "params": {
+      "path": "examples/acoustics/c-focused-planar-array.resonant"
+     }
+    }
+   ],
+   "title": "The material library",
+   "capture": {
+    "target": "materials",
+    "size": [
+     900,
+     620
+    ]
+   }
+  },
+  {
+   "name": "geometry-workflow.png",
+   "page": "concepts.geometry",
+   "description": "The primitives example: geometry objects in the viewport with one selected and its parameters in the property editor.",
+   "steps": [
+    {
+     "id": "open",
+     "action": "open-project",
+     "description": "Open primitives.resonant",
+     "params": {
+      "path": "examples/foundation/primitives.resonant"
+     }
+    },
+    {
+     "id": "layout",
+     "action": "workspace",
+     "description": "Layout",
+     "params": {
+      "panel": "properties",
+      "docks": [
+       "scene",
+       "properties"
+      ],
+      "windowSize": [
+       1600,
+       1000
+      ]
+     }
+    },
+    {
+     "id": "select",
+     "action": "select",
+     "description": "Select",
+     "params": {
+      "object": "ex-foundation-04"
+     }
+    },
+    {
+     "id": "camera",
+     "action": "camera",
+     "description": "Camera",
+     "params": {
+      "preset": "frame-all",
+      "yaw": -50,
+      "pitch": 25
+     }
+    }
+   ],
+   "title": "Geometry",
+   "capture": {
+    "target": "window"
+   }
+  },
+  {
+   "name": "acoustic-array-setup.png",
+   "page": "acoustics.arrays",
+   "description": "An acoustic linear array selected, with the Acoustics panel's focusing tab.",
+   "steps": [
+    {
+     "id": "open",
+     "action": "open-project",
+     "description": "Open b-linear-array.resonant",
+     "params": {
+      "path": "examples/acoustics/b-linear-array.resonant"
+     }
+    },
+    {
+     "id": "layout",
+     "action": "workspace",
+     "description": "Layout",
+     "params": {
+      "panel": "acoustics",
+      "docks": [
+       "scene",
+       "acoustics"
+      ],
+      "windowSize": [
+       1600,
+       1000
+      ],
+      "tab": "focusTab"
+     }
+    },
+    {
+     "id": "select",
+     "action": "select",
+     "description": "Select",
+     "params": {
+      "object": "ex-b-array"
+     }
+    },
+    {
+     "id": "camera",
+     "action": "camera",
+     "description": "Camera",
+     "params": {
+      "preset": "frame-all",
+      "yaw": -60,
+      "pitch": 25
+     }
+    }
+   ],
+   "title": "An acoustic array",
+   "capture": {
+    "target": "window"
+   }
+  },
+  {
+   "name": "acoustic-focal-field.png",
+   "page": "acoustics.focusing",
+   "description": "The pressure field of a focused planar array: the focal spot at the target.",
+   "steps": [
+    {
+     "id": "open",
+     "action": "open-project",
+     "description": "Open c-focused-planar-array.resonant",
+     "params": {
+      "path": "examples/acoustics/c-focused-planar-array.resonant"
+     }
+    },
+    {
+     "id": "layout",
+     "action": "workspace",
+     "description": "Layout",
+     "params": {
+      "panel": "acoustics",
+      "docks": [
+       "scene",
+       "acoustics"
+      ],
+      "windowSize": [
+       1600,
+       1000
+      ],
+      "tab": "displayTab"
+     }
+    },
+    {
+     "id": "field",
+     "action": "run",
+     "description": "Field",
+     "params": {
+      "what": "acoustics.field",
+      "region": "ex-c-region"
+     },
+     "timeoutSeconds": 300
+    },
+    {
+     "id": "decibels",
+     "action": "visualization",
+     "description": "Decibels",
+     "params": {
+      "domain": "acoustics",
+      "quantity": "decibels"
+     }
+    },
+    {
+     "id": "camera",
+     "action": "camera",
+     "description": "Camera",
+     "params": {
+      "preset": "frame-all",
+      "yaw": -90,
+      "pitch": 8
+     }
+    }
+   ],
+   "title": "A focused field",
+   "capture": {
+    "target": "window"
+   }
+  },
+  {
+   "name": "acoustic-reflector-field.png",
+   "page": "acoustics.reflectors",
+   "description": "A parabolic reflector concentrating the field of a source at its focus (reflector model).",
+   "steps": [
+    {
+     "id": "open",
+     "action": "open-project",
+     "description": "Open a-parabolic-reflector.resonant",
+     "params": {
+      "path": "examples/manipulators/a-parabolic-reflector.resonant"
+     }
+    },
+    {
+     "id": "layout",
+     "action": "workspace",
+     "description": "Layout",
+     "params": {
+      "panel": "acoustics",
+      "docks": [
+       "scene",
+       "acoustics"
+      ],
+      "windowSize": [
+       1600,
+       1000
+      ],
+      "tab": "simulationTab"
+     }
+    },
+    {
+     "id": "field",
+     "action": "run",
+     "description": "Field",
+     "params": {
+      "what": "acoustics.field",
+      "region": "ex-ma-region"
+     },
+     "timeoutSeconds": 300
+    },
+    {
+     "id": "decibels",
+     "action": "visualization",
+     "description": "Decibels",
+     "params": {
+      "domain": "acoustics",
+      "quantity": "decibels"
+     }
+    },
+    {
+     "id": "camera",
+     "action": "camera",
+     "description": "Camera",
+     "params": {
+      "preset": "frame-all",
+      "yaw": -90,
+      "pitch": 12
+     }
+    }
+   ],
+   "title": "A parabolic reflector",
+   "capture": {
+    "target": "window"
+   }
+  },
+  {
+   "name": "simulation-controls.png",
+   "page": "sim.architecture",
+   "description": "The Acoustics panel's simulation controls with the resource estimate of a field region.",
+   "steps": [
+    {
+     "id": "open",
+     "action": "open-project",
+     "description": "Open c-focused-planar-array.resonant",
+     "params": {
+      "path": "examples/acoustics/c-focused-planar-array.resonant"
+     }
+    },
+    {
+     "id": "layout",
+     "action": "workspace",
+     "description": "Layout",
+     "params": {
+      "panel": "acoustics",
+      "docks": [
+       "scene",
+       "acoustics"
+      ],
+      "windowSize": [
+       1600,
+       1000
+      ],
+      "tab": "simulationTab"
+     }
+    },
+    {
+     "id": "select",
+     "action": "select",
+     "description": "Select",
+     "params": {
+      "object": "ex-c-region"
+     }
+    }
+   ],
+   "title": "Simulation controls",
+   "capture": {
+    "target": "acoustics"
+   }
+  },
+  {
+   "name": "mechanical-modal-analysis.png",
+   "page": "mechanics.modal",
+   "description": "Modal analysis of a vibrating beam: the mode table and a mode shape in the viewport.",
+   "steps": [
+    {
+     "id": "open",
+     "action": "open-project",
+     "description": "Open a-vibrating-beam.resonant",
+     "params": {
+      "path": "examples/mechanics/a-vibrating-beam.resonant"
+     }
+    },
+    {
+     "id": "layout",
+     "action": "workspace",
+     "description": "Layout",
+     "params": {
+      "panel": "mechanics",
+      "docks": [
+       "scene",
+       "mechanics"
+      ],
+      "windowSize": [
+       1600,
+       1000
+      ],
+      "tab": "modesTab"
+     }
+    },
+    {
+     "id": "modal",
+     "action": "run",
+     "description": "Modal",
+     "params": {
+      "what": "mechanics.modal",
+      "structure": "ex-me-beam"
+     },
+     "timeoutSeconds": 300
+    },
+    {
+     "id": "mode",
+     "action": "show",
+     "description": "Mode 2",
+     "params": {
+      "panel": "mechanics",
+      "domain": "mechanics",
+      "result": 0,
+      "item": 1
+     }
+    },
+    {
+     "id": "camera",
+     "action": "camera",
+     "description": "Camera",
+     "params": {
+      "preset": "frame-all",
+      "yaw": -55,
+      "pitch": 25
+     }
+    }
+   ],
+   "title": "Modal analysis",
+   "capture": {
+    "target": "window"
+   }
+  },
+  {
+   "name": "antenna-radiation-pattern.png",
+   "page": "em.patterns",
+   "description": "The radiation pattern of a half-wave dipole: pattern cut and 3D pattern.",
+   "steps": [
+    {
+     "id": "open",
+     "action": "open-project",
+     "description": "Open a-half-wave-dipole.resonant",
+     "params": {
+      "path": "examples/electromagnetics/a-half-wave-dipole.resonant"
+     }
+    },
+    {
+     "id": "layout",
+     "action": "workspace",
+     "description": "Layout",
+     "params": {
+      "panel": "em",
+      "docks": [
+       "scene",
+       "em"
+      ],
+      "windowSize": [
+       1600,
+       1000
+      ],
+      "tab": "patternTab"
+     }
+    },
+    {
+     "id": "pattern",
+     "action": "run",
+     "description": "Pattern",
+     "params": {
+      "what": "em.pattern",
+      "object": "ex-ea-dipole"
+     },
+     "timeoutSeconds": 120
+    },
+    {
+     "id": "camera",
+     "action": "camera",
+     "description": "Camera",
+     "params": {
+      "preset": "frame-all",
+      "yaw": -60,
+      "pitch": 20
+     }
+    }
+   ],
+   "title": "A dipole's pattern",
+   "capture": {
+    "target": "window"
+   }
+  },
+  {
+   "name": "em-array-steering.png",
+   "page": "em.beamforming",
+   "description": "An 8 x 8 phased array steered to (30°, 45°): its 3D pattern and the pattern summary.",
+   "steps": [
+    {
+     "id": "open",
+     "action": "open-project",
+     "description": "Open d-phased-array-steering.resonant",
+     "params": {
+      "path": "examples/electromagnetics/d-phased-array-steering.resonant"
+     }
+    },
+    {
+     "id": "layout",
+     "action": "workspace",
+     "description": "Layout",
+     "params": {
+      "panel": "em",
+      "docks": [
+       "scene",
+       "em"
+      ],
+      "windowSize": [
+       1600,
+       1000
+      ],
+      "tab": "patternTab"
+     }
+    },
+    {
+     "id": "pattern",
+     "action": "run",
+     "description": "Pattern",
+     "params": {
+      "what": "em.pattern",
+      "object": "ex-ed-array"
+     },
+     "timeoutSeconds": 120
+    },
+    {
+     "id": "camera",
+     "action": "camera",
+     "description": "Camera",
+     "params": {
+      "preset": "frame-all",
+      "yaw": -60,
+      "pitch": 25
+     }
+    }
+   ],
+   "title": "A steered array",
+   "capture": {
+    "target": "window"
+   }
+  },
+  {
+   "name": "optimization-studio.png",
+   "page": "opt.studio",
+   "description": "The Optimization Studio after a run: candidates and the progress of the objective.",
+   "steps": [
+    {
+     "id": "open",
+     "action": "open-project",
+     "description": "Open a-acoustic-focal-array.resonant",
+     "params": {
+      "path": "examples/optimization/a-acoustic-focal-array.resonant",
+      "copyToRunDirectory": true
+     }
+    },
+    {
+     "id": "layout",
+     "action": "workspace",
+     "description": "Layout",
+     "params": {
+      "panel": "optimization",
+      "docks": [
+       "scene",
+       "optimization"
+      ],
+      "windowSize": [
+       1600,
+       1000
+      ],
+      "tab": "runTab"
+     }
+    },
+    {
+     "id": "run",
+     "action": "run",
+     "description": "Optimize",
+     "params": {
+      "what": "optimization",
+      "problem": "ex-opt-a-focus"
+     },
+     "timeoutSeconds": 600
+    },
+    {
+     "id": "tab",
+     "action": "show",
+     "description": "Candidates",
+     "params": {
+      "panel": "optimization",
+      "tab": "candidatesTab"
+     }
+    }
+   ],
+   "title": "The Optimization Studio",
+   "capture": {
+    "target": "window"
+   }
+  },
+  {
+   "name": "experiment-workspace.png",
+   "page": "exp.acquisition",
+   "description": "The Experiments panel with the RF example's experiments and an imported (synthetic) S11 measurement.",
+   "steps": [
+    {
+     "id": "open",
+     "action": "open-project",
+     "description": "Open rf_experiments.resonant",
+     "params": {
+      "path": "examples/experiments/rf_experiments.resonant",
+      "copyToRunDirectory": true
+     }
+    },
+    {
+     "id": "layout",
+     "action": "workspace",
+     "description": "Layout",
+     "params": {
+      "panel": "experiments",
+      "docks": [
+       "scene",
+       "experiments"
+      ],
+      "windowSize": [
+       1600,
+       1000
+      ]
+     }
+    },
+    {
+     "id": "import",
+     "action": "experiment-data",
+     "description": "Import",
+     "params": {
+      "op": "import-touchstone",
+      "experiment": "ex-exp-s11",
+      "file": "examples/experiments/rlc_antenna_and_line.s2p"
+     }
+    }
+   ],
+   "title": "Experiments",
+   "capture": {
+    "target": "window"
+   }
+  },
+  {
+   "name": "python-console.png",
+   "page": "py.console",
+   "description": "The Python console after building and evaluating a design.",
+   "steps": [
+    {
+     "id": "open",
+     "action": "open-project",
+     "description": "Open b-linear-array.resonant",
+     "params": {
+      "path": "examples/acoustics/b-linear-array.resonant"
+     }
+    },
+    {
+     "id": "layout",
+     "action": "workspace",
+     "description": "Layout",
+     "params": {
+      "panel": "python",
+      "docks": [
+       "scene",
+       "python"
+      ],
+      "windowSize": [
+       1600,
+       1000
+      ],
+      "dockHeights": {
+       "python": 420
+      }
+     }
+    },
+    {
+     "id": "script",
+     "action": "python",
+     "description": "Script",
+     "params": {
+      "label": "console example",
+      "code": "arrays = [o for o in project.objects() if o.component_type == 'acoustic.array']\nprint(arrays[0].name, arrays[0].component['countX'], 'elements')\nresonant.acoustics.focus(project, arrays[0], point=(0, 0, 0.05))\nprint('|p| at the focus:', round(abs(resonant.acoustics.pressure(project, [(0, 0, 0.05)])[0]), 1), 'Pa')\napp.apply(project, 'Focus at 5 cm')\n"
+     },
+     "timeoutSeconds": 120
+    },
+    {
+     "id": "field",
+     "action": "run",
+     "description": "Field of the focused array",
+     "params": {
+      "what": "acoustics.field",
+      "region": "ex-b-region"
+     },
+     "timeoutSeconds": 120
+    },
+    {
+     "id": "decibels",
+     "action": "visualization",
+     "description": "Decibels",
+     "params": {
+      "domain": "acoustics",
+      "quantity": "decibels"
+     }
+    },
+    {
+     "id": "camera",
+     "action": "camera",
+     "description": "Camera",
+     "params": {
+      "preset": "frame-all",
+      "yaw": -90,
+      "pitch": 10
+     }
+    }
+   ],
+   "title": "The Python console",
+   "capture": {
+    "target": "window"
+   }
+  },
+  {
+   "name": "script-editor.png",
+   "page": "py.editor",
+   "description": "The script editor with an example script.",
+   "steps": [
+    {
+     "id": "open",
+     "action": "open-project",
+     "description": "Open b-linear-array.resonant",
+     "params": {
+      "path": "examples/acoustics/b-linear-array.resonant"
+     }
+    }
+   ],
+   "title": "The script editor",
+   "capture": {
+    "target": "script-editor",
+    "open": "python/examples/01_focus_array.py",
+    "size": [
+     1000,
+     700
+    ]
+   }
+  },
+  {
+   "name": "plugins-dialog.png",
+   "page": "py.plugins",
+   "description": "The Plugins dialog: the example plugins (two enabled and loaded) and the deliberately broken test plugins with their states.",
+   "steps": [
+    {
+     "id": "open",
+     "action": "open-project",
+     "description": "Open c-focused-planar-array.resonant",
+     "params": {
+      "path": "examples/acoustics/c-focused-planar-array.resonant"
+     }
+    },
+    {
+     "id": "python",
+     "action": "python",
+     "description": "Start Python (enabled Python plugins load into it)",
+     "params": {
+      "code": "print('python ready')",
+      "sendProject": false
+     },
+     "timeoutSeconds": 60
+    }
+   ],
+   "title": "Plugins",
+   "capture": {
+    "target": "plugins",
+    "size": [
+     1100,
+     620
+    ]
+   }
+  },
+  {
+   "name": "workflows-dialog.png",
+   "page": "py.workflows",
+   "description": "The Workflows dialog: the templates (built in and from the example workflow pack), a template's parameters, and a run recorded in the project.",
+   "steps": [
+    {
+     "id": "open",
+     "action": "open-project",
+     "description": "Open b-linear-array.resonant",
+     "params": {
+      "path": "examples/acoustics/b-linear-array.resonant"
+     }
+    },
+    {
+     "id": "wf",
+     "action": "workflow",
+     "description": "Run a workflow",
+     "params": {
+      "id": "em.dipole-pattern"
+     },
+     "timeoutSeconds": 120
+    }
+   ],
+   "title": "Workflows",
+   "capture": {
+    "target": "workflows",
+    "size": [
+     1100,
+     640
+    ]
+   }
+  },
+  {
+   "name": "help-window.png",
+   "page": "ui.help-window",
+   "description": "The help window: navigation, search and an article.",
+   "steps": [
+    {
+     "id": "help",
+     "action": "help",
+     "description": "Help",
+     "params": {
+      "topic": "acoustics.focusing"
+     }
+    }
+   ],
+   "title": "Help",
+   "capture": {
+    "target": "help",
+    "size": [
+     1200,
+     800
+    ]
+   }
+  },
+  {
+   "name": "demo-studio.png",
+   "page": "ui.demo-studio",
+   "description": "Demo Studio with a demonstration profile and its steps.",
+   "steps": [
+    {
+     "id": "open",
+     "action": "open-project",
+     "description": "Open c-focused-planar-array.resonant",
+     "params": {
+      "path": "examples/acoustics/c-focused-planar-array.resonant"
+     }
+    },
+    {
+     "id": "layout",
+     "action": "workspace",
+     "description": "Layout",
+     "params": {
+      "panel": "demo",
+      "docks": [
+       "scene",
+       "demo"
+      ],
+      "windowSize": [
+       1600,
+       1000
+      ]
+     }
+    },
+    {
+     "id": "camera",
+     "action": "camera",
+     "description": "Camera",
+     "params": {
+      "preset": "frame-all",
+      "yaw": -60,
+      "pitch": 22
+     }
+    }
+   ],
+   "title": "Demo Studio",
+   "capture": {
+    "target": "window"
+   }
+  },
+  {
+   "name": "presenter-mode.png",
+   "page": "ui.demo-studio",
+   "description": "Presenter mode: the large viewport and the presenter bar with step instructions.",
+   "steps": [
+    {
+     "id": "open",
+     "action": "open-project",
+     "description": "Open c-focused-planar-array.resonant",
+     "params": {
+      "path": "examples/acoustics/c-focused-planar-array.resonant"
+     }
+    },
+    {
+     "id": "field",
+     "action": "run",
+     "description": "Field",
+     "params": {
+      "what": "acoustics.field",
+      "region": "ex-c-region"
+     },
+     "timeoutSeconds": 300
+    },
+    {
+     "id": "decibels",
+     "action": "visualization",
+     "description": "Decibels",
+     "params": {
+      "domain": "acoustics",
+      "quantity": "decibels"
+     }
+    },
+    {
+     "id": "presenter",
+     "action": "presenter",
+     "description": "Presenter mode",
+     "params": {
+      "on": true
+     }
+    },
+    {
+     "id": "camera",
+     "action": "camera",
+     "description": "Camera",
+     "params": {
+      "preset": "frame-all",
+      "yaw": -90,
+      "pitch": 10
+     }
+    }
+   ],
+   "title": "A. Resonant overview",
+   "capture": {
+    "target": "window"
+   },
+   "caption": "The focus: every element's wave arrives in phase at the target."
+  }
+ ],
+ "outputDirectory": "help/src/images/screenshots",
+ "environment": {
+  "RESONANT_PLUGIN_PATH": "tests/data/plugins",
+  "RESONANT_PLUGIN_CONFIG": "tests/data/screenshot-config/Resonant/plugins.json"
+ }
+}

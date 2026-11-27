@@ -1,0 +1,14 @@
+{
+  "format": "resonant.workflow", "version": 1,
+  "id": "examples.em-frequency-check", "workflowVersion": "1", "category": "electromagnetic",
+  "name": "Electromagnetic: dipole return loss at three frequencies",
+  "description": "Builds a dipole and reports its induced-EMF impedance and return loss at three frequencies.",
+  "expectedSeconds": 1, "docs": ["em.antennas"],
+  "parameters": [{"id": "frequencies", "label": "Frequencies", "type": "list", "default": [9e8, 1e9, 1.1e9], "unit": "Hz"}],
+  "steps": [
+    {"id": "dipole", "action": "scene.add", "params": {"type": "antenna", "id": "check-dipole", "name": "Dipole", "kind": "antenna.dipole",
+      "parameters": {"length": 0.145, "wireRadius": 0.001}, "material": "mat-copper"}},
+    {"id": "report", "action": "em.antenna", "params": {"object": "check-dipole", "set": {"component": {"frequencyHz": "${frequencies}"}}},
+      "repeat": {"parameter": "frequencies"}}
+  ]
+}

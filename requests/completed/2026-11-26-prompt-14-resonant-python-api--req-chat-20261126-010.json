@@ -1,0 +1,418 @@
+{
+  "request_id": "REQ-CHAT-20261126-010",
+  "source": "chat",
+  "type": "FEATURE",
+  "priority": "NORMAL",
+  "created": "2026-11-26T15:53:25-05:00",
+  "created_utc": "2026-11-26T20:53:25+00:00",
+  "id_date": "2026-11-26",
+  "timezone": "EST (UTC-05:00)",
+  "status": "completed",
+  "original_text": "# PROMPT 14 \u2014 RESONANT: PYTHON API, SCRIPTING, AUTOMATION, EXTENSIBILITY, COMPREHENSIVE HTML HELP AND DEMONSTRATION SYSTEM\n\nYou are continuing development of **RESONANT \u2014 Wave Field Engineering Studio**.\n\nThis milestone establishes the extensibility, automation, documentation, and demonstration infrastructure that will make Resonant easier to develop, use, teach, showcase, and extend.\n\nThis is a major product milestone.\n\nResonant must evolve from a collection of engineering capabilities into a coherent, extensible engineering platform with:\n\n1. A documented Python scripting API.\n2. An interactive scripting environment.\n3. Repeatable experiment and simulation automation.\n4. A plugin and extension architecture.\n5. User-created workflows.\n6. A comprehensive in-app HTML help system.\n7. An integrated screenshot and documentation-generation workflow.\n8. A dedicated demonstration environment.\n9. Reproducible demonstrations based on actual application capabilities.\n10. A systematic analysis of the existing RF_IQ_Analyst application as a reference for the demonstration system.\n\nDo not weaken or replace existing physics, geometry, simulation, measurement, or optimization functionality.\n\nThe objective is to make Resonant extensible and demonstrable without requiring users or developers to modify the application core for every new workflow.\n\n---\n\n# PART 1 \u2014 ANALYZE THE EXISTING RF_IQ_ANALYST APPLICATION\n\n## 1. Inspect the existing Analyst project\n\nBefore designing the Resonant demonstration environment, inspect:\n\n`/home/dev/RF_IQ_Analyst`\n\nThis is an existing engineering application. Treat it as a reference implementation for engineering-oriented user interfaces, workflows, visualization, and technical demonstrations.\n\nDo not modify, rename, delete, or otherwise alter the Analyst project.\n\nThe purpose of this inspection is to understand what makes a sophisticated engineering application useful and demonstrable.\n\nPerform an audit-first inspection.\n\nExamine:\n\n- Repository structure.\n- Existing documentation.\n- Build system.\n- Application architecture.\n- Qt interface.\n- Main window organization.\n- Dockable panels.\n- Toolbars.\n- Menus.\n- Visualization components.\n- Plotting and analysis interfaces.\n- Data-loading workflows.\n- Live-data workflows.\n- Signal-processing workflows.\n- Configuration management.\n- User interaction patterns.\n- Error reporting.\n- Status indicators.\n- Technical terminology.\n- Existing demo or test data.\n- Screenshot or presentation capabilities, if any.\n\nPay particular attention to how the application presents technical information without overwhelming the user.\n\nStudy the relationship between:\n- Main visualization.\n- Data sources.\n- Analysis tools.\n- Configuration panels.\n- Status information.\n- Results.\n- Workflow progression.\n\nIdentify which interface patterns could improve Resonant.\n\n## 2. Produce an Analyst reference audit\n\nCreate:\n\n`docs/reference/ANALYST_REFERENCE_AUDIT.md`\n\nInclude:\n\n- What Analyst does well.\n- Its most useful interface patterns.\n- Its visualization patterns.\n- Its engineering workflow conventions.\n- Its information hierarchy.\n- Its strengths for demonstrations.\n- Its limitations as a demonstration reference.\n- Which ideas should be adapted for Resonant.\n- Which ideas should not be copied.\n- Potential implementation implications.\n\nDo not simply reproduce the Analyst interface.\n\nResonant has a broader scope involving three physical wave domains, 3D geometry, numerical simulation, experiments, and optimization.\n\nThe objective is to learn from Analyst's engineering presentation and workflow design while maintaining Resonant's own identity.\n\nIf the path does not exist or cannot be accessed, report that clearly and continue using the documented Resonant requirements. Do not invent observations about Analyst.\n\n---\n\n# PART 2 \u2014 PYTHON API AND SCRIPTING ARCHITECTURE\n\n## 3. Establish a public Python API\n\nPython must become a first-class extension and automation interface.\n\nThe core application remains C++20.\n\nUse the existing Qt6, CMake, and pybind11 architecture.\n\nThe Python API should expose stable, documented interfaces for:\n\n- Projects.\n- Scenes.\n- Geometry.\n- Materials.\n- Emitters.\n- Arrays.\n- Wave manipulators.\n- Sensors.\n- Actuators.\n- Experiments.\n- Simulations.\n- Simulation results.\n- Field sampling.\n- Optimization.\n- Measurements.\n- Visualization configuration.\n- Reports.\n- Data export.\n\nDo not expose arbitrary internal C++ implementation details as the public API.\n\nCreate a deliberate Python-facing abstraction layer.\n\nUse consistent naming and predictable object lifetimes.\n\nThe API must have documented versioning and compatibility expectations.\n\n## 4. Python package organization\n\nCreate a structured Python package, provisionally:\n\n`resonant`\n\nOrganize it into logical modules, for example:\n\n- `resonant.project`\n- `resonant.scene`\n- `resonant.geometry`\n- `resonant.materials`\n- `resonant.acoustics`\n- `resonant.mechanics`\n- `resonant.electromagnetics`\n- `resonant.sources`\n- `resonant.arrays`\n- `resonant.simulation`\n- `resonant.experiments`\n- `resonant.measurements`\n- `resonant.optimization`\n- `resonant.visualization`\n- `resonant.analysis`\n- `resonant.reporting`\n- `resonant.automation`\n- `resonant.io`\n\nThe exact organization may be adjusted based on the existing codebase.\n\nDo not create duplicate implementations of core physics in Python.\n\nPython should orchestrate the C++ engines and provide scientific workflow flexibility.\n\n## 5. Core Python API capabilities\n\nSupport workflows such as:\n\n**Project management**\n- Create a project.\n- Open a project.\n- Save a project.\n- Inspect project contents.\n- Export results.\n\n**Scene construction**\n- Create geometry.\n- Place emitters.\n- Configure arrays.\n- Assign materials.\n- Create targets.\n- Create sensors.\n\n**Simulation**\n- Configure a solver.\n- Run a simulation.\n- Monitor progress.\n- Cancel a simulation.\n- Access results.\n- Sample fields.\n\n**Optimization**\n- Define design variables.\n- Define objectives.\n- Define constraints.\n- Run optimization.\n- Inspect candidates.\n- Promote a candidate.\n\n**Experiments**\n- Define an experiment.\n- Configure sensors.\n- Configure acquisition.\n- Import measurements.\n- Apply calibration.\n- Compare against simulation.\n\n**Reporting**\n- Generate plots.\n- Generate tables.\n- Export results.\n- Generate reports.\n- Save visualizations.\n\nProvide complete examples rather than exposing functions without practical usage documentation.\n\n## 6. Interactive scripting console\n\nImplement a Python console integrated into Resonant.\n\nIt should support:\n\n- Command execution.\n- Multiline input.\n- Syntax highlighting.\n- Basic autocomplete.\n- Command history.\n- Error reporting.\n- Object inspection.\n- Help lookup.\n- Script execution.\n- Script file loading.\n- Result inspection.\n\nExpose the active project and supported application interfaces in a controlled way.\n\nDo not expose unsafe internal application state unnecessarily.\n\nThe console must not block the Qt GUI during long-running simulations.\n\nSupport background jobs and asynchronous operations.\n\nProvide clear handling of exceptions and application errors.\n\n## 7. Script editor\n\nProvide a practical script editor.\n\nSupport:\n\n- Python syntax highlighting.\n- Line numbers.\n- Indentation.\n- Basic autocomplete.\n- Save and open.\n- Run current script.\n- Run selected code.\n- Stop execution where safe.\n- Error navigation.\n- Script templates.\n\nAllow scripts to be associated with projects.\n\nSupport user scripts stored separately from application code.\n\nProvide a useful initial collection of example scripts.\n\n## 8. Python execution architecture\n\nDetermine the safest and most reliable execution model.\n\nEvaluate:\n\n- Embedded Python.\n- Dedicated Python worker process.\n- Hybrid execution.\n\nConsider long-running scientific workloads, application stability, object lifetime, thread safety, and third-party library compatibility.\n\nDo not execute long-running Python jobs on the GUI thread.\n\nDefine explicit data-transfer and error-reporting interfaces.\n\nDo not allow Python garbage collection to invalidate C++ objects still in use.\n\nDefine clear ownership and lifetime rules.\n\nDocument which APIs are thread-safe and which require application-thread access.\n\nIf Python is unavailable or disabled, the core C++ application must remain fully functional.\n\n---\n\n# PART 3 \u2014 AUTOMATION AND WORKFLOW SYSTEM\n\n## 9. Unified automation framework\n\nIntroduce a reusable automation system.\n\nSupport automation of:\n\n- Project setup.\n- Geometry generation.\n- Material assignment.\n- Emitter configuration.\n- Array construction.\n- Simulation execution.\n- Parameter sweeps.\n- Optimization.\n- Measurement import.\n- Calibration.\n- Result processing.\n- Report generation.\n- Demonstration sequences.\n\nAutomation must use the same underlying application APIs as normal user interactions.\n\nAvoid implementing a separate automation-only physics or geometry engine.\n\n## 10. Workflow definitions\n\nIntroduce a structured workflow representation.\n\nA workflow should contain:\n\n- Stable ID.\n- Name.\n- Description.\n- Version.\n- Required capabilities.\n- Inputs.\n- Parameters.\n- Execution steps.\n- Dependencies.\n- Outputs.\n- Error handling.\n- Cancellation behavior.\n- Expected runtime.\n- Documentation references.\n\nSupport reusable workflow templates.\n\nAllow users to execute workflows manually or through Python.\n\nPrepare for future visual workflow editing, but do not let a visual editor delay the underlying workflow engine.\n\n## 11. Workflow execution\n\nSupport:\n\n- Sequential steps.\n- Conditional execution.\n- Parameterized execution.\n- Repeated execution.\n- Simulation dependencies.\n- Result dependencies.\n- Failure handling.\n- Cancellation.\n- Progress reporting.\n- Checkpointing where appropriate.\n\nKeep workflow execution asynchronous.\n\nStore execution history and outputs.\n\nAllow users to rerun a workflow with modified parameters.\n\nDo not silently continue after a required step fails.\n\n## 12. Reusable engineering templates\n\nCreate workflow templates for all three physics domains.\n\nExamples:\n\n**Acoustic**\n- Create a linear array.\n- Configure transducers.\n- Calculate a focal field.\n- Generate field slices.\n- Compare active and passive focusing.\n- Optimize a reflector.\n- Generate an engineering report.\n\n**Mechanical**\n- Create a structural model.\n- Assign materials.\n- Configure excitation.\n- Run modal analysis.\n- Run forced-response analysis.\n- Compare multiple designs.\n- Generate a report.\n\n**Electromagnetic**\n- Create a dipole.\n- Calculate a radiation pattern.\n- Generate an antenna array.\n- Steer a beam.\n- Calculate sidelobes.\n- Compare array configurations.\n- Export radiation-pattern data.\n\nTemplates must call actual implemented capabilities.\n\nDo not include steps that silently produce fabricated or placeholder results.\n\n---\n\n# PART 4 \u2014 PLUGIN AND EXTENSION ARCHITECTURE\n\n## 13. Plugin system\n\nIntroduce a modular plugin architecture.\n\nThe objective is to allow new capabilities without changing the core application.\n\nPotential plugin categories:\n\n- Physics domains.\n- Solvers.\n- Geometry generators.\n- Materials.\n- Visualization layers.\n- Measurement importers.\n- Instrument drivers.\n- Optimization algorithms.\n- Analysis tools.\n- Reporting tools.\n- Python packages.\n- Workflow templates.\n\nNot every category needs to use the same plugin mechanism.\n\nChoose appropriate interfaces for native C++ plugins and Python extensions.\n\n## 14. Plugin lifecycle\n\nSupport:\n\n- Discovery.\n- Metadata inspection.\n- Version validation.\n- Dependency checking.\n- Loading.\n- Initialization.\n- Capability registration.\n- Error reporting.\n- Unloading where safe.\n- Disabling.\n- Removal.\n\nA plugin should declare:\n\n- ID.\n- Name.\n- Version.\n- Author.\n- Description.\n- Supported Resonant versions.\n- Dependencies.\n- Required capabilities.\n- License.\n- Entry point.\n- Permissions where relevant.\n\nDo not load arbitrary plugins without a clear user or administrator configuration.\n\nDo not imply that loading a native plugin is a secure sandbox.\n\n## 15. Plugin API stability\n\nDefine stable plugin interfaces.\n\nProvide:\n\n- Plugin API versioning.\n- Compatibility rules.\n- Example plugins.\n- Plugin development documentation.\n- Test harnesses.\n- Error isolation.\n\nAvoid allowing plugins to modify arbitrary global application state.\n\nPlugins must use supported extension points.\n\nDocument binary compatibility considerations for C++ plugins.\n\n## 16. Example plugins\n\nCreate at least three demonstration extensions:\n\n1. A Python-based geometry generator.\n2. A custom analysis or visualization extension.\n3. A workflow or measurement importer extension.\n\nEach must demonstrate the intended extension API rather than bypassing it.\n\n---\n\n# PART 5 \u2014 COMPREHENSIVE IN-APP HTML HELP SYSTEM\n\n## 17. Build a complete integrated help system\n\nThis is a major product requirement.\n\nResonant must include a comprehensive, professional, searchable HTML help system integrated directly into the desktop application.\n\nThis must not be a minimal README viewer.\n\nThe help system will serve three purposes:\n\n1. User documentation.\n2. Technical reference documentation.\n3. The foundation of the product's demonstration and training system.\n\nUse local HTML, CSS, JavaScript, images, and other appropriate static resources.\n\nThe help system must work offline.\n\nDo not require an internet connection.\n\nEvaluate an appropriate Qt6 integration such as Qt WebEngine or Qt Help/QHelpEngine.\n\nChoose based on existing dependencies, platform support, security, licensing, and the need for rich HTML content.\n\nDo not introduce a large dependency without justification.\n\n## 18. Help system interface\n\nCreate a dedicated Help window or workspace.\n\nInclude:\n\n- Navigation tree.\n- Search field.\n- Table of contents.\n- Article viewer.\n- Previous and next navigation.\n- Breadcrumbs.\n- Related topics.\n- Image viewer.\n- Screenshot zoom.\n- Code examples.\n- Mathematical notation.\n- Cross-references.\n- Keyboard shortcut reference.\n- Context-sensitive help.\n\nSupport opening help from:\n\n- Main menus.\n- Toolbar buttons.\n- Workspace panels.\n- Property editors.\n- Simulation dialogs.\n- Solver configuration.\n- Optimization Studio.\n- Experiment workflows.\n- Error messages.\n\nProvide context-sensitive help links where practical.\n\nFor example, opening the help action from an antenna-array editor should navigate to the antenna-array documentation rather than the help home page.\n\n## 19. Help content structure\n\nCreate a comprehensive documentation hierarchy.\n\nAt minimum include:\n\n**Getting Started**\n- Introduction to Resonant.\n- Installation and first launch.\n- Project creation.\n- Interface overview.\n- Navigation and selection.\n- Saving and loading projects.\n- Units and coordinate systems.\n\n**Core Concepts**\n- Scene architecture.\n- Geometry.\n- Materials.\n- Emitters and sources.\n- Arrays.\n- Targets.\n- Wave manipulators.\n- Sensors.\n- Simulation regions.\n- Meshes.\n- Solver selection.\n\n**Acoustic Engineering**\n- Acoustic physics.\n- Acoustic materials.\n- Sources and transducers.\n- Arrays.\n- Focusing.\n- Reflectors.\n- Lenses.\n- Waveguides.\n- Acoustic FDTD.\n- Field analysis.\n- Acoustic optimization.\n\n**Mechanical Engineering**\n- Mechanical materials.\n- Structural objects.\n- Actuators.\n- Boundary conditions.\n- Modal analysis.\n- Forced response.\n- Mechanical waves.\n- Resonators.\n- Mechanical optimization.\n\n**Electromagnetic Engineering**\n- Maxwell equations.\n- RF materials.\n- Antennas.\n- Antenna arrays.\n- Radiation patterns.\n- Beamforming.\n- Impedance.\n- S-parameters.\n- Transmission lines.\n- Waveguides.\n- Near-field and far-field analysis.\n- Electromagnetic solvers.\n\n**Simulation**\n- Solver architecture.\n- Solver selection.\n- Mesh resolution.\n- Numerical accuracy.\n- Convergence.\n- Boundary conditions.\n- Resource estimation.\n- Result storage.\n- Simulation comparison.\n\n**Experiments and Hardware**\n- Hardware discovery.\n- Sensors.\n- Actuators.\n- Acquisition.\n- Synchronization.\n- Calibration.\n- Measurements.\n- Uncertainty.\n- Simulation correlation.\n- Safety.\n\n**Optimization**\n- Design variables.\n- Objectives.\n- Constraints.\n- Algorithms.\n- Inverse design.\n- Geometry optimization.\n- Topology optimization.\n- Robust optimization.\n- Multi-fidelity optimization.\n\n**Python and Automation**\n- Python installation and configuration.\n- Python API.\n- Scripting console.\n- Script editor.\n- Workflow automation.\n- Plugin development.\n- Example scripts.\n\n**User Interface Reference**\n- Main window.\n- Toolbars.\n- Panels.\n- Scene hierarchy.\n- Property editors.\n- Viewport controls.\n- Visualization settings.\n- Analysis panels.\n- Keyboard shortcuts.\n- Preferences.\n\n**Troubleshooting**\n- Installation problems.\n- Build and runtime problems.\n- Missing dependencies.\n- Solver failures.\n- Mesh problems.\n- Memory issues.\n- Device connection failures.\n- Acquisition errors.\n- Calibration problems.\n- Python errors.\n- Plugin failures.\n\n**Technical Reference**\n- Units.\n- Coordinate conventions.\n- Phase conventions.\n- Data formats.\n- Project format.\n- Solver assumptions.\n- Numerical limitations.\n- API reference.\n- Plugin API.\n- File import/export.\n\nDo not document unsupported features as if they are implemented.\n\nEach page must identify its implementation status where relevant:\n\n- Available.\n- Experimental.\n- Planned.\n- Not implemented.\n\n## 20. Screenshot and illustration system\n\nThe help system must include real screenshots from the actual Resonant application.\n\nDo not fill the documentation with generic stock images or generated images pretending to be application screenshots.\n\nUse screenshots captured from the running application.\n\nCreate a repeatable screenshot-generation workflow.\n\nScreenshots should show:\n\n- Main application window.\n- Main 3D viewport.\n- Scene hierarchy.\n- Property editors.\n- Material editor.\n- Geometry workflows.\n- Acoustic simulation.\n- Mechanical simulation.\n- Electromagnetic simulation.\n- Array configuration.\n- Field visualization.\n- Radiation patterns.\n- Simulation controls.\n- Optimization Studio.\n- Experiment workspace.\n- Python console.\n- Help system itself.\n\nUse meaningful example projects and consistent UI state.\n\nCapture both overview and detail screenshots.\n\nWhere useful, annotate screenshots with numbered callouts or explanatory overlays.\n\nDo not obscure critical application content.\n\nKeep original unannotated screenshots available.\n\nUse consistent image dimensions and sensible compression.\n\n## 21. Screenshot automation\n\nImplement a screenshot capture tool or automated process.\n\nIt should be possible to:\n\n1. Launch Resonant.\n2. Open a designated example project.\n3. Select a workspace.\n4. Set a known viewport state.\n5. Select an object or panel.\n6. Configure relevant display options.\n7. Capture a screenshot.\n8. Save the screenshot with a descriptive filename.\n9. Associate it with a documentation page.\n\nUse stable screenshot names, for example:\n\n- `main-window-overview.png`\n- `scene-hierarchy.png`\n- `acoustic-array-setup.png`\n- `acoustic-focal-field.png`\n- `mechanical-modal-analysis.png`\n- `antenna-radiation-pattern.png`\n- `optimization-studio.png`\n- `experiment-workspace.png`\n- `python-console.png`\n\nScreenshots must be generated from the real application state.\n\nDo not claim screenshot coverage for panels or features that do not exist.\n\nIf a feature is not implemented, document its current status instead of fabricating a screenshot.\n\n## 22. Help content quality\n\nDocumentation must explain how to use Resonant, not merely describe internal class names.\n\nFor each major feature, include:\n\n- What it does.\n- When to use it.\n- How to configure it.\n- Important parameters.\n- Expected results.\n- Common mistakes.\n- Limitations.\n- Related features.\n- Relevant screenshots.\n- Practical examples.\n\nInclude equations where they help explain physics.\n\nUse readable mathematical notation.\n\nProvide worked examples.\n\nKeep terminology consistent across the application and documentation.\n\n## 23. Help system search and navigation\n\nImplement full-text local search.\n\nSupport:\n\n- Search indexing.\n- Search result ranking.\n- Highlighted search terms.\n- Topic categories.\n- Related topic suggestions.\n- Breadcrumb navigation.\n- Cross-page links.\n\nSearch must work offline.\n\nProvide a useful landing page with major engineering domains and common workflows.\n\n## 24. Context-sensitive help integration\n\nAdd a consistent help mechanism to relevant application controls.\n\nExamples:\n\n- F1 opens context-sensitive help.\n- A help icon on complex dialogs.\n- Help links in solver configuration.\n- Help links in material editors.\n- Help links in geometry editors.\n- Help links in experiment configuration.\n- Help links in optimization setup.\n\nUse stable documentation topic IDs.\n\nDo not hardcode brittle file paths into dozens of unrelated UI components.\n\nCreate a central help-topic registry.\n\n---\n\n# PART 6 \u2014 DEMONSTRATION AND SHOWCASE SYSTEM\n\n## 25. Create a dedicated demonstration environment\n\nResonant must have a first-class demonstration system.\n\nThis is not simply a collection of example projects.\n\nIt should allow a developer, presenter, or user to launch a polished, repeatable demonstration of the software's capabilities.\n\nThe demo system will be used to produce future demonstration videos.\n\nIt must be designed so that individual demonstrations can be executed consistently, recorded, and repeated.\n\nCreate a dedicated **Demo Studio** workspace or equivalent.\n\nKeep demonstration infrastructure separate from the core physics engines.\n\nDo not create fake simulation results.\n\nAll demonstrations must use real implemented capabilities, validated example datasets, or explicitly labeled imported measurements.\n\n## 26. Demonstration profiles\n\nSupport named demonstration profiles.\n\nA profile should include:\n\n- Profile ID.\n- Name.\n- Description.\n- Target audience.\n- Physics domain.\n- Example project.\n- Initial workspace.\n- Required features.\n- Required data.\n- Demonstration sequence.\n- Expected results.\n- Camera configuration.\n- Visualization configuration.\n- Screenshot references.\n- Narration or presenter notes.\n- Estimated duration.\n- Completion criteria.\n\nSupport profiles for:\n\n- Acoustic engineering.\n- Mechanical engineering.\n- Electromagnetic engineering.\n- Cross-domain capabilities.\n- Optimization.\n- Experimental workflows.\n- Python automation.\n- General product overview.\n\n## 27. Demonstration sequence engine\n\nCreate a structured demonstration sequence system.\n\nA demonstration should consist of explicit steps.\n\nPossible actions:\n\n- Open project.\n- Change workspace.\n- Select scene object.\n- Change camera.\n- Configure visualization.\n- Run simulation.\n- Wait for simulation completion.\n- Display result.\n- Change field component.\n- Move clipping plane.\n- Display plot.\n- Compare candidates.\n- Open help topic.\n- Display measurement.\n- Capture screenshot.\n- Pause for narration.\n\nEach step should have:\n\n- Stable ID.\n- Description.\n- Action type.\n- Parameters.\n- Expected state.\n- Timeout.\n- Failure behavior.\n- Optional presenter notes.\n- Optional screenshot reference.\n\nAllow sequences to be saved and replayed.\n\nDo not use arbitrary screen-coordinate clicking as the primary automation mechanism.\n\nUse application-level commands and stable object IDs wherever possible.\n\n## 28. Presenter mode\n\nIntroduce a presenter-friendly demonstration mode.\n\nSupport:\n\n- Clean presentation layout.\n- Reduced visual clutter.\n- Consistent panel arrangement.\n- Larger visualization area.\n- Optional step instructions.\n- Optional presenter notes.\n- Step progression.\n- Pause and resume.\n- Restart.\n- Progress indication.\n\nAllow demonstrations to run without exposing development diagnostics or unrelated panels.\n\nProvide a way to exit demonstration mode without losing the project.\n\n## 29. Deterministic demonstration behavior\n\nDemonstrations must be repeatable.\n\nUse:\n\n- Fixed example project versions.\n- Known initial conditions.\n- Fixed simulation parameters.\n- Recorded random seeds where randomness is involved.\n- Known camera positions.\n- Known viewport settings.\n- Stable object IDs.\n- Defined execution sequences.\n\nDo not rely on timing assumptions alone.\n\nA demonstration must wait for actual application events, such as simulation completion or data availability.\n\nIf a simulation fails, report the failure rather than displaying a previous run's result.\n\n## 30. Demo asset library\n\nCreate a dedicated example and demo asset structure.\n\nFor example:\n\n`examples/`\n- `acoustics/`\n- `mechanics/`\n- `electromagnetics/`\n- `optimization/`\n- `experiments/`\n- `cross_domain/`\n\n`demos/`\n- `profiles/`\n- `sequences/`\n- `presenter_notes/`\n- `assets/`\n- `screenshots/`\n- `reports/`\n\nKeep demo assets versioned.\n\nDo not store large temporary simulation caches in source control unless there is a clear reason.\n\nInclude a manifest describing each demo's dependencies and expected outputs.\n\n## 31. Demonstration quality standards\n\nEvery demonstration must answer:\n\n1. What engineering problem are we solving?\n2. What does the user configure?\n3. What does Resonant calculate?\n4. What does the result mean physically?\n5. How can the result be inspected?\n6. What makes this capability valuable?\n7. What are its assumptions and limitations?\n\nDemonstrations should tell a coherent technical story.\n\nAvoid demonstrations that merely click through menus.\n\nPrioritize visual clarity and engineering substance.\n\n## 32. Initial demonstration set\n\nCreate an initial set of polished demonstrations based on implemented features.\n\n**Demo A \u2014 Resonant Overview**\n- Open a representative project.\n- Introduce the interface.\n- Show scene construction.\n- Show the 3D viewport.\n- Show the three physics domains.\n- Demonstrate project management.\n\n**Demo B \u2014 Acoustic Focusing**\n- Configure an emitter array.\n- Define a target focus.\n- Calculate the field.\n- Visualize the focus in 3D.\n- Inspect field slices.\n- Compare excitation configurations.\n\n**Demo C \u2014 Passive Acoustic Focusing**\n- Create a reflector.\n- Assign material properties.\n- Configure a source.\n- Simulate supported geometry interactions.\n- Visualize the resulting field.\n- Explain the physical behavior.\n\n**Demo D \u2014 Mechanical Resonance**\n- Create a structural model.\n- Assign a mechanical material.\n- Configure boundary conditions.\n- Run modal analysis.\n- Visualize mode shapes.\n- Explain resonance.\n\n**Demo E \u2014 RF Antenna Engineering**\n- Create a dipole antenna.\n- Configure frequency.\n- Calculate its radiation pattern.\n- Visualize 3D directivity.\n- Compare a simple array.\n- Demonstrate beam steering.\n\n**Demo F \u2014 Inverse Design**\n- Define a target field.\n- Select design variables.\n- Define objectives and constraints.\n- Run optimization.\n- Compare candidates.\n- Promote a candidate.\n\n**Demo G \u2014 Experimental Correlation**\n- Load a supported measurement dataset.\n- Apply calibration.\n- Compare measured and simulated results.\n- Display error and uncertainty.\n\n**Demo H \u2014 Python Automation**\n- Open the scripting console.\n- Execute a real workflow.\n- Create or configure a design.\n- Run a simulation.\n- Export results.\n\nOnly include steps that the current implementation can actually execute.\n\nIf a demo is partially implemented, label it accordingly and document what remains.\n\n## 33. Video production preparation\n\nDesign the demonstration system to support future video production.\n\nPrepare for:\n\n- 1080p and 4K recording.\n- Consistent application window dimensions.\n- Clean presenter layouts.\n- Stable camera movements.\n- Reproducible simulation playback.\n- Scripted demonstration sequences.\n- Screenshot capture.\n- Presenter notes.\n- Optional narration scripts.\n\nDo not attempt to build a full video editor.\n\nProvide a clean and reliable application environment for external screen recording.\n\nSupport exporting a demonstration run manifest containing:\n\n- Demo profile.\n- Sequence version.\n- Application version.\n- Project version.\n- Simulation configuration.\n- Screenshot filenames.\n- Presenter notes.\n- Execution status.\n- Timestamps.\n\nFuture prompts will develop individual demonstration videos, so make this system reusable and extensible.\n\n---\n\n# PART 7 \u2014 HELP AND DEMO CONTENT GENERATION PIPELINE\n\n## 34. Single-source documentation architecture\n\nAvoid maintaining separate, contradictory versions of documentation.\n\nEstablish a structured documentation source system.\n\nConsider Markdown or another suitable authoring format with generated HTML output.\n\nThe documentation source should be version-controlled.\n\nThe build process should produce:\n\n- In-app HTML help.\n- Search index.\n- Navigation structure.\n- Screenshot references.\n- API reference.\n- Plugin documentation.\n- Example workflow documentation.\n\nKeep content modular.\n\nAllow individual documentation topics to be referenced by stable IDs.\n\n## 35. Documentation generation\n\nImplement a repeatable build process.\n\nIt should:\n\n1. Validate documentation structure.\n2. Validate internal links.\n3. Check screenshot references.\n4. Generate HTML.\n5. Generate navigation.\n6. Generate search indexes.\n7. Copy required static assets.\n8. Package the help system for the application.\n\nDetect broken image links.\n\nDetect missing pages.\n\nDetect documentation references to unavailable features where practical.\n\nDo not silently omit failed documentation generation steps.\n\n## 36. Documentation coverage tracking\n\nCreate a documentation coverage report.\n\nTrack:\n\n- Implemented feature.\n- Related help topic.\n- Screenshot coverage.\n- Example project.\n- Demo profile.\n- Python API documentation.\n- Known limitations.\n\nThe goal is to make documentation coverage measurable.\n\nA major user-facing feature should not be considered complete without an appropriate help topic.\n\nDo not require screenshots for every trivial control, but ensure every major workflow has illustrated documentation.\n\n## 37. Demo and documentation consistency\n\nDemonstrations and help pages must describe the same actual application behavior.\n\nWhere possible, use the same example project and screenshots for both.\n\nWhen a feature changes:\n\n- Identify affected help pages.\n- Identify affected screenshots.\n- Identify affected demo sequences.\n- Update the relevant content.\n- Validate the generated help.\n\nDo not let screenshots become stale without warning.\n\nInclude application version or documentation build metadata where appropriate.\n\n---\n\n# PART 8 \u2014 QUALITY, SECURITY AND TESTING\n\n## 38. API testing\n\nTest:\n\n- Python module imports.\n- Object lifetimes.\n- API versioning.\n- Project operations.\n- Scene construction.\n- Simulation execution.\n- Result access.\n- Optimization access.\n- Experiment access.\n- Error handling.\n- Script cancellation.\n- Long-running operations.\n\nUse automated Python tests.\n\nTest compatibility between the Python package and the C++ core.\n\n## 39. Plugin testing\n\nTest:\n\n- Discovery.\n- Metadata validation.\n- Dependency checks.\n- Loading.\n- Initialization.\n- Registration.\n- Failure handling.\n- Version incompatibility.\n- Disabled plugins.\n\nInclude a deliberately failing test plugin.\n\nThe application must report the failure without corrupting project state.\n\n## 40. Help system testing\n\nTest:\n\n- Help startup.\n- Offline operation.\n- Search.\n- Navigation.\n- Context-sensitive links.\n- Image loading.\n- Mathematical rendering.\n- Internal links.\n- Missing-page handling.\n- Packaging.\n\nVerify that help works from the installed application, not just the development build.\n\n## 41. Demo system testing\n\nTest:\n\n- Profile loading.\n- Project opening.\n- Sequence execution.\n- Event-based waiting.\n- Simulation completion.\n- Screenshot capture.\n- Presenter mode.\n- Restart.\n- Cancellation.\n- Failure recovery.\n\nRun every initial demonstration from a clean application state.\n\nVerify that the result is reproducible.\n\n## 42. Security and reliability\n\nTreat user scripts and plugins as executable code.\n\nDo not claim that Python execution or native plugins are sandboxed unless a real security boundary exists.\n\nProvide clear configuration and warnings for enabling extensions.\n\nKeep plugin execution, project loading, and script execution from silently activating physical hardware.\n\nAll physical output must continue to require explicit authorization through the existing experiment safety architecture.\n\nDo not expose credentials, private paths, or sensitive data in generated reports or screenshots.\n\n---\n\n# PART 9 \u2014 DOCUMENTATION AND PROJECT DELIVERABLES\n\n## 43. Required documentation\n\nCreate or update:\n\n**Python and automation**\n- PYTHON_API.md\n- PYTHON_SCRIPTING.md\n- PYTHON_EXECUTION_ARCHITECTURE.md\n- AUTOMATION_ARCHITECTURE.md\n- WORKFLOW_SYSTEM.md\n\n**Plugins**\n- PLUGIN_ARCHITECTURE.md\n- PLUGIN_DEVELOPMENT.md\n- PLUGIN_API_REFERENCE.md\n\n**Help**\n- HELP_SYSTEM_ARCHITECTURE.md\n- HELP_CONTENT_STRUCTURE.md\n- SCREENSHOT_CAPTURE_SYSTEM.md\n- DOCUMENTATION_BUILD.md\n- DOCUMENTATION_COVERAGE.md\n\n**Demonstrations**\n- DEMO_SYSTEM_ARCHITECTURE.md\n- DEMO_PROFILE_FORMAT.md\n- DEMO_SEQUENCE_FORMAT.md\n- PRESENTER_MODE.md\n- VIDEO_PRODUCTION_GUIDE.md\n- DEMO_CATALOG.md\n\n**Analyst reference**\n- reference/ANALYST_REFERENCE_AUDIT.md\n\n**Project status**\n- IMPLEMENTATION_STATUS.md\n- DECISIONS.md\n\nIn addition, create the actual user-facing HTML help content.\n\nThe Markdown architecture documents are not substitutes for the in-app HTML help.\n\n---\n\n# PART 10 \u2014 IMPLEMENTATION SEQUENCE\n\n## 44. Development phases\n\n**Phase A \u2014 Analyst reference audit**\n- Inspect `/home/dev/RF_IQ_Analyst`.\n- Document useful patterns.\n- Identify relevant demo-system ideas.\n- Do not modify Analyst.\n\n**Phase B \u2014 Python API**\n- Define public interfaces.\n- Implement bindings.\n- Package Python modules.\n- Add API tests.\n\n**Phase C \u2014 Scripting environment**\n- Interactive console.\n- Script editor.\n- Execution management.\n- Example scripts.\n\n**Phase D \u2014 Automation**\n- Workflow model.\n- Workflow execution.\n- Reusable templates.\n- History and results.\n\n**Phase E \u2014 Plugin architecture**\n- Plugin interfaces.\n- Discovery.\n- Lifecycle.\n- Example plugins.\n\n**Phase F \u2014 Help system foundation**\n- Select HTML integration.\n- Build help window.\n- Navigation.\n- Search.\n- Topic registry.\n\n**Phase G \u2014 Help content**\n- Populate documentation.\n- Add examples.\n- Add mathematical explanations.\n- Add troubleshooting.\n- Generate API references.\n\n**Phase H \u2014 Screenshot system**\n- Automated capture.\n- Naming conventions.\n- Screenshot catalog.\n- Documentation integration.\n\n**Phase I \u2014 Demo Studio**\n- Demo profiles.\n- Sequence engine.\n- Presenter mode.\n- Demo asset library.\n\n**Phase J \u2014 Initial demonstrations**\n- Overview.\n- Acoustic.\n- Mechanical.\n- Electromagnetic.\n- Optimization.\n- Experimental.\n- Python.\n\n**Phase K \u2014 Integration and verification**\n- Offline testing.\n- Packaging.\n- Documentation validation.\n- Demo reproducibility.\n- API and plugin regression tests.\n\nDo not attempt to implement everything simultaneously.\n\nPrioritize the foundational APIs and help architecture, then build demonstration functionality around real capabilities.\n\n---\n\n# PART 11 \u2014 ACCEPTANCE CRITERIA\n\n## 45. Required completion criteria\n\nThis milestone is complete only when:\n\n1. `/home/dev/RF_IQ_Analyst` has been inspected if accessible.\n2. The Analyst reference audit exists.\n3. Analyst has not been modified.\n4. A documented Python API exists.\n5. Python can construct and configure supported Resonant objects.\n6. Python can run supported simulations.\n7. Python can access simulation results.\n8. A scripting console exists.\n9. A script editor exists.\n10. Long-running scripts do not block the GUI.\n11. A reusable automation framework exists.\n12. Workflow templates can be executed.\n13. A plugin architecture exists.\n14. Example plugins demonstrate supported extension points.\n15. An offline HTML help system is integrated into the application.\n16. Help search works.\n17. Context-sensitive help works for major workflows.\n18. Major implemented features have practical documentation.\n19. Actual application screenshots appear in the help.\n20. Screenshot capture is reproducible.\n21. Documentation builds automatically.\n22. Broken internal links and missing screenshot references are detected.\n23. A Demo Studio or equivalent demonstration environment exists.\n24. Demonstration profiles can be loaded.\n25. Demonstration sequences can execute reproducibly.\n26. Presenter mode works.\n27. At least the initial set of implemented demonstrations is available.\n28. Demonstrations use actual implemented functionality.\n29. Demonstration runs can be recorded in a manifest.\n30. Existing physics, simulation, measurement, and optimization functionality remains intact.\n31. Automated tests pass.\n32. The application can be packaged with its local help content and demonstration assets.\n\n---\n\n# PART 12 \u2014 CRITICAL DEVELOPMENT RULES\n\n- Do not modify RF_IQ_Analyst.\n- Inspect it as a reference, not as a codebase to merge into Resonant.\n- Keep Resonant's architecture independent.\n- Keep Python optional for core operation.\n- Do not duplicate physics implementations in Python.\n- Do not block the GUI with scripts or automation.\n- Treat plugins and scripts as executable code.\n- Do not claim security isolation without a real security boundary.\n- Do not silently activate hardware.\n- Keep help available offline.\n- Use real screenshots from the actual application.\n- Never fabricate screenshots or claim unimplemented functionality exists.\n- Maintain one authoritative documentation source.\n- Keep demonstration sequences deterministic and reproducible.\n- Wait for actual application events rather than relying on arbitrary delays.\n- Use real simulation results and clearly labeled datasets.\n- Keep demo assets separate from temporary build and simulation output.\n- Preserve existing project data and functionality.\n- Record architectural decisions and limitations.\n\n**The goal is to make Resonant a complete, extensible, self-documenting engineering platform. Users should be able to extend it with Python, automate complex workflows, develop plugins, learn through comprehensive in-app help, and experience its capabilities through polished, reproducible demonstrations.**\n\n**The demonstration system and HTML help are foundational product capabilities, not optional developer conveniences. They must be designed so that future development can use them to produce professional, technically credible demonstration videos without rebuilding the presentation infrastructure each time.**",
+  "file": "requests/inbox/2026-11-26-prompt-14-resonant-python-api--req-chat-20261126-010.md",
+  "attachments": [],
+  "context": "Tenth ticket, submitted by the user in chat while REQ-CHAT-20261126-002 was being processed, with the instruction to process it in order (after REQ-CHAT-20261126-009). Python API, automation, plugins, in-app HTML help and demonstration system on top of all earlier milestones. It names an external reference project, /home/dev/RF_IQ_Analyst, to be inspected read-only and never modified. Standing operator instructions for all tickets: keep qmake support in addition to CMake; Qt user interfaces use .ui files.",
+  "text_sha256": "6ad7169edcc92b37c78129af02aaddc99f203204a5116f409bfb277f4a2ea333",
+  "classification": {
+    "proposed_type": "FEATURE",
+    "proposed_source": "override",
+    "normalized_type": "FEATURE",
+    "heuristic_type": "FEATURE",
+    "final_type": "FEATURE",
+    "confidence": "high",
+    "validation": "PASS",
+    "classifier_reason": "request statement is framed as feature: Add, Create",
+    "correction_reason": null,
+    "normalization_note": null,
+    "evidence": [
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "milestone",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This milestone establishes the extensibility, automation, documentation, and demonstration infrastructure that will make Resonant easier to develop, use, teach, showcase, and extend."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "extend",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This milestone establishes the extensibility, automation, documentation, and demonstration infrastructure that will make Resonant easier to develop, use, teach, showcase, and extend."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "milestone",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This is a major product milestone."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "evolve",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Resonant must evolve from a collection of engineering capabilities into a coherent, extensible engineering platform with:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capabilities",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Resonant must evolve from a collection of engineering capabilities into a coherent, extensible engineering platform with:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capabilities",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Reproducible demonstrations based on actual application capabilities."
+      },
+      {
+        "category": "PERFORMANCE",
+        "where": "body",
+        "phrase": "optimization",
+        "strength": "weak",
+        "note": "enumeration",
+        "sentence": "Do not weaken or replace existing physics, geometry, simulation, measurement, or optimization functionality."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "objective",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The objective is to make Resonant extensible and demonstrable without requiring users or developers to modify the application core for every new workflow."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "new workflow",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The objective is to make Resonant extensible and demonstrable without requiring users or developers to modify the application core for every new workflow."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Build",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Build system."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capabilities",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Screenshot or presentation capabilities, if any."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Create:"
+      },
+      {
+        "category": "PERFORMANCE",
+        "where": "body",
+        "phrase": "optimization",
+        "strength": "weak",
+        "note": "enumeration",
+        "sentence": "Resonant has a broader scope involving three physical wave domains, 3D geometry, numerical simulation, experiments, and optimization."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "objective",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The objective is to learn from Analyst's engineering presentation and workflow design while maintaining Resonant's own identity."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "must become",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Python must become a first-class extension and automation interface."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "first-class",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Python must become a first-class extension and automation interface."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "should expose",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The Python API should expose stable, documented interfaces for:"
+      },
+      {
+        "category": "PERFORMANCE",
+        "where": "body",
+        "phrase": "Optimization",
+        "strength": "weak",
+        "note": "bullet",
+        "sentence": "Optimization."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "expose",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not expose arbitrary internal C++ implementation details as the public API."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Create a deliberate Python-facing abstraction layer."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Create a structured Python package, provisionally:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not create duplicate implementations of core physics in Python."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "provide",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Python should orchestrate the C++ engines and provide scientific workflow flexibility."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support workflows such as:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Create a project."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Create geometry."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Create targets."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Create sensors."
+      },
+      {
+        "category": "PERFORMANCE",
+        "where": "body",
+        "phrase": "Optimization",
+        "strength": "strong",
+        "note": "",
+        "sentence": "**Optimization**"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "objectives",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Define objectives."
+      },
+      {
+        "category": "PERFORMANCE",
+        "where": "body",
+        "phrase": "optimization",
+        "strength": "weak",
+        "note": "bullet",
+        "sentence": "Run optimization."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Generate",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Generate plots."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Generate",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Generate tables."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Generate",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Generate reports."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Provide",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Provide complete examples rather than exposing functions without practical usage documentation."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "exposing",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Provide complete examples rather than exposing functions without practical usage documentation."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement a Python console integrated into Resonant."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "should support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "It should support:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Expose",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Expose the active project and supported application interfaces in a controlled way."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "expose",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not expose unsafe internal application state unnecessarily."
+      }
+    ],
+    "scores": {
+      "FEATURE": {
+        "head": 2,
+        "body": 168
+      },
+      "BUG": {
+        "head": 0,
+        "body": 21
+      },
+      "CRASH": {
+        "head": 0,
+        "body": 0
+      },
+      "REGRESSION": {
+        "head": 0,
+        "body": 0
+      },
+      "PERFORMANCE": {
+        "head": 0,
+        "body": 21
+      },
+      "REFACTOR": {
+        "head": 0,
+        "body": 6
+      },
+      "BUILD": {
+        "head": 0,
+        "body": 0
+      },
+      "DOCUMENTATION": {
+        "head": 1,
+        "body": 89
+      },
+      "INVESTIGATION": {
+        "head": 0,
+        "body": 29
+      },
+      "PROCESS-CHANGE": {
+        "head": 0,
+        "body": 3
+      }
+    },
+    "evidence_total": 340,
+    "validator": "scripts/request_classification.py"
+  },
+  "links": {
+    "work": [
+      "WORK-000013"
+    ]
+  },
+  "commits": [],
+  "resolution": {
+    "from": "processing",
+    "to": "completed",
+    "at": "2026-11-27T19:34:01.169888+00:00",
+    "by": "agent-dev-20261126151713-76f632",
+    "gates": [
+      {
+        "work": "WORK-000013",
+        "at": "2026-11-27T19:33:54.007947+00:00",
+        "verdict": "PASS",
+        "request_fingerprint": "2d201c06de7a703b75c67b001c06b0dd9eead511ec415204b4097e67b61eee2e",
+        "test_runs": [
+          "20261127T142308-3323701",
+          "20261127T142934-3381583"
+        ]
+      }
+    ]
+  }
+}

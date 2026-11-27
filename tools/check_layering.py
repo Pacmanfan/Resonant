@@ -27,6 +27,13 @@ the optimization rules of ADR-000214:
                       adapters, registered in src/core/coupling
     src/core/acoustic_optimization is part of the acoustic domain
 
+and of ADR-000215: src/core/automation (the workflow engine) includes no
+physics domain either; the actions are registered in src/core/coupling.
+src/core/help (the help index), src/core/demo (demonstration profiles,
+sequences and run manifests) and src/core/plugins (the plugin manager) are
+infrastructure: they include no physics domain and no coupling (plugins may
+use the automation registries)
+
 and one build rule: no two sources of one library or test target share a
 file name (qmake writes every object of a target into one directory, so
 the second would overwrite the first).
@@ -89,16 +96,16 @@ def violations():
                                                              "electromagnetics", "coupling"):
                 found.append(f"{path.relative_to(ROOT)}:{number}: the experiment framework must not include <{match.group(1)}> "
                              f"(a physics domain); put the physical interpretation in the domain")
-    # The optimization framework is domain independent.
-    for path in sorted((ROOT / "src" / "core" / "optimization").glob("*")):
+    # The optimization framework and the workflow engine are domain independent.
+    for path in sorted(sum((list((ROOT / "src" / "core" / d).glob("*")) for d in ("optimization", "automation", "help", "demo", "plugins")), [])):
         if path.suffix not in (".h", ".cpp"):
             continue
         for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
             match = INCLUDE.match(line)
             if match and match.group(1).split("/", 1)[0] in ("acoustics", "manipulators", "fdtd", "solvers", "mechanics",
                                                              "electromagnetics", "coupling", "acoustic_optimization"):
-                found.append(f"{path.relative_to(ROOT)}:{number}: the optimization framework must not include <{match.group(1)}> "
-                             f"(a physics domain); put the physics in the domain's adapter")
+                found.append(f"{path.relative_to(ROOT)}:{number}: {path.parent.name} must not include <{match.group(1)}> "
+                             f"(a physics domain); put the physics in the domain's adapter or action")
     # Domains do not include each other.
     domains = {"acoustics": "acoustic", "manipulators": "acoustic", "fdtd": "acoustic", "solvers": "acoustic",
                "acoustic_optimization": "acoustic",

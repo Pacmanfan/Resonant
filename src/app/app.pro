@@ -12,3 +12,6 @@ SOURCES += $$files($$PWD/*.cpp)
 HEADERS += $$files($$PWD/*.h)
 FORMS += $$files($$PWD/forms/*.ui)
 PRE_TARGETDEPS += $$OUT_PWD/../core/libresonant_core.a $$OUT_PWD/../hardware/libresonant_hardware.a $$OUT_PWD/../render/libresonant_render.a
+# Development builds find the demonstrations, examples, plugins and Python
+# package in the source tree (ResourcePaths); installations use share/resonant.
+DEFINES += RESONANT_SOURCE_DIR=\\\"$$clean_path($$PWD/../..)\\\"

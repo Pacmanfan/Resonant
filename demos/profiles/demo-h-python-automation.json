@@ -1,0 +1,44 @@
+{
+ "format": "resonant.demo-profile",
+ "version": 1,
+ "id": "demo-h-python-automation",
+ "name": "H. Python automation",
+ "description": "The Python console changes the open project, runs a simulation with the API, exports the result and applies the change as one undoable step.",
+ "audience": "engineers who script, test automation",
+ "domain": "automation",
+ "status": "available",
+ "project": "examples/acoustics/b-linear-array.resonant",
+ "workspace": "python",
+ "requires": [
+  "python"
+ ],
+ "data": [],
+ "sequence": "demos/sequences/demo-h-python-automation.json",
+ "expected": [
+  "the console prints the peak pressure and exports python-field.csv",
+  "the target 'Python focus' appears in the scene"
+ ],
+ "camera": {},
+ "visualization": {},
+ "screenshots": [
+  "python-console.png"
+ ],
+ "notes": "demos/presenter_notes/demo-h-python-automation.md",
+ "durationMinutes": 5,
+ "completion": [
+  "every step done"
+ ],
+ "limitations": [
+  "needs Python 3, NumPy and the built resonant module"
+ ],
+ "remaining": [],
+ "story": {
+  "problem": "Repeat a study, sweep a parameter or connect Resonant to other tools without clicking.",
+  "configure": "Nothing beyond the open project: the script adds a target and focuses the array.",
+  "calculate": "In Python: the focusing phases and the field on the plane (the same C++ models as the application).",
+  "meaning": "The script's design change appears in the application as one undoable step; its field matches the application's.",
+  "inspect": "The console output (peak pressure, exported file), the new target in the scene tree, the field recalculated in the application.",
+  "value": "Everything the panels do is scriptable and repeatable, and scripts cannot silently change or damage the project.",
+  "assumptions": "Python 3 with NumPy and the resonant package; scripts are not sandboxed (they run with your permissions)."
+ }
+}

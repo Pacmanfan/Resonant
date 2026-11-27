@@ -4,9 +4,11 @@
 // parameters: derived variables ("0.5 * wavelength"), dependent dimensions
 // ("aperture / 4") and relational constraints ("aperture - 4 * focalLength").
 //
+//   condition  := and ('||' and)*;  and := comparison ('&&' comparison)*
+//   comparison := expression (('<' | '<=' | '>' | '>=' | '==' | '!=') expression)?
 //   expression := term (('+' | '-') term)*
 //   term       := factor (('*' | '/') factor)*
-//   factor     := ('+' | '-') factor | power
+//   factor     := ('+' | '-' | '!') factor | power     (comparisons and logic give 1 or 0)
 //   power      := primary ('^' factor)?
 //   primary    := number | name | '[' id ']' | name '(' arguments ')' | '(' expression ')'
 //

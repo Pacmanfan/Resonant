@@ -89,15 +89,13 @@ Milestones and the requests that deliver them are in
 
 | Capability | State | Notes |
 |---|---|---|
-| Numerical (full-wave) acoustic solvers | Missing | request 005 |
-| Wave manipulators, reflectors, lenses | Missing | request 004 |
 | Geometry import from CAD or mesh files | Missing | no request covers it yet; it is part of V1 (RES-PRODUCT-015) |
-| Python scripting | Missing | request 010 |
-| Hardware and measurements | Missing | request 008 |
-| Optimization | Missing | request 009 |
-| Help system, demonstrations | Missing | request 010 |
 | Windows and macOS builds | Untested | nothing platform-specific is used on purpose, but only Linux has been built and run |
-| Installer / packaging | Missing | |
+| Binary installer / distribution package | Missing | `make install` / `cmake --install` install the application with its help, demonstrations, examples, plugins and Python package (REQ-CHAT-20261126-010) |
+
+(Full-wave acoustics, wave manipulators, hardware and measurements, optimization,
+Python scripting, the help system and demonstrations were delivered by the
+milestones below.)
 
 ## Passive wave manipulation — `docs/requirements/wave_manipulators.md`, `docs/manipulators/`
 
@@ -287,5 +285,32 @@ Milestones and the requests that deliver them are in
 | Topology optimization: 2D SIMP compliance proof of concept, filter, cleanup, extrusion | Tested | not acoustic or electromagnetic; not a finished design |
 | Optimization Studio dock, Optimization menu, `--run-optimization` | Tested | |
 | Seven example projects (A-G) run by the tests | Tested | `examples/optimization/` |
-| Python workflows | Partial | versioned JSON / CSV exchange and a reader script; bindings in REQ-CHAT-20261126-010 |
+| Python workflows | Tested | the `resonant.optimization` API (REQ-CHAT-20261126-010) and the versioned JSON / CSV exchange |
 | Mutual coupling in array optimization; Yee full-wave evaluation of arrays | Missing | both array models assume isolated elements |
+
+## Python, automation, plugins, help and demonstrations — `docs/requirements/automation.md`, `docs/python/`, `docs/automation/`, `docs/plugins/`, `docs/help/`, `docs/demos/`
+
+| Capability | State | Notes |
+|---|---|---|
+| Python API 1.0: pybind11 module over the core, documented package by domain, versioning, id-based object references | Tested | built when pybind11 and the Python headers are found; skipped with the reason otherwise |
+| Python: scene construction (every object type), settings, acoustic fields and pressures, FDTD, modal and harmonic analyses, antennas, patterns, steering, tapers, optimization with promotion, workflows, experiment validation; NumPy results | Tested | experiments are run only from the Experiments panel (outputs need authorization) |
+| Errors as `resonant.Error`, progress and cancellation callbacks, GIL released, parallel projects in threads | Tested | |
+| Python console (worker process): multi-line input, highlighting, completion, history, inspection, Stop, crash isolation, `app.apply` as one undoable step | Tested | the console works on a copy of the project |
+| Script editor: line numbers, indentation, completion, run / run selection / stop, error navigation, templates, examples, scripts in the project | Tested | no debugger |
+| Seven example scripts run by the tests | Tested | `python/examples/` |
+| Workflow engine (`resonant.workflow` v1): parameters, conditions, repetition, dependencies, failure behaviour, cancellation, jobs on snapshots, history | Tested | steps run one after another |
+| Workflow actions for every domain; five templates; Workflows dialog; `--run-workflow` | Tested | |
+| Plugins: manifests, discovery, validation, dependencies, explicit enabling, states and reasons; workflow-pack, Python and native kinds; Plugins dialog; Tools > Extensions | Tested | not sandboxed (stated); native plugins can crash the application |
+| Example plugins (geometry generator, analysis, importer, workflow pack) and deliberately failing test plugins | Tested | the importer's bundled data is synthetic |
+| Offline in-app help: 120 topics in 12 categories with statuses, navigation, ranked search with highlighting, images and readable equations, missing-topic handling | Tested | QTextBrowser (no web engine): simple styling |
+| Help build (both build systems): validation of links, anchors, related topics, images, screenshot manifest, statuses; navigation and search index; installed with the application; `--check-help` | Tested | the development build uses `--draft` for not-yet-captured screenshots |
+| Context help (F1) from a central topic registry; Help menu; help buttons; failure messages mapped to troubleshooting | Tested | |
+| 22 screenshots captured from the running application by Demo Studio sequences, with annotated copies | Tested | `--capture-screenshots help/screenshots/manifest.json` |
+| Generated Python API reference; documentation coverage report | Tested | `tools/help/generate_api_reference.py`, `tools/help/coverage.py` |
+| Demo Studio: profiles, application-level step sequences, event-based waiting, time limits, failure handling, stop, restart, run manifests; `--run-demo` | Tested | |
+| Presenter mode: clean layout, presenter bar with instructions, notes, progress, pause / resume / next / restart / exit | Tested | |
+| Demonstrations A-F and H run by the tests from a clean state | Tested | |
+| Demonstration G (experimental correlation) | Partial | imports labelled synthetic S11 data and compares it with a dipole model; no calibration step; no live acquisition (every bundled experiment drives outputs, which a demonstration never authorizes) |
+| RF_IQ_Analyst reference audit | Done | `docs/reference/ANALYST_REFERENCE_AUDIT.md`; the reference was not modified |
+| Video recording, narration audio | Missing | by design: Resonant prepares fixed-size, scripted, reproducible runs for external recording |
+

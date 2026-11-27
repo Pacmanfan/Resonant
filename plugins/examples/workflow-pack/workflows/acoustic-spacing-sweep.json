@@ -1,0 +1,16 @@
+{
+  "format": "resonant.workflow", "version": 1,
+  "id": "examples.acoustic-spacing-sweep", "workflowVersion": "1", "category": "acoustic",
+  "name": "Acoustic: element-spacing sweep of a focused array",
+  "description": "Builds a focused linear array and repeats the field calculation for several element spacings, writing the peak pressure of each to a CSV file.",
+  "expectedSeconds": 3, "docs": ["acoustics.arrays", "automation.workflows"],
+  "parameters": [{"id": "spacing", "label": "Element spacings", "type": "list", "default": [0.003, 0.0043, 0.006, 0.009], "unit": "m"}],
+  "steps": [
+    {"id": "array", "action": "scene.add", "params": {"type": "array", "id": "sweep-array", "name": "Array", "component": {"countX": 8}}},
+    {"id": "plane", "action": "scene.add", "params": {"type": "region", "id": "sweep-plane", "name": "Plane", "position": [0, 0, 0.05],
+      "component": {"kind": "planeXZ", "size": [0.12, 0.01, 0.1], "countU": 61, "countV": 51}}},
+    {"id": "fields", "action": "acoustics.field", "params": {"region": "sweep-plane", "set": {"object": "sweep-array", "component": {"spacingX": "${spacing}"}}},
+      "repeat": {"parameter": "spacing"}},
+    {"id": "save", "action": "io.write-json", "params": {"path": "spacing-sweep.json", "data": "${steps.fields}"}}
+  ]
+}

@@ -24,6 +24,7 @@ option(RESONANT_WITH_CUDA "Build the CUDA solver backend when a CUDA toolkit is 
 option(RESONANT_WITH_HDF5 "Store measurements in HDF5 when HDF5 is installed (else Resonant's binary format)" ON)
 option(RESONANT_WITH_ALSA "Build the ALSA audio-interface driver when ALSA is installed" ON)
 option(RESONANT_WITH_SOAPYSDR "Build the SoapySDR driver (discovery only) when SoapySDR is installed" ON)
+option(RESONANT_WITH_PYTHON "Build the Python API module when Python and pybind11 are installed" ON)
 set(RESONANT_CUDA_ARCHITECTURES "75-real;86-real;89-real;120" CACHE STRING
     "GPU architectures compiled in (Turing, Ampere, Ada, Blackwell; the last also as PTX)")
 
@@ -89,11 +90,31 @@ if(PkgConfig_FOUND)
 endif()
 message(STATUS "Resonant measurement libraries: HDF5 ${RESONANT_HAVE_HDF5}, ALSA ${RESONANT_HAVE_ALSA}, SoapySDR ${RESONANT_HAVE_SOAPYSDR}")
 
+# The Python API module (ADR-000215): needs position-independent code in the
+# static core it links.
+set(RESONANT_HAVE_PYTHON OFF)
+if(RESONANT_WITH_PYTHON)
+    find_package(Python3 QUIET COMPONENTS Interpreter Development.Module)
+    find_package(pybind11 CONFIG QUIET)
+    if(Python3_FOUND AND pybind11_FOUND)
+        set(RESONANT_HAVE_PYTHON ON)
+        set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+    endif()
+endif()
+message(STATUS "Resonant Python API module: ${RESONANT_HAVE_PYTHON}")
+
 add_library(resonant_json INTERFACE)
 target_include_directories(resonant_json SYSTEM INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/nlohmann)
 
 add_subdirectory(src/core)
 add_subdirectory(src/hardware)
+if(RESONANT_HAVE_PYTHON)
+    add_subdirectory(src/python)
+endif()
+
+# The in-app help needs only the Python interpreter (tools/help/build_help.py).
+find_package(Python3 REQUIRED COMPONENTS Interpreter)
+add_subdirectory(help)
 
 if(RESONANT_BUILD_APP)
     find_package(Qt6 6.4 REQUIRED COMPONENTS Core Gui Widgets OpenGL OpenGLWidgets)

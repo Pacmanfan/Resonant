@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>DemoStudioPanel</class>
+ <widget class="QWidget" name="DemoStudioPanel">
+  <property name="geometry"><rect><x>0</x><y>0</y><width>420</width><height>700</height></rect></property>
+  <property name="windowTitle"><string>Demo Studio</string></property>
+  <layout class="QVBoxLayout" name="mainLayout">
+   <item><widget class="QLabel" name="profilesLabel"><property name="text"><string>Demonstrations</string></property></widget></item>
+   <item><widget class="QListWidget" name="profileList"><property name="maximumSize"><size><width>16777215</width><height>170</height></size></property></widget></item>
+   <item><widget class="QTextBrowser" name="profileView"/></item>
+   <item><widget class="QLabel" name="stepsLabel"><property name="text"><string>Steps</string></property></widget></item>
+   <item><widget class="QListWidget" name="stepsList"/></item>
+   <item><widget class="QPlainTextEdit" name="notesView"><property name="readOnly"><bool>true</bool></property><property name="maximumSize"><size><width>16777215</width><height>80</height></size></property><property name="placeholderText"><string>Presenter notes of the selected step</string></property></widget></item>
+   <item><widget class="QCheckBox" name="attendedCheck"><property name="text"><string>Wait for Next at narration pauses</string></property><property name="checked"><bool>true</bool></property></widget></item>
+   <item><widget class="QCheckBox" name="presenterCheck"><property name="text"><string>Run in presenter mode</string></property><property name="checked"><bool>false</bool></property></widget></item>
+   <item>
+    <layout class="QGridLayout" name="buttonGrid">
+     <item row="0" column="0"><widget class="QPushButton" name="runButton"><property name="text"><string>Run</string></property></widget></item>
+     <item row="0" column="1"><widget class="QPushButton" name="nextButton"><property name="text"><string>Next</string></property></widget></item>
+     <item row="0" column="2"><widget class="QPushButton" name="pauseButton"><property name="text"><string>Pause</string></property></widget></item>
+     <item row="1" column="0"><widget class="QPushButton" name="stopButton"><property name="text"><string>Stop</string></property></widget></item>
+     <item row="1" column="1"><widget class="QPushButton" name="restartButton"><property name="text"><string>Restart</string></property></widget></item>
+     <item row="1" column="2"><widget class="QPushButton" name="exportButton"><property name="text"><string>Export Manifest...</string></property></widget></item>
+    </layout>
+   </item>
+   <item><widget class="QLabel" name="statusLabel"><property name="wordWrap"><bool>true</bool></property><property name="text"><string/></property></widget></item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

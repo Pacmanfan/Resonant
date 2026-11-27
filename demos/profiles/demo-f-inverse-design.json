@@ -1,0 +1,45 @@
+{
+ "format": "resonant.demo-profile",
+ "version": 1,
+ "id": "demo-f-inverse-design",
+ "name": "F. Inverse design",
+ "description": "The Optimization Studio searches the phases of an array for the strongest focus, compares the candidates and promotes the best one into the design.",
+ "audience": "design engineers, researchers",
+ "domain": "optimization",
+ "status": "available",
+ "project": "examples/optimization/a-acoustic-focal-array.resonant",
+ "workspace": "optimization",
+ "requires": [],
+ "data": [],
+ "sequence": "demos/sequences/demo-f-inverse-design.json",
+ "expected": [
+  "the best candidate's objective exceeds the initial design's",
+  "a design revision is recorded"
+ ],
+ "camera": {},
+ "visualization": {},
+ "screenshots": [
+  "optimization-studio.png"
+ ],
+ "notes": "demos/presenter_notes/demo-f-inverse-design.md",
+ "durationMinutes": 7,
+ "completion": [
+  "every step done",
+  "at least two candidates",
+  "one design revision"
+ ],
+ "limitations": [
+  "the search is local to the algorithm and bounds of the saved problem",
+  "the promoted design is evaluated with the analytical model only"
+ ],
+ "remaining": [],
+ "story": {
+  "problem": "Find a design that meets a goal without trying every variant by hand.",
+  "configure": "Design variables (the element phases), the objective (pressure at the focus) and the algorithm, saved in the project.",
+  "calculate": "Candidate designs, each evaluated with the acoustic model, searched by the problem's algorithm.",
+  "meaning": "The best candidate is the design that focuses most strongly at the target within the variables' bounds.",
+  "inspect": "The candidates table (objective of each candidate, the best marked), the progress plot, the promoted design revision.",
+  "value": "The search is recorded and repeatable; the best design is applied with one undoable command and marked unvalidated until checked.",
+  "assumptions": "The objective is evaluated with the analytical free-field model; the algorithm and its seed are those of the saved problem."
+ }
+}

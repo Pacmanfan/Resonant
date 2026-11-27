@@ -1,0 +1,44 @@
+{
+ "format": "resonant.demo-profile",
+ "version": 1,
+ "id": "demo-d-mechanical-resonance",
+ "name": "D. Mechanical resonance",
+ "description": "An aluminium cantilever: its natural frequencies and mode shapes, then its forced response near the first resonance.",
+ "audience": "mechanical engineers, vibration specialists",
+ "domain": "mechanical",
+ "status": "available",
+ "project": "examples/mechanics/a-vibrating-beam.resonant",
+ "workspace": "mechanics",
+ "requires": [],
+ "data": [],
+ "sequence": "demos/sequences/demo-d-mechanical-resonance.json",
+ "expected": [
+  "first natural frequency about 16 Hz",
+  "a frequency response with peaks at the natural frequencies"
+ ],
+ "camera": {},
+ "visualization": {},
+ "screenshots": [
+  "mechanical-modal-analysis.png"
+ ],
+ "notes": "demos/presenter_notes/demo-d-mechanical-resonance.md",
+ "durationMinutes": 6,
+ "completion": [
+  "every step done",
+  "at least three modes"
+ ],
+ "limitations": [
+  "linear elasticity",
+  "the project's mesh resolution"
+ ],
+ "remaining": [],
+ "story": {
+  "problem": "Know at which frequencies a part resonates, and how it moves there, before it is built.",
+  "configure": "An aluminium beam clamped at one end (material, supports and mesh are in the project).",
+  "calculate": "The natural frequencies and mode shapes (finite-element modal analysis), then the steady forced response to a tip force.",
+  "meaning": "At a natural frequency a small force produces a large motion: the first bending mode is the easiest to excite.",
+  "inspect": "The mode table (frequency, effective mass), the animated mode shape in the viewport, the frequency response plot.",
+  "value": "Resonances found in minutes, with the shape that tells where to stiffen, damp or place a sensor.",
+  "assumptions": "Linear elasticity, small displacements, the beam idealization and mesh of the project, light damping."
+ }
+}

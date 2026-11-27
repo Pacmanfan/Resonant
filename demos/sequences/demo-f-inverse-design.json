@@ -1,0 +1,121 @@
+{
+ "format": "resonant.demo-sequence",
+ "version": 1,
+ "id": "demo-f-inverse-design",
+ "sequenceVersion": "1",
+ "name": "F. Inverse design",
+ "steps": [
+  {
+   "id": "open",
+   "action": "open-project",
+   "description": "Open the acoustic focal array optimization example (a copy in the run folder: runs write checkpoints next to it)",
+   "params": {
+    "path": "examples/optimization/a-acoustic-focal-array.resonant",
+    "copyToRunDirectory": true
+   },
+   "expect": {
+    "object": "ex-opt-a-array"
+   },
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "layout",
+   "action": "workspace",
+   "description": "The Optimization Studio",
+   "params": {
+    "panel": "optimization",
+    "docks": [
+     "scene"
+    ],
+    "tab": "problemTab"
+   },
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "explain-problem",
+   "action": "pause",
+   "description": "The problem: element phases as variables, the focal pressure as objective.",
+   "params": {
+    "text": "The problem: element phases as variables, the focal pressure as objective."
+   },
+   "notes": "",
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "run",
+   "action": "run",
+   "description": "Run the optimization",
+   "params": {
+    "what": "optimization",
+    "problem": "ex-opt-a-focus"
+   },
+   "timeoutSeconds": 600,
+   "expect": {
+    "minCandidates": 2
+   }
+  },
+  {
+   "id": "candidates",
+   "action": "show",
+   "description": "Compare the candidates",
+   "params": {
+    "panel": "optimization",
+    "tab": "candidatesTab"
+   },
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "explain-candidates",
+   "action": "pause",
+   "description": "Each row is a design that was evaluated; the best is marked.",
+   "params": {
+    "text": "Each row is a design that was evaluated; the best is marked."
+   },
+   "notes": "",
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "promote",
+   "action": "promote",
+   "description": "Promote the best candidate into the design",
+   "params": {
+    "candidate": "best"
+   },
+   "expect": {
+    "revisions": 1
+   },
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "layout-field",
+   "action": "workspace",
+   "description": "Check the promoted design's field",
+   "params": {
+    "panel": "acoustics",
+    "tab": "simulationTab"
+   },
+   "timeoutSeconds": 60
+  },
+  {
+   "id": "field",
+   "action": "run",
+   "description": "Field of the promoted design",
+   "params": {
+    "what": "acoustics.field",
+    "region": "ex-opt-a-region"
+   },
+   "timeoutSeconds": 120
+  },
+  {
+   "id": "camera",
+   "action": "camera",
+   "description": "Frame the field",
+   "params": {
+    "preset": "frame-all",
+    "yaw": -90,
+    "pitch": 10
+   },
+   "timeoutSeconds": 60
+  }
+ ]
+}
