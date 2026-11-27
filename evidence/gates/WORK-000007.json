@@ -1,0 +1,28 @@
+{
+ "work": "WORK-000007",
+ "runs": [
+  {
+   "at": "2026-11-27T02:28:12.032918+00:00",
+   "verdict": "PASS",
+   "gate_version": 3,
+   "work": "WORK-000007",
+   "request": "2026-11-26-the-github-for-this-repo-is-no-req-chat-20261126-011.md",
+   "request_id": "REQ-CHAT-20261126-011",
+   "request_fingerprint": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "request_code_paths": [],
+   "test_runs": [
+    "20261126T212722-4063643"
+   ],
+   "evidence": [
+    "VER-000007"
+   ],
+   "head": "0c40ed369450c12c7e711616c225faa7fb4dbd04",
+   "agent_id": "agent-dev-20261126151713-76f632",
+   "fails": [],
+   "warns": [
+    "31 unowned change(s) in the tree (not this request's; never committed by it)"
+   ],
+   "passes": 14
+  }
+ ]
+}

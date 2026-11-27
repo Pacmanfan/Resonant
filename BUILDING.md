@@ -8,6 +8,9 @@ re-run the configure step: `cmake` does it by itself; for qmake run
 it only the top-level Makefile is regenerated), or
 `python3 scripts/devsys.py build fresh`.
 
+The source is published at https://github.com/Pacmanfan/Resonant
+(`git clone https://github.com/Pacmanfan/Resonant.git`).
+
 ## Requirements
 
 | Dependency | Version used | License | Why |

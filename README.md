@@ -1,58 +1,61 @@
-# Resonant — Wave Field Engineering Studio
+# Resonant
 
-*Design. Simulate. Focus. Measure.*
+**Explore the world through frequency and vibration.**
 
-Resonant is a native desktop engineering application for designing,
-simulating, visualizing, optimizing and experimentally investigating wave
-propagation in physical environments: acoustic, mechanical and
-electromagnetic, on one architecture.
+Everything around us vibrates. Sound folds around corners and gathers in
+the focus of a dish, a guitar body sings, a bridge hums at its natural
+frequencies, radio waves cross the room. Resonant is an exploratory studio
+for seeing those waves: place sources and structures in a 3D scene, run
+real physics, watch the field come alive — then change one thing and see
+what happens.
 
-What exists today is recorded, capability by capability, in
-`IMPLEMENTATION_STATUS.md`. Read it before relying on anything: it separates
-what is implemented and tested from what is partial, missing or deferred.
+It is made for curiosity as much as for engineering: students meeting
+standing waves for the first time, makers shaping a horn or a speaker
+panel, engineers checking how an array focuses ultrasound. Every result
+says which model produced it and what that model leaves out, so what you
+discover is something you can trust.
 
-## Build and run
+![Sound from an emitter focused by a parabolic reflector, calculated by the full-wave solver](docs/images/full-wave-reflector-focus.png)
+
+## What you can explore today
+
+* **Sound in space** — emitters and phased arrays, interference, focusing,
+  inverse design of target fields, animated pressure fields, probes.
+* **Shaping waves** — parabolic and elliptical reflectors, lenses,
+  waveguides and cavities, hybrid active-and-passive focusing.
+* **Full-wave acoustics** — sound that diffracts through slits, reflects,
+  refracts into materials and rings in cavities; pulses and spectra.
+* **Vibration of things** — beams, plates, membranes and solids: natural
+  frequencies and mode shapes, frequency responses, impulses, waves along
+  rods, vibration steered to a chosen spot, phononic rods with stop bands,
+  and the sound a vibrating plate sends out.
+* **Coming next** — electromagnetic waves and antennas, experiments with
+  real hardware, optimization, Python scripting and guided demonstrations.
+
+`IMPLEMENTATION_STATUS.md` is the honest, capability-by-capability record;
+`examples/README.md` lists ready-to-open projects for every area.
+
+![A vibrating plate's first mode](docs/images/plate-mode.png)
+
+## Get started
 
 ```sh
-cmake -S . -B build/cmake-debug -G Ninja && cmake --build build/cmake-debug
-./build/cmake-debug/src/app/resonant
-ctest --test-dir build/cmake-debug --output-on-failure
+git clone https://github.com/Pacmanfan/Resonant.git && cd Resonant
+cmake -S . -B build/release -G Ninja -DCMAKE_BUILD_TYPE=Release && cmake --build build/release
+./build/release/src/app/resonant examples/mechanics/b-vibrating-plate.resonant
 ```
 
-qmake builds the same targets (`project.pro`). `BUILDING.md` has both build
-systems, the dependencies and the tests.
+It needs C++20, Qt 6, Eigen 3.4 and OpenGL 4.5. qmake builds the same
+targets (`project.pro`); `BUILDING.md` covers both, the tests included.
 
-## Using the application
+## How it grows
 
-* **Geometry** menu: add a box, sphere, cylinder, cone, plane, disc or
-  ellipsoid; **Scene > New Group** makes a group.
-* **Viewport:** left drag orbits, right or middle drag pans, the wheel
-  zooms, a click selects (Ctrl+click adds or removes).
-* **Scene** and **Properties** panels: rename, hide, transform, geometry
-  parameters, material. Lengths are shown in the unit chosen under
-  **Tools**; projects (`.resonant`, JSON) always store SI values.
-* **Materials > Material Library:** the example values are illustrative,
-  not authoritative.
-* Every edit is undoable. `examples/README.md` lists example projects.
-
-## Source layout
-
-`src/core` (data model and physics; no Qt, no OpenGL), `src/render` (OpenGL
-4.5 Core), `src/app` (the Qt application; forms in `src/app/forms`),
-`src/main` (entry point), `tests/core` and `tests/app`, `third_party`
-(vendored GoogleTest and nlohmann-json).
-
-## How changes are made here
-
-The repository carries a development-control system for coding agents:
-
-* **Requests** — each piece of work is a record under `requests/`.
-* **Claims** — an agent claims one request and registers every path first.
-* **Gated completion** — a request completes only with a requirement,
-  tests, evidence, documentation and a passing completion gate.
-* **Workers** and **agent coordination** — unattended agent sessions, a
-  roster, messages and live panels (web control panel, terminal dashboard,
-  Qt control panel).
+Resonant is built with a development-control system for coding agents.
+**Requests** are records under `requests/`; **claims** give one agent each
+request and every path it edits; **gated completion** admits a change only
+with its requirement, tests, evidence and documentation; **workers** and
+**agent coordination** add unattended sessions, messages and live panels
+(web control panel, terminal dashboard, Qt control panel).
 
 ```bash
 python3 scripts/devsys.py doctor      # environment and configuration
@@ -64,8 +67,7 @@ python3 scripts/msg.py panels         # where the panels are right now
 
 ## Documents
 
-* `docs/README.md` — documentation map (canonical entry point).
-* `docs/requirements/product.md` — product vision and requirements.
+* `docs/README.md` — the documentation map; `docs/requirements/product.md` — the vision.
 * `docs/architecture/overview.md` — architecture; `DECISIONS.md` — decisions.
-* `AGENTS.md` — the operating rules every agent follows;
+* `AGENTS.md` — the rules every agent follows;
   `docs/process/agent-coordination.md` — roster, messages and panels.

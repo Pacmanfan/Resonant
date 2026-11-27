@@ -1,0 +1,121 @@
+{
+  "request_id": "REQ-CHAT-20261126-011",
+  "source": "chat",
+  "type": "DOCUMENTATION",
+  "priority": "HIGH",
+  "created": "2026-11-26T21:26:03-05:00",
+  "created_utc": "2026-11-27T02:26:03+00:00",
+  "id_date": "2026-11-26",
+  "timezone": "EST (UTC-05:00)",
+  "status": "completed",
+  "original_text": "the github for this repo is not set up https://github.com/Pacmanfan/Resonant.git .check in all code as you proceed. Generate a readme wit ha descriptive text of the purpose of the project. Make it sound upbeat and positive Talk about it as it is an exploratory tool to help people understand the world through frequency and vibration.",
+  "file": "requests/inbox/2026-11-26-the-github-for-this-repo-is-no-req-chat-20261126-011.md",
+  "attachments": [],
+  "context": "",
+  "text_sha256": "4cc39452e1f4aec4f1708c4f5652491ac20bcf4fa308bf201d5d8fbef098726f",
+  "classification": {
+    "proposed_type": "DOCUMENTATION",
+    "proposed_source": "override",
+    "normalized_type": "DOCUMENTATION",
+    "heuristic_type": "FEATURE",
+    "final_type": "DOCUMENTATION",
+    "confidence": "high",
+    "validation": "PASS",
+    "classifier_reason": "override DOCUMENTATION accepted (text alone suggests FEATURE: request statement is framed as feature: Generate, Make )",
+    "correction_reason": null,
+    "normalization_note": null,
+    "evidence": [
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "Generate",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Generate a readme wit ha descriptive text of the purpose of the project."
+      },
+      {
+        "category": "DOCUMENTATION",
+        "where": "head",
+        "phrase": "readme",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Generate a readme wit ha descriptive text of the purpose of the project."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "Make ",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Make it sound upbeat and positive Talk about it as it is an exploratory tool to help people understand the world through frequency and vibration."
+      }
+    ],
+    "scores": {
+      "FEATURE": {
+        "head": 2,
+        "body": 0
+      },
+      "BUG": {
+        "head": 1,
+        "body": 0
+      },
+      "CRASH": {
+        "head": 0,
+        "body": 0
+      },
+      "REGRESSION": {
+        "head": 0,
+        "body": 0
+      },
+      "PERFORMANCE": {
+        "head": 0,
+        "body": 0
+      },
+      "REFACTOR": {
+        "head": 0,
+        "body": 0
+      },
+      "BUILD": {
+        "head": 0,
+        "body": 0
+      },
+      "DOCUMENTATION": {
+        "head": 1,
+        "body": 0
+      },
+      "INVESTIGATION": {
+        "head": 1,
+        "body": 0
+      },
+      "PROCESS-CHANGE": {
+        "head": 0,
+        "body": 0
+      }
+    },
+    "evidence_total": 5,
+    "validator": "scripts/request_classification.py"
+  },
+  "links": {
+    "work": [
+      "WORK-000007"
+    ]
+  },
+  "commits": [],
+  "resolution": {
+    "from": "processing",
+    "to": "completed",
+    "at": "2026-11-27T02:28:12.202686+00:00",
+    "by": "agent-dev-20261126151713-76f632",
+    "gates": [
+      {
+        "work": "WORK-000007",
+        "at": "2026-11-27T02:28:12.032918+00:00",
+        "verdict": "PASS",
+        "request_fingerprint": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "test_runs": [
+          "20261126T212722-4063643"
+        ]
+      }
+    ]
+  }
+}
