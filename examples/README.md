@@ -73,3 +73,20 @@ runs (Run > Authorize Output...), and a saved project (raw data is stored
 next to it). They are generated and checked by
 `tests/core/test_experiment_examples.cpp`.
 
+## Optimization
+
+Each project holds a scene and an optimization problem (Optimization Studio,
+or `resonant <project> --run-optimization first`). They are generated and
+checked by `tests/core/test_optimization_examples.cpp`, which runs every
+problem with the real physics.
+
+| Project | Shows | Assumptions and limits |
+|---|---|---|
+| `optimization/a-acoustic-focal-array.resonant` | eight elements: phases and amplitudes for the largest pressure at an off-axis focus, against the uniform excitation | free field; the optimum is the coherent sum, reached to 0.1 %; a field plane allows full-wave re-evaluation (2D) |
+| `optimization/b-acoustic-reflector.resonant` | a parabolic reflector's focal length swept for a target 80 mm from the vertex; candidates compared | Kirchhoff model (one reflection); optimum within 5 % of the mirror equation |
+| `optimization/c-mechanical-vibration-suppression.resonant` | two actuators on a plate at 120 Hz: a quiet point and a point with 2 um motion | finite elements, loss factor 0.02; the linear inverse solution is available |
+| `optimization/d-mechanical-resonator.resonant` | a cantilever tuned to 25 Hz by length, stock thickness and library material, at most 250 g | screened with Euler-Bernoulli, validated with finite elements; illustrative material values |
+| `optimization/e-electromagnetic-beam-steering.resonant` | a 4 x 4 planar array steered to (30, 45) degrees by its phases | array factor, isotropic elements, no coupling |
+| `optimization/f-sidelobe-reduction.resonant` | a symmetric taper (derived variables) of a 10-element array: directivity against sidelobes, Pareto | array factor; compare with Dolph-Chebyshev |
+| `optimization/g-robust-design.resonant` | a taper for the worst directivity toward 30 degrees over 0.9 - 1.1 GHz, against the 1 GHz optimum | the band is a stated requirement, sampled at eight common frequencies |
+| `optimization/read_run.py` | reads an exported run record (standard library; `--plot` with NumPy and matplotlib) | |

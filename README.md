@@ -35,7 +35,9 @@ discover is something you can trust.
 * **Real measurements** — experiments with microphones, accelerometers and
   radios (or simulated instruments), calibration, and measured fields set
   beside the simulation; outputs only ever start when you authorize them.
-* **Coming next** — optimization, Python scripting and guided demos.
+* **Designing by goal** — say what you want (a focus, a resonance, a beam)
+  and Resonant searches, simulates and compares candidate designs for you.
+* **Coming next** — Python scripting and guided demos.
 
 `IMPLEMENTATION_STATUS.md` is the honest, capability-by-capability record;
 `examples/README.md` lists ready-to-open projects for every area.

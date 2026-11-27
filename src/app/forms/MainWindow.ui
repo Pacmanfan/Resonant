@@ -169,6 +169,11 @@
     <addaction name="actionEvaluateEmField"/>
     <addaction name="actionRunEmFullWave"/>
    </widget>
+   <widget class="QMenu" name="menuOptimization">
+    <property name="title"><string>&amp;Optimization</string></property>
+    <addaction name="actionShowOptimization"/>
+    <addaction name="actionStopOptimization"/>
+   </widget>
    <widget class="QMenu" name="menuExperiments">
     <property name="title"><string>E&amp;xperiments</string></property>
     <addaction name="actionShowExperiments"/>
@@ -211,6 +216,7 @@
    <addaction name="menuManipulators"/>
    <addaction name="menuMechanics"/>
    <addaction name="menuElectromagnetics"/>
+   <addaction name="menuOptimization"/>
    <addaction name="menuExperiments"/>
    <addaction name="menuSimulation"/>
    <addaction name="menuTools"/>
@@ -300,6 +306,11 @@
    <property name="windowTitle"><string>Experimental Hardware</string></property>
    <attribute name="dockWidgetArea"><number>2</number></attribute>
    <widget class="ExperimentsPanel" name="experimentsPanel"/>
+  </widget>
+  <widget class="QDockWidget" name="optimizationDock">
+   <property name="windowTitle"><string>Optimization Studio</string></property>
+   <attribute name="dockWidgetArea"><number>2</number></attribute>
+   <widget class="OptimizationPanel" name="optimizationPanel"/>
   </widget>
   <widget class="QDockWidget" name="solverDock">
    <property name="windowTitle"><string>Full-Wave Solver</string></property>
@@ -739,6 +750,14 @@
    <property name="toolTip"><string>Add a circular array of half-wave dipoles</string></property>
    <property name="statusTip"><string>Add a circular array of half-wave dipoles</string></property>
   </action>
+  <action name="actionShowOptimization">
+   <property name="text"><string>&amp;Optimization Studio</string></property>
+   <property name="toolTip"><string>Show the optimization problems, runs, candidates and analyses</string></property>
+  </action>
+  <action name="actionStopOptimization">
+   <property name="text"><string>&amp;Stop Optimization</string></property>
+   <property name="toolTip"><string>Stop the running optimization (its checkpoint is kept for resuming)</string></property>
+  </action>
   <action name="actionShowExperiments">
    <property name="text"><string>&amp;Experimental Hardware Panel</string></property>
    <property name="toolTip"><string>Show the experiments, devices, calibrations and measurements</string></property>
@@ -868,6 +887,7 @@
   <customwidget><class>MechanicsPanel</class><extends>QWidget</extends><header>MechanicsPanel.h</header><container>1</container></customwidget>
   <customwidget><class>EmPanel</class><extends>QWidget</extends><header>EmPanel.h</header><container>1</container></customwidget>
   <customwidget><class>ExperimentsPanel</class><extends>QWidget</extends><header>ExperimentsPanel.h</header><container>1</container></customwidget>
+  <customwidget><class>OptimizationPanel</class><extends>QWidget</extends><header>OptimizationPanel.h</header><container>1</container></customwidget>
   <customwidget><class>FdtdPanel</class><extends>QWidget</extends><header>FdtdPanel.h</header><container>1</container></customwidget>
   <customwidget><class>AcousticsPanel</class><extends>QWidget</extends><header>AcousticsPanel.h</header><container>1</container></customwidget>
  </customwidgets>

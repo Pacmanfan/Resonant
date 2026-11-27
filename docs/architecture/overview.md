@@ -1,7 +1,7 @@
 # Resonant — Architecture Overview
 
 **Status:** current. Decisions: ADR-000204 (stack, build systems),
-ADR-000205 (layers, domains), ADR-000207 (acoustics), ADR-000208 (manipulators), ADR-000209 (full-wave solver), ADR-000210 (mechanics), ADR-000211 (electromagnetics), ADR-000212 (compute backends), ADR-000213 (experiments). Requirements: `docs/requirements/product.md`.
+ADR-000205 (layers, domains), ADR-000207 (acoustics), ADR-000208 (manipulators), ADR-000209 (full-wave solver), ADR-000210 (mechanics), ADR-000211 (electromagnetics), ADR-000212 (compute backends), ADR-000213 (experiments), ADR-000214 (optimization). Requirements: `docs/requirements/product.md`.
 
 This document describes the architecture every milestone builds on. Each
 subsystem gets its own document in this directory when it is implemented;
@@ -45,8 +45,10 @@ A higher layer may use a lower one; never the reverse.
 | `mechanics` | the mechanical domain: elastic materials, structural idealization, finite elements, eigensolver, static / modal / harmonic / transient analyses, actuators, sensors, targets, targeting, horns, periodic rods, measured data (`docs/mechanics/`) |
 | `electromagnetics` | the electromagnetic domain: materials, sources, antennas (analytical models and estimates), impedance and matching, patterns, near fields, arrays (array factor, steering, grating lobes, tapers, synthesis), lines, guides and cavities, the Yee FDTD solver and its setup from a project, Touchstone data (`docs/electromagnetics/`) |
 | `geometry/SolidModel` | simulation bodies (an inside test per geometry kind) shared by the acoustic and electromagnetic full-wave setups |
-| `coupling` | the only code that uses two domains: sound radiated by vibrating plates |
+| `coupling` | the only code that uses two domains: sound radiated by vibrating plates; the registry of the optimization adapters |
 | `experiments` | the domain-independent experiment framework: experiments, the hardware abstraction and simulated instruments, acquisition, calibration, measurement records and their HDF5 store, processing, spatial data, comparison, uncertainty, execution, output safety, reports, archives; the domains add the physical interpretation (`AcousticExperiments`, `MechanicalExperiments`, `RfExperiments`) (`docs/experiments/`) |
+| `optimization` | the domain-independent optimization framework: problems, design variables and derived variables, objectives, constraints, the adapter interface, algorithms (sweeps, sampling, Nelder-Mead, L-BFGS-B, differential evolution, NSGA-II, Bayesian), runs, candidates, Pareto ranking, caching, checkpoints, jobs, sensitivity, surrogates, robust and multi-fidelity evaluation, linear inverse design, persistence; the domains provide adapters (`acoustic_optimization`, `mechanics/MechanicalOptimization` with `TopologyOptimization`, `electromagnetics/EmOptimization`), registered in `coupling/OptimizationRegistry` (`docs/optimization/`) |
+| `geometry/MeshChecks` | mesh integrity, printability checks, STL and OBJ export |
 | later physics domains | one module per domain, each with its own equations, property sets and solvers |
 
 ## Rendering and application (`src/render`, `src/app`)
@@ -68,6 +70,7 @@ A higher layer may use a lower one; never the reverse.
 | `app/MechanicsController`, `app/MechanicsPanel`, `app/MechanicalEditor`, `app/MechanicsMarkers`, `render/ScalarMeshLayer` | mechanical objects, analyses, results, deformed display |
 | `app/EmController`, `app/EmPanel`, `app/EmEditor`, `app/EmMarkers` | electromagnetic objects, reports, sweeps, patterns (3D through `ScalarMeshLayer`), arrays, fields, full-wave runs, measured data |
 | `app/DisplayUnits` | the single boundary between displayed units and SI |
+| `app/OptimizationController`, `app/OptimizationPanel` | the Optimization Studio: problems, background runs, candidates, re-evaluation, inverse design, sensitivity, promotion as an undoable revision, export, topology |
 | `app/MainWindow` | wires the actions of `forms/MainWindow.ui` to the controller |
 
 ## Data flow

@@ -24,6 +24,8 @@ class MechanicsPanel;
 class EmController;
 class ExperimentsController;
 class ExperimentsPanel;
+class OptimizationController;
+class OptimizationPanel;
 class EmPanel;
 class FdtdPanel;
 class TimeSignalPanel;
@@ -60,6 +62,8 @@ public:
     EmPanel& emPanel();
     ExperimentsController& experiments() { return *experiments_; }
     ExperimentsPanel& experimentsPanel();
+    OptimizationController& optimization() { return *optimization_; }
+    OptimizationPanel& optimizationPanel();
     FdtdPanel& fullWavePanel();
     TimeSignalPanel& timeSignals() { return *timeSignals_; }
     QAction* action(const QString& objectName) const;
@@ -93,6 +97,7 @@ private:
     void connectMechanics();
     void connectElectromagnetics();
     void connectExperiments();
+    void connectOptimization();
     void updateDocumentState();
     void updateSelectionState();
     void fillAssignMaterialMenu();
@@ -113,6 +118,7 @@ private:
     MechanicsController* mechanics_ = nullptr;
     EmController* em_ = nullptr;
     ExperimentsController* experiments_ = nullptr;
+    OptimizationController* optimization_ = nullptr;
     TimeSignalPanel* timeSignals_ = nullptr;
     QActionGroup* unitGroup_ = nullptr;
     QByteArray defaultLayout_;

@@ -5,6 +5,8 @@
 #include "FdtdController.h"
 #include "FdtdPanel.h"
 #include "MainWindow.h"
+#include "OptimizationController.h"
+#include "OptimizationPanel.h"
 #include "MechanicsController.h"
 #include "EmController.h"
 #include "EmPanel.h"
@@ -74,6 +76,12 @@ int main(int argc, char** argv)
                        "started without it)."),
         QStringLiteral("operator"));
     parser.addOption(authorizeOutputOption);
+    const QCommandLineOption runOptimizationOption(
+        QStringLiteral("run-optimization"),
+        QStringLiteral("After opening the project: run its optimization problem with this id (or its first problem for 'first') in the "
+                       "Optimization Studio and log the outcome."),
+        QStringLiteral("id"));
+    parser.addOption(runOptimizationOption);
     parser.process(application);
 
     int result = 0;
@@ -184,8 +192,36 @@ int main(int argc, char** argv)
                     resonant::logInfo("application", "--run-experiment: " + message.toStdString());
                 });
         }
+        bool waitingForOptimization = false;
+        if (parser.isSet(runOptimizationOption)) {
+            OptimizationPanel& panel = window.optimizationPanel();
+            if (auto* dock = qobject_cast<QDockWidget*>(panel.parentWidget())) {
+                dock->show();
+                dock->raise();
+            }
+            const auto problems = window.optimization().workspace().problems;
+            std::string id = parser.value(runOptimizationOption).toStdString();
+            if (id == "first" && !problems.empty())
+                id = problems.front().id;
+            panel.selectProblem(id);
+            if (panel.selectedProblem() != id)
+                resonant::logError("application", "--run-optimization: the project has no optimization problem '" + id + "'");
+            else {
+                panel.showTab(QStringLiteral("runTab"));
+                waitingForOptimization = panel.start();
+                if (!waitingForOptimization)
+                    resonant::logError("application", "--run-optimization: " + panel.statusText().toStdString());
+                else
+                    QObject::connect(&window.optimization(), &OptimizationController::runFinished, &window, [&panel](const QString& message) {
+                        panel.showTab(QStringLiteral("candidatesTab"));
+                        resonant::logInfo("application", "--run-optimization: " + message.toStdString());
+                    });
+            }
+        }
         if (parser.isSet(screenshotOption)) {
-            if (waitingForExperiment)
+            if (waitingForOptimization)
+                QObject::connect(&window.optimization(), &OptimizationController::runFinished, &window, capture);
+            else if (waitingForExperiment)
                 QObject::connect(&window.experiments(), &ExperimentsController::runFinished, &window, capture);
             else if (waitingForEm)
                 QObject::connect(&window.electromagnetics(), &EmController::resultsChanged, &window, capture);

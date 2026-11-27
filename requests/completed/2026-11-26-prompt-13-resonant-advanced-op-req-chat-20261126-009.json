@@ -1,0 +1,417 @@
+{
+  "request_id": "REQ-CHAT-20261126-009",
+  "source": "chat",
+  "type": "FEATURE",
+  "priority": "NORMAL",
+  "created": "2026-11-26T15:48:53-05:00",
+  "created_utc": "2026-11-26T20:48:53+00:00",
+  "id_date": "2026-11-26",
+  "timezone": "EST (UTC-05:00)",
+  "status": "completed",
+  "original_text": "# PROMPT 13 \u2014 RESONANT: ADVANCED OPTIMIZATION, INVERSE DESIGN, GEOMETRY OPTIMIZATION AND AUTOMATED ENGINEERING\n\nYou are continuing development of **RESONANT \u2014 Wave Field Engineering Studio**.\n\nThis milestone introduces a unified optimization and inverse-design framework across all supported physics domains:\n\n1. Acoustic wave engineering.\n2. Mechanical wave engineering.\n3. Electromagnetic wave engineering.\n\nThe objective is to allow users to specify a desired physical result and have Resonant determine configurations that can achieve it.\n\nRather than requiring users to manually adjust every source, emitter, material, geometric feature, or excitation parameter, Resonant should provide tools to explore the design space and identify promising solutions.\n\nExamples:\n\n- Focus acoustic energy at a specified point or across a three-dimensional region.\n- Design a reflector that produces a desired focal distribution.\n- Optimize an ultrasonic transducer array.\n- Shape vibration modes in a plate or mechanical structure.\n- Minimize vibration at selected locations.\n- Optimize an antenna array for a particular radiation pattern.\n- Steer multiple electromagnetic beams.\n- Suppress radiation in unwanted directions.\n- Optimize a waveguide or resonant cavity.\n- Find geometry and material configurations that produce a specified response.\n\nThis must become a reusable engineering capability, not a collection of unrelated optimization buttons.\n\nBuild on the existing physics, geometry, material, simulation, measurement, and experiment architectures.\n\nDo not replace or weaken existing validated simulation capabilities.\n\n---\n\n## 1. Mission and objectives\n\nImplement a unified optimization framework supporting:\n\n- Inverse design.\n- Source optimization.\n- Array excitation optimization.\n- Geometry optimization.\n- Material optimization.\n- Topology optimization.\n- Multi-objective optimization.\n- Constrained optimization.\n- Parameter sweeps.\n- Design-space exploration.\n- Sensitivity analysis.\n- Robust optimization.\n- Uncertainty-aware optimization.\n- Automated candidate generation.\n- Candidate comparison.\n- Optimization history.\n- Design validation.\n- CAD and geometry export.\n\nUsers must be able to define:\n\n1. What they want to achieve.\n2. What variables Resonant is allowed to change.\n3. What constraints must be respected.\n4. Which physical model evaluates candidates.\n5. How candidate quality is measured.\n\nThe optimization engine should produce a set of candidate designs, not merely one opaque answer.\n\nEvery result must be traceable to its inputs, solver configuration, objective functions, constraints, and optimization history.\n\n## 2. Unified optimization architecture\n\nIntroduce a physics-independent optimization subsystem.\n\nCreate core abstractions for:\n\n- OptimizationProblem.\n- DesignVariable.\n- DesignParameter.\n- DesignBounds.\n- DesignConstraint.\n- ObjectiveFunction.\n- ObjectiveEvaluation.\n- OptimizationAlgorithm.\n- OptimizationRun.\n- CandidateDesign.\n- CandidateEvaluation.\n- OptimizationResult.\n- OptimizationHistory.\n- DesignComparison.\n- ValidationRun.\n\nThe optimization framework must not contain acoustic, mechanical, or electromagnetic equations directly.\n\nInstead, it should communicate with domain-specific physics adapters.\n\nEach physics domain must expose supported optimization capabilities through explicit interfaces.\n\nFor example:\n\n- Acoustic adapter.\n- Mechanical adapter.\n- Electromagnetic adapter.\n\nEach adapter must identify which variables, objectives, constraints, and solver types it supports.\n\nDo not allow an optimization algorithm to silently assume that all physics domains expose the same quantities.\n\nUse typed physical quantities and appropriate unit handling.\n\n## 3. Design-variable framework\n\nImplement a flexible design-variable system.\n\nSupport variable categories:\n\n**Continuous**\n- Position.\n- Dimensions.\n- Radius.\n- Thickness.\n- Spacing.\n- Material parameters.\n- Frequency.\n- Amplitude.\n- Phase.\n- Delay.\n- Orientation.\n\n**Discrete**\n- Material selection.\n- Component selection.\n- Number of emitters.\n- Number of array elements.\n- Structural configuration.\n- Geometry type.\n\n**Categorical**\n- Antenna type.\n- Reflector type.\n- Solver choice.\n- Material family.\n- Array layout.\n\n**Derived**\n- Wavelength.\n- Element spacing as a fraction of wavelength.\n- Resonant dimensions.\n- Geometric relationships.\n- Dependent dimensions.\n\nSupport:\n\n- Minimum and maximum values.\n- Fixed values.\n- Initial values.\n- Units.\n- Step sizes.\n- Parameter dependencies.\n- Design groups.\n- Variable activation and deactivation.\n\nAllow users to lock parameters.\n\nAllow multiple variables to be grouped into meaningful design parameters.\n\nFor example, a reflector can expose focal length, aperture diameter, depth, and material while keeping its parametric definition valid.\n\nDo not permit an optimization algorithm to create invalid geometry without detecting it.\n\n## 4. Objective-function framework\n\nImplement reusable objective definitions.\n\nSupport:\n\n- Minimize.\n- Maximize.\n- Match a target value.\n- Match a target distribution.\n- Satisfy a threshold.\n- Minimize deviation.\n- Maximize efficiency.\n- Minimize energy outside a desired region.\n\nObjectives must be defined using domain-specific quantities.\n\nExamples:\n\n**Acoustic**\n- Maximize pressure at a target point.\n- Minimize pressure outside a target region.\n- Maximize focal-to-background ratio.\n- Minimize focal width.\n- Minimize sidelobes.\n- Match a target pressure distribution.\n- Minimize phase error.\n- Improve acoustic energy concentration.\n\n**Mechanical**\n- Maximize displacement at a selected location.\n- Minimize vibration at selected locations.\n- Match a desired displacement field.\n- Minimize stress concentration.\n- Minimize unwanted resonances.\n- Shift a structural resonance.\n- Minimize response at a selected frequency.\n- Maximize a desired mode's participation.\n\n**Electromagnetic**\n- Maximize gain in a specified direction.\n- Minimize sidelobe levels.\n- Place radiation nulls.\n- Match a desired radiation pattern.\n- Improve impedance matching.\n- Maximize efficiency.\n- Shape near-field distributions.\n- Optimize beamwidth.\n- Minimize unwanted radiation.\n\nDo not assume that the same numerical metric has the same physical meaning across different domains.\n\nEach objective must document its mathematical definition, units, normalization, and applicable physics models.\n\n## 5. Multiple objectives and trade-offs\n\nSupport multi-objective optimization.\n\nMany engineering problems have competing goals.\n\nExamples:\n\n- Maximize acoustic focal intensity while minimizing sidelobes.\n- Maximize antenna gain while minimizing sidelobes and improving impedance matching.\n- Maximize mechanical response while reducing stress.\n- Improve focal concentration while minimizing actuator power.\n- Minimize weight while maintaining structural performance.\n\nImplement Pareto-based optimization.\n\nSupport displaying Pareto fronts for two or more objectives where appropriate.\n\nAllow users to inspect trade-offs between candidate designs.\n\nProvide objective weighting for scalarized optimization where appropriate, but do not make weighted sums the only multi-objective method.\n\nAllow users to choose priorities after reviewing the trade-off space.\n\nDo not present one candidate as universally optimal when the problem contains meaningful competing objectives.\n\n## 6. Constraint framework\n\nImplement hard and soft constraints.\n\nSupport:\n\n**Geometric constraints**\n- Minimum wall thickness.\n- Maximum dimensions.\n- Minimum spacing.\n- Non-overlapping geometry.\n- Symmetry.\n- Manufacturing clearances.\n- Structural continuity.\n\n**Physical constraints**\n- Material validity ranges.\n- Frequency limits.\n- Amplitude limits.\n- Phase limits.\n- Power limits.\n- Stress limits.\n- Temperature limits.\n- Field-strength limits.\n\n**Manufacturing constraints**\n- Minimum feature size.\n- Available material.\n- Fabrication method.\n- Tool access.\n- Layer or print direction where relevant.\n- Machining or assembly limitations.\n\n**Computational constraints**\n- Maximum simulation time.\n- Memory budget.\n- Mesh limits.\n- Solver availability.\n- Accuracy requirements.\n\nSupport penalty functions and explicit feasibility checks.\n\nHard constraints must not be silently violated.\n\nA candidate that fails a hard constraint must be marked infeasible.\n\nShow which constraints failed and by how much.\n\n## 7. Optimization algorithms\n\nBuild a modular algorithm framework.\n\nInvestigate and implement appropriate methods.\n\n**Gradient-based methods**\n- Gradient descent.\n- L-BFGS.\n- Sequential quadratic programming where suitable.\n- Adjoint-based optimization where supported.\n\n**Derivative-free methods**\n- Nelder-Mead.\n- Powell.\n- CMA-ES.\n- Differential evolution.\n- Bayesian optimization.\n\n**Population-based methods**\n- Genetic algorithms.\n- NSGA-II.\n- Other suitable Pareto optimizers.\n\n**Sampling and exploration**\n- Grid search.\n- Random sampling.\n- Latin hypercube sampling.\n- Design of experiments.\n- Parameter sweeps.\n\nDo not implement every algorithm unnecessarily.\n\nPrioritize methods that are robust and useful for expensive engineering simulations.\n\nAllow algorithms to be selected based on:\n\n- Number of variables.\n- Continuous versus discrete variables.\n- Objective smoothness.\n- Simulation cost.\n- Availability of gradients.\n- Number of objectives.\n- Constraint complexity.\n\nUse established libraries where appropriate.\n\nInvestigate dependencies, licensing, and platform compatibility before adoption.\n\nDo not tie the optimization framework to a single third-party library.\n\n## 8. Gradient and sensitivity infrastructure\n\nPrepare for gradient-based optimization.\n\nSupport numerical finite-difference gradients initially where appropriate.\n\nDesign interfaces for future:\n\n- Automatic differentiation.\n- Adjoint methods.\n- Solver-specific gradients.\n- Sensitivity equations.\n\nImplement sensitivity analysis.\n\nDetermine how changes in design parameters affect objective functions.\n\nProvide:\n\n- Parameter sensitivity rankings.\n- Local derivative estimates.\n- Response curves.\n- Parameter correlation.\n- Sensitivity heatmaps where meaningful.\n\nIdentify variables that have negligible effect on the objective.\n\nWarn when numerical gradients are unreliable because of discontinuities, solver noise, or mesh changes.\n\nDo not claim exact gradients when using finite-difference approximations.\n\n## 9. Inverse design of source configurations\n\nImplement source-focused inverse design.\n\nThis is an essential capability for Resonant.\n\nAllow users to specify a target wave field and solve for source configurations.\n\nSupport optimization of:\n\n- Source positions.\n- Source amplitudes.\n- Source phases.\n- Source delays.\n- Source orientations.\n- Source frequencies where supported.\n- Element activation.\n- Array geometry.\n\nTarget definitions should support:\n\n- Single points.\n- Multiple points.\n- Lines.\n- Planes.\n- Surfaces.\n- Three-dimensional volumes.\n- Spatial amplitude distributions.\n- Spatial phase distributions.\n- Suppression regions.\n\nSupport complex-valued target fields where the physics domain requires them.\n\nImplement linear and regularized least-squares methods where applicable.\n\nFor example:\n\n\\[\nAw\\approx b\n\\]\n\nwhere:\n\n- \\(A\\) represents the relevant source-to-target response.\n- \\(w\\) represents the source excitation weights.\n- \\(b\\) represents the desired field.\n\nSupport:\n\n- Tikhonov regularization.\n- Weight bounds.\n- Power penalties.\n- Sparse excitation where appropriate.\n- Minimum-norm solutions.\n\nReport target error, residual error, feasibility, and limitations.\n\nDistinguish exact mathematical solutions from approximate engineering solutions.\n\n## 10. Geometry optimization\n\nImplement parametric geometry optimization.\n\nAllow optimization of geometry objects already supported by the scene and geometry systems.\n\nSupport:\n\n- Reflectors.\n- Lenses.\n- Waveguides.\n- Cavities.\n- Antennas.\n- Antenna arrays.\n- Structural components.\n- Plates.\n- Membranes.\n- Mechanical resonators.\n- Engineered periodic structures.\n\nGeometry parameters must retain their parametric relationships.\n\nExamples:\n\n**Parabolic reflector**\n- Focal length.\n- Aperture diameter.\n- Depth.\n- Rim geometry.\n- Thickness.\n\n**Acoustic lens**\n- Surface curvature.\n- Thickness.\n- Material.\n- Profile.\n- Aperture.\n\n**Antenna**\n- Element length.\n- Element spacing.\n- Feed position.\n- Substrate dimensions.\n- Conductor geometry.\n\n**Mechanical resonator**\n- Dimensions.\n- Thickness.\n- Material.\n- Support position.\n- Resonant geometry.\n\nAfter each candidate geometry change:\n\n1. Regenerate the geometry.\n2. Validate geometric integrity.\n3. Recalculate or update the mesh.\n4. Run the selected solver.\n5. Evaluate objectives and constraints.\n6. Store results.\n\nDo not reuse stale simulation results after a geometry change.\n\nUse caching only when the full dependency state is known to be identical.\n\n## 11. Topology optimization\n\nEstablish an architecture for topology optimization.\n\nTopology optimization should allow Resonant to explore the distribution of material or geometry within a defined design region.\n\nPotential applications:\n\n- Acoustic metamaterials.\n- Phononic structures.\n- Electromagnetic metamaterials.\n- Structural vibration control.\n- Mechanical resonators.\n- Waveguide structures.\n- Acoustic scattering and diffraction structures.\n\nSupport design-region definitions and material-selection rules.\n\nInvestigate established approaches such as:\n\n- SIMP.\n- Level-set methods.\n- Density-based optimization.\n- Evolutionary structural optimization.\n- Shape optimization.\n\nDo not attempt to implement every topology method in the initial phase.\n\nPrioritize a tractable proof of concept using an appropriate solver and a well-defined benchmark.\n\nTopology optimization must account for:\n\n- Mesh dependence.\n- Minimum feature size.\n- Filtering.\n- Numerical stability.\n- Manufacturing constraints.\n- Material interpolation.\n- Physical validity.\n\nDo not present an unmanufacturable numerical material distribution as a finished physical design.\n\nProvide geometry cleanup and export preparation.\n\n## 12. Shape-based passive focusing optimization\n\nThis capability is especially important.\n\nResonant must be able to optimize physical shapes that manipulate waves through geometry and material behavior.\n\nSupport optimization of:\n\n- Parabolic reflectors.\n- Elliptical reflectors.\n- Spherical reflectors.\n- Acoustic lenses.\n- Electromagnetic reflectors.\n- Waveguides.\n- Resonant cavities.\n- Diffraction structures.\n- Phononic structures.\n- Metamaterial-inspired structures.\n- Arbitrary parametric surfaces.\n\nAllow users to specify:\n\n- Desired focal location.\n- Desired focal region.\n- Desired focal width.\n- Desired field strength.\n- Desired field distribution.\n- Frequency range.\n- Material constraints.\n- Physical dimensions.\n- Manufacturing limitations.\n\nThe optimization engine must evaluate actual geometry using an appropriate physical model.\n\nDo not assume that a shape labeled parabolic, elliptical, or spherical automatically produces the desired focus under all physical conditions.\n\nAccount for wavelength, source location, aperture, material behavior, and the solver's assumptions.\n\nSupport passive, active, and hybrid optimization.\n\nFor hybrid designs, allow optimization of both geometry and source excitation.\n\n## 13. Material optimization\n\nAllow material properties to participate in optimization.\n\nSupport:\n\n- Material selection.\n- Material parameter sweeps.\n- Layer thickness.\n- Layer ordering.\n- Composite construction.\n- Frequency-dependent properties where supported.\n\nExamples:\n\n- Optimize acoustic lens material.\n- Optimize mechanical damping layers.\n- Optimize electromagnetic dielectric substrate.\n- Optimize multilayer reflection and transmission behavior.\n- Explore metamaterial unit-cell parameters.\n\nRespect material validity ranges and real-world availability.\n\nDistinguish selecting an existing material from inventing a hypothetical material.\n\nHypothetical material properties must be clearly labeled and must not be mistaken for commercially available materials.\n\n## 14. Multi-fidelity optimization\n\nIntroduce multi-fidelity optimization.\n\nEngineering simulations can be expensive.\n\nSupport a workflow in which inexpensive models screen candidate designs before expensive numerical solvers evaluate the most promising candidates.\n\nPossible model levels:\n\n**Level 1 \u2014 Analytical**\n- Closed-form approximations.\n- Idealized source models.\n- Basic array factors.\n\n**Level 2 \u2014 Reduced numerical**\n- Simplified geometry.\n- Coarser meshes.\n- Reduced-order models.\n- Approximate solvers.\n\n**Level 3 \u2014 Higher-fidelity numerical**\n- Refined meshes.\n- More complete material models.\n- Full-wave simulation.\n- Detailed boundary conditions.\n\n**Level 4 \u2014 Experimental**\n- Calibrated measurement.\n- Physical validation.\n- Measured performance.\n\nAllow users to define which model levels are available.\n\nEvery candidate must record which model evaluated it.\n\nDo not combine results from incompatible models without documenting the differences.\n\nA design optimized using a simplified model must be re-evaluated with an appropriate higher-fidelity solver before being treated as validated.\n\n## 15. Surrogate models and response surfaces\n\nPrepare for surrogate modeling.\n\nSupport:\n\n- Response surfaces.\n- Polynomial approximations.\n- Gaussian-process models.\n- Radial-basis approximations.\n- Other suitable regression models.\n\nUse surrogate models to reduce the number of expensive simulation runs.\n\nTrack:\n\n- Training data.\n- Input variables.\n- Output objectives.\n- Prediction uncertainty.\n- Training error.\n- Validation error.\n- Model version.\n\nDo not treat a surrogate prediction as a physical simulation result.\n\nSupport selecting promising candidates for real solver evaluation.\n\nWhere appropriate, use active learning to identify the next most informative simulation.\n\n## 16. Robust optimization and uncertainty\n\nEngineering designs must work under realistic variation.\n\nIntroduce robust optimization.\n\nSupport uncertain parameters such as:\n\n- Material properties.\n- Manufacturing tolerances.\n- Source positioning.\n- Emitter phase errors.\n- Amplitude mismatch.\n- Timing errors.\n- Environmental temperature.\n- Mechanical support conditions.\n- Antenna element variation.\n\nAllow users to define parameter distributions or tolerance ranges where justified.\n\nEvaluate candidate designs under multiple sampled conditions.\n\nSupport objectives such as:\n\n- Expected performance.\n- Worst-case performance.\n- Performance variance.\n- Probability of meeting constraints.\n\nDo not assume arbitrary probability distributions without user input or defensible source data.\n\nDistinguish nominal optimization from robust optimization.\n\n## 17. Automated design-space exploration\n\nImplement a design exploration interface.\n\nAllow users to define parameter ranges and explore their effects.\n\nSupport:\n\n- One-variable sweeps.\n- Multi-variable sweeps.\n- Parameter grids.\n- Random sampling.\n- Design of experiments.\n- Candidate filtering.\n- Candidate ranking.\n- Pareto visualization.\n\nProvide plots and tables that allow users to understand how parameters affect the result.\n\nSupport selecting a candidate and promoting it into the main project scene.\n\nDo not overwrite the original design during exploration.\n\n## 18. Optimization job management\n\nOptimization runs may require hundreds or thousands of simulations.\n\nImplement a dedicated optimization job manager.\n\nSupport:\n\n- Background execution.\n- Parallel candidate evaluation.\n- CPU resource limits.\n- Memory limits.\n- Cancellation.\n- Checkpointing.\n- Restart.\n- Progress reporting.\n- Failure recovery.\n- Candidate caching.\n- Run history.\n\nAllow a user to inspect completed candidates while an optimization is still running.\n\nDo not allow one optimization job to monopolize the entire application.\n\nRespect solver concurrency limitations.\n\nAvoid running multiple incompatible jobs against shared mutable scene state.\n\nEach candidate must operate on an immutable or independently reconstructed design snapshot.\n\n## 19. Candidate management and comparison\n\nImplement a candidate-design browser.\n\nEach candidate should include:\n\n- Candidate ID.\n- Parent design.\n- Parameter values.\n- Geometry reference.\n- Material configuration.\n- Solver configuration.\n- Objective values.\n- Constraint results.\n- Simulation result references.\n- Execution status.\n- Model fidelity.\n- Uncertainty metadata.\n\nSupport:\n\n- Side-by-side comparison.\n- Objective comparison.\n- Constraint comparison.\n- Geometry comparison.\n- Field visualization comparison.\n- Performance ranking.\n- Pareto-front exploration.\n\nAllow users to select a candidate and promote it to the main scene as a new design revision.\n\nNever silently replace the original project geometry.\n\nMaintain candidate lineage and optimization history.\n\n## 20. Domain-specific optimization adapters\n\nImplement optimization adapters for each physics domain.\n\n### Acoustic adapter\n\nSupport optimization of:\n\n- Emitter positions.\n- Array spacing.\n- Amplitude.\n- Phase.\n- Delay.\n- Frequency where supported.\n- Reflector geometry.\n- Lens geometry.\n- Material properties.\n- Waveguide geometry.\n- Target-field distributions.\n\nInitial demonstrations:\n\n1. Optimize a linear array to focus at a specified point.\n2. Optimize source phases for multiple focal points.\n3. Optimize a reflector profile for a specified focal region.\n4. Reduce sidelobes around a target focus.\n5. Compare active and passive focusing.\n\n### Mechanical adapter\n\nSupport optimization of:\n\n- Structural dimensions.\n- Material selection.\n- Damping.\n- Actuator locations.\n- Actuator excitation.\n- Support positions.\n- Resonator geometry.\n- Plate and membrane parameters.\n\nInitial demonstrations:\n\n1. Tune a resonant structure to a target frequency.\n2. Minimize vibration at a selected point.\n3. Optimize an actuator configuration for a desired displacement field.\n4. Reduce stress concentration subject to response constraints.\n5. Compare alternative damping configurations.\n\n### Electromagnetic adapter\n\nSupport optimization of:\n\n- Antenna dimensions.\n- Array element spacing.\n- Array excitation.\n- Phase and amplitude.\n- Feed positions.\n- Reflector geometry.\n- Substrate properties.\n- Waveguide geometry.\n- Radiation patterns.\n- Impedance matching.\n\nInitial demonstrations:\n\n1. Optimize an array for a specified steering angle.\n2. Reduce sidelobes.\n3. Place directional radiation nulls.\n4. Optimize a dipole or patch antenna parameter.\n5. Compare array-factor and higher-fidelity results.\n\nEach adapter must clearly expose its actual capabilities and limitations.\n\n## 21. Python integration\n\nPrepare the optimization framework for Python-based scientific workflows.\n\nUse the existing Python integration architecture.\n\nExpose appropriate APIs for:\n\n- Defining optimization problems.\n- Reading design parameters.\n- Setting bounds.\n- Defining objectives.\n- Running parameter sweeps.\n- Accessing simulation results.\n- Exporting candidates.\n- Plotting results.\n\nUse NumPy and SciPy where appropriate.\n\nInvestigate suitable optimization packages.\n\nDo not require Python for the basic optimization framework to function.\n\nKeep the C++ core independently usable.\n\nIf Python-based optimization runs are isolated in a worker process, ensure that project and simulation data are transferred through explicit, versioned interfaces.\n\n## 22. Geometry and manufacturing export\n\nAllow selected optimized geometry to be promoted into the main scene.\n\nSupport export through existing geometry and CAD infrastructure.\n\nPrepare for:\n\n- STEP export.\n- STL export.\n- OBJ export.\n- Mesh export.\n- Parametric design metadata.\n- Manufacturing constraints and annotations.\n\nFor 3D-printable designs, support checks for:\n\n- Minimum wall thickness.\n- Minimum feature size.\n- Overhang constraints where applicable.\n- Closed geometry.\n- Mesh integrity.\n- Manufacturing volume.\n\nDo not imply that simulation-ready geometry is automatically manufacturing-ready.\n\nPreserve the original optimized parameter values and design lineage.\n\n## 23. Optimization UI\n\nIntroduce an **Optimization Studio** workspace.\n\nIt should contain:\n\n- Problem definition.\n- Design-variable editor.\n- Objective editor.\n- Constraint editor.\n- Algorithm selection.\n- Solver fidelity selection.\n- Resource limits.\n- Optimization controls.\n- Live progress.\n- Candidate browser.\n- Pareto visualization.\n- Sensitivity analysis.\n- Comparison tools.\n- Optimization history.\n\nAllow users to configure a problem visually.\n\nKeep advanced controls available without overwhelming basic workflows.\n\nProvide useful templates for common acoustic, mechanical, and electromagnetic optimization tasks.\n\nUse clear terminology.\n\nShow the selected physics model and solver fidelity prominently.\n\n## 24. Example optimization projects\n\nCreate reproducible examples.\n\n**Example A \u2014 Acoustic focal array**\n- Linear array.\n- Target point.\n- Optimized phase and amplitude.\n- Comparison with uniform excitation.\n\n**Example B \u2014 Acoustic reflector**\n- Parametric reflector.\n- Target focal region.\n- Geometry optimization.\n- Candidate comparison.\n\n**Example C \u2014 Mechanical vibration suppression**\n- Structural model.\n- Selected response points.\n- Actuator variables.\n- Optimization of vibration suppression.\n\n**Example D \u2014 Mechanical resonator**\n- Parametric geometry.\n- Target resonant frequency.\n- Material and dimension constraints.\n- Candidate comparison.\n\n**Example E \u2014 Electromagnetic beam steering**\n- Planar antenna array.\n- Target direction.\n- Optimized phase and amplitude.\n- Radiation-pattern comparison.\n\n**Example F \u2014 Sidelobe reduction**\n- Antenna array.\n- Multiple objective functions.\n- Pareto comparison between gain and sidelobe levels.\n\n**Example G \u2014 Robust design**\n- A selected acoustic, mechanical, or electromagnetic configuration.\n- Defined tolerances.\n- Multiple perturbed simulations.\n- Nominal versus robust performance.\n\nEvery example must use actual implemented optimization and physics calculations.\n\n## 25. Testing and validation\n\nImplement tests for:\n\n- Design-variable bounds.\n- Constraint evaluation.\n- Objective evaluation.\n- Optimization convergence.\n- Candidate reproducibility.\n- Multi-objective behavior.\n- Candidate caching.\n- Job cancellation.\n- Checkpoint and restart.\n- Geometry regeneration.\n- Invalid geometry detection.\n- Domain adapter correctness.\n- Result provenance.\n\nValidate optimization results against known analytical problems.\n\nFor source optimization, compare against known linear least-squares solutions where applicable.\n\nFor geometry optimization, compare simple cases against known analytical geometry or independently computed results.\n\nFor robust optimization, test with known parameter distributions.\n\nEnsure that optimization does not mutate the original scene or corrupt saved projects.\n\n## 26. Documentation\n\nCreate or update:\n\n- OPTIMIZATION_ARCHITECTURE.md\n- INVERSE_DESIGN.md\n- DESIGN_VARIABLES.md\n- OBJECTIVE_FUNCTIONS.md\n- CONSTRAINT_SYSTEM.md\n- OPTIMIZATION_ALGORITHMS.md\n- GEOMETRY_OPTIMIZATION.md\n- TOPOLOGY_OPTIMIZATION.md\n- MULTI_FIDELITY_OPTIMIZATION.md\n- SURROGATE_MODELS.md\n- ROBUST_OPTIMIZATION.md\n- DOMAIN_OPTIMIZATION_ADAPTERS.md\n- OPTIMIZATION_VALIDATION.md\n- IMPLEMENTATION_STATUS.md\n- DECISIONS.md\n\nDocument algorithm assumptions, supported problem types, numerical limitations, convergence criteria, and validation evidence.\n\n## 27. Implementation sequence\n\n**Phase A \u2014 Optimization architecture**\n- Core optimization models.\n- Variables.\n- Objectives.\n- Constraints.\n- Run metadata.\n\n**Phase B \u2014 Basic design exploration**\n- Parameter sweeps.\n- Candidate generation.\n- Candidate storage.\n- Candidate comparison.\n\n**Phase C \u2014 Inverse source design**\n- Linear inverse solutions.\n- Regularization.\n- Source weights.\n- Target-field constraints.\n\n**Phase D \u2014 General optimization algorithms**\n- Derivative-free methods.\n- Gradient-based methods where appropriate.\n- Multi-objective methods.\n\n**Phase E \u2014 Geometry optimization**\n- Parametric geometry.\n- Geometry validation.\n- Mesh regeneration.\n- Solver evaluation.\n\n**Phase F \u2014 Domain adapters**\n- Acoustic.\n- Mechanical.\n- Electromagnetic.\n\n**Phase G \u2014 Multi-fidelity optimization**\n- Analytical screening.\n- Reduced-order models.\n- Higher-fidelity validation.\n\n**Phase H \u2014 Robust optimization**\n- Tolerances.\n- Parameter sampling.\n- Statistical evaluation.\n\n**Phase I \u2014 Advanced design**\n- Topology optimization proof of concept.\n- Surrogate modeling.\n- Sensitivity analysis.\n\n**Phase J \u2014 User interface and reporting**\n- Optimization Studio.\n- Candidate browser.\n- Pareto analysis.\n- Design promotion.\n- Export.\n\n**Phase K \u2014 Validation**\n- Analytical benchmarks.\n- Numerical verification.\n- Domain-specific examples.\n- Regression testing.\n\nImplement this incrementally.\n\nDo not attempt to build a general-purpose topology optimizer for every physics domain before delivering reliable source and geometry optimization.\n\n## 28. Acceptance criteria\n\nThis milestone is complete only when:\n\n1. A physics-independent optimization framework exists.\n2. Design variables and constraints are configurable.\n3. Multiple objective functions are supported.\n4. Parameter sweeps work.\n5. Candidate designs are independently stored.\n6. At least one derivative-free optimization method works.\n7. At least one appropriate gradient-based method works where supported.\n8. Inverse source design works for a supported physics model.\n9. Geometry optimization works for at least one real geometry type.\n10. Candidates are evaluated using actual physics calculations.\n11. Optimization results retain solver and model provenance.\n12. Multi-objective comparison is available.\n13. Optimization jobs run asynchronously.\n14. Cancellation and checkpointing work.\n15. The original project design remains unchanged until the user promotes a candidate.\n16. At least one working optimization example exists for each physics domain.\n17. Simplified models are distinguished from higher-fidelity models.\n18. Candidate designs can be re-evaluated using a more accurate solver.\n19. Automated tests and analytical benchmarks pass.\n20. Documentation explains limitations and supported capabilities.\n\n## 29. Critical development rules\n\n- Optimization must be physics-aware.\n- Do not put domain equations into the generic optimization core.\n- Never silently violate hard constraints.\n- Do not treat an optimization result as proof of physical feasibility.\n- Do not reuse stale simulation results after design changes.\n- Preserve original project designs.\n- Preserve candidate history and lineage.\n- Record the exact model used to evaluate every candidate.\n- Distinguish surrogate predictions from real simulations.\n- Distinguish nominal optimization from robust optimization.\n- Do not invent material properties.\n- Respect manufacturing constraints.\n- Validate high-fidelity candidates before declaring them successful.\n- Keep the optimization framework independent of a single algorithm library.\n- Maintain reproducibility.\n\n**The goal is to make Resonant an automated wave-engineering design environment: users describe the physical behavior they want, define the design freedom and constraints, and Resonant searches, simulates, compares, and validates candidate solutions across acoustic, mechanical, and electromagnetic systems.**",
+  "file": "requests/inbox/2026-11-26-prompt-13-resonant-advanced-op-req-chat-20261126-009.md",
+  "attachments": [],
+  "context": "Ninth ticket, submitted by the user in chat while REQ-CHAT-20261126-002 was being processed, with the instruction to process it in order (after REQ-CHAT-20261126-008). Unified optimization framework across the acoustic (003-005), mechanical (006) and electromagnetic (007) domains, building on the experiment framework (008). Standing operator instructions for all tickets: keep qmake support in addition to CMake; Qt user interfaces use .ui files.",
+  "text_sha256": "ba274fb623d26e415bf9457b3580231fbfd2954c105115837675fef4afad49fd",
+  "classification": {
+    "proposed_type": "FEATURE",
+    "proposed_source": "override",
+    "normalized_type": "FEATURE",
+    "heuristic_type": "PERFORMANCE",
+    "final_type": "FEATURE",
+    "confidence": "high",
+    "validation": "PASS",
+    "classifier_reason": "override FEATURE accepted (text alone suggests PERFORMANCE: performance/resource problem in the request statement: OPTIMIZATION, Optimization, optimization)",
+    "correction_reason": null,
+    "normalization_note": null,
+    "evidence": [
+      {
+        "category": "PERFORMANCE",
+        "where": "head",
+        "phrase": "OPTIMIZATION",
+        "strength": "strong",
+        "note": "",
+        "sentence": "RESONANT: ADVANCED OPTIMIZATION, INVERSE DESIGN, GEOMETRY OPTIMIZATION AND AUTOMATED ENGINEERING"
+      },
+      {
+        "category": "PERFORMANCE",
+        "where": "head",
+        "phrase": "OPTIMIZATION",
+        "strength": "strong",
+        "note": "",
+        "sentence": "RESONANT: ADVANCED OPTIMIZATION, INVERSE DESIGN, GEOMETRY OPTIMIZATION AND AUTOMATED ENGINEERING"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "milestone",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This milestone introduces a unified optimization and inverse-design framework across all supported physics domains:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "introduces",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This milestone introduces a unified optimization and inverse-design framework across all supported physics domains:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "framework",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This milestone introduces a unified optimization and inverse-design framework across all supported physics domains:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "objective",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The objective is to allow users to specify a desired physical result and have Resonant determine configurations that can achieve it."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "allow",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The objective is to allow users to specify a desired physical result and have Resonant determine configurations that can achieve it."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "feature",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Rather than requiring users to manually adjust every source, emitter, material, geometric feature, or excitation parameter, Resonant should provide tools to explore the design space and identify promi"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "should provide",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Rather than requiring users to manually adjust every source, emitter, material, geometric feature, or excitation parameter, Resonant should provide tools to explore the design space and identify promi"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "must become",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This must become a reusable engineering capability, not a collection of unrelated optimization buttons."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "reusable",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This must become a reusable engineering capability, not a collection of unrelated optimization buttons."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capability",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This must become a reusable engineering capability, not a collection of unrelated optimization buttons."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Build",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Build on the existing physics, geometry, material, simulation, measurement, and experiment architectures."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capabilities",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not replace or weaken existing validated simulation capabilities."
+      },
+      {
+        "category": "PERFORMANCE",
+        "where": "head",
+        "phrase": "optimization",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement a unified optimization framework supporting:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement a unified optimization framework supporting:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "framework",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement a unified optimization framework supporting:"
+      },
+      {
+        "category": "PERFORMANCE",
+        "where": "head",
+        "phrase": "optimization",
+        "strength": "weak",
+        "note": "bullet",
+        "sentence": "Source optimization."
+      },
+      {
+        "category": "PERFORMANCE",
+        "where": "head",
+        "phrase": "optimization",
+        "strength": "weak",
+        "note": "bullet",
+        "sentence": "Array excitation optimization."
+      },
+      {
+        "category": "PERFORMANCE",
+        "where": "head",
+        "phrase": "optimization",
+        "strength": "weak",
+        "note": "bullet",
+        "sentence": "Geometry optimization."
+      },
+      {
+        "category": "PERFORMANCE",
+        "where": "head",
+        "phrase": "optimization",
+        "strength": "weak",
+        "note": "bullet",
+        "sentence": "Material optimization."
+      },
+      {
+        "category": "PERFORMANCE",
+        "where": "head",
+        "phrase": "optimization",
+        "strength": "weak",
+        "note": "bullet",
+        "sentence": "Topology optimization."
+      },
+      {
+        "category": "PERFORMANCE",
+        "where": "head",
+        "phrase": "optimization",
+        "strength": "weak",
+        "note": "bullet",
+        "sentence": "Multi-objective optimization."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "objective",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Multi-objective optimization."
+      },
+      {
+        "category": "PERFORMANCE",
+        "where": "head",
+        "phrase": "optimization",
+        "strength": "weak",
+        "note": "bullet",
+        "sentence": "Constrained optimization."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "Design",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Design-space exploration."
+      },
+      {
+        "category": "PERFORMANCE",
+        "where": "head",
+        "phrase": "optimization",
+        "strength": "weak",
+        "note": "bullet",
+        "sentence": "Uncertainty-aware optimization."
+      },
+      {
+        "category": "PERFORMANCE",
+        "where": "head",
+        "phrase": "Optimization",
+        "strength": "weak",
+        "note": "bullet",
+        "sentence": "Optimization history."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "Design",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Design validation."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "must be able",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Users must be able to define:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "want to",
+        "strength": "strong",
+        "note": "",
+        "sentence": "What they want to achieve."
+      },
+      {
+        "category": "PERFORMANCE",
+        "where": "head",
+        "phrase": "optimization",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The optimization engine should produce a set of candidate designs, not merely one opaque answer."
+      },
+      {
+        "category": "PERFORMANCE",
+        "where": "head",
+        "phrase": "optimization",
+        "strength": "weak",
+        "note": "enumeration",
+        "sentence": "Every result must be traceable to its inputs, solver configuration, objective functions, constraints, and optimization history."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "objective",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Every result must be traceable to its inputs, solver configuration, objective functions, constraints, and optimization history."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Introduce",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Introduce a physics-independent optimization subsystem."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Create core abstractions for:"
+      },
+      {
+        "category": "PERFORMANCE",
+        "where": "body",
+        "phrase": "optimization",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The optimization framework must not contain acoustic, mechanical, or electromagnetic equations directly."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "framework",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The optimization framework must not contain acoustic, mechanical, or electromagnetic equations directly."
+      },
+      {
+        "category": "PERFORMANCE",
+        "where": "body",
+        "phrase": "optimization",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Each physics domain must expose supported optimization capabilities through explicit interfaces."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "must expose",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Each physics domain must expose supported optimization capabilities through explicit interfaces."
+      }
+    ],
+    "scores": {
+      "FEATURE": {
+        "head": 8,
+        "body": 160
+      },
+      "BUG": {
+        "head": 0,
+        "body": 13
+      },
+      "CRASH": {
+        "head": 0,
+        "body": 0
+      },
+      "REGRESSION": {
+        "head": 0,
+        "body": 0
+      },
+      "PERFORMANCE": {
+        "head": 15,
+        "body": 65
+      },
+      "REFACTOR": {
+        "head": 0,
+        "body": 2
+      },
+      "BUILD": {
+        "head": 0,
+        "body": 0
+      },
+      "DOCUMENTATION": {
+        "head": 0,
+        "body": 3
+      },
+      "INVESTIGATION": {
+        "head": 3,
+        "body": 36
+      },
+      "PROCESS-CHANGE": {
+        "head": 0,
+        "body": 0
+      }
+    },
+    "evidence_total": 305,
+    "validator": "scripts/request_classification.py"
+  },
+  "links": {
+    "work": [
+      "WORK-000012"
+    ]
+  },
+  "commits": [],
+  "resolution": {
+    "from": "processing",
+    "to": "completed",
+    "at": "2026-11-27T17:19:02.238983+00:00",
+    "by": "agent-dev-20261126151713-76f632",
+    "gates": [
+      {
+        "work": "WORK-000012",
+        "at": "2026-11-27T17:18:55.625943+00:00",
+        "verdict": "PASS",
+        "request_fingerprint": "dafc0103dd9f17d909421b04c3dd1c50675df6889b5bdee21fd15c33a7e22515",
+        "test_runs": [
+          "20261127T121503-2819155"
+        ]
+      }
+    ]
+  }
+}

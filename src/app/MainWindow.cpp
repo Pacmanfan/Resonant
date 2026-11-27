@@ -16,6 +16,8 @@
 #include "EmPanel.h"
 #include "ExperimentsController.h"
 #include "ExperimentsPanel.h"
+#include "OptimizationController.h"
+#include "OptimizationPanel.h"
 #include "MechanicsController.h"
 #include "MechanicsMarkers.h"
 #include "MechanicsPanel.h"
@@ -71,6 +73,7 @@ MainWindow::MainWindow(QWidget* parent)
     ui_->menuPanels->addAction(ui_->mechanicsDock->toggleViewAction());
     ui_->menuPanels->addAction(ui_->emDock->toggleViewAction());
     ui_->menuPanels->addAction(ui_->experimentsDock->toggleViewAction());
+    ui_->menuPanels->addAction(ui_->optimizationDock->toggleViewAction());
     ui_->menuPanels->addSeparator();
     ui_->menuPanels->addAction(ui_->fileToolBar->toggleViewAction());
     ui_->menuPanels->addAction(ui_->geometryToolBar->toggleViewAction());
@@ -113,6 +116,7 @@ MainWindow::MainWindow(QWidget* parent)
     connectMechanics();
     connectElectromagnetics();
     connectExperiments();
+    connectOptimization();
 
     unsavedChangesPrompt = [this] {
         return QMessageBox::warning(this, QStringLiteral("Unsaved changes"),
@@ -134,6 +138,7 @@ MainWindow::MainWindow(QWidget* parent)
     tabifyDockWidget(ui_->solverDock, ui_->mechanicsDock);
     tabifyDockWidget(ui_->mechanicsDock, ui_->emDock);
     tabifyDockWidget(ui_->emDock, ui_->experimentsDock);
+    tabifyDockWidget(ui_->experimentsDock, ui_->optimizationDock);
     ui_->propertiesDock->raise();
     resizeDocks({ui_->sceneDock, ui_->propertiesDock}, {280, 380}, Qt::Horizontal);
     resizeDocks({ui_->analysisDock}, {220}, Qt::Vertical);
@@ -521,6 +526,25 @@ void MainWindow::connectExperiments()
     connect(ui_->experimentsPanel, &ExperimentsPanel::selectedExperimentChanged, this, updateMarkers);
     connect(experiments_, &ExperimentsController::runFinished, this, [this](const QString& message) {
         statusBar()->showMessage(tr("Experiment: %1").arg(message), 8000);
+    });
+}
+
+OptimizationPanel& MainWindow::optimizationPanel()
+{
+    return *ui_->optimizationPanel;
+}
+
+void MainWindow::connectOptimization()
+{
+    optimization_ = new OptimizationController(controller_, this);
+    ui_->optimizationPanel->setController(optimization_);
+    connect(ui_->actionShowOptimization, &QAction::triggered, this, [this] {
+        ui_->optimizationDock->show();
+        ui_->optimizationDock->raise();
+    });
+    connect(ui_->actionStopOptimization, &QAction::triggered, this, [this] { optimization_->stop(); });
+    connect(optimization_, &OptimizationController::runFinished, this, [this](const QString& message) {
+        statusBar()->showMessage(tr("Optimization: %1").arg(message), 8000);
     });
 }
 

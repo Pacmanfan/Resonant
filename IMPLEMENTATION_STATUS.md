@@ -10,7 +10,7 @@ states:
 * **Deferred** — deliberately left to a later milestone, with the reason.
 
 Milestones and the requests that deliver them are in
-`docs/architecture/roadmap.md`. Last updated for REQ-CHAT-20261126-006.
+`docs/architecture/roadmap.md`. Last updated for REQ-CHAT-20261126-009.
 
 ## Application foundation (V0.1) — `docs/requirements/application_foundation.md`
 
@@ -264,3 +264,28 @@ Milestones and the requests that deliver them are in
 | Level triggering; motorized positioners other than the simulated one; SCPI / VISA, UHD, libiio, PortAudio drivers | Missing | the abstraction admits them (ADR-000213) |
 | Correlated uncertainty, Monte Carlo propagation | Missing | |
 
+## Optimization, inverse design and automated engineering — `docs/requirements/optimization.md`, `docs/optimization/`
+
+| Capability | State | Notes |
+|---|---|---|
+| Domain-independent framework (problems, variables, objectives, constraints, runs, candidates); adapters registered in `coupling`; layering rule | Tested | `tools/check_layering.py` |
+| Design variables: continuous, stepped, integer, categorical; locks, activation, groups; derived variables by expression | Tested | expressions have no units |
+| Objectives (minimize, maximize, target, thresholds) with normalization; documented quantities of three adapters | Tested | |
+| Hard and soft constraints on quantities and expressions; violations reported; feasibility | Tested | |
+| Sweeps, random and Latin-hypercube sampling, Nelder-Mead, L-BFGS-B (finite differences), differential evolution, NSGA-II, Bayesian optimization; recommendation | Tested | SQP, CMA-ES, Powell: Missing |
+| Pareto fronts, priorities after the run, no single best for several objectives | Tested | |
+| Finite-difference gradients with reliability checks; local sensitivities, rankings, heat map, response curves, correlations | Tested | exact / adjoint gradients: Missing |
+| Linear inverse source design: Tikhonov, power penalty, minimum norm, bounded weights, sparse excitation; classification | Tested | acoustic, mechanical, electromagnetic response matrices |
+| Geometry optimization with regeneration, joint validation of parameters, invalid designs never evaluated | Tested | |
+| Passive focusing judged by the Kirchhoff and full-wave models | Tested | lenses and waveguides only in the full-wave model |
+| Material selection from the library; hypothetical property scalings labelled | Tested | |
+| Multi-fidelity: model levels, recorded per candidate, re-evaluation as linked candidates, validation status | Tested | experimental level not an optimization model yet |
+| Surrogates (quadratic, RBF, Gaussian process) with training and leave-one-out errors; active learning | Tested | isotropic length scale |
+| Robust optimization: uniform / normal uncertain parameters with required sources, common Latin-hypercube samples, mean / mean + k sigma / worst case, constraint probability | Tested | independent parameters only |
+| Jobs: background runs, live candidates, parallel evaluations with a limit, time and memory limits, cancellation, checkpoints, restart by replay, exact caching | Tested | one optimization job at a time in the Studio |
+| Candidate comparison; promotion as one undoable revision with lineage; candidate and run export (JSON, CSV, STL, OBJ with mesh checks) | Tested | STEP: Missing |
+| Topology optimization: 2D SIMP compliance proof of concept, filter, cleanup, extrusion | Tested | not acoustic or electromagnetic; not a finished design |
+| Optimization Studio dock, Optimization menu, `--run-optimization` | Tested | |
+| Seven example projects (A-G) run by the tests | Tested | `examples/optimization/` |
+| Python workflows | Partial | versioned JSON / CSV exchange and a reader script; bindings in REQ-CHAT-20261126-010 |
+| Mutual coupling in array optimization; Yee full-wave evaluation of arrays | Missing | both array models assume isolated elements |
