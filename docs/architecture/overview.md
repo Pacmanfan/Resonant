@@ -1,7 +1,7 @@
 # Resonant — Architecture Overview
 
 **Status:** current. Decisions: ADR-000204 (stack, build systems),
-ADR-000205 (layers, domains), ADR-000207 (acoustics), ADR-000208 (manipulators), ADR-000209 (full-wave solver), ADR-000210 (mechanics), ADR-000211 (electromagnetics). Requirements: `docs/requirements/product.md`.
+ADR-000205 (layers, domains), ADR-000207 (acoustics), ADR-000208 (manipulators), ADR-000209 (full-wave solver), ADR-000210 (mechanics), ADR-000211 (electromagnetics), ADR-000212 (compute backends). Requirements: `docs/requirements/product.md`.
 
 This document describes the architecture every milestone builds on. Each
 subsystem gets its own document in this directory when it is implemented;
@@ -41,6 +41,7 @@ A higher layer may use a lower one; never the reverse.
 | `fdtd` | the full-wave acoustic solver: staggered-grid FDTD core, signals, spectra, simulation geometry, setup from a project, results (`docs/advanced_acoustics/`) |
 | `solvers` | declarations of what each solver represents, and the assessment of a problem against them |
 | `dsp` | signals over time and spectra, shared by every domain |
+| `compute` | where numerical work runs: a deterministic thread pool, compute options and capability detection, the CUDA runtime queries, VOLK vector kernels; the solvers' CUDA kernels live beside them (`*Device.cu`) behind plain-data headers (`docs/compute/`) |
 | `mechanics` | the mechanical domain: elastic materials, structural idealization, finite elements, eigensolver, static / modal / harmonic / transient analyses, actuators, sensors, targets, targeting, horns, periodic rods, measured data (`docs/mechanics/`) |
 | `electromagnetics` | the electromagnetic domain: materials, sources, antennas (analytical models and estimates), impedance and matching, patterns, near fields, arrays (array factor, steering, grating lobes, tapers, synthesis), lines, guides and cavities, the Yee FDTD solver and its setup from a project, Touchstone data (`docs/electromagnetics/`) |
 | `geometry/SolidModel` | simulation bodies (an inside test per geometry kind) shared by the acoustic and electromagnetic full-wave setups |

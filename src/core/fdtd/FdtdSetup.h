@@ -50,6 +50,8 @@ struct FdtdSettings {
     int snapshotCount = 40;        // 0 = none
     double harmonicPeriods = 8.0;  // length of the steady-state analysis window (continuous signals)
     size_t memoryLimitBytes = 1024ull * 1024ull * 1024ull;
+    // Where it runs (CPU threads by default; CUDA only when chosen).
+    compute::ComputeOptions compute;
 
     Status validate() const;
     friend bool operator==(const FdtdSettings&, const FdtdSettings&) = default;
@@ -89,6 +91,7 @@ struct FdtdPlan {
     size_t sourceCount = 0, excludedSources = 0;
     size_t probeCount = 0;
     size_t rigidCells = 0, pressureReleaseCells = 0, materialCells = 0;
+    std::string backend;                // where it will run
     std::vector<std::string> objects;   // how each object of the scene is represented
 
     acoustics::GridFrame frame;         // cell centres of the region

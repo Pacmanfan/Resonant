@@ -14,6 +14,13 @@ using namespace resonant::mechanics;
 
 namespace {
 
+PropertyValue valueOf(double v)
+{
+    PropertyValue p;
+    p.value = v;
+    return p;
+}
+
 constexpr double pi = 3.14159265358979323846;
 
 // Steel-like test values (exact numbers, not a material record).
@@ -119,13 +126,13 @@ TEST(MechanicalMaterial, DerivedConstantsFollowFromEAndNu)
 
     // From a material record: what is missing is named.
     Material record(Id("m"), "Half");
-    ASSERT_TRUE(record.setProperty(PhysicsDomain::Mechanical, "density", PropertyValue{1000.0}).ok());
+    ASSERT_TRUE(record.setProperty(PhysicsDomain::Mechanical, "density", valueOf(1000.0)).ok());
     const auto missing = elasticMaterialOf(record);
     ASSERT_FALSE(missing.ok());
     EXPECT_NE(missing.message().find("Young's modulus, Poisson's ratio"), std::string::npos);
-    ASSERT_TRUE(record.setProperty(PhysicsDomain::Mechanical, "youngsModulus", PropertyValue{1e9}).ok());
-    ASSERT_TRUE(record.setProperty(PhysicsDomain::Mechanical, "poissonsRatio", PropertyValue{0.4}).ok());
-    ASSERT_TRUE(record.setProperty(PhysicsDomain::Mechanical, "lossFactor", PropertyValue{0.05}).ok());
+    ASSERT_TRUE(record.setProperty(PhysicsDomain::Mechanical, "youngsModulus", valueOf(1e9)).ok());
+    ASSERT_TRUE(record.setProperty(PhysicsDomain::Mechanical, "poissonsRatio", valueOf(0.4)).ok());
+    ASSERT_TRUE(record.setProperty(PhysicsDomain::Mechanical, "lossFactor", valueOf(0.05)).ok());
     const auto complete = elasticMaterialOf(record);
     ASSERT_TRUE(complete.ok()) << complete.message();
     EXPECT_TRUE(complete.value().lossFactorStated);
@@ -604,8 +611,9 @@ TEST(MechanicalTransient, EnergyIsConservedWithoutDampingAndStepLoadDoublesTheSt
     for (size_t i = 0; i < s.energyTimes.size(); ++i) {
         const double total = s.kinetic[i] + s.strain[i];
         EXPECT_NEAR(total, s.externalWork[i], 1e-9 * std::max(1e-30, s.externalWork.back()));
-        if (s.energyTimes[i] > 2e-3)
+        if (s.energyTimes[i] > 2e-3) {
             EXPECT_NEAR(total, s.kinetic.back() + s.strain.back(), 1e-9 * total);
+        }
     }
 
     // A suddenly applied constant force: peak deflection twice the static one

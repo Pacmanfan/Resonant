@@ -74,7 +74,8 @@ Waveform continuous(double f)
 double peakAbs(const std::vector<double>& x, size_t from = 0, size_t to = SIZE_MAX)
 {
     double best = 0.0;
-    for (size_t i = from; i < std::min(to, x.size()); ++i)
+    const size_t end = std::min(to, x.size());
+    for (size_t i = from; i < end; ++i)
         best = std::max(best, std::abs(x[i]));
     return best;
 }
@@ -83,9 +84,10 @@ double peakAbs(const std::vector<double>& x, size_t from = 0, size_t to = SIZE_M
 double signedPeak(const std::vector<double>& x, size_t from, size_t to)
 {
     double best = 0.0;
-    for (size_t i = from; i < std::min(to, x.size()); ++i)
-        if (std::abs(x[i]) > std::abs(best))
-            best = x[i];
+    const size_t end = std::min(to, x.size());
+    for (auto it = x.begin() + static_cast<std::ptrdiff_t>(std::min(from, end)); it != x.begin() + static_cast<std::ptrdiff_t>(end); ++it)
+        if (std::abs(*it) > std::abs(best))
+            best = *it;
     return best;
 }
 

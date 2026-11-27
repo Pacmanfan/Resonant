@@ -620,9 +620,12 @@ void EmController::rebuildDisplay()
     samples_.reset();
     if (displayed_ >= 0) {
         const EmFieldResult& r = *results_[static_cast<size_t>(displayed_)];
-        auto samples = std::make_shared<std::vector<std::complex<float>>>(r.grid.count());
-        for (size_t i = 0; i < samples->size(); ++i)
-            (*samples)[i] = r.excluded.empty() || !r.excluded[i] ? r.component(component_, i) : std::complex<float>(0.0f, 0.0f);
+        auto samples = std::make_shared<std::vector<std::complex<float>>>();
+        r.componentArray(component_, *samples);
+        if (!r.excluded.empty())
+            for (size_t i = 0; i < samples->size(); ++i)
+                if (r.excluded[i])
+                    (*samples)[i] = {0.0f, 0.0f};
         samples_ = samples;
         const bool real = component_ == FieldComponent::EMagnitude || component_ == FieldComponent::HMagnitude || component_ == FieldComponent::PowerDensity;
         if (real && (quantity_ == Quantity::Phase || quantity_ == Quantity::Instantaneous))

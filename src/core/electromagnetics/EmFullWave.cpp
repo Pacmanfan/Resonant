@@ -57,6 +57,8 @@ Status EmFullWaveSettings::validate() const
     if (!(duration >= 0.0) || absorbingCells < 4 || absorbingCells > 200 || !(harmonicPeriods >= 1.0) || snapshotCount < 0
         || snapshotCount > 2000 || memoryLimitBytes < 1024 * 1024)
         return Status::failure("invalid duration, absorbing layer, analysis window, snapshot count or memory limit");
+    if (Status status = compute.validate(); !status)
+        return status;
     return waveform.validate();
 }
 
@@ -67,7 +69,7 @@ nlohmann::json toJson(const EmFullWaveSettings& s)
         boundary.push_back(std::string(toString(b)));
     return {{"cellsPerWavelength", s.cellsPerWavelength}, {"courantFraction", s.courantFraction}, {"waveform", dsp::toJson(s.waveform)},
             {"duration", s.duration}, {"boundary", boundary}, {"absorbingCells", s.absorbingCells}, {"harmonicPeriods", s.harmonicPeriods},
-            {"snapshotCount", s.snapshotCount}, {"memoryLimitBytes", s.memoryLimitBytes}};
+            {"snapshotCount", s.snapshotCount}, {"memoryLimitBytes", s.memoryLimitBytes}, {"compute", compute::toJson(s.compute)}};
 }
 
 Result<EmFullWaveSettings> emFullWaveSettingsFromJson(const nlohmann::json& v)
@@ -101,6 +103,12 @@ Result<EmFullWaveSettings> emFullWaveSettingsFromJson(const nlohmann::json& v)
         s.harmonicPeriods = v.value("harmonicPeriods", s.harmonicPeriods);
         s.snapshotCount = v.value("snapshotCount", s.snapshotCount);
         s.memoryLimitBytes = v.value("memoryLimitBytes", s.memoryLimitBytes);
+        if (v.contains("compute")) {
+            auto options = compute::computeOptionsFromJson(v["compute"]);
+            if (!options)
+                return Failure::failure(options.message());
+            s.compute = options.value();
+        }
     } catch (const nlohmann::json::exception& e) {
         return Failure::failure(std::string("invalid full-wave settings: ") + e.what());
     }
@@ -126,10 +134,11 @@ void storeEmFullWaveSettings(Project& project, const EmFullWaveSettings& setting
 std::string EmFullWavePlan::summary() const
 {
     return format("%dD Yee grid %d x %d%s cells of %.4g mm at %.6g MHz (%.3g cells per wavelength in the slowest material), %ld steps of "
-                  "%.4g ps (%.4g ns), time step %.3g of the stability limit. Memory %.1f MiB; %.3g cell updates, roughly %.3g s.\nDuration: %s",
+                  "%.4g ps (%.4g ns), time step %.3g of the stability limit. Memory %.1f MiB; %.3g cell updates, roughly %.3g s on one core.\n"
+                  "Runs on: %s.\nDuration: %s",
                   dimensions, nx, ny, dimensions == 3 ? format(" x %d", nz).c_str() : "", cell * 1e3, frequencyHz / 1e6, cellsPerWavelength,
                   steps, dt * 1e12, duration * 1e9, stabilityLimit > 0 ? dt / stabilityLimit : 0.0, stateBytes / 1048576.0, cellUpdates,
-                  estimatedSeconds, durationBasis.c_str());
+                  estimatedSeconds, backend.c_str(), durationBasis.c_str());
 }
 
 EmPrepared prepareFullWave(const Project& project, const DomainBox& domain, const EmFullWaveSettings& settings)
@@ -253,6 +262,7 @@ EmPrepared prepareFullWave(const Project& project, const DomainBox& domain, cons
     spec.dt = plan.dt;
     spec.boundary = settings.boundary;
     spec.pmlCells = settings.absorbingCells;
+    spec.compute = settings.compute;
     plan.grid.origin = domain.corner;
     plan.grid.axisU = domain.axis[0] * plan.cell * plan.nx;
     plan.grid.axisV = domain.axis[1] * plan.cell * plan.ny;
@@ -278,6 +288,11 @@ EmPrepared prepareFullWave(const Project& project, const DomainBox& domain, cons
     const double cells = static_cast<double>(plan.stateBytes) / (27.0 * sizeof(double) + 1.0);
     plan.cellUpdates = cells * static_cast<double>(plan.steps);
     plan.estimatedSeconds = plan.cellUpdates / 1.5e7;
+    plan.backend = settings.compute.backend == compute::ComputeBackend::Cuda
+                       ? "CUDA device " + std::to_string(settings.compute.device) + ", double precision"
+                       : "CPU, double precision, " + std::to_string(compute::resolveThreads(settings.compute.threads)) + " thread(s)";
+    if (Status status = compute::checkBackend(settings.compute, plan.stateBytes); !status)
+        return refuse(status.message() + ". Choose the CPU, or free the device; the backend is never switched automatically.");
     if (plan.stateBytes > settings.memoryLimitBytes)
         return refuse(format("the grid needs %.0f MiB, more than the memory limit of %.0f MiB; reduce the region, the frequency or the "
                              "resolution. The resolution is not lowered automatically.",
@@ -487,7 +502,8 @@ Result<std::shared_ptr<const EmFullWaveResult>> simulateFullWave(const std::stri
                                       {"pecCells", plan.pecCells}, {"materialCells", plan.materialCells}, {"wireEdges", plan.wireEdges}};
     metadata.configuration["objects"] = plan.objects;
     metadata.configuration["warnings"] = plan.warnings;
-    metadata.configuration["backend"] = "CPU, double precision, single thread";
+    metadata.configuration["backend"] = result->output.backend;
+    metadata.configuration["compute"] = compute::toJson(settings.compute);
     result->metadata = metadata;
     if (!result->output.harmonic[0].empty()) {
         auto field = std::make_shared<EmFieldResult>();

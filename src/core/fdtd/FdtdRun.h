@@ -62,6 +62,7 @@ struct RunOutput {
     double peakPressure = 0.0;                      // largest |p| seen in the region at a sampled instant
     double elapsedSeconds = 0.0;
     double cellUpdatesPerSecond = 0.0;
+    std::string backend;  // where it ran, with the precision
 };
 
 struct RunEnd {
@@ -70,8 +71,10 @@ struct RunEnd {
     std::string message;
 };
 
-// Runs the problem. `context` may be null. On Unstable the output holds what
-// was recorded up to the step at which the field stopped being finite.
+// Runs the problem on the backend of problem.grid.compute (the CPU, or CUDA
+// when chosen and usable; never switched silently). `context` may be null.
+// On Unstable the output holds what was recorded up to the step at which the
+// field stopped being finite.
 RunEnd run(const Problem& problem, RunOutput& output, JobContext* context = nullptr);
 
 }  // namespace resonant::fdtd

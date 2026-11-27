@@ -248,3 +248,29 @@ TEST_F(EmUiTest, LineCalculatorGivesTheCoaxialImpedance)
     ASSERT_TRUE(panel().calculateLine());  // 0.45 / 1.47 mm, air: eta0 / (2 pi) ln(b / a) = 70.98 ohm
     EXPECT_TRUE(panel().lineText().contains(QStringLiteral("Z0 = 70.98 ohm"))) << panel().lineText().toStdString();
 }
+
+TEST_F(EmUiTest, ComputeChoiceReachesThePlanAndCudaIsNeverSilentlyReplaced)
+{
+    open("g-full-wave-scattering");
+    panel().selectRegion(Id("ex-eg-region"));
+    auto* threads = child<QSpinBox>(panel(), "threadsSpin");
+    threads->setValue(3);
+    QCoreApplication::processEvents();
+    EXPECT_EQ(em().fullWaveSettings().compute.threads, 3);
+    ASSERT_TRUE(panel().planFullWave());
+    EXPECT_TRUE(panel().planText().contains(QStringLiteral("Runs on: CPU, double precision, 3 thread(s)"))) << panel().planText().toStdString();
+    auto* backend = child<QComboBox>(panel(), "computeCombo");
+    backend->setCurrentIndex(1);
+    emit backend->activated(1);
+    QCoreApplication::processEvents();
+    EXPECT_EQ(em().fullWaveSettings().compute.backend, compute::ComputeBackend::Cuda);
+    const bool allowed = panel().planFullWave();
+    if (allowed)
+        EXPECT_TRUE(panel().planText().contains(QStringLiteral("Runs on: CUDA"))) << panel().planText().toStdString();
+    else
+        EXPECT_TRUE(panel().planText().contains(QStringLiteral("never switched automatically"))) << panel().planText().toStdString();
+    EXPECT_FALSE(threads->isEnabled());
+    doc().undo();  // the choice is an undoable setting
+    QCoreApplication::processEvents();
+    EXPECT_EQ(em().fullWaveSettings().compute.backend, compute::ComputeBackend::Cpu);
+}

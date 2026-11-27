@@ -117,6 +117,9 @@ public:
     std::vector<std::string> assumptions;
     // Complex value for display (magnitudes and power density are real).
     std::complex<float> component(FieldComponent c, size_t index) const;
+    // The same for every sample at once; |E| and |H| through the vector
+    // kernels (VOLK when the build has it).
+    void componentArray(FieldComponent c, std::vector<std::complex<float>>& out) const;
     double largest(FieldComponent c) const;
 };
 

@@ -9,6 +9,12 @@ RESONANT_ROOT = $$PWD
 QMAKE_CXXFLAGS += -isystem $$RESONANT_ROOT/third_party/nlohmann
 CONFIG += link_pkgconfig
 PKGCONFIG += eigen3
+# Eigen is third-party too: its directory as a system directory (GCC then
+# ignores the plain -I that pkg-config adds), as CMake does for imported targets.
+EIGEN_INCLUDES = $$system(pkg-config --cflags-only-I eigen3)
+QMAKE_CXXFLAGS += $$replace(EIGEN_INCLUDES, -I, -isystem )
+
+include($$PWD/acceleration.pri)
 
 # Qt 6.4's moc cannot parse the C++20 syntax in libstdc++ 13 headers
 # (<compare>, <concepts>, <numbers>, ...). moc only needs our own class

@@ -1,5 +1,7 @@
 #include "electromagnetics/ArrayFactor.h"
 
+#include "compute/ThreadPool.h"
+
 #include <Eigen/SVD>
 
 #include <algorithm>
@@ -132,13 +134,21 @@ PatternAnalysis analyzePattern(const ArrayModel& array, double f, double resolut
     const double dt = kPi / (nt - 1), dp = 2.0 * kPi / np;
     std::vector<double> u(static_cast<size_t>(nt) * static_cast<size_t>(np));
     const auto at = [&](int i, int j) -> double& { return u[static_cast<size_t>(i) * static_cast<size_t>(np) + static_cast<size_t>((j % np + np) % np)]; };
+    // The samples in parallel (each by one thread); the sums below in order.
+    compute::ThreadPool pool(compute::resolveThreads(0));
+    pool.run(static_cast<size_t>(nt), [&](size_t begin, size_t end) {
+        for (size_t row = begin; row < end; ++row) {
+            const int i = static_cast<int>(row);
+            for (int j = 0; j < np; ++j)
+                at(i, j) = std::norm(farFieldResponse(array, directionOf(i * dt, j * dp), f));
+        }
+    });
     double total = 0.0, peak = -1.0;
     int pi = 0, pj = 0;
     for (int i = 0; i < nt; ++i) {
         const double theta = i * dt;
         for (int j = 0; j < np; ++j) {
-            const double value = std::norm(farFieldResponse(array, directionOf(theta, j * dp), f));
-            at(i, j) = value;
+            const double value = at(i, j);
             // Midpoint-like weights: sin(theta) dtheta dphi, half cells at the poles.
             const double band = (i == 0 || i == nt - 1) ? (1.0 - std::cos(0.5 * dt)) : std::sin(theta) * dt;
             total += value * band * dp;

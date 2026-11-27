@@ -211,6 +211,9 @@ geometry is the subject of the optimization milestone (REQ-CHAT-20261126-009).
 
 ### RES-EM-024 — Compute backend
 
-A correct CPU reference first: double precision, one thread, the backend
-recorded in every full-wave result. No GPU backend is claimed.
+A correct CPU reference first: double precision, the backend recorded in
+every full-wave result. Threads and an optional CUDA backend are governed
+by `compute.md` (RES-COMPUTE-001..011): threads give the reference's
+numbers; CUDA is used only when chosen, is validated against the
+reference, and the physics does not depend on it.
 *Verification:* metadata checked in `EmUiTest.ExampleG_*`; `docs/electromagnetics/PERFORMANCE_AND_GPU.md`.

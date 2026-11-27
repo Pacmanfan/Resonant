@@ -1,5 +1,7 @@
 #include "AnalysisPanel.h"
 
+#include "compute/Compute.h"
+
 #include "DocumentController.h"
 #include "foundation/Units.h"
 #include "foundation/Version.h"
@@ -150,6 +152,21 @@ void AnalysisPanel::refreshDiagnostics()
 #else
     row(application, QStringLiteral("Build"), QStringLiteral("Debug"));
 #endif
+
+    // What the solvers can run on (ADR-000212).
+    const compute::ComputeCapabilities capabilities = compute::detectCompute();
+    QTreeWidgetItem* computeGroup = group(QStringLiteral("Compute"));
+    row(computeGroup, QStringLiteral("CPU threads for solvers"), QString::number(capabilities.hardwareThreads));
+    row(computeGroup, QStringLiteral("VOLK vector kernels"),
+        capabilities.volkBuilt ? QStringLiteral("%1, kernels for %2").arg(QString::fromStdString(capabilities.volkVersion),
+                                                                          QString::fromStdString(capabilities.volkMachine))
+                               : QStringLiteral("not in this build"));
+    row(computeGroup, QStringLiteral("CUDA"), capabilities.cudaBuilt ? QString::fromStdString(capabilities.cudaRuntime) : QStringLiteral("not in this build"));
+    for (const compute::CudaDeviceInfo& d : capabilities.cudaDevices)
+        row(computeGroup, QStringLiteral("CUDA device %1").arg(d.index),
+            QStringLiteral("%1 (sm_%2%3, %4 GiB): %5")
+                .arg(QString::fromStdString(d.name)).arg(d.major).arg(d.minor).arg(static_cast<double>(d.totalBytes) / 1073741824.0, 0, 'f', 1)
+                .arg(d.usable ? QStringLiteral("usable, %1 MiB free").arg(d.freeBytes >> 20) : QString::fromStdString(d.problem)));
 
     QTreeWidgetItem* graphics = group(QStringLiteral("Graphics"));
     row(graphics, QStringLiteral("Context"), graphics_);

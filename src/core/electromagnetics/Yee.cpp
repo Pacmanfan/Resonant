@@ -117,7 +117,10 @@ Result<std::unique_ptr<YeeSolver>> YeeSolver::create(YeeSpec spec)
 {
     if (Status status = spec.validate(); !status)
         return Result<std::unique_ptr<YeeSolver>>::failure(status.message());
-    return std::unique_ptr<YeeSolver>(new YeeSolver(std::move(spec)));
+    const int threads = compute::resolveThreads(spec.compute.threads);
+    auto solver = std::unique_ptr<YeeSolver>(new YeeSolver(std::move(spec)));
+    solver->pool_ = std::make_unique<compute::ThreadPool>(threads);
+    return solver;
 }
 
 int YeeSolver::wrap(int axis, int index) const
@@ -295,7 +298,10 @@ void YeeSolver::addSource(const YeeSource& s)
 
 void YeeSolver::updateH()
 {
+    // Rows (j, k) are independent within each component: they are split
+    // across the pool's threads and every row is computed exactly as alone.
     const int limits[3] = {px_, py_, pz_};
+    const size_t rows = static_cast<size_t>(py_) * static_cast<size_t>(pz_);
     for (int c = 0; c < 3; ++c) {
         const int a1 = (c + 1) % 3, a2 = (c + 2) % 3;
         auto& part1 = h_[static_cast<size_t>(c)][static_cast<size_t>(a1)];
@@ -303,8 +309,9 @@ void YeeSolver::updateH()
         const auto& eA2 = e_[static_cast<size_t>(a2)];  // E component along a2, differentiated along a1
         const auto& eA1 = e_[static_cast<size_t>(a1)];
         const auto& chb = chb_[static_cast<size_t>(c)];
-        for (int k = 0; k < pz_; ++k)
-            for (int j = 0; j < py_; ++j)
+        pool_->run(rows, [&](size_t begin, size_t end) {
+            for (size_t row = begin; row < end; ++row) {
+                const int j = static_cast<int>(row % static_cast<size_t>(py_)), k = static_cast<int>(row / static_cast<size_t>(py_));
                 for (int i = 0; i < px_; ++i) {
                     const int idx[3] = {i, j, k};
                     // H_c is at half positions along a1 and a2.
@@ -323,11 +330,14 @@ void YeeSolver::updateH()
                     part1[n] = d1 * (d1 * part1[n] - chb[n] * (ea2Up - ea2));
                     part2[n] = d2 * (d2 * part2[n] + chb[n] * (ea1Up - ea1));
                 }
+            }
+        });
     }
 }
 
 void YeeSolver::updateE()
 {
+    const size_t rows = static_cast<size_t>(py_) * static_cast<size_t>(pz_);
     for (int c = 0; c < 3; ++c) {
         const int a1 = (c + 1) % 3, a2 = (c + 2) % 3;
         auto& part1 = e_[static_cast<size_t>(c)][static_cast<size_t>(a1)];
@@ -336,8 +346,9 @@ void YeeSolver::updateE()
         const auto& hA1 = h_[static_cast<size_t>(a1)];
         const auto& ca = ca_[static_cast<size_t>(c)];
         const auto& cb = cb_[static_cast<size_t>(c)];
-        for (int k = 0; k < pz_; ++k)
-            for (int j = 0; j < py_; ++j)
+        pool_->run(rows, [&](size_t begin, size_t end) {
+            for (size_t row = begin; row < end; ++row) {
+                const int j = static_cast<int>(row % static_cast<size_t>(py_)), k = static_cast<int>(row / static_cast<size_t>(py_));
                 for (int i = 0; i < px_; ++i) {
                     const size_t n = at(i, j, k);
                     if (cb[n] == 0.0)
@@ -354,6 +365,8 @@ void YeeSolver::updateE()
                     part1[n] = d1 * (d1 * ca[n] * part1[n] + cb[n] * (ha2 - ha2Down));
                     part2[n] = d2 * (d2 * ca[n] * part2[n] - cb[n] * (ha1 - ha1Down));
                 }
+            }
+        });
     }
 }
 
@@ -373,36 +386,110 @@ void YeeSolver::step()
 
 double YeeSolver::e(int c, int i, int j, int k) const
 {
-    const size_t n = at(i + pad_[0], j + pad_[1], spec_.is2D() ? 0 : k + pad_[2]);
+    const size_t n = paddedNode(i, j, k);
     return e_[static_cast<size_t>(c)][0][n] + e_[static_cast<size_t>(c)][1][n] + e_[static_cast<size_t>(c)][2][n];
 }
 
 double YeeSolver::h(int c, int i, int j, int k) const
 {
-    const size_t n = at(i + pad_[0], j + pad_[1], spec_.is2D() ? 0 : k + pad_[2]);
+    const size_t n = paddedNode(i, j, k);
     return h_[static_cast<size_t>(c)][0][n] + h_[static_cast<size_t>(c)][1][n] + h_[static_cast<size_t>(c)][2][n];
 }
 
 double YeeSolver::energy() const
 {
+    // A partial sum per row, added in row order: the same value for any
+    // number of threads.
     const double volume = spec_.cell * spec_.cell * (spec_.is2D() ? 1.0 : spec_.cell);
-    double sum = 0.0;
-    for (size_t n = 0; n < e_[0][0].size(); ++n)
-        for (int c = 0; c < 3; ++c) {
-            const double cb = cb_[static_cast<size_t>(c)][n];
-            if (cb > 0.0) {
-                const double eps = spec_.dt / (cb * spec_.cell);  // ignores the loss factor: an estimate in lossy cells
-                const double value = e_[static_cast<size_t>(c)][0][n] + e_[static_cast<size_t>(c)][1][n] + e_[static_cast<size_t>(c)][2][n];
-                sum += 0.5 * eps * value * value;
-            }
-            const double chb = chb_[static_cast<size_t>(c)][n];
-            if (chb > 0.0) {
-                const double mu = spec_.dt / (chb * spec_.cell);
-                const double value = h_[static_cast<size_t>(c)][0][n] + h_[static_cast<size_t>(c)][1][n] + h_[static_cast<size_t>(c)][2][n];
-                sum += 0.5 * mu * value * value;
-            }
+    const size_t rows = static_cast<size_t>(py_) * static_cast<size_t>(pz_);
+    std::vector<double> partial(rows, 0.0);
+    pool_->run(rows, [&](size_t begin, size_t end) {
+        for (size_t row = begin; row < end; ++row) {
+            double sum = 0.0;
+            const size_t first = row * static_cast<size_t>(px_);
+            for (size_t n = first; n < first + static_cast<size_t>(px_); ++n)
+                for (int c = 0; c < 3; ++c) {
+                    const double cb = cb_[static_cast<size_t>(c)][n];
+                    if (cb > 0.0) {
+                        const double eps = spec_.dt / (cb * spec_.cell);  // ignores the loss factor: an estimate in lossy cells
+                        const double value = e_[static_cast<size_t>(c)][0][n] + e_[static_cast<size_t>(c)][1][n] + e_[static_cast<size_t>(c)][2][n];
+                        sum += 0.5 * eps * value * value;
+                    }
+                    const double chb = chb_[static_cast<size_t>(c)][n];
+                    if (chb > 0.0) {
+                        const double mu = spec_.dt / (chb * spec_.cell);
+                        const double value = h_[static_cast<size_t>(c)][0][n] + h_[static_cast<size_t>(c)][1][n] + h_[static_cast<size_t>(c)][2][n];
+                        sum += 0.5 * mu * value * value;
+                    }
+                }
+            partial[row] = sum;
         }
-    return sum * volume;
+    });
+    double total = 0.0;
+    for (const double p : partial)
+        total += p;
+    return total * volume;
+}
+
+double YeeSolver::eAtNode(int c, int i, int j, int k) const
+{
+    if (c == 2 && spec_.is2D())
+        return e(2, i, j, 0);
+    int lo[3] = {i, j, k};
+    lo[c] -= 1;
+    // Along a periodic axis every node has an edge on either side (the
+    // indices wrap; region node n is node 0).
+    if (periodic_[static_cast<size_t>(c)])
+        return 0.5 * (e(c, i, j, k) + e(c, lo[0], lo[1], lo[2]));
+    const int limit = c == 0 ? spec_.nx : c == 1 ? spec_.ny : spec_.nz;
+    const int along = c == 0 ? i : c == 1 ? j : k;
+    if (along >= limit)
+        return e(c, lo[0], lo[1], lo[2]);  // the last node: the edge before it
+    const double here = e(c, i, j, k);
+    return along > 0 ? 0.5 * (here + e(c, lo[0], lo[1], lo[2])) : here;
+}
+
+YeeDeviceLayout YeeSolver::deviceLayout() const
+{
+    YeeDeviceLayout l;
+    l.px = px_;
+    l.py = py_;
+    l.pz = pz_;
+    for (int a = 0; a < 3; ++a) {
+        l.periodic[a] = periodic_[static_cast<size_t>(a)] ? 1 : 0;
+        l.pad[a] = pad_[static_cast<size_t>(a)];
+        l.ca[a] = ca_[static_cast<size_t>(a)].data();
+        l.cb[a] = cb_[static_cast<size_t>(a)].data();
+        l.chb[a] = chb_[static_cast<size_t>(a)].data();
+        l.decayNode[a] = decayNode_[static_cast<size_t>(a)].data();
+        l.decayHalf[a] = decayHalf_[static_cast<size_t>(a)].data();
+        for (int p = 0; p < 3; ++p) {
+            l.e[a][p] = e_[static_cast<size_t>(a)][static_cast<size_t>(p)].data();
+            l.h[a][p] = h_[static_cast<size_t>(a)][static_cast<size_t>(p)].data();
+        }
+    }
+    l.nx = spec_.nx;
+    l.ny = spec_.ny;
+    l.nz = spec_.nz;
+    l.is2D = spec_.is2D() ? 1 : 0;
+    l.cell = spec_.cell;
+    l.dt = spec_.dt;
+    for (const Active& a : sources_) {
+        l.sourceComponent.push_back(a.component);
+        l.sourcePart.push_back((a.component + 1) % 3);
+        l.sourceNode.push_back(a.node);
+    }
+    return l;
+}
+
+void YeeSolver::sourceValues(std::vector<double>& out) const
+{
+    const double t = (static_cast<double>(step_) + 0.5) * spec_.dt;
+    out.resize(sources_.size());
+    for (size_t i = 0; i < sources_.size(); ++i) {
+        const Active& a = sources_[i];
+        out[i] = cb_[static_cast<size_t>(a.component)][a.node] * a.scale * a.waveform.value(t - a.delay);
+    }
 }
 
 bool YeeSolver::finite() const
@@ -415,15 +502,174 @@ bool YeeSolver::finite() const
     return true;
 }
 
+namespace {
+
+// One way of advancing the grid and reading what runYee records: the CPU
+// reference (threads) or the CUDA device.
+class YeeStepper {
+public:
+    virtual ~YeeStepper() = default;
+    virtual bool step(std::string& error) = 0;
+    virtual bool probe(const std::vector<YeeProbe>& probes, std::vector<double>& values, std::string& error) = 0;
+    virtual bool accumulateHarmonic(std::complex<double> kernel, std::string& error) = 0;
+    virtual bool harmonic(std::array<std::vector<std::complex<double>>, 3>& out, std::string& error) = 0;
+    virtual bool snapshot(int component, std::vector<float>& out, std::string& error) = 0;
+    virtual bool energy(double& value, std::string& error) = 0;
+    virtual bool finite() = 0;
+    virtual double time() const = 0;
+    virtual std::string backend() const = 0;
+};
+
+size_t regionNodes(const YeeSpec& s)
+{
+    return static_cast<size_t>(s.nx + 1) * static_cast<size_t>(s.ny + 1) * static_cast<size_t>(s.is2D() ? 1 : s.nz + 1);
+}
+
+class CpuYeeStepper final : public YeeStepper {
+public:
+    explicit CpuYeeStepper(std::unique_ptr<YeeSolver> solver) : solver_(std::move(solver)) {}
+    bool step(std::string&) override
+    {
+        solver_->step();
+        return true;
+    }
+    bool probe(const std::vector<YeeProbe>& probes, std::vector<double>& values, std::string&) override
+    {
+        values.resize(probes.size());
+        for (size_t q = 0; q < probes.size(); ++q)
+            values[q] = solver_->e(probes[q].component, probes[q].i, probes[q].j, probes[q].k);
+        return true;
+    }
+    bool accumulateHarmonic(std::complex<double> kernel, std::string&) override
+    {
+        const YeeSpec& s = solver_->spec();
+        if (accumulated_[0].empty())
+            for (auto& a : accumulated_)
+                a.assign(regionNodes(s), {0.0, 0.0});
+        forNodeRows([&](int j, int k, size_t first) {
+            for (int i = 0; i <= s.nx; ++i)
+                for (int c = 0; c < 3; ++c)
+                    accumulated_[static_cast<size_t>(c)][first + static_cast<size_t>(i)] += solver_->eAtNode(c, i, j, k) * kernel;
+        });
+        return true;
+    }
+    bool harmonic(std::array<std::vector<std::complex<double>>, 3>& out, std::string&) override
+    {
+        for (int c = 0; c < 3; ++c)
+            if (!accumulated_[static_cast<size_t>(c)].empty())
+                out[static_cast<size_t>(c)] = accumulated_[static_cast<size_t>(c)];
+        return true;
+    }
+    bool snapshot(int component, std::vector<float>& out, std::string&) override
+    {
+        out.assign(regionNodes(solver_->spec()), 0.0f);
+        forNodeRows([&](int j, int k, size_t first) {
+            for (int i = 0; i <= solver_->spec().nx; ++i)
+                out[first + static_cast<size_t>(i)] = static_cast<float>(solver_->eAtNode(component, i, j, k));
+        });
+        return true;
+    }
+    bool energy(double& value, std::string&) override
+    {
+        value = solver_->energy();
+        return true;
+    }
+    bool finite() override { return solver_->finite(); }
+    double time() const override { return solver_->time(); }
+    std::string backend() const override
+    {
+        const int t = solver_->threads();
+        return "CPU, double precision, " + std::to_string(t) + (t == 1 ? " thread" : " threads");
+    }
+
+private:
+    // Rows (j, k) of region nodes in parallel; `first` is the row's first node index.
+    template <typename F>
+    void forNodeRows(F&& body)
+    {
+        const YeeSpec& s = solver_->spec();
+        const int nk = s.is2D() ? 1 : s.nz + 1;
+        const size_t rows = static_cast<size_t>(s.ny + 1) * static_cast<size_t>(nk);
+        solver_->pool().run(rows, [&](size_t begin, size_t end) {
+            for (size_t row = begin; row < end; ++row) {
+                const int j = static_cast<int>(row % static_cast<size_t>(s.ny + 1)), k = static_cast<int>(row / static_cast<size_t>(s.ny + 1));
+                body(j, k, row * static_cast<size_t>(s.nx + 1));
+            }
+        });
+    }
+
+    std::unique_ptr<YeeSolver> solver_;
+    std::array<std::vector<std::complex<double>>, 3> accumulated_;
+};
+
+class CudaYeeStepper final : public YeeStepper {
+public:
+    CudaYeeStepper(std::unique_ptr<YeeSolver> solver, YeeCudaState* state, std::vector<int> components, std::vector<size_t> nodes)
+        : solver_(std::move(solver)), state_(state), probeComponents_(std::move(components)), probeNodes_(std::move(nodes))
+    {
+    }
+    ~CudaYeeStepper() override { yeeCudaDestroy(state_); }
+    bool step(std::string& error) override
+    {
+        solver_->sourceValues(sourceValues_);
+        if (!yeeCudaStep(state_, sourceValues_.data(), error))
+            return false;
+        solver_->advanceClock();
+        return true;
+    }
+    bool probe(const std::vector<YeeProbe>&, std::vector<double>& values, std::string& error) override
+    {
+        values.resize(probeNodes_.size());
+        return probeNodes_.empty() || yeeCudaGather(state_, probeComponents_.data(), probeNodes_.data(), static_cast<int>(probeNodes_.size()), values.data(), error);
+    }
+    bool accumulateHarmonic(std::complex<double> kernel, std::string& error) override
+    {
+        accumulating_ = true;
+        return yeeCudaAccumulateHarmonic(state_, kernel.real(), kernel.imag(), error);
+    }
+    bool harmonic(std::array<std::vector<std::complex<double>>, 3>& out, std::string& error) override
+    {
+        if (!accumulating_)
+            return true;
+        std::vector<double> re[3], im[3];
+        if (!yeeCudaHarmonic(state_, re, im, error))
+            return false;
+        for (int c = 0; c < 3; ++c) {
+            auto& o = out[static_cast<size_t>(c)];
+            o.resize(re[c].size());
+            for (size_t n = 0; n < o.size(); ++n)
+                o[n] = {re[c][n], im[c][n]};
+        }
+        return true;
+    }
+    bool snapshot(int component, std::vector<float>& out, std::string& error) override { return yeeCudaNodeField(state_, component, out, error); }
+    bool energy(double& value, std::string& error) override { return yeeCudaEnergy(state_, value, error); }
+    bool finite() override { return true; }  // a non-finite field makes the energy non-finite, which runYee checks
+    double time() const override { return solver_->time(); }
+    std::string backend() const override { return "CUDA on " + yeeCudaDeviceName(state_) + ", double precision"; }
+
+private:
+    std::unique_ptr<YeeSolver> solver_;  // keeps the sources' waveforms and the clock
+    YeeCudaState* state_;
+    std::vector<int> probeComponents_;
+    std::vector<size_t> probeNodes_;
+    std::vector<double> sourceValues_;
+    bool accumulating_ = false;
+};
+
+}  // namespace
+
 YeeRunEnd runYee(const YeeSpec& spec, const std::vector<YeeSource>& sources, const std::vector<YeeProbe>& probes, long steps,
                  const YeeRecording& rec, YeeOutput& out, JobContext* context)
 {
     if (steps < 1)
         return {YeeRunEnd::Kind::Invalid, "the simulation needs at least one time step"};
+    if (Status status = compute::checkBackend(spec.compute, spec.stateBytes()); !status)
+        return {YeeRunEnd::Kind::Invalid, status.message()};
     auto created = YeeSolver::create(spec);
     if (!created)
         return {YeeRunEnd::Kind::Invalid, created.message()};
-    const auto solver = created.take();
+    auto solver = created.take();
     const int nk = spec.is2D() ? 1 : spec.nz + 1;
     const auto inside = [&](int i, int j, int k) { return i >= 0 && j >= 0 && k >= 0 && i <= spec.nx && j <= spec.ny && k < nk; };
     for (const YeeSource& s : sources) {
@@ -441,23 +687,24 @@ YeeRunEnd runYee(const YeeSpec& spec, const std::vector<YeeSource>& sources, con
         out.probes.emplace_back();
         out.probes.back().reserve(static_cast<size_t>(steps));
     }
-    const size_t nodes = static_cast<size_t>(spec.nx + 1) * static_cast<size_t>(spec.ny + 1) * static_cast<size_t>(nk);
-    const auto nodeIndex = [&](int i, int j, int k) {
-        return static_cast<size_t>(i) + static_cast<size_t>(spec.nx + 1) * (static_cast<size_t>(j) + static_cast<size_t>(spec.ny + 1) * k);
-    };
-    // E component at a node: the mean of the edges on either side along the component's axis.
-    const auto atNode = [&](int c, int i, int j, int k) {
-        if (c == 2 && spec.is2D())
-            return solver->e(2, i, j, 0);
-        int lo[3] = {i, j, k};
-        lo[c] -= 1;
-        const int limit = c == 0 ? spec.nx : c == 1 ? spec.ny : spec.nz;
-        const int along = c == 0 ? i : c == 1 ? j : k;
-        if (along >= limit)
-            return solver->e(c, lo[0], lo[1], lo[2]);  // the last node: the edge before it
-        const double here = solver->e(c, i, j, k);
-        return along > 0 ? 0.5 * (here + solver->e(c, lo[0], lo[1], lo[2])) : here;
-    };
+    std::unique_ptr<YeeStepper> stepper;
+    if (spec.compute.backend == compute::ComputeBackend::Cuda) {
+        std::vector<int> components;
+        std::vector<size_t> nodes;
+        for (const YeeProbe& p : probes) {
+            components.push_back(p.component);
+            nodes.push_back(solver->paddedNode(p.i, p.j, p.k));
+        }
+        std::string error;
+        YeeCudaState* state = yeeCudaCreate(solver->deviceLayout(), spec.compute.device, error);
+        if (!state)
+            return {YeeRunEnd::Kind::Invalid, "the CUDA backend could not start: " + error};
+        stepper = std::make_unique<CudaYeeStepper>(std::move(solver), state, std::move(components), std::move(nodes));
+    } else {
+        stepper = std::make_unique<CpuYeeStepper>(std::move(solver));
+    }
+    out.backend = stepper->backend();
+    const size_t nodes = regionNodes(spec);
     long harmonicFirst = steps + 1, harmonicCount = 0;
     if (rec.harmonicFrequencyHz > 0.0) {
         harmonicCount = std::clamp<long>(std::lround(rec.harmonicPeriods / (rec.harmonicFrequencyHz * spec.dt)), 1, steps);
@@ -471,42 +718,43 @@ YeeRunEnd runYee(const YeeSpec& spec, const std::vector<YeeSource>& sources, con
     const long energyEvery = std::max<long>(1, steps / std::max(1, rec.energySamples));
     const auto started = std::chrono::steady_clock::now();
     const double twoPi = 2.0 * kPi;
+    std::string error;
+    std::vector<double> probeValues;
+    const auto failed = [&](long n) {
+        return YeeRunEnd{YeeRunEnd::Kind::Invalid, "the " + out.backend + " backend failed at step " + std::to_string(n) + ": " + error};
+    };
     for (long n = 1; n <= steps; ++n) {
-        solver->step();
-        const double t = solver->time();
-        for (size_t q = 0; q < probes.size(); ++q)
-            out.probes[q].push_back(solver->e(probes[q].component, probes[q].i, probes[q].j, probes[q].k));
+        if (!stepper->step(error))
+            return failed(n);
+        const double t = stepper->time();
+        if (!probes.empty()) {
+            if (!stepper->probe(probes, probeValues, error))
+                return failed(n);
+            for (size_t q = 0; q < probes.size(); ++q)
+                out.probes[q].push_back(probeValues[q]);
+        }
         if (n >= harmonicFirst) {
             const std::complex<double> kernel = std::polar(2.0 / static_cast<double>(harmonicCount), -twoPi * rec.harmonicFrequencyHz * t);
-            for (int k = 0; k < nk; ++k)
-                for (int j = 0; j <= spec.ny; ++j)
-                    for (int i = 0; i <= spec.nx; ++i)
-                        for (int c = 0; c < 3; ++c) {
-                            if (spec.is2D() && c != 2) {
-                                // 2D: the TE components at nodes as well.
-                                out.harmonic[static_cast<size_t>(c)][nodeIndex(i, j, k)] += atNode(c, i, j, 0) * kernel;
-                                continue;
-                            }
-                            out.harmonic[static_cast<size_t>(c)][nodeIndex(i, j, k)] += atNode(c, i, j, k) * kernel;
-                        }
+            if (!stepper->accumulateHarmonic(kernel, error))
+                return failed(n);
         }
         if (snapshotsTaken < snapshotTotal
             && n >= std::lround(static_cast<double>(snapshotsTaken + 1) * static_cast<double>(steps) / static_cast<double>(snapshotTotal))) {
             ++snapshotsTaken;
-            std::vector<float> snapshot(nodes);
-            for (int k = 0; k < nk; ++k)
-                for (int j = 0; j <= spec.ny; ++j)
-                    for (int i = 0; i <= spec.nx; ++i)
-                        snapshot[nodeIndex(i, j, k)] = static_cast<float>(atNode(rec.snapshotComponent, i, j, k));
+            std::vector<float> snapshot;
+            if (!stepper->snapshot(rec.snapshotComponent, snapshot, error))
+                return failed(n);
             out.snapshots.push_back(std::move(snapshot));
             out.snapshotTimes.push_back(t);
         }
         if (n % energyEvery == 0 || n == steps) {
-            const double energy = solver->energy();
+            double energy = 0.0;
+            if (!stepper->energy(energy, error))
+                return failed(n);
             out.energyTimes.push_back(t);
             out.energy.push_back(energy);
             out.steps = n;
-            if (!std::isfinite(energy) || !solver->finite())
+            if (!std::isfinite(energy) || !stepper->finite())
                 return {YeeRunEnd::Kind::Unstable, "the field stopped being finite at step " + std::to_string(n)};
             if (context) {
                 if (context->cancelRequested())
@@ -515,6 +763,8 @@ YeeRunEnd runYee(const YeeSpec& spec, const std::vector<YeeSource>& sources, con
             }
         }
     }
+    if (harmonicCount > 0 && !stepper->harmonic(out.harmonic, error))
+        return failed(steps);
     out.steps = steps;
     out.elapsedSeconds = std::chrono::duration<double>(std::chrono::steady_clock::now() - started).count();
     const double cells = static_cast<double>(spec.stateBytes()) / (27.0 * sizeof(double) + 1.0);

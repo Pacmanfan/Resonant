@@ -180,9 +180,10 @@ void EmPanel::setController(EmController* controller)
     connect(ui_->ttdCheck, &QCheckBox::clicked, this, [this] { commitSettings(); });
     for (QDoubleSpinBox* spin : {ui_->cellsSpin, ui_->courantSpin, ui_->cyclesSpin, ui_->periodsSpin, ui_->durationSpin})
         connect(spin, &QDoubleSpinBox::valueChanged, this, [this] { commitFullWave(); });
-    for (QSpinBox* spin : {ui_->absorbingSpin, ui_->memorySpin})
+    for (QSpinBox* spin : {ui_->absorbingSpin, ui_->memorySpin, ui_->threadsSpin})
         connect(spin, &QSpinBox::valueChanged, this, [this] { commitFullWave(); });
-    connect(ui_->waveformCombo, &QComboBox::activated, this, [this] { commitFullWave(); });
+    for (QComboBox* combo : {ui_->waveformCombo, ui_->computeCombo})
+        connect(combo, &QComboBox::activated, this, [this] { commitFullWave(); });
     // Display.
     connect(ui_->resultCombo, &QComboBox::activated, this, [this](int index) { controller_->display(index - 1); });
     connect(ui_->componentCombo, &QComboBox::activated, this, [this](int index) { controller_->setComponentShown(kComponents[index]); });
@@ -287,7 +288,7 @@ void EmPanel::refreshSettings()
     }
     const EmFullWaveSettings f = controller_->fullWaveSettings();
     const QSignalBlocker c1(ui_->cellsSpin), c2(ui_->courantSpin), c3(ui_->absorbingSpin), c4(ui_->cyclesSpin), c5(ui_->periodsSpin),
-        c6(ui_->durationSpin), c7(ui_->memorySpin);
+        c6(ui_->durationSpin), c7(ui_->memorySpin), c8(ui_->threadsSpin);
     ui_->cellsSpin->setValue(f.cellsPerWavelength);
     ui_->courantSpin->setValue(f.courantFraction);
     ui_->absorbingSpin->setValue(f.absorbingCells);
@@ -300,6 +301,9 @@ void EmPanel::refreshSettings()
     ui_->periodsSpin->setValue(f.harmonicPeriods);
     ui_->durationSpin->setValue(f.duration * 1e9);
     ui_->memorySpin->setValue(static_cast<int>(f.memoryLimitBytes / (1024 * 1024)));
+    ui_->computeCombo->setCurrentIndex(f.compute.backend == compute::ComputeBackend::Cuda ? 1 : 0);
+    ui_->threadsSpin->setValue(f.compute.threads);
+    ui_->threadsSpin->setEnabled(f.compute.backend == compute::ComputeBackend::Cpu);
     updating_ = false;
 }
 
@@ -347,6 +351,8 @@ void EmPanel::commitFullWave()
     f.harmonicPeriods = ui_->periodsSpin->value();
     f.duration = ui_->durationSpin->value() * 1e-9;
     f.memoryLimitBytes = static_cast<size_t>(ui_->memorySpin->value()) * 1024 * 1024;
+    f.compute.backend = ui_->computeCombo->currentIndex() == 1 ? compute::ComputeBackend::Cuda : compute::ComputeBackend::Cpu;
+    f.compute.threads = ui_->threadsSpin->value();
     if (const Status status = controller_->setFullWaveSettings(f); !status) {
         fail(QString::fromStdString(status.message()));
         refreshSettings();

@@ -15,6 +15,11 @@
         "absorbing"
       ],
       "cellsPerWavelength": 30.0,
+      "compute": {
+        "backend": "cpu",
+        "device": 0,
+        "threads": 0
+      },
       "courantFraction": 0.95,
       "duration": 0.0,
       "harmonicPeriods": 8.0,

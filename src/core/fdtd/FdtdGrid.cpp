@@ -147,7 +147,10 @@ Result<std::unique_ptr<FdtdSolver>> FdtdSolver::create(GridSpec spec)
 {
     if (const Status status = spec.validate(); !status)
         return Result<std::unique_ptr<FdtdSolver>>::failure(status.message());
-    return std::unique_ptr<FdtdSolver>(new FdtdSolver(std::move(spec)));
+    const int threads = compute::resolveThreads(spec.compute.threads);
+    auto solver = std::unique_ptr<FdtdSolver>(new FdtdSolver(std::move(spec)));
+    solver->pool_ = std::make_unique<compute::ThreadPool>(threads);
+    return solver;
 }
 
 FdtdSolver::FdtdSolver(GridSpec spec) : spec_(std::move(spec))
@@ -304,9 +307,13 @@ void FdtdSolver::updateVelocity()
         }
     };
 
+    // The passes split their rows across the pool's threads; every face is
+    // computed exactly as in a single-threaded pass.
+    const size_t rowsXY = static_cast<size_t>(ny_) * static_cast<size_t>(nz_);
     // vx
-    for (int k = 0; k < nz_; ++k)
-        for (int j = 0; j < ny_; ++j) {
+    pool_->run(rowsXY, [&](size_t begin, size_t end) {
+        for (size_t row = begin; row < end; ++row) {
+            const int j = static_cast<int>(row % static_cast<size_t>(ny_)), k = static_cast<int>(row / static_cast<size_t>(ny_));
             const size_t rowP = index(0, j, k);
             const size_t rowV = static_cast<size_t>(nx_ + 1) * (static_cast<size_t>(j) + static_cast<size_t>(ny_) * static_cast<size_t>(k));
             for (int i = 1; i < nx_; ++i) {
@@ -319,11 +326,14 @@ void FdtdSolver::updateVelocity()
             boundaryFace(vx_[rowV], XMin, rowP, -1.0);
             boundaryFace(vx_[rowV + static_cast<size_t>(nx_)], XMax, rowP + static_cast<size_t>(nx_ - 1), 1.0);
         }
+    });
     // vy
     const size_t strideY = static_cast<size_t>(nx_);
-    for (int k = 0; k < nz_; ++k) {
-        const size_t slabV = static_cast<size_t>(nx_) * static_cast<size_t>(ny_ + 1) * static_cast<size_t>(k);
-        for (int j = 1; j < ny_; ++j) {
+    const size_t interiorRowsY = static_cast<size_t>(std::max(0, ny_ - 1)) * static_cast<size_t>(nz_);
+    pool_->run(interiorRowsY, [&](size_t begin, size_t end) {
+        for (size_t row = begin; row < end; ++row) {
+            const int j = 1 + static_cast<int>(row % static_cast<size_t>(ny_ - 1)), k = static_cast<int>(row / static_cast<size_t>(ny_ - 1));
+            const size_t slabV = static_cast<size_t>(nx_) * static_cast<size_t>(ny_ + 1) * static_cast<size_t>(k);
             const double a = ay[static_cast<size_t>(j)];
             const size_t rowP = index(0, j, k);
             const size_t rowV = slabV + static_cast<size_t>(nx_) * static_cast<size_t>(j);
@@ -334,26 +344,39 @@ void FdtdSolver::updateVelocity()
                 v = a * (a * v - b * (p_[c] - p_[c - strideY]));
             }
         }
-        for (int i = 0; i < nx_; ++i) {
-            boundaryFace(vy_[slabV + static_cast<size_t>(i)], YMin, index(i, 0, k), -1.0);
-            boundaryFace(vy_[slabV + static_cast<size_t>(nx_) * static_cast<size_t>(ny_) + static_cast<size_t>(i)], YMax, index(i, ny_ - 1, k), 1.0);
+    });
+    pool_->run(static_cast<size_t>(nz_), [&](size_t begin, size_t end) {
+        for (size_t kk = begin; kk < end; ++kk) {
+            const int k = static_cast<int>(kk);
+            const size_t slabV = static_cast<size_t>(nx_) * static_cast<size_t>(ny_ + 1) * static_cast<size_t>(k);
+            for (int i = 0; i < nx_; ++i) {
+                boundaryFace(vy_[slabV + static_cast<size_t>(i)], YMin, index(i, 0, k), -1.0);
+                boundaryFace(vy_[slabV + static_cast<size_t>(nx_) * static_cast<size_t>(ny_) + static_cast<size_t>(i)], YMax, index(i, ny_ - 1, k), 1.0);
+            }
         }
-    }
+    });
     // vz
     if (!spec_.is2D()) {
         const size_t strideZ = static_cast<size_t>(nx_) * static_cast<size_t>(ny_);
-        for (int k = 1; k < nz_; ++k) {
-            const double a = az[static_cast<size_t>(k)];
-            for (size_t c = strideZ * static_cast<size_t>(k), end = c + strideZ; c < end; ++c) {
-                const double b = faceCoefficient_[material_[c - strideZ] * count + material_[c]];
-                double& v = vz_[c];
-                v = a * (a * v - b * (p_[c] - p_[c - strideZ]));
+        const size_t interiorRowsZ = static_cast<size_t>(std::max(0, nz_ - 1)) * static_cast<size_t>(ny_);
+        pool_->run(interiorRowsZ, [&](size_t begin, size_t end) {
+            for (size_t row = begin; row < end; ++row) {
+                const int j = static_cast<int>(row % static_cast<size_t>(ny_)), k = 1 + static_cast<int>(row / static_cast<size_t>(ny_));
+                const double a = az[static_cast<size_t>(k)];
+                const size_t first = index(0, j, k);
+                for (size_t c = first, last = first + static_cast<size_t>(nx_); c < last; ++c) {
+                    const double b = faceCoefficient_[material_[c - strideZ] * count + material_[c]];
+                    double& v = vz_[c];
+                    v = a * (a * v - b * (p_[c] - p_[c - strideZ]));
+                }
             }
-        }
-        for (size_t c = 0; c < strideZ; ++c) {
-            boundaryFace(vz_[c], ZMin, c, -1.0);
-            boundaryFace(vz_[strideZ * static_cast<size_t>(nz_) + c], ZMax, strideZ * static_cast<size_t>(nz_ - 1) + c, 1.0);
-        }
+        });
+        pool_->run(strideZ, [&](size_t begin, size_t end) {
+            for (size_t c = begin; c < end; ++c) {
+                boundaryFace(vz_[c], ZMin, c, -1.0);
+                boundaryFace(vz_[strideZ * static_cast<size_t>(nz_) + c], ZMax, strideZ * static_cast<size_t>(nz_ - 1) + c, 1.0);
+            }
+        });
     }
 }
 
@@ -364,9 +387,11 @@ void FdtdSolver::updatePressure()
     const auto& az = decayCell_[2];
     const bool threeD = !spec_.is2D();
     const size_t strideZ = static_cast<size_t>(nx_) * static_cast<size_t>(ny_);
-    for (int k = 0; k < nz_; ++k) {
-        const double dz = az[static_cast<size_t>(k)];
-        for (int j = 0; j < ny_; ++j) {
+    const size_t rows = static_cast<size_t>(ny_) * static_cast<size_t>(nz_);
+    pool_->run(rows, [&](size_t begin, size_t end) {
+        for (size_t row = begin; row < end; ++row) {
+            const int j = static_cast<int>(row % static_cast<size_t>(ny_)), k = static_cast<int>(row / static_cast<size_t>(ny_));
+            const double dz = az[static_cast<size_t>(k)];
             const double dy = ay[static_cast<size_t>(j)];
             const size_t rowP = index(0, j, k);
             const size_t rowVx = static_cast<size_t>(nx_ + 1) * (static_cast<size_t>(j) + static_cast<size_t>(ny_) * static_cast<size_t>(k));
@@ -391,7 +416,7 @@ void FdtdSolver::updatePressure()
                 p_[c] = sum;
             }
         }
-    }
+    });
 }
 
 void FdtdSolver::applySources()
@@ -432,14 +457,10 @@ std::array<double, 3> FdtdSolver::velocity(int i, int j, int k) const
 
 double FdtdSolver::energy() const
 {
+    // A partial sum per row (j, k), added in row order: the same value for
+    // any number of threads (and on the CUDA backend).
     const double cellVolume = spec_.is2D() ? spec_.dx * spec_.dx : spec_.dx * spec_.dx * spec_.dx;
     const size_t count = spec_.materials.size();
-    double potential = 0.0, kinetic = 0.0;
-    for (size_t c = 0; c < p_.size(); ++c) {
-        const CellMaterial& m = spec_.materials[material_[c]];
-        if (m.isFluid())
-            potential += p_[c] * p_[c] / m.bulkModulus();
-    }
     // Kinetic energy. The stored velocity is half a step BEFORE the stored
     // pressure. The leapfrog scheme conserves p(t)^2 / K together with
     // rho v(t - dt/2) . v(t + dt/2) exactly, and
@@ -452,35 +473,106 @@ double FdtdSolver::energy() const
         const double density = spec_.dt / (spec_.dx * coefficient);
         return density * v * (v - coefficient * (p_[upper] - p_[lower]));
     };
-    for (int k = 0; k < nz_; ++k)
-        for (int j = 0; j < ny_; ++j)
-            for (int i = 1; i < nx_; ++i) {
-                const size_t c = index(i, j, k);
-                kinetic += faceEnergy(vx_[static_cast<size_t>(i) + static_cast<size_t>(nx_ + 1) * (static_cast<size_t>(j) + static_cast<size_t>(ny_) * static_cast<size_t>(k))],
-                                      c - 1, c);
-            }
-    for (int k = 0; k < nz_; ++k)
-        for (int j = 1; j < ny_; ++j)
+    const size_t strideZ = static_cast<size_t>(nx_) * static_cast<size_t>(ny_);
+    const size_t rows = static_cast<size_t>(ny_) * static_cast<size_t>(nz_);
+    std::vector<double> partial(rows, 0.0);
+    pool_->run(rows, [&](size_t begin, size_t end) {
+        for (size_t row = begin; row < end; ++row) {
+            const int j = static_cast<int>(row % static_cast<size_t>(ny_)), k = static_cast<int>(row / static_cast<size_t>(ny_));
+            double potential = 0.0, kinetic = 0.0;
             for (int i = 0; i < nx_; ++i) {
                 const size_t c = index(i, j, k);
-                kinetic += faceEnergy(vy_[static_cast<size_t>(i) + static_cast<size_t>(nx_) * (static_cast<size_t>(j) + static_cast<size_t>(ny_ + 1) * static_cast<size_t>(k))],
-                                      c - static_cast<size_t>(nx_), c);
+                const CellMaterial& m = spec_.materials[material_[c]];
+                if (m.isFluid())
+                    potential += p_[c] * p_[c] / m.bulkModulus();
+                if (i >= 1)
+                    kinetic += faceEnergy(vx_[static_cast<size_t>(i) + static_cast<size_t>(nx_ + 1) * (static_cast<size_t>(j) + static_cast<size_t>(ny_) * static_cast<size_t>(k))],
+                                          c - 1, c);
+                if (j >= 1)
+                    kinetic += faceEnergy(vy_[static_cast<size_t>(i) + static_cast<size_t>(nx_) * (static_cast<size_t>(j) + static_cast<size_t>(ny_ + 1) * static_cast<size_t>(k))],
+                                          c - static_cast<size_t>(nx_), c);
+                if (!spec_.is2D() && k >= 1)
+                    kinetic += faceEnergy(vz_[c], c - strideZ, c);
             }
-    if (!spec_.is2D()) {
-        const size_t strideZ = static_cast<size_t>(nx_) * static_cast<size_t>(ny_);
-        for (size_t c = strideZ; c < strideZ * static_cast<size_t>(nz_); ++c)
-            kinetic += faceEnergy(vz_[c], c - strideZ, c);
+            partial[row] = potential + kinetic;
+        }
+    });
+    double total = 0.0;
+    for (const double p : partial)
+        total += p;
+    return 0.5 * cellVolume * total;
+}
+
+FdtdDeviceLayout FdtdSolver::deviceLayout() const
+{
+    FdtdDeviceLayout l;
+    l.nx = nx_;
+    l.ny = ny_;
+    l.nz = nz_;
+    l.is2D = spec_.is2D() ? 1 : 0;
+    for (int a = 0; a < 3; ++a) {
+        l.padLo[a] = padLo_[static_cast<size_t>(a)];
+        l.decayCell[a] = decayCell_[static_cast<size_t>(a)];
+        l.decayFace[a] = decayFace_[static_cast<size_t>(a)];
     }
-    return 0.5 * cellVolume * (potential + kinetic);
+    l.interior[0] = spec_.nx;
+    l.interior[1] = spec_.ny;
+    l.interior[2] = spec_.nz;
+    l.dx = spec_.dx;
+    l.dt = spec_.dt;
+    l.material = material_.data();
+    l.p = p_.data();
+    l.px = px_.data();
+    l.py = py_.data();
+    l.pz = spec_.is2D() ? nullptr : pz_.data();
+    l.vx = vx_.data();
+    l.vy = vy_.data();
+    l.vz = spec_.is2D() ? nullptr : vz_.data();
+    l.kappa = kappa_;
+    l.loss = loss_;
+    l.cellInverseDensity = cellInverseDensity_;
+    l.faceCoefficient = faceCoefficient_;
+    for (const CellMaterial& m : spec_.materials)
+        l.bulkModulus.push_back(m.isFluid() ? m.bulkModulus() : 0.0);
+    for (int f = 0; f < 6; ++f) {
+        l.boundary[f] = static_cast<int>(spec_.boundary[static_cast<size_t>(f)]);
+        l.impedance[f] = spec_.impedance[static_cast<size_t>(f)];
+    }
+    for (const ActiveSource& a : sources_)
+        l.sourceCell.push_back(a.cell);
+    return l;
+}
+
+void FdtdSolver::advanceSources(std::vector<double>& increments)
+{
+    const double tMid = (static_cast<double>(step_) + 0.5) * spec_.dt;
+    increments.resize(sources_.size());
+    for (size_t i = 0; i < sources_.size(); ++i) {
+        ActiveSource& s = sources_[i];
+        const double w = s.waveform.value(tMid - s.delay);
+        s.integral += 0.5 * (w + s.previous) * spec_.dt;
+        s.previous = w;
+        increments[i] = s.scale * s.integral;
+    }
 }
 
 double FdtdSolver::maxAbsPressure() const
 {
-    double largest = 0.0;
-    for (int k = 0; k < spec_.nz; ++k)
-        for (int j = 0; j < spec_.ny; ++j)
+    // The largest value is the same whatever the order: a partial per row.
+    const size_t rows = static_cast<size_t>(spec_.ny) * static_cast<size_t>(spec_.nz);
+    std::vector<double> partial(rows, 0.0);
+    pool_->run(rows, [&](size_t begin, size_t end) {
+        for (size_t row = begin; row < end; ++row) {
+            const int j = static_cast<int>(row % static_cast<size_t>(spec_.ny)), k = static_cast<int>(row / static_cast<size_t>(spec_.ny));
+            double largest = 0.0;
             for (int i = 0; i < spec_.nx; ++i)
                 largest = std::max(largest, std::abs(pressure(i, j, k)));
+            partial[row] = largest;
+        }
+    });
+    double largest = 0.0;
+    for (const double p : partial)
+        largest = std::max(largest, p);
     return largest;
 }
 

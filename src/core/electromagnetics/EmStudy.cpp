@@ -1,5 +1,8 @@
 #include "electromagnetics/EmStudy.h"
 
+#include "compute/ThreadPool.h"
+#include "compute/VectorKernels.h"
+
 #include "foundation/Transform.h"
 #include "electromagnetics/Lines.h"
 
@@ -115,6 +118,28 @@ std::complex<float> EmFieldResult::component(FieldComponent c, size_t i) const
     }
     }
     return {};
+}
+
+void EmFieldResult::componentArray(FieldComponent c, std::vector<std::complex<float>>& out) const
+{
+    const size_t n = grid.count();
+    out.resize(n);
+    const bool magnitude = c == FieldComponent::EMagnitude || (c == FieldComponent::HMagnitude && hasH);
+    if (!magnitude || e[0].size() != n) {
+        for (size_t i = 0; i < n; ++i)
+            out[i] = component(c, i);
+        return;
+    }
+    const auto& f = c == FieldComponent::EMagnitude ? e : h;
+    std::vector<float> sum(n), part(n);
+    compute::magnitudeSquared(f[0].data(), sum.data(), n);
+    for (int k = 1; k < 3; ++k) {
+        compute::magnitudeSquared(f[static_cast<size_t>(k)].data(), part.data(), n);
+        compute::add(sum.data(), part.data(), sum.data(), n);
+    }
+    compute::squareRoot(sum.data(), sum.data(), n);
+    for (size_t i = 0; i < n; ++i)
+        out[i] = {sum[i], 0.0f};
 }
 
 double EmFieldResult::largest(FieldComponent c) const
@@ -370,11 +395,17 @@ Result<PatternGrid> patternOf(const Project& project, const Id& id, double resol
     } else {
         return Failure::failure("select an antenna or an array");
     }
+    // The samples in parallel (each by one thread); the sums below in order.
+    compute::ThreadPool pool(compute::resolveThreads(0));
+    pool.run(static_cast<size_t>(p.thetaCount), [&](size_t begin, size_t end) {
+        for (size_t row = begin; row < end; ++row)
+            for (int j = 0; j < p.phiCount; ++j)
+                p.magnitude[row * static_cast<size_t>(p.phiCount) + static_cast<size_t>(j)] = amplitude(static_cast<double>(row) * p.stepRad, j * p.stepRad);
+    });
     double peak = 0.0, total = 0.0;
     for (int i = 0; i < p.thetaCount; ++i)
         for (int j = 0; j < p.phiCount; ++j) {
-            const double t = i * p.stepRad, value = amplitude(t, j * p.stepRad);
-            p.magnitude[static_cast<size_t>(i) * p.phiCount + j] = value;
+            const double t = i * p.stepRad, value = p.magnitude[static_cast<size_t>(i) * p.phiCount + j];
             peak = std::max(peak, value);
             // Exact solid angle of the band around this sample (per radian of phi), clipped to the
             // half-space above the ground plane for a monopole.
@@ -513,27 +544,32 @@ Result<std::shared_ptr<EmFieldResult>> evaluateFields(const Project& project, co
         return false;
     };
     // Accumulate a local field function over the grid.
+    // Samples in parallel: each is computed by one thread, radiators are
+    // added in scene order, so the result does not depend on the threads.
+    compute::ThreadPool pool(compute::resolveThreads(0));
     const auto accumulate = [&](const Placement& place, const std::function<FieldPoint(const Vec3&)>& field, const std::function<bool(const Vec3&)>& exclude) {
-        for (size_t i = 0; i < grid.count(); ++i) {
-            const int u = static_cast<int>(i % static_cast<size_t>(grid.nu));
-            const int v = static_cast<int>((i / static_cast<size_t>(grid.nu)) % static_cast<size_t>(grid.nv));
-            const int w = static_cast<int>(i / (static_cast<size_t>(grid.nu) * static_cast<size_t>(grid.nv)));
-            const Vec3 local = transformPoint(place.inverse, grid.point(u, v, w));
-            if (exclude && exclude(local)) {
-                result->excluded[i] = 1;
-                continue;
+        pool.run(grid.count(), [&](size_t first, size_t last) {
+            for (size_t i = first; i < last; ++i) {
+                const int u = static_cast<int>(i % static_cast<size_t>(grid.nu));
+                const int v = static_cast<int>((i / static_cast<size_t>(grid.nu)) % static_cast<size_t>(grid.nv));
+                const int w = static_cast<int>(i / (static_cast<size_t>(grid.nu) * static_cast<size_t>(grid.nv)));
+                const Vec3 local = transformPoint(place.inverse, grid.point(u, v, w));
+                if (exclude && exclude(local)) {
+                    result->excluded[i] = 1;
+                    continue;
+                }
+                const FieldPoint fp = field(local);
+                if (fp.singular) {
+                    result->excluded[i] = 1;
+                    continue;
+                }
+                const Eigen::Vector3cd e = place.rotation.cast<Complex>() * fp.e, h = place.rotation.cast<Complex>() * fp.h;
+                for (int c = 0; c < 3; ++c) {
+                    result->e[static_cast<size_t>(c)][i] += std::complex<float>(e(c));
+                    result->h[static_cast<size_t>(c)][i] += std::complex<float>(h(c));
+                }
             }
-            const FieldPoint fp = field(local);
-            if (fp.singular) {
-                result->excluded[i] = 1;
-                continue;
-            }
-            const Eigen::Vector3cd e = place.rotation.cast<Complex>() * fp.e, h = place.rotation.cast<Complex>() * fp.h;
-            for (int c = 0; c < 3; ++c) {
-                result->e[static_cast<size_t>(c)][i] += std::complex<float>(e(c));
-                result->h[static_cast<size_t>(c)][i] += std::complex<float>(h(c));
-            }
-        }
+        });
     };
     project.scene.forEach([&](const SceneObject& object) {
         if (!project.scene.isEffectivelyVisible(object))

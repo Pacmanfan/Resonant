@@ -21,8 +21,11 @@
 //
 // Domain faces: perfect electric conductor, periodic, or a split-field
 // perfectly matched layer (Berenger) outside the region backed by PEC.
+#include "compute/Compute.h"
+#include "compute/ThreadPool.h"
 #include "dsp/Waveform.h"
 #include "electromagnetics/Conventions.h"
+#include "electromagnetics/YeeDevice.h"
 #include "foundation/Result.h"
 #include "simulation/Job.h"
 
@@ -63,6 +66,8 @@ struct YeeSpec {
         friend bool operator==(const Edge&, const Edge&) = default;
     };
     std::vector<Edge> pecEdges;
+    // Where it runs: CPU threads (bit-identical for any count) or CUDA.
+    compute::ComputeOptions compute;
 
     bool is2D() const { return nz == 1; }
     int dimensions() const { return is2D() ? 2 : 3; }
@@ -101,6 +106,9 @@ public:
 
     // E component at its own edge position next to region node (i, j, k).
     double e(int component, int i, int j, int k = 0) const;
+    // E component at region node (i, j, k): the mean of the edges on either
+    // side along the component's axis (the edge before it at the last node).
+    double eAtNode(int component, int i, int j, int k = 0) const;
     // H component at its own face position.
     double h(int component, int i, int j, int k = 0) const;
     // Energy in the grid (J; J per metre in 2D), an estimate: E is taken at
@@ -108,6 +116,23 @@ public:
     // omega dt; it does not grow in a stable closed lossless domain.
     double energy() const;
     bool finite() const;
+
+    int threads() const { return pool_ ? pool_->threads() : 1; }
+    compute::ThreadPool& pool() { return *pool_; }
+    // The state as plain arrays, for the CUDA backend (valid while this lives).
+    YeeDeviceLayout deviceLayout() const;
+    // cb * scale * w(t_mid - delay) of every source for the step from the
+    // current time, in the order of deviceLayout()'s sources.
+    void sourceValues(std::vector<double>& out) const;
+    // Advances the step counter without updating fields (the CUDA backend
+    // steps the fields on the device).
+    void advanceClock() { ++step_; }
+    // Padded node index of region node (i, j, k); indices along a periodic
+    // axis wrap (that axis keeps no duplicate last node: node n is node 0).
+    size_t paddedNode(int i, int j, int k) const
+    {
+        return at(wrap(0, i + pad_[0]), wrap(1, j + pad_[1]), spec_.is2D() ? 0 : wrap(2, k + pad_[2]));
+    }
 
 private:
     explicit YeeSolver(YeeSpec spec);
@@ -138,6 +163,7 @@ private:
         dsp::Waveform waveform;
     };
     std::vector<Active> sources_;
+    std::unique_ptr<compute::ThreadPool> pool_;
 };
 
 struct YeeProbe {
@@ -165,6 +191,7 @@ struct YeeOutput {
     std::vector<double> energyTimes, energy;
     double elapsedSeconds = 0.0;
     double cellUpdatesPerSecond = 0.0;
+    std::string backend;  // where it ran, with the precision
 };
 
 struct YeeRunEnd {

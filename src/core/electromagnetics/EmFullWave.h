@@ -37,6 +37,7 @@ struct EmFullWaveSettings {
     double harmonicPeriods = 8.0;
     int snapshotCount = 20;
     size_t memoryLimitBytes = 1024ull * 1024ull * 1024ull;
+    compute::ComputeOptions compute;    // CPU threads by default; CUDA only when chosen
 
     Status validate() const;
     friend bool operator==(const EmFullWaveSettings&, const EmFullWaveSettings&) = default;
@@ -61,6 +62,7 @@ struct EmFullWavePlan {
     size_t stateBytes = 0;
     double cellUpdates = 0.0, estimatedSeconds = 0.0;
     size_t sourceCount = 0, pecCells = 0, materialCells = 0, wireEdges = 0;
+    std::string backend;                // where it will run
     SampleGrid grid;  // the region's nodes
     std::string summary() const;
 };

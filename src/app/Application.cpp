@@ -1,5 +1,7 @@
 #include "Application.h"
 
+#include "compute/Compute.h"
+
 #include "foundation/Log.h"
 #include "foundation/Version.h"
 #include "render/Renderer.h"
@@ -33,6 +35,7 @@ void logStartup(const QApplication& application)
                 + std::to_string(EIGEN_MAJOR_VERSION) + "." + std::to_string(EIGEN_MINOR_VERSION) + ", nlohmann-json "
                 + std::to_string(NLOHMANN_JSON_VERSION_MAJOR) + "." + std::to_string(NLOHMANN_JSON_VERSION_MINOR) + "."
                 + std::to_string(NLOHMANN_JSON_VERSION_PATCH));
+    logInfo("application", "compute: " + resonant::compute::detectCompute().summary());
 }
 
 }  // namespace resonant_app

@@ -20,7 +20,10 @@
 //
 // This file knows nothing about scenes: a GridSpec is a complete numerical
 // problem. FdtdSetup.h builds one from a project.
+#include "compute/Compute.h"
+#include "compute/ThreadPool.h"
 #include "dsp/Waveform.h"
+#include "fdtd/FdtdDevice.h"
 #include "foundation/Result.h"
 
 #include <array>
@@ -74,6 +77,8 @@ struct GridSpec {
     double pmlTheoreticalReflection = 1e-6;  // design value of the profile at normal incidence
     std::vector<CellMaterial> materials{CellMaterial{}};  // [0] is the background medium
     std::vector<std::uint8_t> cellMaterial;                // nx*ny*nz indices into `materials`; empty = all background
+    // Where it runs: CPU threads (bit-identical for any count) or CUDA.
+    compute::ComputeOptions compute;
 
     bool is2D() const { return nz == 1; }
     int dimensions() const { return is2D() ? 2 : 3; }
@@ -140,6 +145,17 @@ public:
     double maxAbsPressure() const;
     bool finite() const;
 
+    int threads() const { return pool_ ? pool_->threads() : 1; }
+    compute::ThreadPool& pool() const { return *pool_; }
+    // The state as plain arrays, for the CUDA backend (valid while this lives).
+    FdtdDeviceLayout deviceLayout() const;
+    // Advances the sources' running integrals for the step from the current
+    // time and returns each source's pressure increment, as step() applies
+    // it; then advanceClock() when the fields were stepped elsewhere.
+    void advanceSources(std::vector<double>& increments);
+    void advanceClock() { ++step_; }
+    size_t paddedCell(int i, int j, int k) const { return index(i + padLo_[0], j + padLo_[1], k + padLo_[2]); }
+
 private:
     explicit FdtdSolver(GridSpec spec);
     size_t index(int i, int j, int k) const
@@ -173,6 +189,7 @@ private:
         double previous;  // w at the previous step, for the trapezoidal rule
     };
     std::vector<ActiveSource> sources_;
+    std::unique_ptr<compute::ThreadPool> pool_;
 };
 
 }  // namespace resonant::fdtd

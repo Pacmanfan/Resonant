@@ -25,6 +25,8 @@ The source is published at https://github.com/Pacmanfan/Resonant
 | GoogleTest | 1.17.0, vendored in `third_party/googletest` | BSD-3-Clause | tests only |
 | pkg-config | any | GPL-2.0 (build tool only) | lets qmake find Eigen |
 | xvfb (optional) | any | MIT/X11 | runs the application tests without a display |
+| VOLK (optional) | 3.1.2 | LGPL-3.0 (dynamically linked) | SIMD kernels for single-precision data (display conversions, measured samples) |
+| CUDA toolkit (optional) | 13.5 | NVIDIA CUDA EULA (runtime linked statically) | the optional GPU backend of the full-wave solvers |
 
 On Ubuntu 24.04:
 
@@ -32,6 +34,11 @@ On Ubuntu 24.04:
 sudo apt install build-essential cmake ninja-build pkg-config \
     qt6-base-dev libqt6opengl6-dev libeigen3-dev libgl1-mesa-dev xvfb
 ```
+
+Optional: `sudo apt install libvolk-dev` for VOLK, and NVIDIA's CUDA
+toolkit for the GPU backend. Both builds find them by themselves and build
+without them (`docs/compute/COMPUTE_BACKENDS.md`); the configure step
+reports `Resonant acceleration: VOLK ON|OFF, CUDA ON|OFF`.
 
 Nothing in the build refers to a path on a particular machine.
 
@@ -46,7 +53,10 @@ cmake --build build/cmake-release
 ```
 
 Options: `-DRESONANT_BUILD_APP=OFF` builds only the core library and its
-tests (no Qt needed); `-DRESONANT_BUILD_TESTS=OFF` skips the tests.
+tests (no Qt needed); `-DRESONANT_BUILD_TESTS=OFF` skips the tests;
+`-DRESONANT_WITH_VOLK=OFF` and `-DRESONANT_WITH_CUDA=OFF` leave the
+acceleration out; `RESONANT_CUDA_ARCHITECTURES` sets the GPU architectures
+(default `75-real;86-real;89-real;120`).
 
 The application is `build/cmake-debug/src/app/resonant`.
 
@@ -57,6 +67,9 @@ mkdir -p build/debug && cd build/debug
 qmake6 ../../project.pro                 # add CONFIG+=release for a Release build
 make -j"$(nproc)"
 ```
+
+qmake options: `CONFIG+=no_volk`, `CONFIG+=no_cuda`, `CUDA_DIR=...` (default:
+the `nvcc` on the `PATH`, else `/usr/local/cuda`), `RESONANT_CUDA_ARCHS="75 86 89 120"`.
 
 The application is `build/debug/src/main/resonant`. The repository's
 development-control system uses this build

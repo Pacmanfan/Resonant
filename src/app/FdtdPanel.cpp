@@ -26,9 +26,9 @@ FdtdPanel::FdtdPanel(QWidget* parent) : QWidget(parent), ui_(std::make_unique<Ui
     for (QDoubleSpinBox* spin : {ui_->cyclesSpin, ui_->bandwidthSpin, ui_->signalFrequencySpin, ui_->endFrequencySpin, ui_->sweepDurationSpin,
                                  ui_->durationSpin, ui_->resolutionSpin, ui_->courantSpin, ui_->impedanceSpin, ui_->periodsSpin})
         connect(spin, &QDoubleSpinBox::valueChanged, this, [this] { commit(); });
-    for (QSpinBox* spin : {ui_->absorbingSpin, ui_->snapshotSpin})
+    for (QSpinBox* spin : {ui_->absorbingSpin, ui_->snapshotSpin, ui_->threadsSpin})
         connect(spin, &QSpinBox::valueChanged, this, [this] { commit(); });
-    for (QComboBox* combo : {ui_->waveformCombo, ui_->boundaryCombo})
+    for (QComboBox* combo : {ui_->waveformCombo, ui_->boundaryCombo, ui_->computeCombo})
         connect(combo, &QComboBox::activated, this, [this] { commit(); });
     connect(ui_->regionCombo, &QComboBox::activated, this, [this] { check(); });
     connect(ui_->checkButton, &QPushButton::clicked, this, &FdtdPanel::check);
@@ -123,6 +123,8 @@ void FdtdPanel::refreshSettings()
     ui_->absorbingSpin->setValue(s.absorbingCells);
     ui_->snapshotSpin->setValue(s.snapshotCount);
     ui_->periodsSpin->setValue(s.harmonicPeriods);
+    ui_->computeCombo->setCurrentIndex(s.compute.backend == compute::ComputeBackend::Cuda ? 1 : 0);
+    ui_->threadsSpin->setValue(s.compute.threads);
     updating_ = false;
     updateEnabled();
 }
@@ -141,6 +143,7 @@ void FdtdPanel::updateEnabled()
     const BoundaryKind boundary = kBoundaries[ui_->boundaryCombo->currentIndex()];
     ui_->impedanceSpin->setEnabled(boundary == BoundaryKind::Impedance);
     ui_->absorbingSpin->setEnabled(boundary == BoundaryKind::Absorbing);
+    ui_->threadsSpin->setEnabled(ui_->computeCombo->currentIndex() == 0);
     const bool running = solver_ && solver_->isRunning();
     ui_->runButton->setEnabled(!running);
     ui_->cancelButton->setEnabled(running);
@@ -165,6 +168,8 @@ void FdtdPanel::commit()
     s.absorbingCells = ui_->absorbingSpin->value();
     s.snapshotCount = ui_->snapshotSpin->value();
     s.harmonicPeriods = ui_->periodsSpin->value();
+    s.compute.backend = ui_->computeCombo->currentIndex() == 1 ? compute::ComputeBackend::Cuda : compute::ComputeBackend::Cpu;
+    s.compute.threads = ui_->threadsSpin->value();
     if (const Status status = solver_->setSettings(s); !status) {
         ui_->statusLabel->setText(QString::fromStdString(status.message()));
         refreshSettings();

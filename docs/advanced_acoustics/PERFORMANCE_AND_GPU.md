@@ -1,12 +1,18 @@
 # Performance and Compute Backends
 
-**Status:** current for REQ-CHAT-20261126-005.
+**Status:** current for REQ-CHAT-20261126-005, updated by REQ-CHAT-20261126-014.
 
 ## What exists
 
-One backend: a single-threaded CPU implementation in double precision. It
-is the reference. No OpenMP, SIMD intrinsics, GPU, CUDA or OpenCL code
-exists, and no backend selection (there is nothing to select).
+The CPU implementation in double precision is the reference and the
+default. Since REQ-CHAT-20261126-014 (`docs/requirements/compute.md`,
+ADR-000212) it runs on every hardware thread with results bit-identical to
+one thread (1.9x on 16 threads here: the update is memory-bound), and an
+optional CUDA backend repeats it on an NVIDIA GPU. The backend is chosen in
+the Full-Wave Solver panel (Compute, CPU threads); CUDA is refused with the
+reason when no usable device is present and is not yet validated on this
+project's machine (`docs/compute/ACCELERATION_AUDIT.md`). The single-core
+figures below remain the reference measurements.
 
 ## Measured
 
@@ -49,19 +55,19 @@ out-of-core or HDF5 storage of fields.
 
 ## What would help, in order
 
-1. Threads over slabs of the grid: the update of each field reads only the
-   other field, so slabs are independent. Expected: near-linear on a few
-   cores until memory bandwidth limits it.
+1. Threads over slabs of the grid — done (REQ-CHAT-20261126-014): 1.9x on
+   sixteen threads, limited by memory bandwidth as expected.
 2. Single precision as an option: half the memory traffic. It must be
    compared with the double-precision reference; long runs accumulate
    rounding in the source integral and the energy sum.
 3. Split fields in the layers only.
-4. A GPU backend through a portable interface (OpenCL, SYCL or Vulkan
-   compute; not a single vendor's). The stencil is a textbook case and
+4. A GPU backend — a CUDA backend exists (optional, not yet validated on
+   this machine); a portable one (OpenCL, SYCL or Vulkan compute) could be
+   added behind the same stepper interface. The stencil is a textbook case and
    gains of one to two orders of magnitude are usual.
 
 Each accelerated backend must reproduce the reference tests of
 `ACOUSTIC_VALIDATION.md` within stated tolerances, including boundary
 behaviour, a long-run energy check and cancellation with resource cleanup,
-before it is offered. None has been written, so none of this has been
-measured here.
+before it is offered. The CUDA backend has the comparison tests; it has not
+been measured or validated here yet.

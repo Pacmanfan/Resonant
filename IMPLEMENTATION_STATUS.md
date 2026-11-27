@@ -161,7 +161,7 @@ Milestones and the requests that deliver them are in
 | Plots: pressure over time, spectrum magnitude and phase, energy over time | Tested | one curve at a time |
 | Isosurfaces, volume rendering, arbitrary cross-sections, probe-to-probe comparison plots | Missing | |
 | Background job with progress and cancellation; memory and work limits | Tested | |
-| Threads, SIMD, GPU backends; backend selection | Missing | one single-threaded double-precision reference: about 1e8 cell updates per second |
+| Threads, SIMD, GPU backends; backend selection | Partial | threads (bit-identical, 1.9x); optional CUDA backend implemented, not yet validated on a GPU (see Compute backends) |
 | FEM, BEM, angular spectrum, pseudospectral solvers | Missing | |
 | Nonlinear, thermoviscous, streaming, cavitation effects | Missing | requirements for each are listed in `ADVANCED_ACOUSTICS.md` |
 | Example projects A (2D, 3D), B to G in `examples/advanced_acoustics` | Tested | |
@@ -192,7 +192,7 @@ Milestones and the requests that deliver them are in
 | Horn geometry (conical, exponential, stepped) | Tested | analysed as a member of varying section |
 | Periodic rod: longitudinal Bloch band structure, stop bands, finite-rod attenuation | Tested | 2D/3D phononic crystals, locally resonant metamaterials: Missing |
 | One-way sound radiation from plates and membranes (Rayleigh) | Tested | two-way fluid-structure interaction: Missing |
-| Threads, SIMD, GPU backends | Missing | single-threaded sparse direct solvers |
+| Threads, SIMD, GPU backends | Missing | single-threaded sparse direct solvers (not accelerated by decision: ADR-000212) |
 | Example projects A to H in `examples/mechanics` | Tested | |
 
 ## Electromagnetic waves, antennas and RF — `docs/requirements/electromagnetics.md`, `docs/electromagnetics/`
@@ -220,5 +220,21 @@ Milestones and the requests that deliver them are in
 | Touchstone one-port import and export; measured vs calculated | Tested | multi-port Missing; no instrument control |
 | Reproducibility metadata and run records | Tested | fields kept in memory, not in the project file |
 | Electromagnetic optimization | Partial | synthesis, tapers, resonant length, matching; general optimization: request 009 |
-| Threads, SIMD, GPU backends | Missing | CPU, double precision, one thread |
+| Threads, SIMD, GPU backends | Partial | Yee solver, analytical fields and patterns threaded (bit-identical, Yee 4.4x); optional CUDA Yee backend implemented, not yet validated on a GPU |
 | Example projects A to G in `examples/electromagnetics` | Tested | |
+
+## Compute backends — `docs/requirements/compute.md`, `docs/compute/`
+
+| Capability | State | Notes |
+|---|---|---|
+| `src/core/compute`: thread pool, compute options, capability detection | Tested | chunked scheduling for hybrid CPUs |
+| Threaded acoustic FDTD and Yee solvers, bit-identical to one thread | Tested | 1.9x and 4.4x on 16 threads (memory bandwidth limits the acoustic solver) |
+| Threaded analytical EM fields and pattern sampling | Tested | bit-identical |
+| CUDA backend for both full-wave solvers (double precision, no FMA) | Partial | implemented and compiled (sm_75..sm_120 + PTX); GPU comparison tests skipped here because the GPU's memory was taken by another program: NOT validated yet |
+| Backend choice in the panels, plan "Runs on", refusal without a usable device, backend in results | Tested | never a silent fall-back |
+| VOLK vector kernels with plain fallbacks | Tested | used for field display magnitudes; ready for measured sample streams (request 008) |
+| Optional VOLK / CUDA in CMake and qmake; static CUDA runtime | Tested | builds without either work (stubs) |
+| Compute capabilities in Diagnostics and the startup log | Tested | |
+| Benchmark in the perf lane | Tested | figures in `docs/compute/ACCELERATION_AUDIT.md` |
+| Vendor-neutral GPU backend; single precision on the GPU | Missing | the stepper interface allows them |
+| Mechanics solvers accelerated | Missing | by decision (ADR-000212) |

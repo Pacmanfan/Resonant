@@ -161,7 +161,7 @@ Status FdtdSettings::validate() const
         return Status::failure("the analysis window must be between 1 and 1000 periods");
     if (memoryLimitBytes < 1024 * 1024)
         return Status::failure("the memory limit must be at least 1 MiB");
-    return Status::success();
+    return compute.validate();
 }
 
 nlohmann::json toJson(const FdtdSettings& s)
@@ -178,7 +178,8 @@ nlohmann::json toJson(const FdtdSettings& s)
             {"absorbingCells", s.absorbingCells},
             {"snapshotCount", s.snapshotCount},
             {"harmonicPeriods", s.harmonicPeriods},
-            {"memoryLimitBytes", s.memoryLimitBytes}};
+            {"memoryLimitBytes", s.memoryLimitBytes},
+            {"compute", compute::toJson(s.compute)}};
 }
 
 Result<FdtdSettings> fdtdSettingsFromJson(const nlohmann::json& value)
@@ -212,6 +213,12 @@ Result<FdtdSettings> fdtdSettingsFromJson(const nlohmann::json& value)
         s.snapshotCount = value.value("snapshotCount", s.snapshotCount);
         s.harmonicPeriods = value.value("harmonicPeriods", s.harmonicPeriods);
         s.memoryLimitBytes = value.value("memoryLimitBytes", s.memoryLimitBytes);
+        if (value.contains("compute")) {
+            auto options = compute::computeOptionsFromJson(value["compute"]);
+            if (!options)
+                return Result<FdtdSettings>::failure(options.message());
+            s.compute = options.value();
+        }
     } catch (const nlohmann::json::exception& error) {
         return Result<FdtdSettings>::failure(std::string("invalid solver settings: ") + error.what());
     }
@@ -242,11 +249,11 @@ std::string FdtdPlan::summary() const
         "%dD grid %d x %d%s cells of %.4g mm (%zu cells with absorbing layers), %ld time steps of %.4g us (%.4g ms simulated).\n"
         "Resolution: %.3g cells per wavelength at %.6g Hz in the slowest medium (%.6g m/s); numerical phase velocity error up to %.2g %%.\n"
         "Time step: %.3g of the stability limit (%.4g us); Courant number c_max dt / dx = %.3f.\n"
-        "Memory: %.1f MiB solver state + %.1f MiB recordings. Work: %.3g cell updates, roughly %.3g s on one core.",
+        "Memory: %.1f MiB solver state + %.1f MiB recordings. Work: %.3g cell updates, roughly %.3g s on one core.\nRuns on: %s.",
         dimensions, nx, ny, dimensions == 3 ? format(" x %d", nz).c_str() : "", dx * 1e3, cellCount, steps, dt * 1e6, duration * 1e3,
         pointsPerWavelength, highestFrequency, slowestSpeed, 100.0 * phaseVelocityError, stabilityLimit > 0.0 ? dt / stabilityLimit : 0.0,
         stabilityLimit * 1e6, courantNumber, static_cast<double>(stateBytes) / 1048576.0, static_cast<double>(recordingBytes) / 1048576.0,
-        cellUpdates, estimatedSeconds);
+        cellUpdates, estimatedSeconds, backend.c_str());
     text += "\nDuration: " + durationBasis;
     return text;
 }
@@ -337,6 +344,7 @@ Prepared prepare(const Project& project, const Id& regionId, const acoustics::Me
     grid.boundary = settings.boundary;
     grid.impedance.fill(settings.boundaryImpedance);
     grid.pmlCells = settings.absorbingCells;
+    grid.compute = settings.compute;
     plan.totalCells = grid.totalCells();
     plan.cellCount = static_cast<size_t>(plan.totalCells[0]) * static_cast<size_t>(plan.totalCells[1]) * static_cast<size_t>(plan.totalCells[2]);
 
@@ -444,6 +452,11 @@ Prepared prepare(const Project& project, const Id& regionId, const acoustics::Me
                              "lowered automatically.",
                              static_cast<double>(plan.stateBytes + plan.recordingBytes) / 1048576.0, plan.cellCount,
                              static_cast<double>(settings.memoryLimitBytes) / 1048576.0));
+    plan.backend = settings.compute.backend == compute::ComputeBackend::Cuda
+                       ? "CUDA device " + std::to_string(settings.compute.device) + ", double precision"
+                       : "CPU, double precision, " + std::to_string(compute::resolveThreads(settings.compute.threads)) + " thread(s)";
+    if (Status status = compute::checkBackend(settings.compute, plan.stateBytes); !status)
+        return refuse(status.message() + ". Choose the CPU, or free the device; the backend is never switched automatically.");
     if (plan.cellUpdates > 5e11)
         return refuse(format("The calculation needs %.3g cell updates (about %.0f hours on one core). Reduce the region, the frequency, "
                              "the resolution or the simulated time.", plan.cellUpdates, plan.estimatedSeconds / 3600.0));
@@ -740,6 +753,8 @@ Result<std::shared_ptr<const FdtdResult>> simulate(const std::string& name, Prep
     configuration["sources"] = plan.sourceCount;
     configuration["excludedSources"] = plan.excludedSources;
     configuration["cellUpdatesPerSecond"] = result->output.cellUpdatesPerSecond;
+    configuration["backend"] = result->output.backend;
+    configuration["compute"] = compute::toJson(settings.compute);
     result->metadata = metadata;
 
     if (!result->output.harmonic.empty()) {

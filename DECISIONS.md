@@ -16,6 +16,7 @@ development-control system, not the application.
 | [ADR-000209](docs/decisions/ADR-000209-full-wave-fdtd-solver.md) | Staggered-grid FDTD as the first full-wave solver, validated as a scene-independent core; split-field PML; calibrated soft sources; 2D as a stated different problem; simulation geometry from definitions; solids as fluids; steady state as an ordinary field result; a solver registry that assesses and never selects; refuse rather than degrade | M4 |
 | [ADR-000210](docs/decisions/ADR-000210-mechanical-domain.md) | Mechanical domain with an own finite-element core; explicit idealizations; frame, ACM plate, membrane and hexahedral elements; Lanczos eigensolver with residuals; explicit damping models; Newmark transients; shared dsp module; separate coupling module | M5 |
 | [ADR-000211](docs/decisions/ADR-000211-electromagnetic-domain.md) | Electromagnetic domain: analytical thin-wire antennas and induced-EMF impedance; arrays as an array-factor model without coupling; an own Yee FDTD solver (split-field PML, PEC, thin wires, 2D TM); setup separate from numerics with refusal instead of coarsening; simulation bodies shared in the geometry module; guide objects; one-port Touchstone; a dB field view | M6 |
+| [ADR-000212](docs/decisions/ADR-000212-compute-backends.md) | Compute backends: a domain-independent compute module; deterministic CPU threads (bit-identical, ordered reductions) with chunked scheduling; a stepper interface per full-wave solver; CUDA as an optional, statically linked backend with the reference arithmetic (no FMA) and refusal instead of fall-back; VOLK only for single-precision data | — |
 
 ## Deviations from requests
 
@@ -29,3 +30,4 @@ Recorded in the decision that caused them:
 * The deviations of the full-wave solver milestone from its request are listed in ADR-000209.
 * The deviations of the mechanical milestone from its request are listed in ADR-000210.
 * The deviations of the electromagnetic milestone from its request are listed in ADR-000211 and `IMPLEMENTATION_STATUS.md`.
+* The deviations of the compute-backend work from its request are listed in ADR-000212.
