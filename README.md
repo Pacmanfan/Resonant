@@ -37,9 +37,9 @@ discover is something you can trust.
   beside the simulation; outputs only ever start when you authorize them.
 * **Designing by goal** — say what you want (a focus, a resonance, a beam)
   and Resonant searches, simulates and compares candidate designs for you.
-* **Script it, extend it** — a Python API and console, replayable
-  workflows, plugins, an offline help with F1 everywhere, and Demo Studio
-  for repeatable, presenter-ready demonstrations.
+* **Script it, extend it, connect it** — Python, workflows, plugins, and an
+  automation API (gRPC, MCP) so other programs and AI assistants can build
+  with you; an offline help with F1 everywhere, and Demo Studio.
 
 `IMPLEMENTATION_STATUS.md` is the honest record; `examples/README.md` lists projects.
 

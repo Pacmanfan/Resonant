@@ -1,0 +1,52 @@
+syntax = "proto3";
+package resonant.v1;
+
+import "resonant/v1/common/events.proto";
+import "resonant/v1/common/metadata.proto";
+import "resonant/v1/scene/scene.proto";
+
+message EventFilter {
+  repeated EventCategory categories = 1;  // empty: all
+  repeated string resource_ids = 2;       // empty: all
+  string job_id = 3;
+  string session_id = 4;                  // only events caused by this session
+}
+
+message SubscribeEventsRequest {
+  RequestHeader header = 1;
+  EventFilter filter = 2;
+  // Resume after this sequence (0: from now). Missed events beyond retention produce a GapNotice.
+  uint64 after_sequence = 3;
+  // Send a scene snapshot first (then events from the snapshot's sequence on).
+  bool include_snapshot = 4;
+}
+
+message SubscribeEventsResponse {
+  oneof item {
+    SceneSnapshot snapshot = 1;
+    Event event = 2;
+    GapNotice gap = 3;
+  }
+}
+
+message ListEventsRequest {
+  RequestHeader header = 1;
+  EventFilter filter = 2;
+  uint64 after_sequence = 3;
+  int32 limit = 4;   // at most 1000
+}
+message ListEventsResponse {
+  ResponseHeader header = 1;
+  repeated Event events = 2;
+  GapNotice gap = 3;           // set when events after after_sequence are no longer retained
+  uint64 last_sequence = 4;
+}
+
+// Subscriptions (streaming) and polling of the application's events.
+service EventService {
+  // A live stream of events in sequence order, optionally after a scene snapshot. It resumes after
+  // a given sequence and sends a gap notice for events no longer retained.
+  rpc SubscribeEvents(SubscribeEventsRequest) returns (stream SubscribeEventsResponse);
+  // The retained events after a sequence, one page at a time (polling clients).
+  rpc ListEvents(ListEventsRequest) returns (ListEventsResponse);
+}

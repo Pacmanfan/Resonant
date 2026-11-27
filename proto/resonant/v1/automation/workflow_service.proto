@@ -1,0 +1,44 @@
+syntax = "proto3";
+package resonant.v1;
+
+import "google/protobuf/struct.proto";
+import "resonant/v1/common/jobs.proto";
+import "resonant/v1/common/metadata.proto";
+
+message WorkflowTemplate {
+  string workflow_id = 1;
+  string name = 2;
+  string description = 3;
+  string category = 4;
+  string source = 5;               // "built-in" or "plugin <id>"
+  int32 step_count = 6;
+  google.protobuf.Struct definition = 7;   // the resonant.workflow JSON
+}
+
+message ListWorkflowTemplatesRequest { RequestHeader header = 1; }
+message ListWorkflowTemplatesResponse { ResponseHeader header = 1; repeated WorkflowTemplate workflows = 2; }
+
+// Runs a template (or a definition) on a copy of the project as a job; when it
+// completes, its changes are applied as one undoable step and the run is recorded.
+message ExecuteWorkflowRequest {
+  RequestHeader header = 1;
+  string workflow_id = 2;
+  google.protobuf.Struct definition = 3;   // instead of workflow_id
+  google.protobuf.Struct parameters = 4;
+  bool apply_changes = 5;
+}
+message ExecuteWorkflowResponse { ResponseHeader header = 1; Job job = 2; }
+
+message GetWorkflowRunRequest { RequestHeader header = 1; string job_id = 2; }
+message GetWorkflowRunResponse { ResponseHeader header = 1; google.protobuf.Struct run = 2; bool finished = 3; }
+
+// resonant.workflow templates run as jobs.
+service WorkflowService {
+  // The workflow templates (built in and from plugins), with their definitions.
+  rpc ListWorkflowTemplates(ListWorkflowTemplatesRequest) returns (ListWorkflowTemplatesResponse);
+  // Runs a workflow as a job on a copy of the project. With apply_changes, its changes are applied
+  // as one undo step when it completes.
+  rpc ExecuteWorkflow(ExecuteWorkflowRequest) returns (ExecuteWorkflowResponse);
+  // A workflow job's run record (steps, outputs, errors) once it has finished.
+  rpc GetWorkflowRun(GetWorkflowRunRequest) returns (GetWorkflowRunResponse);
+}

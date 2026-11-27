@@ -1,0 +1,44 @@
+// Sessions identify clients. A session has a client name, an interface and
+// permissions (never more than the server's policy allows). Every other call
+// names its session in RequestHeader.session_id.
+syntax = "proto3";
+package resonant.v1;
+
+import "google/protobuf/timestamp.proto";
+import "resonant/v1/application/capabilities.proto";
+import "resonant/v1/common/events.proto";
+import "resonant/v1/common/metadata.proto";
+
+message Session {
+  string session_id = 1;
+  string client_name = 2;
+  SourceInterface source_interface = 3;
+  repeated Permission permissions = 4;
+  google.protobuf.Timestamp opened_time = 5;
+  google.protobuf.Timestamp last_seen_time = 6;
+}
+
+message OpenSessionRequest {
+  RequestHeader header = 1;
+  string client_name = 2;
+  SourceInterface source_interface = 3;
+  repeated Permission requested_permissions = 4;  // empty: the policy's default
+}
+message OpenSessionResponse { ResponseHeader header = 1; Session session = 2; }
+
+message CloseSessionRequest { RequestHeader header = 1; }
+message CloseSessionResponse { ResponseHeader header = 1; }
+
+message ListSessionsRequest { RequestHeader header = 1; }
+message ListSessionsResponse { ResponseHeader header = 1; repeated Session sessions = 2; }
+
+// Client sessions: who is calling, with which permissions.
+service SessionService {
+  // Opens a client session. It holds the permissions requested, limited by the application's
+  // policy. Every other call names it in its header.
+  rpc OpenSession(OpenSessionRequest) returns (OpenSessionResponse);
+  // Closes the header's session. Its jobs keep running.
+  rpc CloseSession(CloseSessionRequest) returns (CloseSessionResponse);
+  // The open sessions: the caller's own, or all of them with the admin permission.
+  rpc ListSessions(ListSessionsRequest) returns (ListSessionsResponse);
+}

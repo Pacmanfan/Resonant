@@ -35,6 +35,7 @@ ResourcePaths ResourcePaths::locateFrom(const QString& executableDirectory, bool
         p.resourceRoot = env("RESONANT_RESOURCE_ROOT");
         p.pythonPackage = env("RESONANT_PYTHON_PACKAGE_DIR");
         p.pythonModule = env("RESONANT_PYTHON_MODULE_DIR");
+        p.apiDescriptors = env("RESONANT_API_DESCRIPTORS");
     }
     const QDir exe(executableDirectory);
 
@@ -47,6 +48,8 @@ ResourcePaths ResourcePaths::locateFrom(const QString& executableDirectory, bool
             p.resourceRoot = share.absolutePath();
         if (p.pythonPackage.isEmpty() && share.exists(QStringLiteral("python/resonant/__init__.py")))
             p.pythonPackage = share.absoluteFilePath(QStringLiteral("python"));
+        if (p.apiDescriptors.isEmpty() && share.exists(QStringLiteral("automation/resonant_api.desc")))
+            p.apiDescriptors = share.absoluteFilePath(QStringLiteral("automation/resonant_api.desc"));
     }
 
     // A build tree: walk up from the executable (build/<tree>/src/main, tests/app, ...).
@@ -56,6 +59,8 @@ ResourcePaths ResourcePaths::locateFrom(const QString& executableDirectory, bool
             p.help = up.absoluteFilePath(QStringLiteral("help"));
         if (p.pythonModule.isEmpty() && hasNativeModule(QDir(up.absoluteFilePath(QStringLiteral("src/python")))))
             p.pythonModule = up.absoluteFilePath(QStringLiteral("src/python"));
+        if (p.apiDescriptors.isEmpty() && up.exists(QStringLiteral("src/automation_api/resonant_api.desc")))
+            p.apiDescriptors = up.absoluteFilePath(QStringLiteral("src/automation_api/resonant_api.desc"));
         if (p.resourceRoot.isEmpty() && isResourceRoot(up))
             p.resourceRoot = up.absolutePath();
         if (!up.cdUp())

@@ -17,6 +17,9 @@ SOURCES += $$PWD/ResonantModule.cpp
 
 LIBS += $$OUT_PWD/../core/libresonant_core.a -lpthread
 PRE_TARGETDEPS += $$OUT_PWD/../core/libresonant_core.a
+# In-process dispatch of the automation API (the same contract as gRPC), when it is built.
+include(../../protobuf.pri)
+equals(RESONANT_AUTOMATION_API, 1): useAutomationApi($$OUT_PWD/../automation_api)
 
 # `make install`: the module into the installed package (share/resonant/python/resonant).
 isEmpty(PREFIX): PREFIX = /usr/local

@@ -8,9 +8,10 @@
 
 #include <string>
 
+#include "scene/SceneObject.h"
+
 namespace resonant {
 class Project;
-class SceneObject;
 }  // namespace resonant
 
 namespace resonant::coupling {
@@ -25,9 +26,13 @@ void registerBuiltinWorkflows(automation::WorkflowLibrary& library);
 // (merged into the type's default component data), position, rotation,
 // material, parent.
 Result<std::string> addSceneObject(Project& project, const nlohmann::json& description);
+// The object addSceneObject would insert, without inserting it (and the parent it names).
+Result<std::unique_ptr<SceneObject>> makeSceneObject(const Project& project, const nlohmann::json& description, Id* parent = nullptr);
 // Changes an object: name, position, rotation, visible, parameters (geometry,
 // set together and validated), component (merge patch), material.
 Status changeSceneObject(Project& project, const std::string& reference, const nlohmann::json& changes);
+// The state changeSceneObject would set, without setting it.
+Result<ObjectState> changedObjectState(const Project& project, const SceneObject& object, const nlohmann::json& changes);
 // An object by id, or else by name.
 const SceneObject* findSceneObject(const Project& project, const std::string& reference);
 // The object types and component types addSceneObject knows.

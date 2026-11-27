@@ -244,9 +244,9 @@ const SceneObject* findSceneObject(const Project& project, const std::string& re
     return firstWith(project.scene, [&](const SceneObject& o) { return o.state.name == reference; });
 }
 
-Result<std::string> addSceneObject(Project& project, const json& d)
+Result<std::unique_ptr<SceneObject>> makeSceneObject(const Project& project, const json& d, Id* parentOut)
 {
-    using R = Result<std::string>;
+    using R = Result<std::unique_ptr<SceneObject>>;
     if (!d.is_object())
         return R::failure("an object description must be a JSON object");
     const std::string type = d.value("type", std::string("geometry"));
@@ -323,20 +323,30 @@ Result<std::string> addSceneObject(Project& project, const json& d)
             return R::failure("no parent object '" + d["parent"].get<std::string>() + "'");
         parent = p->id();
     }
-    const std::string id = object->id().str();
-    auto inserted = project.scene.insert(std::move(object), parent);
+    if (parentOut)
+        *parentOut = parent;
+    return object;
+}
+
+Result<std::string> addSceneObject(Project& project, const json& d)
+{
+    Id parent;
+    auto object = makeSceneObject(project, d, &parent);
+    if (!object)
+        return Result<std::string>::failure(object.message());
+    const std::string id = object.value()->id().str();
+    auto inserted = project.scene.insert(object.take(), parent);
     if (!inserted)
-        return R::failure(inserted.message());
+        return Result<std::string>::failure(inserted.message());
     return id;
 }
 
-Status changeSceneObject(Project& project, const std::string& reference, const json& changes)
+Result<ObjectState> changedObjectState(const Project& project, const SceneObject& object, const json& changes)
 {
-    const SceneObject* o = findSceneObject(project, reference);
-    if (!o)
-        return Status::failure("no object '" + reference + "'");
+    using R = Result<ObjectState>;
+    const SceneObject* o = &object;
     if (!changes.is_object())
-        return Status::failure("changes must be a JSON object");
+        return R::failure("changes must be a JSON object");
     ObjectState state = o->state;
     if (changes.contains("name"))
         state.name = changes["name"].get<std::string>();
@@ -345,31 +355,31 @@ Status changeSceneObject(Project& project, const std::string& reference, const j
     if (changes.contains("position")) {
         auto p = vec3(changes["position"], "position");
         if (!p)
-            return Status::failure(p.message());
+            return R::failure(p.message());
         state.local.position = p.value();
     }
     if (changes.contains("rotation")) {
         auto r = vec3(changes["rotation"], "rotation");
         if (!r)
-            return Status::failure(r.message());
+            return R::failure(r.message());
         state.local.rotation = r.value();
     }
     if (changes.contains("parameters")) {
         if (!state.geometry)
-            return Status::failure("'" + state.name + "' has no geometry");
+            return R::failure("'" + state.name + "' has no geometry");
         Geometry g = *state.geometry;
         if (Status s = setGeometryParameters(g, changes["parameters"], state.name); !s)
-            return s;
+            return R::failure(s.message());
         state.geometry = g;
     }
     if (changes.contains("component")) {
         if (!state.component)
-            return Status::failure("'" + state.name + "' has no component");
+            return R::failure("'" + state.name + "' has no component");
         json data = state.component->toJson();
         data.merge_patch(changes["component"]);
         auto c = ComponentRegistry::instance().create(state.component->typeId(), data);
         if (!c)
-            return Status::failure("'" + state.name + "': " + c.message());
+            return R::failure("'" + state.name + "': " + c.message());
         state.component = c.take();
     }
     if (changes.contains("material")) {
@@ -381,11 +391,22 @@ Status changeSceneObject(Project& project, const std::string& reference, const j
             if (!material)
                 material = project.materials.findByName(m);
             if (!material)
-                return Status::failure("no material '" + m + "'");
+                return R::failure("no material '" + m + "'");
             state.materialId = material->id();
         }
     }
-    return project.scene.setState(o->id(), std::move(state));
+    return state;
+}
+
+Status changeSceneObject(Project& project, const std::string& reference, const json& changes)
+{
+    const SceneObject* o = findSceneObject(project, reference);
+    if (!o)
+        return Status::failure("no object '" + reference + "'");
+    auto state = changedObjectState(project, *o, changes);
+    if (!state)
+        return Status::failure(state.message());
+    return project.scene.setState(o->id(), state.take());
 }
 
 void registerWorkflowActions(automation::ActionRegistry& registry)

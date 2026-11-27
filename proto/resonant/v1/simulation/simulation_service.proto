@@ -1,0 +1,82 @@
+syntax = "proto3";
+package resonant.v1;
+
+import "resonant/v1/common/jobs.proto";
+import "resonant/v1/common/metadata.proto";
+import "resonant/v1/common/spatial.proto";
+import "resonant/v1/common/validation.proto";
+import "resonant/v1/scene/scene.proto";
+
+message Solver {
+  string solver_id = 1;          // "acoustic.freefield.analytical", "acoustic.reflector.kirchhoff", ...
+  string display_name = 2;
+  string physics_domain = 3;
+  string method = 4;             // "analytical superposition", "Kirchhoff physical optics", "FDTD", ...
+  bool available = 5;
+  bool startable_through_api = 6;  // false: available in the application, not yet through this API
+  repeated string assumptions = 7;
+}
+
+message ListSolversRequest { RequestHeader header = 1; }
+message ListSolversResponse { ResponseHeader header = 1; repeated Solver solvers = 2; }
+
+// The plan of an acoustic field calculation on a field region, without running it.
+message AcousticFieldPlan {
+  bool allowed = 1;
+  string refusal = 2;
+  int64 sample_points = 3;
+  int64 memory_bytes = 4;
+  double source_evaluations = 5;
+  int32 active_sources = 6;
+  string model_id = 7;
+  double frequency_hz = 8;
+  repeated string warnings = 9;
+}
+
+message EstimateAcousticFieldRequest { RequestHeader header = 1; string region_id = 2; }
+message EstimateAcousticFieldResponse { ResponseHeader header = 1; AcousticFieldPlan plan = 2; }
+
+// Starts the field calculation as a job (returns at once with the job; the result arrives with result.created).
+message StartAcousticFieldSimulationRequest { RequestHeader header = 1; string region_id = 2; }
+message StartAcousticFieldSimulationResponse { ResponseHeader header = 1; Job job = 2; AcousticFieldPlan plan = 3; }
+
+enum FieldRegionKind {
+  FIELD_REGION_KIND_UNSPECIFIED = 0;   // plane XZ
+  FIELD_REGION_KIND_PLANE_XY = 1;
+  FIELD_REGION_KIND_PLANE_XZ = 2;
+  FIELD_REGION_KIND_PLANE_YZ = 3;
+  FIELD_REGION_KIND_VOLUME = 4;
+}
+
+// Adds a field region: the plane or box, in the region's own frame and
+// centred on its position, where a field run samples the pressure. Unset
+// fields keep the defaults (0.2 m, 121 x 121 samples; 41 through a volume).
+message CreateFieldRegionRequest {
+  RequestHeader header = 1;
+  string name = 2;
+  Transform local_transform = 3;
+  string parent_id = 4;
+  FieldRegionKind kind = 5;
+  optional double size_x_meters = 6;
+  optional double size_y_meters = 7;
+  optional double size_z_meters = 8;
+  optional int32 count_u = 9;          // samples along the first in-plane axis (X; Y for a YZ plane)
+  optional int32 count_v = 10;         // along the second in-plane axis
+  optional int32 count_w = 11;         // through a volume (Z)
+}
+message CreateFieldRegionResponse { ResponseHeader header = 1; SceneObject region = 2; ChangeSummary changes = 3; }
+
+// Simulations. Mechanical, electromagnetic and full-wave runs are available in
+// the application and planned for this API (see GetCapabilities).
+service SimulationService {
+  // The solvers, their method and assumptions, and whether this API can start them.
+  rpc ListSolvers(ListSolversRequest) returns (ListSolversResponse);
+  // Adds a field region: the plane or box where a field run samples the pressure.
+  rpc CreateFieldRegion(CreateFieldRegionRequest) returns (CreateFieldRegionResponse);
+  // What a field run on a region would cost (points, memory, work), and whether it is allowed,
+  // before anything is computed.
+  rpc EstimateAcousticField(EstimateAcousticFieldRequest) returns (EstimateAcousticFieldResponse);
+  // Starts the field calculation as a job. It returns at once with the job; the result arrives with
+  // a result.created event.
+  rpc StartAcousticFieldSimulation(StartAcousticFieldSimulationRequest) returns (StartAcousticFieldSimulationResponse);
+}

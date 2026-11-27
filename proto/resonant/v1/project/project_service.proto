@@ -1,0 +1,57 @@
+syntax = "proto3";
+package resonant.v1;
+
+import "resonant/v1/common/metadata.proto";
+import "resonant/v1/common/validation.proto";
+import "resonant/v1/project/project.proto";
+
+message GetProjectRequest { RequestHeader header = 1; }
+message GetProjectResponse { ResponseHeader header = 1; Project project = 2; }
+
+// Replaces the open project with a new, empty one. Refused (FAILED_PRECONDITION)
+// when the open project has unsaved changes, unless discard_unsaved_changes.
+message CreateProjectRequest { RequestHeader header = 1; string name = 2; bool discard_unsaved_changes = 3; }
+message CreateProjectResponse { ResponseHeader header = 1; Project project = 2; }
+
+// Opens a project file. `file_name` is relative to the server's project
+// directory (no absolute paths, no ".."); requires PERMISSION_FILES.
+message OpenProjectRequest { RequestHeader header = 1; string file_name = 2; bool discard_unsaved_changes = 3; }
+message OpenProjectResponse { ResponseHeader header = 1; Project project = 2; repeated string load_warnings = 3; }
+
+// Saves to the current file, or to `file_name` (relative to the project directory). Requires PERMISSION_FILES.
+message SaveProjectRequest { RequestHeader header = 1; string file_name = 2; }
+message SaveProjectResponse { ResponseHeader header = 1; Project project = 2; }
+
+message ValidateProjectRequest { RequestHeader header = 1; }
+message ValidateProjectResponse { ResponseHeader header = 1; ValidationResult validation = 2; }
+
+message UndoRequest { RequestHeader header = 1; }
+message UndoResponse { ResponseHeader header = 1; Project project = 2; string undone = 3; }
+message RedoRequest { RequestHeader header = 1; }
+message RedoResponse { ResponseHeader header = 1; Project project = 2; string redone = 3; }
+
+// The open project's export as the project file's JSON (for inspection, copies and diffs).
+message ExportProjectJsonRequest { RequestHeader header = 1; }
+message ExportProjectJsonResponse { ResponseHeader header = 1; string project_json = 2; }
+
+// The open project: create, open, save, validate, undo and redo.
+service ProjectService {
+  // The open project's summary: name, file, revision, unsaved changes, undo and redo.
+  rpc GetProject(GetProjectRequest) returns (GetProjectResponse);
+  // Replaces the open project with a new, empty one. Refused while there are unsaved changes,
+  // unless they are discarded.
+  rpc CreateProject(CreateProjectRequest) returns (CreateProjectResponse);
+  // Opens a project file from the application's project directory (files permission). Unsaved
+  // changes are kept unless discarded.
+  rpc OpenProject(OpenProjectRequest) returns (OpenProjectResponse);
+  // Saves the project, to its file or to a name in the project directory (files permission).
+  rpc SaveProject(SaveProjectRequest) returns (SaveProjectResponse);
+  // Checks geometry, material references, transforms and materials, and reports the issues.
+  rpc ValidateProject(ValidateProjectRequest) returns (ValidateProjectResponse);
+  // Undoes the last change (whoever made it: GUI, script or client).
+  rpc Undo(UndoRequest) returns (UndoResponse);
+  // Redoes the last undone change.
+  rpc Redo(RedoRequest) returns (RedoResponse);
+  // The project in its file format (JSON text).
+  rpc ExportProjectJson(ExportProjectJsonRequest) returns (ExportProjectJsonResponse);
+}

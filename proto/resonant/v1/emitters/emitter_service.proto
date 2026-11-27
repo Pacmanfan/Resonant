@@ -1,0 +1,44 @@
+syntax = "proto3";
+package resonant.v1;
+
+import "resonant/v1/common/metadata.proto";
+import "resonant/v1/common/spatial.proto";
+import "resonant/v1/common/validation.proto";
+import "resonant/v1/emitters/emitter.proto";
+
+message CreateEmitterRequest {
+  RequestHeader header = 1;
+  string name = 2;
+  Transform local_transform = 3;
+  string parent_id = 4;
+  // Fields that are set replace the defaults (40 kHz, 1 Pa at 1 m, omnidirectional, active).
+  SourceSettingsPatch source = 5;
+}
+message CreateEmitterResponse { ResponseHeader header = 1; Emitter emitter = 2; ChangeSummary changes = 3; }
+
+message GetEmitterRequest { RequestHeader header = 1; string object_id = 2; }
+message GetEmitterResponse { ResponseHeader header = 1; Emitter emitter = 2; }
+
+message ListEmittersRequest { RequestHeader header = 1; }
+message ListEmittersResponse { ResponseHeader header = 1; repeated Emitter emitters = 2; }
+
+message UpdateEmitterRequest {
+  RequestHeader header = 1;
+  string object_id = 2;
+  optional uint64 expected_revision = 3;
+  SourceSettingsPatch source = 4;
+  Transform local_transform = 5;   // the parts set (position, rotation, scale) replace the current ones
+}
+message UpdateEmitterResponse { ResponseHeader header = 1; Emitter emitter = 2; ChangeSummary changes = 3; }
+
+// Acoustic point sources.
+service EmitterService {
+  // Adds an acoustic point source.
+  rpc CreateEmitter(CreateEmitterRequest) returns (CreateEmitterResponse);
+  // One emitter with its source settings.
+  rpc GetEmitter(GetEmitterRequest) returns (GetEmitterResponse);
+  // Every emitter.
+  rpc ListEmitters(ListEmittersRequest) returns (ListEmittersResponse);
+  // Changes an emitter's source settings or transform. Only the fields that are set change.
+  rpc UpdateEmitter(UpdateEmitterRequest) returns (UpdateEmitterResponse);
+}

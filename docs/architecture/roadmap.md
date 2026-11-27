@@ -16,6 +16,7 @@ The implementation status of each milestone is kept in
 | M7 Experiments and hardware | REQ-CHAT-20261126-008 | experiment framework, simulated devices, acquisition, calibration, correlation with simulation | RES-PRODUCT-009 |
 | M8 Optimization | REQ-CHAT-20261126-009 | optimization framework, inverse design, geometry optimization across domains | RES-PRODUCT-004, -010 |
 | M9 Python, help, demonstrations | REQ-CHAT-20261126-010 | Python API and scripting, automation, plugins, HTML help, demonstration system | RES-PRODUCT-015 |
+| M10 Automation API | REQ-CHAT-20261126-012 | application services, protobuf contract, local endpoint and gRPC bridge, events, jobs, transactions, Python client, MCP adapter | RES-PRODUCT-015 |
 | Later | — | geometry import from CAD formats, GPU backends | RES-PRODUCT-002, -014 |
 
 V1 (RES-PRODUCT-015) is reached when M1 and M2 are complete and the two

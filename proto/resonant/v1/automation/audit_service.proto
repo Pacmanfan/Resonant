@@ -1,0 +1,44 @@
+syntax = "proto3";
+package resonant.v1;
+
+import "google/protobuf/timestamp.proto";
+import "resonant/v1/common/errors.proto";
+import "resonant/v1/common/events.proto";
+import "resonant/v1/common/metadata.proto";
+
+// One mutation (or refused mutation) as recorded by the audit trail. Never
+// contains tokens, credentials or file contents.
+message AuditRecord {
+  uint64 sequence = 1;
+  google.protobuf.Timestamp time = 2;
+  string request_id = 3;
+  string session_id = 4;
+  string client_name = 5;
+  SourceInterface source_interface = 6;
+  string operation = 7;              // "SceneService.UpdateObject"
+  repeated string resource_ids = 8;
+  uint64 revision_before = 9;
+  uint64 revision_after = 10;
+  bool succeeded = 11;
+  bool dry_run = 12;
+  Error error = 13;
+  double duration_seconds = 14;
+}
+
+message QueryAuditRequest {
+  RequestHeader header = 1;
+  string session_id = 2;
+  string operation = 3;
+  string resource_id = 4;
+  uint64 after_sequence = 5;
+  int32 limit = 6;                   // at most 1000
+  bool failures_only = 7;
+}
+message QueryAuditResponse { ResponseHeader header = 1; repeated AuditRecord records = 2; }
+
+// The audit trail of changes made through the API, the GUI's services and scripts.
+service AuditService {
+  // Audit records of changes and refused changes: the caller's own session's, or any session's with
+  // the admin permission.
+  rpc QueryAudit(QueryAuditRequest) returns (QueryAuditResponse);
+}

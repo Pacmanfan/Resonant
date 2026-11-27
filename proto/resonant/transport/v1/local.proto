@@ -1,0 +1,20 @@
+// The local endpoint's frames (internal, not part of the public contract):
+// how the gRPC bridge (or an in-host client) hands a call to the application
+// over a Unix-domain socket. One call per connection; a frame is a 4-byte
+// little-endian length followed by the message.
+syntax = "proto3";
+package resonant.transport.v1;
+
+message LocalRequest {
+  string method = 1;                 // "/resonant.v1.SceneService/GetObject"
+  bytes payload = 2;                 // the serialized request message
+  map<string, string> metadata = 3;  // e.g. "client-address"
+}
+
+message LocalResponse {
+  int32 status = 1;                  // 0 OK, otherwise the gRPC status code
+  bytes payload = 2;                 // the serialized response message (or stream item)
+  bytes error = 3;                   // a serialized resonant.v1.Error when status != 0
+  bool stream_item = 4;              // more items follow
+  bool end_of_stream = 5;
+}

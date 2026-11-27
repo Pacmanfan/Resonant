@@ -1,0 +1,47 @@
+// Spatial types. Conventions (docs/reference/PROTOBUF_API.md): SI units,
+// right-handed world frame with X horizontal, Y depth, Z up; angles in
+// radians; rotations are Z-Y-X Euler angles applied in the parent frame.
+syntax = "proto3";
+package resonant.v1;
+
+// A position or displacement in metres.
+message Vector3Meters {
+  double x_meters = 1;
+  double y_meters = 2;
+  double z_meters = 3;
+}
+
+// A direction or dimensionless vector.
+message Vector3 {
+  double x = 1;
+  double y = 2;
+  double z = 3;
+}
+
+// Rotation as Z-Y-X Euler angles in radians (about X, Y, Z of the parent frame).
+message EulerAnglesRadians {
+  double x_radians = 1;
+  double y_radians = 2;
+  double z_radians = 3;
+}
+
+// The frame a value is expressed in.
+enum CoordinateFrame {
+  COORDINATE_FRAME_UNSPECIFIED = 0;
+  COORDINATE_FRAME_WORLD = 1;
+  COORDINATE_FRAME_PARENT = 2;   // the parent object's frame (a local transform)
+  COORDINATE_FRAME_OBJECT = 3;   // the object's own frame
+}
+
+// A local transform: relative to the parent object (or the world at the top level).
+message Transform {
+  Vector3Meters position_meters = 1;
+  EulerAnglesRadians rotation_radians = 2;
+  Vector3 scale = 3;  // factors, > 0
+}
+
+// A complex value (peak amplitude, phase convention exp(+j omega t)).
+message Complex {
+  double real = 1;
+  double imag = 2;
+}

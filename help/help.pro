@@ -24,5 +24,5 @@ demofiles.files = $$PWD/../demos $$PWD/../examples
 pluginfiles.path = $$PREFIX/share/resonant/plugins
 pluginfiles.files = $$PWD/../plugins/examples
 pythonfiles.path = $$PREFIX/share/resonant/python
-pythonfiles.files = $$PWD/../python/resonant $$PWD/../python/examples $$PWD/../python/templates
+pythonfiles.files = $$PWD/../python/resonant $$PWD/../python/resonant_api $$PWD/../python/examples $$PWD/../python/templates
 INSTALLS += helpfiles demofiles pluginfiles pythonfiles

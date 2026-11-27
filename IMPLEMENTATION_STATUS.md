@@ -314,3 +314,22 @@ milestones below.)
 | RF_IQ_Analyst reference audit | Done | `docs/reference/ANALYST_REFERENCE_AUDIT.md`; the reference was not modified |
 | Video recording, narration audio | Missing | by design: Resonant prepares fixed-size, scripted, reproducible runs for external recording |
 
+## Automation API — `docs/requirements/automation_api.md`, `docs/architecture/AUTOMATION_ARCHITECTURE.md`, `docs/reference/`
+
+| Capability | State | Notes |
+|---|---|---|
+| Application service layer (project, scene, geometry, materials, emitters, arrays, simulation, jobs, results, optimization, workflows, transactions, application) with sessions, permissions, structured errors, dry runs, idempotent retries and an audit trail | Tested | Qt-free in `src/core/services`; layering-checked |
+| Revisions counted from the scene and the undo history (also GUI commands, undo, redo, Python edits); optimistic concurrency with `CONFLICT` and the current revision | Tested | |
+| One ordered event stream; subscriptions with snapshot, resumption and gap notices; filters | Tested | 10 000 events retained |
+| Jobs through the API: acoustic field runs, workflows, optimizations; wait, cancel; field results as summaries with provenance, chunked slices with a stride and a limit, point samples | Tested | |
+| Mechanical, electromagnetic and full-wave (FDTD) runs through the API | Missing | available in their panels and from Python; listed by `GetCapabilities` / `ListSolvers` as not startable through the API |
+| Atomic batches and staged transactions (one undo step, base-revision conflicts) | Tested | project changes only: no rollback of files, jobs or hardware |
+| proto3 contract `proto/resonant/v1` (16 services, 68 methods), generated at build time in qmake and CMake, descriptor set, compatibility check against a baseline, generated reference | Tested | optional: builds without protoc / libprotobuf |
+| Local endpoint (Unix socket, same user, token) in the GUI and in the headless host `resonant-automation` | Tested | |
+| gRPC transport | Tested | a grpcio bridge process (`python3 -m resonant_api.bridge`), loopback by default; C++ gRPC is not linked (libgrpc++ not installed here) |
+| The GUI's operations through the services (create, rename, move, show / hide, reparent, parameters, materials, library, delete, duplicate, undo, redo, save, field runs); Tools > Automation Server (permissions, token, bridge, sessions) | Tested | domain panels that set a whole component state still push one command (counted like any change) |
+| Python client `resonant_api` (socket, gRPC, in process) and in-process dispatch in the native module | Tested | `SubscribeEvents` needs a socket or gRPC |
+| MCP adapter: tools from the contract by permission level, dry runs, its own MCP session | Tested | tested without an MCP client; `serve_stdio` uses the `mcp` package |
+| Latency: GetProject median 0.12 ms over the local socket, 0.45 ms over gRPC through the bridge (this machine) | Measured | `AutomationApiTests.test_call_latency` |
+| Authentication beyond the local token (TLS, users) | Missing | the bridge is unencrypted and loopback by default |
+

@@ -1,0 +1,62 @@
+syntax = "proto3";
+package resonant.v1;
+
+import "resonant/v1/common/metadata.proto";
+import "resonant/v1/common/spatial.proto";
+import "resonant/v1/common/validation.proto";
+import "resonant/v1/scene/scene.proto";
+
+message GeometryParameterDefinition {
+  string key = 1;
+  string label = 2;
+  string unit = 3;           // "m", "rad", "" (count)
+  double default_value = 4;
+  double min_value = 5;
+  double max_value = 6;
+  bool integer = 7;
+}
+
+message GeometryKind {
+  string kind_id = 1;
+  string display_name = 2;
+  string category = 3;
+  repeated GeometryParameterDefinition parameters = 4;
+}
+
+message ListGeometryKindsRequest { RequestHeader header = 1; }
+message ListGeometryKindsResponse { ResponseHeader header = 1; repeated GeometryKind kinds = 2; }
+
+// Creates a geometry object (a primitive or a parametric kind). Unset parameters take their defaults.
+message CreatePrimitiveRequest {
+  RequestHeader header = 1;
+  string kind_id = 2;
+  string name = 3;                      // empty: the kind's name, made unique
+  map<string, double> parameters = 4;
+  Transform local_transform = 5;
+  string parent_id = 6;
+  string material_id = 7;
+}
+message CreatePrimitiveResponse { ResponseHeader header = 1; SceneObject object = 2; ChangeSummary changes = 3; }
+
+message UpdateGeometryParametersRequest {
+  RequestHeader header = 1;
+  string object_id = 2;
+  optional uint64 expected_revision = 3;
+  map<string, double> parameters = 4;   // the parameters to change, validated together
+}
+message UpdateGeometryParametersResponse { ResponseHeader header = 1; SceneObject object = 2; ChangeSummary changes = 3; }
+
+message ValidateGeometryRequest { RequestHeader header = 1; string kind_id = 2; map<string, double> parameters = 3; }
+message ValidateGeometryResponse { ResponseHeader header = 1; ValidationResult validation = 2; }
+
+// Parametric geometry: kinds, creation, parameters, validation.
+service GeometryService {
+  // The geometry kinds, with their parameters, units, defaults and limits.
+  rpc ListGeometryKinds(ListGeometryKindsRequest) returns (ListGeometryKindsResponse);
+  // Adds a geometry object of a kind, with parameters, transform, parent and material.
+  rpc CreatePrimitive(CreatePrimitiveRequest) returns (CreatePrimitiveResponse);
+  // Changes geometry parameters. They are validated together, so nothing changes if one is invalid.
+  rpc UpdateGeometryParameters(UpdateGeometryParametersRequest) returns (UpdateGeometryParametersResponse);
+  // Validates a kind's parameters without creating anything.
+  rpc ValidateGeometry(ValidateGeometryRequest) returns (ValidateGeometryResponse);
+}

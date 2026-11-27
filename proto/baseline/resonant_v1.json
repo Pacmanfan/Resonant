@@ -1,0 +1,6775 @@
+{
+ "enums": {
+  "resonant.v1.ArrayLayout": {
+   "0": "ARRAY_LAYOUT_UNSPECIFIED",
+   "1": "ARRAY_LAYOUT_LINEAR",
+   "2": "ARRAY_LAYOUT_RECTANGULAR_PLANAR",
+   "3": "ARRAY_LAYOUT_CIRCULAR",
+   "4": "ARRAY_LAYOUT_CYLINDRICAL",
+   "5": "ARRAY_LAYOUT_SPHERICAL",
+   "6": "ARRAY_LAYOUT_CUSTOM"
+  },
+  "resonant.v1.CoordinateFrame": {
+   "0": "COORDINATE_FRAME_UNSPECIFIED",
+   "1": "COORDINATE_FRAME_WORLD",
+   "2": "COORDINATE_FRAME_PARENT",
+   "3": "COORDINATE_FRAME_OBJECT"
+  },
+  "resonant.v1.DirectivityModel": {
+   "0": "DIRECTIVITY_MODEL_UNSPECIFIED",
+   "1": "DIRECTIVITY_MODEL_OMNIDIRECTIONAL",
+   "2": "DIRECTIVITY_MODEL_CARDIOID",
+   "3": "DIRECTIVITY_MODEL_BAFFLED_PISTON"
+  },
+  "resonant.v1.ErrorCode": {
+   "0": "ERROR_CODE_UNSPECIFIED",
+   "1": "ERROR_CODE_INVALID_ARGUMENT",
+   "10": "ERROR_CODE_CANCELLED",
+   "11": "ERROR_CODE_INTERNAL",
+   "2": "ERROR_CODE_NOT_FOUND",
+   "3": "ERROR_CODE_ALREADY_EXISTS",
+   "4": "ERROR_CODE_CONFLICT",
+   "5": "ERROR_CODE_FAILED_PRECONDITION",
+   "6": "ERROR_CODE_PERMISSION_DENIED",
+   "7": "ERROR_CODE_RESOURCE_EXHAUSTED",
+   "8": "ERROR_CODE_UNIMPLEMENTED",
+   "9": "ERROR_CODE_UNAVAILABLE"
+  },
+  "resonant.v1.EventCategory": {
+   "0": "EVENT_CATEGORY_UNSPECIFIED",
+   "1": "EVENT_CATEGORY_PROJECT",
+   "2": "EVENT_CATEGORY_SCENE",
+   "3": "EVENT_CATEGORY_MATERIAL",
+   "4": "EVENT_CATEGORY_JOB",
+   "5": "EVENT_CATEGORY_RESULT",
+   "6": "EVENT_CATEGORY_SESSION",
+   "7": "EVENT_CATEGORY_DIAGNOSTIC"
+  },
+  "resonant.v1.FieldRegionKind": {
+   "0": "FIELD_REGION_KIND_UNSPECIFIED",
+   "1": "FIELD_REGION_KIND_PLANE_XY",
+   "2": "FIELD_REGION_KIND_PLANE_XZ",
+   "3": "FIELD_REGION_KIND_PLANE_YZ",
+   "4": "FIELD_REGION_KIND_VOLUME"
+  },
+  "resonant.v1.FocusControl": {
+   "0": "FOCUS_CONTROL_UNSPECIFIED",
+   "1": "FOCUS_CONTROL_PHASE",
+   "2": "FOCUS_CONTROL_TIME_DELAY"
+  },
+  "resonant.v1.JobState": {
+   "0": "JOB_STATE_UNSPECIFIED",
+   "1": "JOB_STATE_CREATED",
+   "2": "JOB_STATE_QUEUED",
+   "3": "JOB_STATE_RUNNING",
+   "4": "JOB_STATE_CANCELLING",
+   "5": "JOB_STATE_CANCELLED",
+   "6": "JOB_STATE_COMPLETED",
+   "7": "JOB_STATE_FAILED"
+  },
+  "resonant.v1.MaterialProvenance": {
+   "0": "MATERIAL_PROVENANCE_UNSPECIFIED",
+   "1": "MATERIAL_PROVENANCE_MEASURED",
+   "2": "MATERIAL_PROVENANCE_MANUFACTURER",
+   "3": "MATERIAL_PROVENANCE_LITERATURE",
+   "4": "MATERIAL_PROVENANCE_THEORETICAL",
+   "5": "MATERIAL_PROVENANCE_ILLUSTRATIVE"
+  },
+  "resonant.v1.Maturity": {
+   "0": "MATURITY_UNSPECIFIED",
+   "1": "MATURITY_STABLE",
+   "2": "MATURITY_EXPERIMENTAL",
+   "3": "MATURITY_PLANNED",
+   "4": "MATURITY_UNAVAILABLE"
+  },
+  "resonant.v1.Permission": {
+   "0": "PERMISSION_UNSPECIFIED",
+   "1": "PERMISSION_READ",
+   "2": "PERMISSION_MODIFY",
+   "3": "PERMISSION_EXECUTE",
+   "4": "PERMISSION_FILES",
+   "5": "PERMISSION_ADMIN"
+  },
+  "resonant.v1.ResourceType": {
+   "0": "RESOURCE_TYPE_UNSPECIFIED",
+   "1": "RESOURCE_TYPE_PROJECT",
+   "10": "RESOURCE_TYPE_WORKFLOW",
+   "2": "RESOURCE_TYPE_SCENE_OBJECT",
+   "3": "RESOURCE_TYPE_MATERIAL",
+   "4": "RESOURCE_TYPE_JOB",
+   "5": "RESOURCE_TYPE_RESULT",
+   "6": "RESOURCE_TYPE_TRANSACTION",
+   "7": "RESOURCE_TYPE_SESSION",
+   "8": "RESOURCE_TYPE_OPTIMIZATION_PROBLEM",
+   "9": "RESOURCE_TYPE_OPTIMIZATION_RUN"
+  },
+  "resonant.v1.Severity": {
+   "0": "SEVERITY_UNSPECIFIED",
+   "1": "SEVERITY_INFO",
+   "2": "SEVERITY_WARNING",
+   "3": "SEVERITY_ERROR"
+  },
+  "resonant.v1.SliceAxis": {
+   "0": "SLICE_AXIS_UNSPECIFIED",
+   "1": "SLICE_AXIS_U",
+   "2": "SLICE_AXIS_V",
+   "3": "SLICE_AXIS_W"
+  },
+  "resonant.v1.SourceInterface": {
+   "0": "SOURCE_INTERFACE_UNSPECIFIED",
+   "1": "SOURCE_INTERFACE_GUI",
+   "2": "SOURCE_INTERFACE_PYTHON",
+   "3": "SOURCE_INTERFACE_GRPC",
+   "4": "SOURCE_INTERFACE_MCP",
+   "5": "SOURCE_INTERFACE_INTERNAL"
+  },
+  "resonant.v1.TransactionState": {
+   "0": "TRANSACTION_STATE_UNSPECIFIED",
+   "1": "TRANSACTION_STATE_OPEN",
+   "2": "TRANSACTION_STATE_COMMITTED",
+   "3": "TRANSACTION_STATE_ABORTED",
+   "4": "TRANSACTION_STATE_FAILED"
+  }
+ },
+ "messages": {
+  "resonant.v1.AbortTransactionRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "transaction_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.AbortTransactionResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "transaction",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Transaction"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.AcousticArray": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "object_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "10": {
+     "cardinality": "singular",
+     "name": "radius_meters",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_DOUBLE"
+    },
+    "11": {
+     "cardinality": "singular",
+     "name": "element_defaults",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.SourceSettings"
+    },
+    "12": {
+     "cardinality": "repeated",
+     "name": "elements",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ArrayElement"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "name",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "revision",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_UINT64"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "local_transform",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Transform"
+    },
+    "5": {
+     "cardinality": "singular",
+     "name": "layout",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ArrayLayout"
+    },
+    "6": {
+     "cardinality": "singular",
+     "name": "count_x",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_INT32"
+    },
+    "7": {
+     "cardinality": "singular",
+     "name": "count_y",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_INT32"
+    },
+    "8": {
+     "cardinality": "singular",
+     "name": "spacing_x_meters",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_DOUBLE"
+    },
+    "9": {
+     "cardinality": "singular",
+     "name": "spacing_y_meters",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_DOUBLE"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.AcousticFieldPlan": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "allowed",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_BOOL"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "refusal",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "sample_points",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_INT64"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "memory_bytes",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_INT64"
+    },
+    "5": {
+     "cardinality": "singular",
+     "name": "source_evaluations",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_DOUBLE"
+    },
+    "6": {
+     "cardinality": "singular",
+     "name": "active_sources",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_INT32"
+    },
+    "7": {
+     "cardinality": "singular",
+     "name": "model_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "8": {
+     "cardinality": "singular",
+     "name": "frequency_hz",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_DOUBLE"
+    },
+    "9": {
+     "cardinality": "repeated",
+     "name": "warnings",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ApplicationInfo": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "application_name",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "application_version",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "api_version",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "api_revision",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "5": {
+     "cardinality": "singular",
+     "name": "host",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ArrayElement": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "index",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_INT32"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "local_position_meters",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Vector3Meters"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "source",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.SourceSettings"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.AssignMaterialRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "material_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "repeated",
+     "name": "object_ids",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.AssignMaterialResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "changes",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ChangeSummary"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.AuditRecord": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "sequence",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_UINT64"
+    },
+    "10": {
+     "cardinality": "singular",
+     "name": "revision_after",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_UINT64"
+    },
+    "11": {
+     "cardinality": "singular",
+     "name": "succeeded",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_BOOL"
+    },
+    "12": {
+     "cardinality": "singular",
+     "name": "dry_run",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_BOOL"
+    },
+    "13": {
+     "cardinality": "singular",
+     "name": "error",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Error"
+    },
+    "14": {
+     "cardinality": "singular",
+     "name": "duration_seconds",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_DOUBLE"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "time",
+     "oneof": "",
+     "optional": false,
+     "type": "google.protobuf.Timestamp"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "request_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "session_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "5": {
+     "cardinality": "singular",
+     "name": "client_name",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "6": {
+     "cardinality": "singular",
+     "name": "source_interface",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.SourceInterface"
+    },
+    "7": {
+     "cardinality": "singular",
+     "name": "operation",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "8": {
+     "cardinality": "repeated",
+     "name": "resource_ids",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "9": {
+     "cardinality": "singular",
+     "name": "revision_before",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_UINT64"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.BatchOperation": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "operation_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "10": {
+     "cardinality": "singular",
+     "name": "create_primitive",
+     "oneof": "operation",
+     "optional": false,
+     "type": "resonant.v1.CreatePrimitiveRequest"
+    },
+    "11": {
+     "cardinality": "singular",
+     "name": "update_geometry_parameters",
+     "oneof": "operation",
+     "optional": false,
+     "type": "resonant.v1.UpdateGeometryParametersRequest"
+    },
+    "12": {
+     "cardinality": "singular",
+     "name": "update_object",
+     "oneof": "operation",
+     "optional": false,
+     "type": "resonant.v1.UpdateObjectRequest"
+    },
+    "13": {
+     "cardinality": "singular",
+     "name": "delete_objects",
+     "oneof": "operation",
+     "optional": false,
+     "type": "resonant.v1.DeleteObjectsRequest"
+    },
+    "14": {
+     "cardinality": "singular",
+     "name": "assign_material",
+     "oneof": "operation",
+     "optional": false,
+     "type": "resonant.v1.AssignMaterialRequest"
+    },
+    "15": {
+     "cardinality": "singular",
+     "name": "create_emitter",
+     "oneof": "operation",
+     "optional": false,
+     "type": "resonant.v1.CreateEmitterRequest"
+    },
+    "16": {
+     "cardinality": "singular",
+     "name": "update_emitter",
+     "oneof": "operation",
+     "optional": false,
+     "type": "resonant.v1.UpdateEmitterRequest"
+    },
+    "17": {
+     "cardinality": "singular",
+     "name": "create_array",
+     "oneof": "operation",
+     "optional": false,
+     "type": "resonant.v1.CreateArrayRequest"
+    },
+    "18": {
+     "cardinality": "singular",
+     "name": "set_array_excitation",
+     "oneof": "operation",
+     "optional": false,
+     "type": "resonant.v1.SetArrayExcitationRequest"
+    },
+    "19": {
+     "cardinality": "singular",
+     "name": "focus_array",
+     "oneof": "operation",
+     "optional": false,
+     "type": "resonant.v1.FocusArrayRequest"
+    },
+    "20": {
+     "cardinality": "singular",
+     "name": "create_field_region",
+     "oneof": "operation",
+     "optional": false,
+     "type": "resonant.v1.CreateFieldRegionRequest"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.BeginTransactionRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "description",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.BeginTransactionResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "transaction",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Transaction"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.CancelJobRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "job_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.CancelJobResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "job",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Job"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.Capability": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "capability_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "10": {
+     "cardinality": "repeated",
+     "name": "limitations",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "display_name",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "description",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "category",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "5": {
+     "cardinality": "singular",
+     "name": "maturity",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Maturity"
+    },
+    "6": {
+     "cardinality": "singular",
+     "name": "available",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_BOOL"
+    },
+    "7": {
+     "cardinality": "repeated",
+     "name": "required_dependencies",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "8": {
+     "cardinality": "singular",
+     "name": "physics_domain",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "9": {
+     "cardinality": "repeated",
+     "name": "dimensions",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ChangeSummary": {
+   "fields": {
+    "1": {
+     "cardinality": "repeated",
+     "name": "created",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResourceRef"
+    },
+    "2": {
+     "cardinality": "repeated",
+     "name": "updated",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResourceRef"
+    },
+    "3": {
+     "cardinality": "repeated",
+     "name": "deleted",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResourceRef"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "description",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.CloseSessionRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.CloseSessionResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.CommitTransactionRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "transaction_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.CommitTransactionResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "transaction",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Transaction"
+    },
+    "3": {
+     "cardinality": "repeated",
+     "name": "results",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.OperationResult"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "changes",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ChangeSummary"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.Complex": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "real",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_DOUBLE"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "imag",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_DOUBLE"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.CreateArrayRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "10": {
+     "cardinality": "singular",
+     "name": "radius_meters",
+     "oneof": "",
+     "optional": true,
+     "type": "TYPE_DOUBLE"
+    },
+    "11": {
+     "cardinality": "singular",
+     "name": "element_defaults",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.SourceSettingsPatch"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "name",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "local_transform",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Transform"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "parent_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "5": {
+     "cardinality": "singular",
+     "name": "layout",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ArrayLayout"
+    },
+    "6": {
+     "cardinality": "singular",
+     "name": "count_x",
+     "oneof": "",
+     "optional": true,
+     "type": "TYPE_INT32"
+    },
+    "7": {
+     "cardinality": "singular",
+     "name": "count_y",
+     "oneof": "",
+     "optional": true,
+     "type": "TYPE_INT32"
+    },
+    "8": {
+     "cardinality": "singular",
+     "name": "spacing_x_meters",
+     "oneof": "",
+     "optional": true,
+     "type": "TYPE_DOUBLE"
+    },
+    "9": {
+     "cardinality": "singular",
+     "name": "spacing_y_meters",
+     "oneof": "",
+     "optional": true,
+     "type": "TYPE_DOUBLE"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.CreateArrayResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "array",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.AcousticArray"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "changes",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ChangeSummary"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.CreateEmitterRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "name",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "local_transform",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Transform"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "parent_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "5": {
+     "cardinality": "singular",
+     "name": "source",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.SourceSettingsPatch"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.CreateEmitterResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "emitter",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Emitter"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "changes",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ChangeSummary"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.CreateFieldRegionRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "10": {
+     "cardinality": "singular",
+     "name": "count_v",
+     "oneof": "",
+     "optional": true,
+     "type": "TYPE_INT32"
+    },
+    "11": {
+     "cardinality": "singular",
+     "name": "count_w",
+     "oneof": "",
+     "optional": true,
+     "type": "TYPE_INT32"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "name",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "local_transform",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Transform"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "parent_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "5": {
+     "cardinality": "singular",
+     "name": "kind",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.FieldRegionKind"
+    },
+    "6": {
+     "cardinality": "singular",
+     "name": "size_x_meters",
+     "oneof": "",
+     "optional": true,
+     "type": "TYPE_DOUBLE"
+    },
+    "7": {
+     "cardinality": "singular",
+     "name": "size_y_meters",
+     "oneof": "",
+     "optional": true,
+     "type": "TYPE_DOUBLE"
+    },
+    "8": {
+     "cardinality": "singular",
+     "name": "size_z_meters",
+     "oneof": "",
+     "optional": true,
+     "type": "TYPE_DOUBLE"
+    },
+    "9": {
+     "cardinality": "singular",
+     "name": "count_u",
+     "oneof": "",
+     "optional": true,
+     "type": "TYPE_INT32"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.CreateFieldRegionResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "region",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.SceneObject"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "changes",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ChangeSummary"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.CreateGroupRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "name",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "parent_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "4": {
+     "cardinality": "repeated",
+     "name": "member_ids",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.CreateGroupResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "group",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.SceneObject"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "changes",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ChangeSummary"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.CreateMaterialRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "material_json",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "name",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "description",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "5": {
+     "cardinality": "repeated",
+     "name": "properties",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.MaterialProperty"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.CreateMaterialResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "material",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Material"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "changes",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ChangeSummary"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.CreatePrimitiveRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "kind_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "name",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "4": {
+     "cardinality": "map",
+     "name": "parameters",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.CreatePrimitiveRequest.ParametersEntry"
+    },
+    "5": {
+     "cardinality": "singular",
+     "name": "local_transform",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Transform"
+    },
+    "6": {
+     "cardinality": "singular",
+     "name": "parent_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "7": {
+     "cardinality": "singular",
+     "name": "material_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.CreatePrimitiveResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "object",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.SceneObject"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "changes",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ChangeSummary"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.CreateProjectRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "name",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "discard_unsaved_changes",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_BOOL"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.CreateProjectResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "project",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Project"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.DeleteMaterialRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "material_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.DeleteMaterialResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "changes",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ChangeSummary"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.DeleteObjectsRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "repeated",
+     "name": "object_ids",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "map",
+     "name": "expected_revisions",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.DeleteObjectsRequest.ExpectedRevisionsEntry"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.DeleteObjectsResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "changes",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ChangeSummary"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.Diagnostics": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "health",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "10": {
+     "cardinality": "singular",
+     "name": "uptime_seconds",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_DOUBLE"
+    },
+    "11": {
+     "cardinality": "singular",
+     "name": "time",
+     "oneof": "",
+     "optional": false,
+     "type": "google.protobuf.Timestamp"
+    },
+    "2": {
+     "cardinality": "repeated",
+     "name": "services",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ServiceStatus"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "active_sessions",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_INT32"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "active_jobs",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_INT32"
+    },
+    "5": {
+     "cardinality": "singular",
+     "name": "last_event_sequence",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_UINT64"
+    },
+    "6": {
+     "cardinality": "singular",
+     "name": "oldest_retained_event_sequence",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_UINT64"
+    },
+    "7": {
+     "cardinality": "singular",
+     "name": "audit_records",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_INT32"
+    },
+    "8": {
+     "cardinality": "repeated",
+     "name": "recent_errors",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Error"
+    },
+    "9": {
+     "cardinality": "singular",
+     "name": "resident_memory_bytes",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_UINT64"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.DuplicateObjectsRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "repeated",
+     "name": "object_ids",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.DuplicateObjectsResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "repeated",
+     "name": "objects",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.SceneObject"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "changes",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ChangeSummary"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ElementExcitation": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "index",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_INT32"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "phase_radians",
+     "oneof": "",
+     "optional": true,
+     "type": "TYPE_DOUBLE"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "amplitude_peak_pa_at_1m",
+     "oneof": "",
+     "optional": true,
+     "type": "TYPE_DOUBLE"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "delay_seconds",
+     "oneof": "",
+     "optional": true,
+     "type": "TYPE_DOUBLE"
+    },
+    "5": {
+     "cardinality": "singular",
+     "name": "active",
+     "oneof": "",
+     "optional": true,
+     "type": "TYPE_BOOL"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.Emitter": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "object_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "name",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "revision",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_UINT64"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "local_transform",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Transform"
+    },
+    "5": {
+     "cardinality": "singular",
+     "name": "world_position_meters",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Vector3Meters"
+    },
+    "6": {
+     "cardinality": "singular",
+     "name": "source",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.SourceSettings"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.Error": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "code",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ErrorCode"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "message",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "repeated",
+     "name": "violations",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.FieldViolation"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "resource",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResourceRef"
+    },
+    "5": {
+     "cardinality": "singular",
+     "name": "current_revision",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_UINT64"
+    },
+    "6": {
+     "cardinality": "singular",
+     "name": "retryable",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_BOOL"
+    },
+    "7": {
+     "cardinality": "singular",
+     "name": "request_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.EstimateAcousticFieldRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "region_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.EstimateAcousticFieldResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "plan",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.AcousticFieldPlan"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.EulerAnglesRadians": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "x_radians",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_DOUBLE"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "y_radians",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_DOUBLE"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "z_radians",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_DOUBLE"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.Event": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "event_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "10": {
+     "cardinality": "singular",
+     "name": "request_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "sequence",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_UINT64"
+    },
+    "20": {
+     "cardinality": "singular",
+     "name": "project",
+     "oneof": "payload",
+     "optional": false,
+     "type": "resonant.v1.ProjectEvent"
+    },
+    "21": {
+     "cardinality": "singular",
+     "name": "object",
+     "oneof": "payload",
+     "optional": false,
+     "type": "resonant.v1.ObjectEvent"
+    },
+    "22": {
+     "cardinality": "singular",
+     "name": "material",
+     "oneof": "payload",
+     "optional": false,
+     "type": "resonant.v1.MaterialEvent"
+    },
+    "23": {
+     "cardinality": "singular",
+     "name": "job",
+     "oneof": "payload",
+     "optional": false,
+     "type": "resonant.v1.JobEvent"
+    },
+    "24": {
+     "cardinality": "singular",
+     "name": "result",
+     "oneof": "payload",
+     "optional": false,
+     "type": "resonant.v1.ResultEvent"
+    },
+    "25": {
+     "cardinality": "singular",
+     "name": "session",
+     "oneof": "payload",
+     "optional": false,
+     "type": "resonant.v1.SessionEvent"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "time",
+     "oneof": "",
+     "optional": false,
+     "type": "google.protobuf.Timestamp"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "category",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.EventCategory"
+    },
+    "5": {
+     "cardinality": "singular",
+     "name": "type",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "6": {
+     "cardinality": "singular",
+     "name": "source",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.EventSource"
+    },
+    "7": {
+     "cardinality": "singular",
+     "name": "project_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "8": {
+     "cardinality": "repeated",
+     "name": "resources",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResourceRef"
+    },
+    "9": {
+     "cardinality": "singular",
+     "name": "project_revision",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_UINT64"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.EventFilter": {
+   "fields": {
+    "1": {
+     "cardinality": "repeated",
+     "name": "categories",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.EventCategory"
+    },
+    "2": {
+     "cardinality": "repeated",
+     "name": "resource_ids",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "job_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "session_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.EventSource": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "session_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "client_name",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "source_interface",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.SourceInterface"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ExecuteBatchRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "repeated",
+     "name": "operations",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.BatchOperation"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "description",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ExecuteBatchResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "committed",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_BOOL"
+    },
+    "3": {
+     "cardinality": "repeated",
+     "name": "results",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.OperationResult"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "changes",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ChangeSummary"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ExecuteWorkflowRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "workflow_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "definition",
+     "oneof": "",
+     "optional": false,
+     "type": "google.protobuf.Struct"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "parameters",
+     "oneof": "",
+     "optional": false,
+     "type": "google.protobuf.Struct"
+    },
+    "5": {
+     "cardinality": "singular",
+     "name": "apply_changes",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_BOOL"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ExecuteWorkflowResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "job",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Job"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ExportProjectJsonRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ExportProjectJsonResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "project_json",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.FieldDataChunk": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "rows",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_INT32"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "columns",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_INT32"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "offset",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_INT64"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "count",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_INT32"
+    },
+    "5": {
+     "cardinality": "singular",
+     "name": "samples",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_BYTES"
+    },
+    "6": {
+     "cardinality": "singular",
+     "name": "unit",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "7": {
+     "cardinality": "singular",
+     "name": "last",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_BOOL"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.FieldGrid": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "origin_world_meters",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Vector3Meters"
+    },
+    "10": {
+     "cardinality": "singular",
+     "name": "count_w",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_INT32"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "axis_u",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Vector3"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "axis_v",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Vector3"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "axis_w",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Vector3"
+    },
+    "5": {
+     "cardinality": "singular",
+     "name": "step_u_meters",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_DOUBLE"
+    },
+    "6": {
+     "cardinality": "singular",
+     "name": "step_v_meters",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_DOUBLE"
+    },
+    "7": {
+     "cardinality": "singular",
+     "name": "step_w_meters",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_DOUBLE"
+    },
+    "8": {
+     "cardinality": "singular",
+     "name": "count_u",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_INT32"
+    },
+    "9": {
+     "cardinality": "singular",
+     "name": "count_v",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_INT32"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.FieldSample": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "point_world_meters",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Vector3Meters"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "inside",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_BOOL"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "value",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Complex"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "magnitude",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_DOUBLE"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.FieldViolation": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "field",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "description",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.FocusArrayRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "object_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "expected_revision",
+     "oneof": "",
+     "optional": true,
+     "type": "TYPE_UINT64"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "target_object_id",
+     "oneof": "focus",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "5": {
+     "cardinality": "singular",
+     "name": "point_world_meters",
+     "oneof": "focus",
+     "optional": false,
+     "type": "resonant.v1.Vector3Meters"
+    },
+    "6": {
+     "cardinality": "singular",
+     "name": "control",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.FocusControl"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.FocusArrayResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "array",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.AcousticArray"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "changes",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ChangeSummary"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.GapNotice": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "first_missed_sequence",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_UINT64"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "last_missed_sequence",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_UINT64"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "oldest_retained_sequence",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_UINT64"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.GeometryInfo": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "kind_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "2": {
+     "cardinality": "map",
+     "name": "parameters",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.GeometryInfo.ParametersEntry"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.GeometryKind": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "kind_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "display_name",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "category",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "4": {
+     "cardinality": "repeated",
+     "name": "parameters",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.GeometryParameterDefinition"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.GeometryParameterDefinition": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "key",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "label",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "unit",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "default_value",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_DOUBLE"
+    },
+    "5": {
+     "cardinality": "singular",
+     "name": "min_value",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_DOUBLE"
+    },
+    "6": {
+     "cardinality": "singular",
+     "name": "max_value",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_DOUBLE"
+    },
+    "7": {
+     "cardinality": "singular",
+     "name": "integer",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_BOOL"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.GetApplicationInfoRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.GetApplicationInfoResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "info",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ApplicationInfo"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.GetArrayRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "object_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.GetArrayResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "array",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.AcousticArray"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.GetCapabilitiesRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "category",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.GetCapabilitiesResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "repeated",
+     "name": "capabilities",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Capability"
+    },
+    "3": {
+     "cardinality": "repeated",
+     "name": "operations",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.OperationCapability"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.GetDiagnosticsRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.GetDiagnosticsResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "diagnostics",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Diagnostics"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.GetEmitterRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "object_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.GetEmitterResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "emitter",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Emitter"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.GetJobRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "job_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.GetJobResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "job",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Job"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.GetMaterialRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "material_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.GetMaterialResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "material",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Material"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.GetObjectRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "object_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.GetObjectResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "object",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.SceneObject"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.GetProjectRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.GetProjectResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "project",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Project"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.GetResultRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "result_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.GetResultResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "result",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResultSummary"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.GetSceneSnapshotRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.GetSceneSnapshotResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "snapshot",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.SceneSnapshot"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.GetTransactionRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "transaction_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.GetTransactionResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "transaction",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Transaction"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.GetWorkflowRunRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "job_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.GetWorkflowRunResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "run",
+     "oneof": "",
+     "optional": false,
+     "type": "google.protobuf.Struct"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "finished",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_BOOL"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.Job": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "job_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "10": {
+     "cardinality": "singular",
+     "name": "error",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Error"
+    },
+    "11": {
+     "cardinality": "repeated",
+     "name": "results",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResourceRef"
+    },
+    "12": {
+     "cardinality": "singular",
+     "name": "cancellable",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_BOOL"
+    },
+    "13": {
+     "cardinality": "singular",
+     "name": "session_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "job_type",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "display_name",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "state",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.JobState"
+    },
+    "5": {
+     "cardinality": "singular",
+     "name": "progress_fraction",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_DOUBLE"
+    },
+    "6": {
+     "cardinality": "singular",
+     "name": "phase",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "7": {
+     "cardinality": "singular",
+     "name": "start_time",
+     "oneof": "",
+     "optional": false,
+     "type": "google.protobuf.Timestamp"
+    },
+    "8": {
+     "cardinality": "singular",
+     "name": "elapsed_seconds",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_DOUBLE"
+    },
+    "9": {
+     "cardinality": "singular",
+     "name": "completion_time",
+     "oneof": "",
+     "optional": false,
+     "type": "google.protobuf.Timestamp"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.JobEvent": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "job",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Job"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ListEmittersRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ListEmittersResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "repeated",
+     "name": "emitters",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Emitter"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ListEventsRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "filter",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.EventFilter"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "after_sequence",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_UINT64"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "limit",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_INT32"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ListEventsResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "repeated",
+     "name": "events",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Event"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "gap",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.GapNotice"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "last_sequence",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_UINT64"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ListGeometryKindsRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ListGeometryKindsResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "repeated",
+     "name": "kinds",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.GeometryKind"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ListJobsRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "active_only",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_BOOL"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ListJobsResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "repeated",
+     "name": "jobs",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Job"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ListMaterialsRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "domain",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ListMaterialsResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "repeated",
+     "name": "materials",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Material"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ListObjectsRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "object_type",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "parent_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "page",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.PageRequest"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ListObjectsResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "repeated",
+     "name": "objects",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.SceneObject"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "page",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.PageResponse"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ListOptimizationProblemsRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ListOptimizationProblemsResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "repeated",
+     "name": "problems",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.OptimizationProblemSummary"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ListOptimizationRunsRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ListOptimizationRunsResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "repeated",
+     "name": "runs",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.OptimizationRunSummary"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ListResultsRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ListResultsResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "repeated",
+     "name": "results",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResultSummary"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ListSessionsRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ListSessionsResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "repeated",
+     "name": "sessions",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Session"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ListSolversRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ListSolversResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "repeated",
+     "name": "solvers",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Solver"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ListWorkflowTemplatesRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ListWorkflowTemplatesResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "repeated",
+     "name": "workflows",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.WorkflowTemplate"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.Material": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "material_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "name",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "description",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "4": {
+     "cardinality": "repeated",
+     "name": "domains",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "5": {
+     "cardinality": "repeated",
+     "name": "properties",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.MaterialProperty"
+    },
+    "6": {
+     "cardinality": "singular",
+     "name": "material_json",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.MaterialEvent": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "material_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "2": {
+     "cardinality": "repeated",
+     "name": "object_ids",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.MaterialProperty": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "domain",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "key",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "value_si",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_DOUBLE"
+    },
+    "5": {
+     "cardinality": "singular",
+     "name": "provenance",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.MaterialProvenance"
+    },
+    "6": {
+     "cardinality": "singular",
+     "name": "source",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": [
+    4
+   ]
+  },
+  "resonant.v1.ObjectEvent": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "object_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "object_type",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "parent_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "object_revision",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_UINT64"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.OpenProjectRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "file_name",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "discard_unsaved_changes",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_BOOL"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.OpenProjectResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "project",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Project"
+    },
+    "3": {
+     "cardinality": "repeated",
+     "name": "load_warnings",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.OpenSessionRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "client_name",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "source_interface",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.SourceInterface"
+    },
+    "4": {
+     "cardinality": "repeated",
+     "name": "requested_permissions",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Permission"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.OpenSessionResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "session",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Session"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.OperationCapability": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "method",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "maturity",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Maturity"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "required_permission",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Permission"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "mutating",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_BOOL"
+    },
+    "5": {
+     "cardinality": "singular",
+     "name": "idempotent",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_BOOL"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.OperationResult": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "operation_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "succeeded",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_BOOL"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "error",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Error"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "changes",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ChangeSummary"
+    },
+    "5": {
+     "cardinality": "repeated",
+     "name": "created_ids",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.OptimizationProblemSummary": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "problem_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "name",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "algorithm",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "variable_count",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_INT32"
+    },
+    "5": {
+     "cardinality": "singular",
+     "name": "objective_count",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_INT32"
+    },
+    "6": {
+     "cardinality": "singular",
+     "name": "constraint_count",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_INT32"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.OptimizationRunSummary": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "run_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "problem_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "algorithm",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "candidate_count",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_INT32"
+    },
+    "5": {
+     "cardinality": "singular",
+     "name": "termination",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "6": {
+     "cardinality": "singular",
+     "name": "best_candidate_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "7": {
+     "cardinality": "repeated",
+     "name": "best_objective_values",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_DOUBLE"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.PageRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "page_size",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_INT32"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "page_token",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.PageResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "next_page_token",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "total_size",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_INT32"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.Project": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "project_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "10": {
+     "cardinality": "singular",
+     "name": "undo_description",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "11": {
+     "cardinality": "singular",
+     "name": "redo_description",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "12": {
+     "cardinality": "singular",
+     "name": "created_time",
+     "oneof": "",
+     "optional": false,
+     "type": "google.protobuf.Timestamp"
+    },
+    "13": {
+     "cardinality": "singular",
+     "name": "modified_time",
+     "oneof": "",
+     "optional": false,
+     "type": "google.protobuf.Timestamp"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "name",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "file_name",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "revision",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_UINT64"
+    },
+    "5": {
+     "cardinality": "singular",
+     "name": "modified",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_BOOL"
+    },
+    "6": {
+     "cardinality": "singular",
+     "name": "object_count",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_INT32"
+    },
+    "7": {
+     "cardinality": "singular",
+     "name": "material_count",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_INT32"
+    },
+    "8": {
+     "cardinality": "singular",
+     "name": "can_undo",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_BOOL"
+    },
+    "9": {
+     "cardinality": "singular",
+     "name": "can_redo",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_BOOL"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ProjectEvent": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "project_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "project_name",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "description",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.QueryAuditRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "session_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "operation",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "resource_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "5": {
+     "cardinality": "singular",
+     "name": "after_sequence",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_UINT64"
+    },
+    "6": {
+     "cardinality": "singular",
+     "name": "limit",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_INT32"
+    },
+    "7": {
+     "cardinality": "singular",
+     "name": "failures_only",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_BOOL"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.QueryAuditResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "repeated",
+     "name": "records",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.AuditRecord"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ReadFieldSamplesRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "result_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "repeated",
+     "name": "points_world_meters",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Vector3Meters"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ReadFieldSamplesResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "repeated",
+     "name": "samples",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.FieldSample"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "unit",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ReadFieldSliceRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "result_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "fixed_axis",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.SliceAxis"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "fixed_index",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_INT32"
+    },
+    "5": {
+     "cardinality": "singular",
+     "name": "stride",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_INT32"
+    },
+    "6": {
+     "cardinality": "singular",
+     "name": "chunk_samples",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_INT32"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.RedoRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.RedoResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "project",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Project"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "redone",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.RemoveMaterialAssignmentRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "repeated",
+     "name": "object_ids",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.RemoveMaterialAssignmentResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "changes",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ChangeSummary"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.RequestHeader": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "session_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "request_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "idempotency_key",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "expected_project_revision",
+     "oneof": "",
+     "optional": true,
+     "type": "TYPE_UINT64"
+    },
+    "5": {
+     "cardinality": "singular",
+     "name": "dry_run",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_BOOL"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ResourceMetadata": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "ref",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResourceRef"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "display_name",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "revision",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_UINT64"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "observed_time",
+     "oneof": "",
+     "optional": false,
+     "type": "google.protobuf.Timestamp"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ResourceRef": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "type",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResourceType"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ResponseHeader": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "request_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "project_revision",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_UINT64"
+    },
+    "3": {
+     "cardinality": "repeated",
+     "name": "warnings",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "dry_run",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_BOOL"
+    },
+    "5": {
+     "cardinality": "singular",
+     "name": "replayed",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_BOOL"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ResultEvent": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "result_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "result_kind",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "job_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ResultProvenance": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "physics_domain",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "solver_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "solver_version",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "approximation",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "5": {
+     "cardinality": "repeated",
+     "name": "assumptions",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "6": {
+     "cardinality": "singular",
+     "name": "project_revision",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_UINT64"
+    },
+    "7": {
+     "cardinality": "singular",
+     "name": "job_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "8": {
+     "cardinality": "singular",
+     "name": "configuration_json",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ResultSummary": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "result_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "10": {
+     "cardinality": "singular",
+     "name": "max_magnitude",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_DOUBLE"
+    },
+    "11": {
+     "cardinality": "singular",
+     "name": "provenance",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResultProvenance"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "result_kind",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "display_name",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "created_time",
+     "oneof": "",
+     "optional": false,
+     "type": "google.protobuf.Timestamp"
+    },
+    "5": {
+     "cardinality": "singular",
+     "name": "quantity",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "6": {
+     "cardinality": "singular",
+     "name": "unit",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "7": {
+     "cardinality": "singular",
+     "name": "value_type",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "8": {
+     "cardinality": "singular",
+     "name": "frequency_hz",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_DOUBLE"
+    },
+    "9": {
+     "cardinality": "singular",
+     "name": "grid",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.FieldGrid"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.SaveProjectRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "file_name",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.SaveProjectResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "project",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Project"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.SceneObject": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "object_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "10": {
+     "cardinality": "singular",
+     "name": "material_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "11": {
+     "cardinality": "singular",
+     "name": "geometry",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.GeometryInfo"
+    },
+    "12": {
+     "cardinality": "singular",
+     "name": "component_json",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "name",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "object_type",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "parent_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "5": {
+     "cardinality": "repeated",
+     "name": "child_ids",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "6": {
+     "cardinality": "singular",
+     "name": "revision",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_UINT64"
+    },
+    "7": {
+     "cardinality": "singular",
+     "name": "local_transform",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Transform"
+    },
+    "8": {
+     "cardinality": "singular",
+     "name": "world_position_meters",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Vector3Meters"
+    },
+    "9": {
+     "cardinality": "singular",
+     "name": "visible",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_BOOL"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.SceneSnapshot": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "project_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "project_revision",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_UINT64"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "event_sequence",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_UINT64"
+    },
+    "4": {
+     "cardinality": "repeated",
+     "name": "objects",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.SceneObject"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ServiceStatus": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "service",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "available",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_BOOL"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "note",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.Session": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "session_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "client_name",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "source_interface",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.SourceInterface"
+    },
+    "4": {
+     "cardinality": "repeated",
+     "name": "permissions",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Permission"
+    },
+    "5": {
+     "cardinality": "singular",
+     "name": "opened_time",
+     "oneof": "",
+     "optional": false,
+     "type": "google.protobuf.Timestamp"
+    },
+    "6": {
+     "cardinality": "singular",
+     "name": "last_seen_time",
+     "oneof": "",
+     "optional": false,
+     "type": "google.protobuf.Timestamp"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.SessionEvent": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "session_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "client_name",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.SetArrayExcitationRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "object_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "expected_revision",
+     "oneof": "",
+     "optional": true,
+     "type": "TYPE_UINT64"
+    },
+    "4": {
+     "cardinality": "repeated",
+     "name": "elements",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ElementExcitation"
+    },
+    "5": {
+     "cardinality": "singular",
+     "name": "clear_other_overrides",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_BOOL"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.SetArrayExcitationResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "array",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.AcousticArray"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "changes",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ChangeSummary"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.Solver": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "solver_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "display_name",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "physics_domain",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "method",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "5": {
+     "cardinality": "singular",
+     "name": "available",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_BOOL"
+    },
+    "6": {
+     "cardinality": "singular",
+     "name": "startable_through_api",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_BOOL"
+    },
+    "7": {
+     "cardinality": "repeated",
+     "name": "assumptions",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.SourceSettings": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "frequency_hz",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_DOUBLE"
+    },
+    "10": {
+     "cardinality": "singular",
+     "name": "waveform",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "amplitude_peak_pa_at_1m",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_DOUBLE"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "phase_radians",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_DOUBLE"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "delay_seconds",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_DOUBLE"
+    },
+    "5": {
+     "cardinality": "singular",
+     "name": "active",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_BOOL"
+    },
+    "6": {
+     "cardinality": "singular",
+     "name": "directivity",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.DirectivityModel"
+    },
+    "7": {
+     "cardinality": "singular",
+     "name": "cardioid_order",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_DOUBLE"
+    },
+    "8": {
+     "cardinality": "singular",
+     "name": "piston_radius_meters",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_DOUBLE"
+    },
+    "9": {
+     "cardinality": "singular",
+     "name": "radius_meters",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_DOUBLE"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.SourceSettingsPatch": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "frequency_hz",
+     "oneof": "",
+     "optional": true,
+     "type": "TYPE_DOUBLE"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "amplitude_peak_pa_at_1m",
+     "oneof": "",
+     "optional": true,
+     "type": "TYPE_DOUBLE"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "phase_radians",
+     "oneof": "",
+     "optional": true,
+     "type": "TYPE_DOUBLE"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "delay_seconds",
+     "oneof": "",
+     "optional": true,
+     "type": "TYPE_DOUBLE"
+    },
+    "5": {
+     "cardinality": "singular",
+     "name": "active",
+     "oneof": "",
+     "optional": true,
+     "type": "TYPE_BOOL"
+    },
+    "6": {
+     "cardinality": "singular",
+     "name": "directivity",
+     "oneof": "",
+     "optional": true,
+     "type": "resonant.v1.DirectivityModel"
+    },
+    "7": {
+     "cardinality": "singular",
+     "name": "cardioid_order",
+     "oneof": "",
+     "optional": true,
+     "type": "TYPE_DOUBLE"
+    },
+    "8": {
+     "cardinality": "singular",
+     "name": "piston_radius_meters",
+     "oneof": "",
+     "optional": true,
+     "type": "TYPE_DOUBLE"
+    },
+    "9": {
+     "cardinality": "singular",
+     "name": "radius_meters",
+     "oneof": "",
+     "optional": true,
+     "type": "TYPE_DOUBLE"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.StageOperationsRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "transaction_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "repeated",
+     "name": "operations",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.BatchOperation"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.StageOperationsResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "transaction",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Transaction"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.StartAcousticFieldSimulationRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "region_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.StartAcousticFieldSimulationResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "job",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Job"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "plan",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.AcousticFieldPlan"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.StartOptimizationRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "problem_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "max_evaluations",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_INT32"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.StartOptimizationResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "job",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Job"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.SubscribeEventsRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "filter",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.EventFilter"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "after_sequence",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_UINT64"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "include_snapshot",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_BOOL"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.SubscribeEventsResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "snapshot",
+     "oneof": "item",
+     "optional": false,
+     "type": "resonant.v1.SceneSnapshot"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "event",
+     "oneof": "item",
+     "optional": false,
+     "type": "resonant.v1.Event"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "gap",
+     "oneof": "item",
+     "optional": false,
+     "type": "resonant.v1.GapNotice"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.Transaction": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "transaction_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "state",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.TransactionState"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "description",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "staged_operations",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_INT32"
+    },
+    "5": {
+     "cardinality": "singular",
+     "name": "base_project_revision",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_UINT64"
+    },
+    "6": {
+     "cardinality": "singular",
+     "name": "validation",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ValidationResult"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.Transform": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "position_meters",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Vector3Meters"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "rotation_radians",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.EulerAnglesRadians"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "scale",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Vector3"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.UndoRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.UndoResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "project",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Project"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "undone",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.UpdateEmitterRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "object_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "expected_revision",
+     "oneof": "",
+     "optional": true,
+     "type": "TYPE_UINT64"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "source",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.SourceSettingsPatch"
+    },
+    "5": {
+     "cardinality": "singular",
+     "name": "local_transform",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Transform"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.UpdateEmitterResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "emitter",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Emitter"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "changes",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ChangeSummary"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.UpdateGeometryParametersRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "object_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "expected_revision",
+     "oneof": "",
+     "optional": true,
+     "type": "TYPE_UINT64"
+    },
+    "4": {
+     "cardinality": "map",
+     "name": "parameters",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.UpdateGeometryParametersRequest.ParametersEntry"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.UpdateGeometryParametersResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "object",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.SceneObject"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "changes",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ChangeSummary"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.UpdateObjectRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "object_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "expected_revision",
+     "oneof": "",
+     "optional": true,
+     "type": "TYPE_UINT64"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "name",
+     "oneof": "",
+     "optional": true,
+     "type": "TYPE_STRING"
+    },
+    "5": {
+     "cardinality": "singular",
+     "name": "local_transform",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Transform"
+    },
+    "6": {
+     "cardinality": "singular",
+     "name": "visible",
+     "oneof": "",
+     "optional": true,
+     "type": "TYPE_BOOL"
+    },
+    "7": {
+     "cardinality": "singular",
+     "name": "parent_id",
+     "oneof": "",
+     "optional": true,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.UpdateObjectResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "object",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.SceneObject"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "changes",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ChangeSummary"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ValidateGeometryRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "kind_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "map",
+     "name": "parameters",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ValidateGeometryRequest.ParametersEntry"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ValidateGeometryResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "validation",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ValidationResult"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ValidateObjectRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "object_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ValidateObjectResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "validation",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ValidationResult"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ValidateProjectRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ValidateProjectResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "validation",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ValidationResult"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ValidateTransactionRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "transaction_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ValidateTransactionResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "transaction",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Transaction"
+    },
+    "3": {
+     "cardinality": "repeated",
+     "name": "results",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.OperationResult"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ValidationIssue": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "severity",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Severity"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "field",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "message",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "resource",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResourceRef"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.ValidationResult": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "valid",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_BOOL"
+    },
+    "2": {
+     "cardinality": "repeated",
+     "name": "issues",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ValidationIssue"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.Vector3": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "x",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_DOUBLE"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "y",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_DOUBLE"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "z",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_DOUBLE"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.Vector3Meters": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "x_meters",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_DOUBLE"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "y_meters",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_DOUBLE"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "z_meters",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_DOUBLE"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.WaitForJobRequest": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.RequestHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "job_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "timeout_seconds",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_DOUBLE"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.WaitForJobResponse": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "header",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.ResponseHeader"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "job",
+     "oneof": "",
+     "optional": false,
+     "type": "resonant.v1.Job"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "finished",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_BOOL"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  },
+  "resonant.v1.WorkflowTemplate": {
+   "fields": {
+    "1": {
+     "cardinality": "singular",
+     "name": "workflow_id",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "2": {
+     "cardinality": "singular",
+     "name": "name",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "3": {
+     "cardinality": "singular",
+     "name": "description",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "4": {
+     "cardinality": "singular",
+     "name": "category",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "5": {
+     "cardinality": "singular",
+     "name": "source",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_STRING"
+    },
+    "6": {
+     "cardinality": "singular",
+     "name": "step_count",
+     "oneof": "",
+     "optional": false,
+     "type": "TYPE_INT32"
+    },
+    "7": {
+     "cardinality": "singular",
+     "name": "definition",
+     "oneof": "",
+     "optional": false,
+     "type": "google.protobuf.Struct"
+    }
+   },
+   "reserved_names": [],
+   "reserved_numbers": []
+  }
+ },
+ "services": {
+  "resonant.v1.ApplicationService": {
+   "GetApplicationInfo": {
+    "client_streaming": false,
+    "input": "resonant.v1.GetApplicationInfoRequest",
+    "output": "resonant.v1.GetApplicationInfoResponse",
+    "server_streaming": false
+   },
+   "GetCapabilities": {
+    "client_streaming": false,
+    "input": "resonant.v1.GetCapabilitiesRequest",
+    "output": "resonant.v1.GetCapabilitiesResponse",
+    "server_streaming": false
+   },
+   "GetDiagnostics": {
+    "client_streaming": false,
+    "input": "resonant.v1.GetDiagnosticsRequest",
+    "output": "resonant.v1.GetDiagnosticsResponse",
+    "server_streaming": false
+   }
+  },
+  "resonant.v1.ArrayService": {
+   "CreateArray": {
+    "client_streaming": false,
+    "input": "resonant.v1.CreateArrayRequest",
+    "output": "resonant.v1.CreateArrayResponse",
+    "server_streaming": false
+   },
+   "FocusArray": {
+    "client_streaming": false,
+    "input": "resonant.v1.FocusArrayRequest",
+    "output": "resonant.v1.FocusArrayResponse",
+    "server_streaming": false
+   },
+   "GetArray": {
+    "client_streaming": false,
+    "input": "resonant.v1.GetArrayRequest",
+    "output": "resonant.v1.GetArrayResponse",
+    "server_streaming": false
+   },
+   "SetArrayExcitation": {
+    "client_streaming": false,
+    "input": "resonant.v1.SetArrayExcitationRequest",
+    "output": "resonant.v1.SetArrayExcitationResponse",
+    "server_streaming": false
+   }
+  },
+  "resonant.v1.AuditService": {
+   "QueryAudit": {
+    "client_streaming": false,
+    "input": "resonant.v1.QueryAuditRequest",
+    "output": "resonant.v1.QueryAuditResponse",
+    "server_streaming": false
+   }
+  },
+  "resonant.v1.EmitterService": {
+   "CreateEmitter": {
+    "client_streaming": false,
+    "input": "resonant.v1.CreateEmitterRequest",
+    "output": "resonant.v1.CreateEmitterResponse",
+    "server_streaming": false
+   },
+   "GetEmitter": {
+    "client_streaming": false,
+    "input": "resonant.v1.GetEmitterRequest",
+    "output": "resonant.v1.GetEmitterResponse",
+    "server_streaming": false
+   },
+   "ListEmitters": {
+    "client_streaming": false,
+    "input": "resonant.v1.ListEmittersRequest",
+    "output": "resonant.v1.ListEmittersResponse",
+    "server_streaming": false
+   },
+   "UpdateEmitter": {
+    "client_streaming": false,
+    "input": "resonant.v1.UpdateEmitterRequest",
+    "output": "resonant.v1.UpdateEmitterResponse",
+    "server_streaming": false
+   }
+  },
+  "resonant.v1.EventService": {
+   "ListEvents": {
+    "client_streaming": false,
+    "input": "resonant.v1.ListEventsRequest",
+    "output": "resonant.v1.ListEventsResponse",
+    "server_streaming": false
+   },
+   "SubscribeEvents": {
+    "client_streaming": false,
+    "input": "resonant.v1.SubscribeEventsRequest",
+    "output": "resonant.v1.SubscribeEventsResponse",
+    "server_streaming": true
+   }
+  },
+  "resonant.v1.GeometryService": {
+   "CreatePrimitive": {
+    "client_streaming": false,
+    "input": "resonant.v1.CreatePrimitiveRequest",
+    "output": "resonant.v1.CreatePrimitiveResponse",
+    "server_streaming": false
+   },
+   "ListGeometryKinds": {
+    "client_streaming": false,
+    "input": "resonant.v1.ListGeometryKindsRequest",
+    "output": "resonant.v1.ListGeometryKindsResponse",
+    "server_streaming": false
+   },
+   "UpdateGeometryParameters": {
+    "client_streaming": false,
+    "input": "resonant.v1.UpdateGeometryParametersRequest",
+    "output": "resonant.v1.UpdateGeometryParametersResponse",
+    "server_streaming": false
+   },
+   "ValidateGeometry": {
+    "client_streaming": false,
+    "input": "resonant.v1.ValidateGeometryRequest",
+    "output": "resonant.v1.ValidateGeometryResponse",
+    "server_streaming": false
+   }
+  },
+  "resonant.v1.JobService": {
+   "CancelJob": {
+    "client_streaming": false,
+    "input": "resonant.v1.CancelJobRequest",
+    "output": "resonant.v1.CancelJobResponse",
+    "server_streaming": false
+   },
+   "GetJob": {
+    "client_streaming": false,
+    "input": "resonant.v1.GetJobRequest",
+    "output": "resonant.v1.GetJobResponse",
+    "server_streaming": false
+   },
+   "ListJobs": {
+    "client_streaming": false,
+    "input": "resonant.v1.ListJobsRequest",
+    "output": "resonant.v1.ListJobsResponse",
+    "server_streaming": false
+   },
+   "WaitForJob": {
+    "client_streaming": false,
+    "input": "resonant.v1.WaitForJobRequest",
+    "output": "resonant.v1.WaitForJobResponse",
+    "server_streaming": false
+   }
+  },
+  "resonant.v1.MaterialService": {
+   "AssignMaterial": {
+    "client_streaming": false,
+    "input": "resonant.v1.AssignMaterialRequest",
+    "output": "resonant.v1.AssignMaterialResponse",
+    "server_streaming": false
+   },
+   "CreateMaterial": {
+    "client_streaming": false,
+    "input": "resonant.v1.CreateMaterialRequest",
+    "output": "resonant.v1.CreateMaterialResponse",
+    "server_streaming": false
+   },
+   "DeleteMaterial": {
+    "client_streaming": false,
+    "input": "resonant.v1.DeleteMaterialRequest",
+    "output": "resonant.v1.DeleteMaterialResponse",
+    "server_streaming": false
+   },
+   "GetMaterial": {
+    "client_streaming": false,
+    "input": "resonant.v1.GetMaterialRequest",
+    "output": "resonant.v1.GetMaterialResponse",
+    "server_streaming": false
+   },
+   "ListMaterials": {
+    "client_streaming": false,
+    "input": "resonant.v1.ListMaterialsRequest",
+    "output": "resonant.v1.ListMaterialsResponse",
+    "server_streaming": false
+   },
+   "RemoveMaterialAssignment": {
+    "client_streaming": false,
+    "input": "resonant.v1.RemoveMaterialAssignmentRequest",
+    "output": "resonant.v1.RemoveMaterialAssignmentResponse",
+    "server_streaming": false
+   }
+  },
+  "resonant.v1.OptimizationService": {
+   "ListOptimizationProblems": {
+    "client_streaming": false,
+    "input": "resonant.v1.ListOptimizationProblemsRequest",
+    "output": "resonant.v1.ListOptimizationProblemsResponse",
+    "server_streaming": false
+   },
+   "ListOptimizationRuns": {
+    "client_streaming": false,
+    "input": "resonant.v1.ListOptimizationRunsRequest",
+    "output": "resonant.v1.ListOptimizationRunsResponse",
+    "server_streaming": false
+   },
+   "StartOptimization": {
+    "client_streaming": false,
+    "input": "resonant.v1.StartOptimizationRequest",
+    "output": "resonant.v1.StartOptimizationResponse",
+    "server_streaming": false
+   }
+  },
+  "resonant.v1.ProjectService": {
+   "CreateProject": {
+    "client_streaming": false,
+    "input": "resonant.v1.CreateProjectRequest",
+    "output": "resonant.v1.CreateProjectResponse",
+    "server_streaming": false
+   },
+   "ExportProjectJson": {
+    "client_streaming": false,
+    "input": "resonant.v1.ExportProjectJsonRequest",
+    "output": "resonant.v1.ExportProjectJsonResponse",
+    "server_streaming": false
+   },
+   "GetProject": {
+    "client_streaming": false,
+    "input": "resonant.v1.GetProjectRequest",
+    "output": "resonant.v1.GetProjectResponse",
+    "server_streaming": false
+   },
+   "OpenProject": {
+    "client_streaming": false,
+    "input": "resonant.v1.OpenProjectRequest",
+    "output": "resonant.v1.OpenProjectResponse",
+    "server_streaming": false
+   },
+   "Redo": {
+    "client_streaming": false,
+    "input": "resonant.v1.RedoRequest",
+    "output": "resonant.v1.RedoResponse",
+    "server_streaming": false
+   },
+   "SaveProject": {
+    "client_streaming": false,
+    "input": "resonant.v1.SaveProjectRequest",
+    "output": "resonant.v1.SaveProjectResponse",
+    "server_streaming": false
+   },
+   "Undo": {
+    "client_streaming": false,
+    "input": "resonant.v1.UndoRequest",
+    "output": "resonant.v1.UndoResponse",
+    "server_streaming": false
+   },
+   "ValidateProject": {
+    "client_streaming": false,
+    "input": "resonant.v1.ValidateProjectRequest",
+    "output": "resonant.v1.ValidateProjectResponse",
+    "server_streaming": false
+   }
+  },
+  "resonant.v1.ResultsService": {
+   "GetResult": {
+    "client_streaming": false,
+    "input": "resonant.v1.GetResultRequest",
+    "output": "resonant.v1.GetResultResponse",
+    "server_streaming": false
+   },
+   "ListResults": {
+    "client_streaming": false,
+    "input": "resonant.v1.ListResultsRequest",
+    "output": "resonant.v1.ListResultsResponse",
+    "server_streaming": false
+   },
+   "ReadFieldSamples": {
+    "client_streaming": false,
+    "input": "resonant.v1.ReadFieldSamplesRequest",
+    "output": "resonant.v1.ReadFieldSamplesResponse",
+    "server_streaming": false
+   },
+   "ReadFieldSlice": {
+    "client_streaming": false,
+    "input": "resonant.v1.ReadFieldSliceRequest",
+    "output": "resonant.v1.FieldDataChunk",
+    "server_streaming": true
+   }
+  },
+  "resonant.v1.SceneService": {
+   "CreateGroup": {
+    "client_streaming": false,
+    "input": "resonant.v1.CreateGroupRequest",
+    "output": "resonant.v1.CreateGroupResponse",
+    "server_streaming": false
+   },
+   "DeleteObjects": {
+    "client_streaming": false,
+    "input": "resonant.v1.DeleteObjectsRequest",
+    "output": "resonant.v1.DeleteObjectsResponse",
+    "server_streaming": false
+   },
+   "DuplicateObjects": {
+    "client_streaming": false,
+    "input": "resonant.v1.DuplicateObjectsRequest",
+    "output": "resonant.v1.DuplicateObjectsResponse",
+    "server_streaming": false
+   },
+   "GetObject": {
+    "client_streaming": false,
+    "input": "resonant.v1.GetObjectRequest",
+    "output": "resonant.v1.GetObjectResponse",
+    "server_streaming": false
+   },
+   "GetSceneSnapshot": {
+    "client_streaming": false,
+    "input": "resonant.v1.GetSceneSnapshotRequest",
+    "output": "resonant.v1.GetSceneSnapshotResponse",
+    "server_streaming": false
+   },
+   "ListObjects": {
+    "client_streaming": false,
+    "input": "resonant.v1.ListObjectsRequest",
+    "output": "resonant.v1.ListObjectsResponse",
+    "server_streaming": false
+   },
+   "UpdateObject": {
+    "client_streaming": false,
+    "input": "resonant.v1.UpdateObjectRequest",
+    "output": "resonant.v1.UpdateObjectResponse",
+    "server_streaming": false
+   },
+   "ValidateObject": {
+    "client_streaming": false,
+    "input": "resonant.v1.ValidateObjectRequest",
+    "output": "resonant.v1.ValidateObjectResponse",
+    "server_streaming": false
+   }
+  },
+  "resonant.v1.SessionService": {
+   "CloseSession": {
+    "client_streaming": false,
+    "input": "resonant.v1.CloseSessionRequest",
+    "output": "resonant.v1.CloseSessionResponse",
+    "server_streaming": false
+   },
+   "ListSessions": {
+    "client_streaming": false,
+    "input": "resonant.v1.ListSessionsRequest",
+    "output": "resonant.v1.ListSessionsResponse",
+    "server_streaming": false
+   },
+   "OpenSession": {
+    "client_streaming": false,
+    "input": "resonant.v1.OpenSessionRequest",
+    "output": "resonant.v1.OpenSessionResponse",
+    "server_streaming": false
+   }
+  },
+  "resonant.v1.SimulationService": {
+   "CreateFieldRegion": {
+    "client_streaming": false,
+    "input": "resonant.v1.CreateFieldRegionRequest",
+    "output": "resonant.v1.CreateFieldRegionResponse",
+    "server_streaming": false
+   },
+   "EstimateAcousticField": {
+    "client_streaming": false,
+    "input": "resonant.v1.EstimateAcousticFieldRequest",
+    "output": "resonant.v1.EstimateAcousticFieldResponse",
+    "server_streaming": false
+   },
+   "ListSolvers": {
+    "client_streaming": false,
+    "input": "resonant.v1.ListSolversRequest",
+    "output": "resonant.v1.ListSolversResponse",
+    "server_streaming": false
+   },
+   "StartAcousticFieldSimulation": {
+    "client_streaming": false,
+    "input": "resonant.v1.StartAcousticFieldSimulationRequest",
+    "output": "resonant.v1.StartAcousticFieldSimulationResponse",
+    "server_streaming": false
+   }
+  },
+  "resonant.v1.TransactionService": {
+   "AbortTransaction": {
+    "client_streaming": false,
+    "input": "resonant.v1.AbortTransactionRequest",
+    "output": "resonant.v1.AbortTransactionResponse",
+    "server_streaming": false
+   },
+   "BeginTransaction": {
+    "client_streaming": false,
+    "input": "resonant.v1.BeginTransactionRequest",
+    "output": "resonant.v1.BeginTransactionResponse",
+    "server_streaming": false
+   },
+   "CommitTransaction": {
+    "client_streaming": false,
+    "input": "resonant.v1.CommitTransactionRequest",
+    "output": "resonant.v1.CommitTransactionResponse",
+    "server_streaming": false
+   },
+   "ExecuteBatch": {
+    "client_streaming": false,
+    "input": "resonant.v1.ExecuteBatchRequest",
+    "output": "resonant.v1.ExecuteBatchResponse",
+    "server_streaming": false
+   },
+   "GetTransaction": {
+    "client_streaming": false,
+    "input": "resonant.v1.GetTransactionRequest",
+    "output": "resonant.v1.GetTransactionResponse",
+    "server_streaming": false
+   },
+   "StageOperations": {
+    "client_streaming": false,
+    "input": "resonant.v1.StageOperationsRequest",
+    "output": "resonant.v1.StageOperationsResponse",
+    "server_streaming": false
+   },
+   "ValidateTransaction": {
+    "client_streaming": false,
+    "input": "resonant.v1.ValidateTransactionRequest",
+    "output": "resonant.v1.ValidateTransactionResponse",
+    "server_streaming": false
+   }
+  },
+  "resonant.v1.WorkflowService": {
+   "ExecuteWorkflow": {
+    "client_streaming": false,
+    "input": "resonant.v1.ExecuteWorkflowRequest",
+    "output": "resonant.v1.ExecuteWorkflowResponse",
+    "server_streaming": false
+   },
+   "GetWorkflowRun": {
+    "client_streaming": false,
+    "input": "resonant.v1.GetWorkflowRunRequest",
+    "output": "resonant.v1.GetWorkflowRunResponse",
+    "server_streaming": false
+   },
+   "ListWorkflowTemplates": {
+    "client_streaming": false,
+    "input": "resonant.v1.ListWorkflowTemplatesRequest",
+    "output": "resonant.v1.ListWorkflowTemplatesResponse",
+    "server_streaming": false
+   }
+  }
+ }
+}

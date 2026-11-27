@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>AutomationServerDialog</class>
+ <widget class="QDialog" name="AutomationServerDialog">
+  <property name="geometry"><rect><x>0</x><y>0</y><width>680</width><height>620</height></rect></property>
+  <property name="windowTitle"><string>Automation Server</string></property>
+  <layout class="QVBoxLayout" name="mainLayout">
+   <item>
+    <widget class="QLabel" name="introLabel">
+     <property name="text"><string>Lets scripts, other programs and AI assistants (MCP) drive this project through the automation API (resonant.v1). Every call uses the same operations as the window: it is undoable, validated and recorded. Clients need the token; the server accepts only your user account. Off until you start it.</string></property>
+     <property name="wordWrap"><bool>true</bool></property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="permissionsGroup">
+     <property name="title"><string>What remote sessions may do</string></property>
+     <layout class="QGridLayout" name="permissionsLayout">
+      <item row="0" column="0" colspan="3">
+       <widget class="QCheckBox" name="readCheck">
+        <property name="text"><string>Read the project, results and events</string></property>
+        <property name="checked"><bool>true</bool></property>
+        <property name="enabled"><bool>false</bool></property>
+       </widget>
+      </item>
+      <item row="1" column="0" colspan="3">
+       <widget class="QCheckBox" name="modifyCheck">
+        <property name="text"><string>Change the project (each change can be undone)</string></property>
+        <property name="checked"><bool>true</bool></property>
+       </widget>
+      </item>
+      <item row="2" column="0" colspan="3">
+       <widget class="QCheckBox" name="executeCheck">
+        <property name="text"><string>Start and cancel jobs (simulations, optimizations, workflows)</string></property>
+        <property name="checked"><bool>true</bool></property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QCheckBox" name="filesCheck">
+        <property name="text"><string>Open and save projects in:</string></property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QLineEdit" name="directoryEdit">
+        <property name="enabled"><bool>false</bool></property>
+        <property name="placeholderText"><string>a directory</string></property>
+       </widget>
+      </item>
+      <item row="3" column="2">
+       <widget class="QPushButton" name="browseButton">
+        <property name="text"><string>Browse...</string></property>
+        <property name="enabled"><bool>false</bool></property>
+       </widget>
+      </item>
+      <item row="4" column="0" colspan="3">
+       <widget class="QCheckBox" name="adminCheck">
+        <property name="text"><string>Administer (see every session and every session's audit records)</string></property>
+       </widget>
+      </item>
+      <item row="5" column="0" colspan="3">
+       <widget class="QLabel" name="hardwareLabel">
+        <property name="text"><string>No remote session can drive hardware outputs: those need your authorization in the Experiments panel.</string></property>
+        <property name="wordWrap"><bool>true</bool></property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="serverGroup">
+     <property name="title"><string>Server</string></property>
+     <layout class="QFormLayout" name="serverLayout">
+      <item row="0" column="0"><widget class="QLabel" name="stateCaption"><property name="text"><string>State:</string></property></widget></item>
+      <item row="0" column="1"><widget class="QLabel" name="stateLabel"><property name="text"><string>Stopped</string></property></widget></item>
+      <item row="1" column="0"><widget class="QLabel" name="socketCaption"><property name="text"><string>Socket:</string></property></widget></item>
+      <item row="1" column="1"><widget class="QLineEdit" name="socketEdit"><property name="readOnly"><bool>true</bool></property></widget></item>
+      <item row="2" column="0"><widget class="QLabel" name="tokenCaption"><property name="text"><string>Token file:</string></property></widget></item>
+      <item row="2" column="1">
+       <layout class="QHBoxLayout" name="tokenLayout">
+        <item><widget class="QLineEdit" name="tokenEdit"><property name="readOnly"><bool>true</bool></property></widget></item>
+        <item><widget class="QPushButton" name="copyTokenButton"><property name="text"><string>Copy Token</string></property><property name="enabled"><bool>false</bool></property></widget></item>
+       </layout>
+      </item>
+      <item row="3" column="0"><widget class="QLabel" name="bridgeCaption"><property name="text"><string>gRPC bridge:</string></property></widget></item>
+      <item row="3" column="1">
+       <layout class="QHBoxLayout" name="bridgeLayout">
+        <item><widget class="QLabel" name="portLabel"><property name="text"><string>Port</string></property></widget></item>
+        <item><widget class="QSpinBox" name="portSpin"><property name="minimum"><number>0</number></property><property name="maximum"><number>65535</number></property><property name="value"><number>50051</number></property></widget></item>
+        <item><widget class="QPushButton" name="bridgeButton"><property name="text"><string>Start Bridge</string></property><property name="enabled"><bool>false</bool></property></widget></item>
+        <item><widget class="QLabel" name="bridgeLabel"><property name="text"><string>not running (127.0.0.1 only)</string></property></widget></item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="sessionsCaption"><property name="text"><string>Sessions</string></property></widget>
+   </item>
+   <item>
+    <widget class="QTableWidget" name="sessionTable">
+     <property name="editTriggers"><set>QAbstractItemView::NoEditTriggers</set></property>
+     <property name="selectionBehavior"><enum>QAbstractItemView::SelectRows</enum></property>
+     <column><property name="text"><string>Client</string></property></column>
+     <column><property name="text"><string>Interface</string></property></column>
+     <column><property name="text"><string>Permissions</string></property></column>
+     <column><property name="text"><string>Last call</string></property></column>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="buttonLayout">
+     <item><widget class="QPushButton" name="startButton"><property name="text"><string>Start Server</string></property></widget></item>
+     <item><spacer name="buttonSpacer"><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer></item>
+     <item><widget class="QDialogButtonBox" name="buttonBox"><property name="standardButtons"><set>QDialogButtonBox::Close|QDialogButtonBox::Help</set></property></widget></item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection><sender>buttonBox</sender><signal>rejected()</signal><receiver>AutomationServerDialog</receiver><slot>reject()</slot></connection>
+  <connection><sender>filesCheck</sender><signal>toggled(bool)</signal><receiver>directoryEdit</receiver><slot>setEnabled(bool)</slot></connection>
+  <connection><sender>filesCheck</sender><signal>toggled(bool)</signal><receiver>browseButton</receiver><slot>setEnabled(bool)</slot></connection>
+ </connections>
+</ui>

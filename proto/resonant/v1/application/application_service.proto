@@ -1,0 +1,43 @@
+syntax = "proto3";
+package resonant.v1;
+
+import "resonant/v1/application/capabilities.proto";
+import "resonant/v1/application/diagnostics.proto";
+import "resonant/v1/common/metadata.proto";
+
+message ApplicationInfo {
+  string application_name = 1;      // "Resonant"
+  string application_version = 2;   // "0.1.0"
+  string api_version = 3;           // "resonant.v1"
+  string api_revision = 4;          // schema revision within v1 (additions only)
+  string host = 5;                  // "gui" or "headless"
+}
+
+message GetApplicationInfoRequest { RequestHeader header = 1; }
+message GetApplicationInfoResponse { ResponseHeader header = 1; ApplicationInfo info = 2; }
+
+message GetCapabilitiesRequest {
+  RequestHeader header = 1;
+  string category = 2;   // empty: all
+}
+message GetCapabilitiesResponse {
+  ResponseHeader header = 1;
+  repeated Capability capabilities = 2;
+  repeated OperationCapability operations = 3;
+}
+
+message GetDiagnosticsRequest { RequestHeader header = 1; }
+message GetDiagnosticsResponse { ResponseHeader header = 1; Diagnostics diagnostics = 2; }
+
+// Application status, versions, capabilities and diagnostics.
+service ApplicationService {
+  // The application's name and version, the API version, and whether the host is the GUI or
+  // headless. Needs no session.
+  rpc GetApplicationInfo(GetApplicationInfoRequest) returns (GetApplicationInfoResponse);
+  // What this installation can do: domains, solvers, geometry kinds, material models, algorithms,
+  // file formats, dependencies, and every operation with its permission. Unavailable features are
+  // listed with the reason.
+  rpc GetCapabilities(GetCapabilitiesRequest) returns (GetCapabilitiesResponse);
+  // Health, sessions, active jobs, the event and audit counters, recent errors, memory and uptime.
+  rpc GetDiagnostics(GetDiagnosticsRequest) returns (GetDiagnosticsResponse);
+}

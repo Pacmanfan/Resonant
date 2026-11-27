@@ -25,6 +25,7 @@ option(RESONANT_WITH_HDF5 "Store measurements in HDF5 when HDF5 is installed (el
 option(RESONANT_WITH_ALSA "Build the ALSA audio-interface driver when ALSA is installed" ON)
 option(RESONANT_WITH_SOAPYSDR "Build the SoapySDR driver (discovery only) when SoapySDR is installed" ON)
 option(RESONANT_WITH_PYTHON "Build the Python API module when Python and pybind11 are installed" ON)
+option(RESONANT_WITH_AUTOMATION_API "Build the automation API (Protocol Buffers) when protoc and libprotobuf are installed" ON)
 set(RESONANT_CUDA_ARCHITECTURES "75-real;86-real;89-real;120" CACHE STRING
     "GPU architectures compiled in (Turing, Ampere, Ada, Blackwell; the last also as PTX)")
 
@@ -103,11 +104,26 @@ if(RESONANT_WITH_PYTHON)
 endif()
 message(STATUS "Resonant Python API module: ${RESONANT_HAVE_PYTHON}")
 
+# The automation API: the protobuf contract (proto/), its adapter and the
+# headless host. gRPC itself is a separate bridge process (ADR-000216).
+set(RESONANT_HAVE_AUTOMATION_API OFF)
+if(RESONANT_WITH_AUTOMATION_API)
+    find_package(Protobuf QUIET)
+    if(Protobuf_FOUND AND Protobuf_PROTOC_EXECUTABLE)
+        set(RESONANT_HAVE_AUTOMATION_API ON)
+    endif()
+endif()
+message(STATUS "Resonant automation API: ${RESONANT_HAVE_AUTOMATION_API}")
+
 add_library(resonant_json INTERFACE)
 target_include_directories(resonant_json SYSTEM INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/nlohmann)
 
 add_subdirectory(src/core)
 add_subdirectory(src/hardware)
+if(RESONANT_HAVE_AUTOMATION_API)
+    add_subdirectory(src/automation_api)
+    add_subdirectory(src/automation_host)
+endif()
 if(RESONANT_HAVE_PYTHON)
     add_subdirectory(src/python)
 endif()

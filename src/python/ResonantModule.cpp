@@ -47,6 +47,11 @@
 
 #include <mutex>
 
+#ifdef RESONANT_HAVE_AUTOMATION_API
+#include "Dispatcher.h"
+#include "services/Services.h"
+#endif
+
 namespace py = pybind11;
 using nlohmann::json;
 using namespace resonant;
@@ -437,6 +442,102 @@ py::dict fieldDict(const acoustics::FieldResult& r)
     return d;
 }
 
+#ifdef RESONANT_HAVE_AUTOMATION_API
+// The automation API in this process (REQ-CHAT-20261126-012): the same
+// resonant.v1 contract and services as the socket and gRPC, around a Python
+// project. Calls hold the project's lock and release the GIL; jobs run on the
+// session's workers.
+class PyAutomationSession {
+    class Host final : public services::ProjectHost {
+    public:
+        explicit Host(Box box) : box_(std::move(box)), jobs_(std::make_unique<JobManager>(2)) {}
+        ~Host() override { jobs_.reset(); }
+        Project& project() override { return *box_->project; }
+        CommandStack& commands() override { return commands_; }
+        JobManager& jobs() override { return *jobs_; }
+        std::string filePath() const override { return path_; }
+        void setFilePath(const std::string& path) override { path_ = path; }
+        void installProject(std::unique_ptr<Project> project, const std::string& path) override
+        {
+            box_->project = std::move(project);
+            path_ = path;
+            commands_.clear();
+            if (session_)
+                session_->projectReplaced(path.empty() ? "project.created" : "project.opened");
+        }
+        void setSession(services::Session* s) { session_ = s; }
+        std::recursive_mutex& mutex() { return box_->mutex; }
+
+    private:
+        Box box_;
+        CommandStack commands_;
+        std::unique_ptr<JobManager> jobs_;
+        std::string path_;
+        services::Session* session_ = nullptr;
+    };
+
+public:
+    explicit PyAutomationSession(const PyProject& project)
+        : host_(std::make_unique<Host>(project.box())), session_(std::make_unique<services::Session>(*host_, "python")),
+          dispatcher_(std::make_unique<automation_api::Dispatcher>(*session_, [this](const std::function<void()>& f) {
+              std::lock_guard lock(host_->mutex());
+              f();
+          }))
+    {
+        host_->setSession(session_.get());
+    }
+    ~PyAutomationSession()
+    {
+        dispatcher_.reset();
+        session_.reset();
+        host_.reset();
+    }
+    py::tuple call(const std::string& method, const py::bytes& payload)
+    {
+        const std::string data = payload;
+        automation_api::Reply r;
+        {
+            py::gil_scoped_release release;
+            r = dispatcher_->call(method, data, services::Interface::Python);
+        }
+        return py::make_tuple(r.status, py::bytes(r.payload), py::bytes(r.error));
+    }
+    py::tuple stream(const std::string& method, const py::bytes& payload)
+    {
+        // In this process only bounded streams: a subscription waits for events that this thread would have to produce.
+        if (method == "/resonant.v1.EventService/SubscribeEvents")
+            fail("SubscribeEvents needs the application's socket or gRPC: in process, use EventService.ListEvents");
+        const std::string data = payload;
+        std::vector<std::string> items;
+        automation_api::Reply r;
+        {
+            py::gil_scoped_release release;
+            r = dispatcher_->stream(method, data, services::Interface::Python, [&items](const std::string& item) {
+                if (!item.empty())
+                    items.push_back(item);
+                return true;
+            });
+        }
+        py::list out;
+        for (const std::string& item : items)
+            out.append(py::bytes(item));
+        return py::make_tuple(r.status, out, py::bytes(r.error));
+    }
+    std::vector<std::string> methods() const
+    {
+        std::vector<std::string> out;
+        for (const auto& m : dispatcher_->methods())
+            out.push_back(m.method);
+        return out;
+    }
+
+private:
+    std::unique_ptr<Host> host_;
+    std::unique_ptr<services::Session> session_;
+    std::unique_ptr<automation_api::Dispatcher> dispatcher_;
+};
+#endif
+
 }  // namespace
 
 PYBIND11_MODULE(_resonant, m)
@@ -775,4 +876,15 @@ PYBIND11_MODULE(_resonant, m)
         },
         py::arg("project"), py::arg("workflow"), py::arg("parameters") = py::dict(), py::arg("output_dir") = "", py::arg("progress") = py::none(),
         py::arg("cancel") = py::none(), "Run a workflow (an id or a workflow dict) on the project; returns the run record.");
+
+#ifdef RESONANT_HAVE_AUTOMATION_API
+    py::class_<PyAutomationSession>(m, "AutomationSession",
+                                    "The automation API (resonant.v1) in this process, around a project: call(method, request bytes) -> "
+                                    "(status, response bytes, error bytes). resonant_api.connect(project=...) uses it.")
+        .def(py::init<const PyProject&>(), py::arg("project"), py::keep_alive<1, 2>())
+        .def("call", &PyAutomationSession::call, py::arg("method"), py::arg("payload"), "A unary method by its full name.")
+        .def("stream", &PyAutomationSession::stream, py::arg("method"), py::arg("payload"),
+             "A bounded server-streaming method: (status, [item bytes], error bytes).")
+        .def("methods", &PyAutomationSession::methods, "The full names of the methods.");
+#endif
 }

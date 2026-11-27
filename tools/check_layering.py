@@ -34,9 +34,22 @@ sequences and run manifests) and src/core/plugins (the plugin manager) are
 infrastructure: they include no physics domain and no coupling (plugins may
 use the automation registries)
 
+the automation rules of ADR-000216:
+
+    src/core/services   (the application services) includes no protobuf or
+                        gRPC header: transports adapt to the services, never
+                        the other way round
+    src/core            nothing outside src/core/services includes services/
+                        (domains and infrastructure do not depend on the
+                        application layer)
+    src/automation_api  (the protobuf adapter) and src/automation_host include
+                        no Qt header and nothing from src/app, src/render or
+                        src/hardware
+
 and one build rule: no two sources of one library or test target share a
 file name (qmake writes every object of a target into one directory, so
-the second would overwrite the first).
+the second would overwrite the first); the same holds for the .proto files,
+whose generated objects join the adapter's.
 
 Exit status 0 when the rules hold, 1 with one line per violation otherwise.
 """
@@ -125,9 +138,49 @@ def violations():
             if other is not None and other != own:
                 found.append(f"{path.relative_to(ROOT)}:{number}: the {own} domain must not include <{match.group(1)}> "
                              f"(the {other} domain); put cross-domain code in src/core/coupling")
+    # The application services: no transport types.
+    for path in sorted((ROOT / "src" / "core").rglob("*")):
+        if path.suffix not in (".h", ".cpp"):
+            continue
+        module = path.relative_to(ROOT / "src" / "core").parts[0]
+        for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+            match = INCLUDE.match(line)
+            if not match:
+                continue
+            header = match.group(1)
+            if header.startswith(("google/protobuf", "grpc", "grpcpp", "resonant/v1/", "resonant/transport/")) or header.endswith(".pb.h"):
+                found.append(f"{path.relative_to(ROOT)}:{number}: the core must not include <{header}> (a transport type); "
+                             f"adapt in src/automation_api")
+            elif module != "services" and header.startswith("services/"):
+                found.append(f"{path.relative_to(ROOT)}:{number}: {module} must not include <{header}> "
+                             f"(the application services are a layer above the domains)")
+    for directory in ("automation_api", "automation_host"):
+        for path in sorted((ROOT / "src" / directory).glob("*")):
+            if path.suffix not in (".h", ".cpp"):
+                continue
+            for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+                match = INCLUDE.match(line)
+                if not match:
+                    continue
+                header = match.group(1)
+                name = header.rsplit("/", 1)[-1]
+                if re.match(r"Q[A-Z]", name) or header.startswith(("Qt", "GL/", "render/", "app/", "hardware/")) \
+                        or name in APP_HEADERS or name in RENDER_HEADERS or name in HARDWARE_HEADERS:
+                    found.append(f"{path.relative_to(ROOT)}:{number}: src/{directory} must not include <{header}>")
+    # .proto basenames are unique, and differ from the adapter's own sources.
+    adapter = {p.stem: p for p in (ROOT / "src" / "automation_api").glob("*.cpp")}
+    protos = {}
+    for path in sorted((ROOT / "proto").rglob("*.proto")):
+        stem = path.stem
+        if stem in protos:
+            found.append(f"{path.relative_to(ROOT)}: has the same file name as {protos[stem].relative_to(ROOT)}; "
+                         f"their generated objects would overwrite each other in the qmake build")
+        elif stem + ".pb" in adapter:
+            found.append(f"{path.relative_to(ROOT)}: its generated object would collide with src/automation_api/{stem}.pb.cpp")
+        protos.setdefault(stem, path)
     # Unique source file names per target.
     for target in (ROOT / "src" / "core", ROOT / "src" / "hardware", ROOT / "src" / "render", ROOT / "src" / "app",
-                   ROOT / "tests" / "core", ROOT / "tests" / "app"):
+                   ROOT / "src" / "automation_api", ROOT / "tests" / "core", ROOT / "tests" / "app"):
         seen = {}
         for path in sorted(target.rglob("*.cpp")):
             if path.name in seen:

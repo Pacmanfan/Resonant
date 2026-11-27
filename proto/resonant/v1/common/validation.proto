@@ -1,0 +1,31 @@
+syntax = "proto3";
+package resonant.v1;
+
+import "resonant/v1/common/identifiers.proto";
+
+enum Severity {
+  SEVERITY_UNSPECIFIED = 0;
+  SEVERITY_INFO = 1;
+  SEVERITY_WARNING = 2;
+  SEVERITY_ERROR = 3;
+}
+
+message ValidationIssue {
+  Severity severity = 1;
+  string field = 2;
+  string message = 3;
+  ResourceRef resource = 4;
+}
+
+message ValidationResult {
+  bool valid = 1;
+  repeated ValidationIssue issues = 2;
+}
+
+// What a mutation changed, or would change in a dry run.
+message ChangeSummary {
+  repeated ResourceRef created = 1;
+  repeated ResourceRef updated = 2;
+  repeated ResourceRef deleted = 3;
+  string description = 4;
+}

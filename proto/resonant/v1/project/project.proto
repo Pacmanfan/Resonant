@@ -1,0 +1,21 @@
+syntax = "proto3";
+package resonant.v1;
+
+import "google/protobuf/timestamp.proto";
+
+message Project {
+  string project_id = 1;
+  string name = 2;
+  // The project file's name (not its directory: no paths are sent to clients).
+  string file_name = 3;
+  uint64 revision = 4;
+  bool modified = 5;              // unsaved changes
+  int32 object_count = 6;
+  int32 material_count = 7;
+  bool can_undo = 8;
+  bool can_redo = 9;
+  string undo_description = 10;
+  string redo_description = 11;
+  google.protobuf.Timestamp created_time = 12;
+  google.protobuf.Timestamp modified_time = 13;   // last save
+}

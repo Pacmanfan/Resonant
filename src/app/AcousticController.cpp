@@ -1,6 +1,9 @@
 #include "AcousticController.h"
 
+#include "services/Services.h"
+
 #include "DocumentController.h"
+#include "manipulators/AcousticFieldRun.h"
 #include "commands/SceneCommands.h"
 #include "foundation/Log.h"
 #include "foundation/Units.h"
@@ -204,54 +207,23 @@ bool AcousticController::reflectorModelSelected() const
     return settings().modelId == kReflectorModelId;
 }
 
-namespace {
-ReflectorCollection reflectorsOf(const DocumentController& document, const AcousticSettings& s)
-{
-    ReflectorOptions options;
-    options.elementsPerWavelength = s.reflectorElementsPerWavelength;
-    return collectReflectors(document.scene(), document.project().materials, s.medium.wavelength(s.frequencyHz), options);
-}
-}  // namespace
-
+// The model choice, estimate and provenance live in the core
+// (manipulators/AcousticFieldRun), shared with the application services.
 std::shared_ptr<const PropagationModel> AcousticController::currentModel() const
 {
-    const AcousticSettings s = settings();
-    if (s.modelId == kReflectorModelId)
-        return std::make_shared<const ReflectorModel>(s.propagation, reflectorsOf(*document_, s).surfaces);
-    return std::make_shared<const FreeFieldModel>(s.propagation);
+    return fieldModelFor(document_->project(), settings());
 }
 
 std::shared_ptr<const FieldEvaluator> AcousticController::currentEvaluator() const
 {
-    const AcousticSettings s = settings();
-    const auto sources = collectSources(document_->scene());
-    if (s.modelId == kReflectorModelId) {
-        auto model = std::make_shared<const ReflectorModel>(s.propagation, reflectorsOf(*document_, s).surfaces);
-        return std::make_shared<const ReflectorFieldEvaluator>(sources, s.frequencyHz, s.medium, std::move(model));
-    }
-    return std::make_shared<const FieldEvaluator>(sources, s.frequencyHz, s.medium,
-                                                  std::make_shared<FreeFieldModel>(s.propagation));
+    return fieldEvaluatorFor(document_->project(), settings());
 }
 
 QStringList AcousticController::modelNotes() const
 {
     QStringList notes;
-    const AcousticSettings s = settings();
-    if (s.modelId == kReflectorModelId) {
-        const ReflectorCollection collection = reflectorsOf(*document_, s);
-        if (collection.surfaces.empty())
-            notes.append(QStringLiteral("There is no reflector in the scene: the result equals the free field."));
-        for (const std::string& note : collection.notes)
-            notes.append(QString::fromStdString(note));
-    } else {
-        bool manipulators = false;
-        document_->scene().forEach([&](const SceneObject& object) {
-            manipulators = manipulators || dynamic_cast<const ManipulatorComponent*>(object.state.component.get()) != nullptr;
-        });
-        if (manipulators)
-            notes.append(QStringLiteral("The scene has wave manipulators, but the free-field model ignores them. Select the "
-                                        "reflector model to include reflectors."));
-    }
+    for (const std::string& note : fieldModelNotes(document_->project(), settings()))
+        notes.append(QString::fromStdString(note));
     return notes;
 }
 
@@ -276,94 +248,19 @@ FocusMetrics AcousticController::metricsFor(const FieldResult& result) const
 
 Result<FieldEstimate> AcousticController::estimate(const Id& regionId) const
 {
-    const SceneObject* object = document_->scene().find(regionId);
-    const auto* region = object ? componentOf<RegionComponent>(*object) : nullptr;
-    if (!region)
-        return Result<FieldEstimate>::failure("choose a field region");
-    const AcousticSettings s = settings();
-    size_t sourceCount = 0;
-    for (const PointSource& source : collectSources(document_->scene()))
-        if (std::abs(source.frequencyHz - s.frequencyHz) <= 1e-9 * s.frequencyHz)
-            ++sourceCount;
-    FieldEstimate estimate = estimateField(gridOf(region->settings, document_->scene().worldMatrix(*object)), sourceCount,
-                                           s.medium, s.frequencyHz, s.memoryLimitBytes);
-    if (s.modelId == kReflectorModelId) {
-        // Every sample also costs one pass over the reflector surface elements.
-        ReflectorOptions options;
-        options.elementsPerWavelength = s.reflectorElementsPerWavelength;
-        const size_t elements = estimateReflectorElements(document_->scene(), s.medium.wavelength(s.frequencyHz), options);
-        estimate.evaluations += static_cast<double>(estimate.points) * static_cast<double>(elements);
-        estimate.warnings.push_back("Reflector model: " + std::to_string(elements) + " surface element(s) at "
-                                    + std::to_string(s.reflectorElementsPerWavelength).substr(0, 4)
-                                    + " per wavelength (Kirchhoff approximation, not a full-wave solution).");
-        if (estimate.evaluations > 2e11 && estimate.allowed) {
-            estimate.allowed = false;
-            estimate.refusal = "This calculation needs more than 200 billion element evaluations and would run for "
-                               "hours. Reduce the region's resolution, the reflector size or the surface resolution.";
-        } else if (estimate.evaluations > 5e9) {
-            estimate.warnings.push_back("This is a large calculation and may take minutes.");
-        }
-    }
-    for (const QString& note : modelNotes())
-        estimate.warnings.push_back(note.toStdString());
-    return estimate;
+    return estimateFieldRun(document_->project(), regionId, settings());
 }
 
 Result<Id> AcousticController::runField(const Id& regionId)
 {
-    auto estimated = estimate(regionId);
-    if (!estimated)
-        return Result<Id>::failure(estimated.message());
-    if (!estimated.value().allowed)
-        return Result<Id>::failure(estimated.value().refusal);
-
-    const SceneObject* object = document_->scene().find(regionId);
-    const auto* region = componentOf<RegionComponent>(*object);
-    const AcousticSettings s = settings();
-    const auto evaluator = currentEvaluator();
-
-    // Everything needed to reproduce the run, as it is right now.
-    ResultMetadata metadata;
-    metadata.projectId = document_->project().id;
-    nlohmann::json sources = nlohmann::json::array();
-    for (const PointSource& source : evaluator->sources())
-        sources.push_back({{"label", source.label},
-                           {"object", source.objectId.str()},
-                           {"element", source.elementIndex},
-                           {"position", {source.position.x(), source.position.y(), source.position.z()}},
-                           {"forward", {source.forward.x(), source.forward.y(), source.forward.z()}},
-                           {"frequencyHz", source.frequencyHz},
-                           {"amplitude", {source.amplitude.real(), source.amplitude.imag()}},
-                           {"directivity", std::string(toString(source.directivity.model))},
-                           {"radius", source.radius}});
-    nlohmann::json targets = nlohmann::json::array();
-    for (const TargetPoint& target : collectTargets(document_->scene()).points)
-        targets.push_back({{"label", target.label},
-                           {"position", {target.position.x(), target.position.y(), target.position.z()}},
-                           {"desired", {target.desired.real(), target.desired.imag()}},
-                           {"weight", target.weight}});
-    nlohmann::json reflectors = nlohmann::json::array();
-    // Keep the model alive while its surfaces are read.
-    const std::shared_ptr<const PropagationModel> propagationModel = currentModel();
-    if (const auto* model = dynamic_cast<const ReflectorModel*>(propagationModel.get()))
-        for (const ReflectingSurface& surface : model->surfaces())
-            reflectors.push_back({{"object", surface.objectId.str()},
-                                  {"name", surface.label},
-                                  {"boundary", std::string(manipulators::toString(surface.boundary))},
-                                  {"impedance", surface.impedance},
-                                  {"surfaceElements", surface.elements.size()}});
-    metadata.configuration = {{"settings", toJson(s)},
-                              {"reflectors", std::move(reflectors)},
-                              {"region", {{"object", regionId.str()}, {"name", object->state.name}, {"component", region->toJson()}}},
-                              {"sources", std::move(sources)},
-                              {"targets", std::move(targets)}};
-
-    const std::string name = object->state.name + " @ " + std::to_string(static_cast<long long>(s.frequencyHz)) + " Hz, run "
-                             + std::to_string(results_.size() + pending_.size() + 1);
-    auto job = std::make_shared<FieldJob>(name, evaluator, gridOf(region->settings, document_->scene().worldMatrix(*object)),
-                                          std::move(metadata));
-    const Id jobId = document_->submitJob(job);
-    pending_.emplace_back(jobId, job);
+    // Through the simulation service (REQ-CHAT-20261126-012): the same checks, job and result
+    // registration as a remote client's run, so clients see the GUI's results too.
+    auto started = document_->services().simulation.startAcousticField(DocumentController::guiContext(), regionId,
+                                                                        static_cast<int>(results_.size() + pending_.size() + 1));
+    if (!started)
+        return Result<Id>::failure(started.error().message);
+    const Id jobId(started.value().job.id);
+    pending_.emplace_back(jobId, started.value().fieldJob);
     return jobId;
 }
 

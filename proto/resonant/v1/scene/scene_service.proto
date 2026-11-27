@@ -1,0 +1,75 @@
+syntax = "proto3";
+package resonant.v1;
+
+import "resonant/v1/common/metadata.proto";
+import "resonant/v1/common/pagination.proto";
+import "resonant/v1/common/spatial.proto";
+import "resonant/v1/common/validation.proto";
+import "resonant/v1/scene/scene.proto";
+
+message GetSceneSnapshotRequest { RequestHeader header = 1; }
+message GetSceneSnapshotResponse { ResponseHeader header = 1; SceneSnapshot snapshot = 2; }
+
+message ListObjectsRequest {
+  RequestHeader header = 1;
+  string object_type = 2;   // filter; empty: all
+  string parent_id = 3;     // filter: direct children of this object ("root": top level); empty: all
+  PageRequest page = 4;
+}
+message ListObjectsResponse { ResponseHeader header = 1; repeated SceneObject objects = 2; PageResponse page = 3; }
+
+message GetObjectRequest { RequestHeader header = 1; string object_id = 2; }
+message GetObjectResponse { ResponseHeader header = 1; SceneObject object = 2; }
+
+// Changes the fields that are set. Refused with CONFLICT when expected_revision
+// is set and the object changed since (optimistic concurrency).
+message UpdateObjectRequest {
+  RequestHeader header = 1;
+  string object_id = 2;
+  optional uint64 expected_revision = 3;
+  optional string name = 4;
+  Transform local_transform = 5;        // the parts set (position, rotation, scale) replace the current ones
+  optional bool visible = 6;
+  optional string parent_id = 7;        // "" or "root": move to the top level
+}
+message UpdateObjectResponse { ResponseHeader header = 1; SceneObject object = 2; ChangeSummary changes = 3; }
+
+// Deletes objects with their children, in one undoable step.
+message DeleteObjectsRequest {
+  RequestHeader header = 1;
+  repeated string object_ids = 2;
+  map<string, uint64> expected_revisions = 3;   // object id -> expected revision (optional per object)
+}
+message DeleteObjectsResponse { ResponseHeader header = 1; ChangeSummary changes = 2; }
+
+// Copies objects with their children (new ids), placed after the originals.
+message DuplicateObjectsRequest { RequestHeader header = 1; repeated string object_ids = 2; }
+message DuplicateObjectsResponse { ResponseHeader header = 1; repeated SceneObject objects = 2; ChangeSummary changes = 3; }
+
+message CreateGroupRequest { RequestHeader header = 1; string name = 2; string parent_id = 3; repeated string member_ids = 4; }
+message CreateGroupResponse { ResponseHeader header = 1; SceneObject group = 2; ChangeSummary changes = 3; }
+
+message ValidateObjectRequest { RequestHeader header = 1; string object_id = 2; }
+message ValidateObjectResponse { ResponseHeader header = 1; ValidationResult validation = 2; }
+
+// Scene objects: snapshot, query, update, delete, duplicate, group.
+service SceneService {
+  // Every object, with the project revision and the event sequence it describes. Events after that
+  // sequence describe later changes.
+  rpc GetSceneSnapshot(GetSceneSnapshotRequest) returns (GetSceneSnapshotResponse);
+  // Objects, filtered by type or parent, one page at a time.
+  rpc ListObjects(ListObjectsRequest) returns (ListObjectsResponse);
+  // One object.
+  rpc GetObject(GetObjectRequest) returns (GetObjectResponse);
+  // Renames, moves, shows or hides an object, or moves it to another parent. With expected_revision
+  // it is refused if the object changed since.
+  rpc UpdateObject(UpdateObjectRequest) returns (UpdateObjectResponse);
+  // Deletes objects and their children (one undo step).
+  rpc DeleteObjects(DeleteObjectsRequest) returns (DeleteObjectsResponse);
+  // Copies objects, with their children, beside the originals.
+  rpc DuplicateObjects(DuplicateObjectsRequest) returns (DuplicateObjectsResponse);
+  // Adds a group and moves the members into it.
+  rpc CreateGroup(CreateGroupRequest) returns (CreateGroupResponse);
+  // Checks one object (geometry, material, transform) and reports the issues.
+  rpc ValidateObject(ValidateObjectRequest) returns (ValidateObjectResponse);
+}

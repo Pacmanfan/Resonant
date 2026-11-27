@@ -1,0 +1,29 @@
+// Identifiers and resource references of the Resonant automation API.
+// Every persistent resource has a stable identifier (a UUID string for new
+// resources; example projects may use readable fixed ids). Names may change;
+// ids never do. Never use scene indices, display names or ordering as ids.
+syntax = "proto3";
+package resonant.v1;
+
+option cc_enable_arenas = true;
+
+// What kind of resource a reference names.
+enum ResourceType {
+  RESOURCE_TYPE_UNSPECIFIED = 0;
+  RESOURCE_TYPE_PROJECT = 1;
+  RESOURCE_TYPE_SCENE_OBJECT = 2;
+  RESOURCE_TYPE_MATERIAL = 3;
+  RESOURCE_TYPE_JOB = 4;
+  RESOURCE_TYPE_RESULT = 5;
+  RESOURCE_TYPE_TRANSACTION = 6;
+  RESOURCE_TYPE_SESSION = 7;
+  RESOURCE_TYPE_OPTIMIZATION_PROBLEM = 8;
+  RESOURCE_TYPE_OPTIMIZATION_RUN = 9;
+  RESOURCE_TYPE_WORKFLOW = 10;
+}
+
+// A typed reference to a resource.
+message ResourceRef {
+  ResourceType type = 1;
+  string id = 2;
+}

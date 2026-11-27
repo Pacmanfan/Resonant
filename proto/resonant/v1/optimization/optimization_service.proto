@@ -1,0 +1,45 @@
+syntax = "proto3";
+package resonant.v1;
+
+import "resonant/v1/common/jobs.proto";
+import "resonant/v1/common/metadata.proto";
+
+message OptimizationProblemSummary {
+  string problem_id = 1;
+  string name = 2;
+  string algorithm = 3;
+  int32 variable_count = 4;
+  int32 objective_count = 5;
+  int32 constraint_count = 6;
+}
+
+message OptimizationRunSummary {
+  string run_id = 1;
+  string problem_id = 2;
+  string algorithm = 3;
+  int32 candidate_count = 4;
+  string termination = 5;
+  string best_candidate_id = 6;            // one objective only
+  repeated double best_objective_values = 7;
+}
+
+message ListOptimizationProblemsRequest { RequestHeader header = 1; }
+message ListOptimizationProblemsResponse { ResponseHeader header = 1; repeated OptimizationProblemSummary problems = 2; }
+
+message ListOptimizationRunsRequest { RequestHeader header = 1; }
+message ListOptimizationRunsResponse { ResponseHeader header = 1; repeated OptimizationRunSummary runs = 2; }
+
+// Starts a problem's run as a job; the run is recorded in the project when it completes.
+message StartOptimizationRequest { RequestHeader header = 1; string problem_id = 2; int32 max_evaluations = 3; }
+message StartOptimizationResponse { ResponseHeader header = 1; Job job = 2; }
+
+// Optimization problems, runs and their recording in the project.
+service OptimizationService {
+  // The optimization problems defined in the project.
+  rpc ListOptimizationProblems(ListOptimizationProblemsRequest) returns (ListOptimizationProblemsResponse);
+  // The recorded optimization runs, with their best candidates.
+  rpc ListOptimizationRuns(ListOptimizationRunsRequest) returns (ListOptimizationRunsResponse);
+  // Runs an optimization problem as a job and records the run in the project. The design itself is
+  // not changed: promotion is a separate step.
+  rpc StartOptimization(StartOptimizationRequest) returns (StartOptimizationResponse);
+}

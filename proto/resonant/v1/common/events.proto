@@ -1,0 +1,103 @@
+// Typed application events (EventService.SubscribeEvents). Every event has a
+// sequence number, increasing by one per event; a client resumes after the
+// last sequence it saw and is told when events were missed (GapNotice).
+syntax = "proto3";
+package resonant.v1;
+
+import "google/protobuf/timestamp.proto";
+import "resonant/v1/common/identifiers.proto";
+import "resonant/v1/common/jobs.proto";
+
+enum EventCategory {
+  EVENT_CATEGORY_UNSPECIFIED = 0;
+  EVENT_CATEGORY_PROJECT = 1;
+  EVENT_CATEGORY_SCENE = 2;
+  EVENT_CATEGORY_MATERIAL = 3;
+  EVENT_CATEGORY_JOB = 4;
+  EVENT_CATEGORY_RESULT = 5;
+  EVENT_CATEGORY_SESSION = 6;
+  EVENT_CATEGORY_DIAGNOSTIC = 7;
+}
+
+enum SourceInterface {
+  SOURCE_INTERFACE_UNSPECIFIED = 0;
+  SOURCE_INTERFACE_GUI = 1;
+  SOURCE_INTERFACE_PYTHON = 2;
+  SOURCE_INTERFACE_GRPC = 3;
+  SOURCE_INTERFACE_MCP = 4;
+  SOURCE_INTERFACE_INTERNAL = 5;
+}
+
+message EventSource {
+  string session_id = 1;
+  string client_name = 2;
+  SourceInterface source_interface = 3;
+}
+
+// project.opened, project.saved, project.replaced, project.changed (any committed change, with its description)
+message ProjectEvent {
+  string project_id = 1;
+  string project_name = 2;
+  string description = 3;
+}
+
+// scene.object.created / updated / deleted / moved
+message ObjectEvent {
+  string object_id = 1;
+  string object_type = 2;
+  string parent_id = 3;
+  uint64 object_revision = 4;
+}
+
+// material.created / updated / deleted / assigned
+message MaterialEvent {
+  string material_id = 1;
+  repeated string object_ids = 2;
+}
+
+// job.updated (state or progress; progress events are throttled)
+message JobEvent {
+  Job job = 1;
+}
+
+// result.created
+message ResultEvent {
+  string result_id = 1;
+  string result_kind = 2;
+  string job_id = 3;
+}
+
+// session.opened / closed
+message SessionEvent {
+  string session_id = 1;
+  string client_name = 2;
+}
+
+message Event {
+  string event_id = 1;
+  uint64 sequence = 2;
+  google.protobuf.Timestamp time = 3;
+  EventCategory category = 4;
+  string type = 5;              // e.g. "scene.object.updated"
+  EventSource source = 6;
+  string project_id = 7;
+  repeated ResourceRef resources = 8;
+  uint64 project_revision = 9;
+  string request_id = 10;       // the request that caused it, when there was one
+  oneof payload {
+    ProjectEvent project = 20;
+    ObjectEvent object = 21;
+    MaterialEvent material = 22;
+    JobEvent job = 23;
+    ResultEvent result = 24;
+    SessionEvent session = 25;
+  }
+}
+
+// Sent instead of events a client asked for but that are no longer retained:
+// the client resynchronizes with a snapshot (include_snapshot) and continues.
+message GapNotice {
+  uint64 first_missed_sequence = 1;
+  uint64 last_missed_sequence = 2;
+  uint64 oldest_retained_sequence = 3;
+}

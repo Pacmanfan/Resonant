@@ -1,0 +1,33 @@
+syntax = "proto3";
+package resonant.v1;
+
+import "resonant/v1/common/jobs.proto";
+import "resonant/v1/common/metadata.proto";
+
+message GetJobRequest { RequestHeader header = 1; string job_id = 2; }
+message GetJobResponse { ResponseHeader header = 1; Job job = 2; }
+
+message ListJobsRequest {
+  RequestHeader header = 1;
+  bool active_only = 2;
+}
+message ListJobsResponse { ResponseHeader header = 1; repeated Job jobs = 2; }
+
+message CancelJobRequest { RequestHeader header = 1; string job_id = 2; }
+message CancelJobResponse { ResponseHeader header = 1; Job job = 2; }
+
+// Waits until the job finishes or the timeout passes (at most 30 s), then returns its state.
+message WaitForJobRequest { RequestHeader header = 1; string job_id = 2; double timeout_seconds = 3; }
+message WaitForJobResponse { ResponseHeader header = 1; Job job = 2; bool finished = 3; }
+
+// The unified background jobs (simulations, optimizations, workflows; also those the GUI started).
+service JobService {
+  // A job's state, progress, phase, error and results.
+  rpc GetJob(GetJobRequest) returns (GetJobResponse);
+  // The jobs of this application (all, or only those still running).
+  rpc ListJobs(ListJobsRequest) returns (ListJobsResponse);
+  // Asks a running or queued job to stop. The job reports CANCELLING, then CANCELLED.
+  rpc CancelJob(CancelJobRequest) returns (CancelJobResponse);
+  // Waits for a job to end, for at most the timeout (600 s at most), and returns its state.
+  rpc WaitForJob(WaitForJobRequest) returns (WaitForJobResponse);
+}

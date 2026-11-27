@@ -1,0 +1,25 @@
+syntax = "proto3";
+package resonant.v1;
+
+import "google/protobuf/timestamp.proto";
+import "resonant/v1/common/errors.proto";
+
+message ServiceStatus {
+  string service = 1;    // "resonant.v1.SceneService"
+  bool available = 2;
+  string note = 3;
+}
+
+message Diagnostics {
+  string health = 1;                 // "ok", "degraded"
+  repeated ServiceStatus services = 2;
+  int32 active_sessions = 3;
+  int32 active_jobs = 4;
+  uint64 last_event_sequence = 5;
+  uint64 oldest_retained_event_sequence = 6;
+  int32 audit_records = 7;
+  repeated Error recent_errors = 8;  // newest first, at most 20
+  uint64 resident_memory_bytes = 9;
+  double uptime_seconds = 10;
+  google.protobuf.Timestamp time = 11;
+}

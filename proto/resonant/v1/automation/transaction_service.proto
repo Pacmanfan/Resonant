@@ -1,0 +1,104 @@
+// Batches and transactions. Project changes in one batch or transaction are
+// validated together on a copy and committed as ONE undoable step (atomic:
+// all or nothing). Operations with external side effects (files, jobs,
+// hardware) are not allowed inside transactions.
+syntax = "proto3";
+package resonant.v1;
+
+import "resonant/v1/arrays/array_service.proto";
+import "resonant/v1/common/errors.proto";
+import "resonant/v1/common/metadata.proto";
+import "resonant/v1/common/validation.proto";
+import "resonant/v1/emitters/emitter_service.proto";
+import "resonant/v1/geometry/geometry_service.proto";
+import "resonant/v1/materials/material_service.proto";
+import "resonant/v1/scene/scene_service.proto";
+import "resonant/v1/simulation/simulation_service.proto";
+
+// One project change (the inner requests' headers are ignored).
+message BatchOperation {
+  string operation_id = 1;    // client label, echoed in the result
+  oneof operation {
+    CreatePrimitiveRequest create_primitive = 10;
+    UpdateGeometryParametersRequest update_geometry_parameters = 11;
+    UpdateObjectRequest update_object = 12;
+    DeleteObjectsRequest delete_objects = 13;
+    AssignMaterialRequest assign_material = 14;
+    CreateEmitterRequest create_emitter = 15;
+    UpdateEmitterRequest update_emitter = 16;
+    CreateArrayRequest create_array = 17;
+    SetArrayExcitationRequest set_array_excitation = 18;
+    FocusArrayRequest focus_array = 19;
+    CreateFieldRegionRequest create_field_region = 20;
+  }
+}
+
+message OperationResult {
+  string operation_id = 1;
+  bool succeeded = 2;
+  Error error = 3;
+  ChangeSummary changes = 4;
+  repeated string created_ids = 5;
+}
+
+message ExecuteBatchRequest {
+  RequestHeader header = 1;   // dry_run: validate and plan only
+  repeated BatchOperation operations = 2;
+  string description = 3;     // the undo step's name
+}
+message ExecuteBatchResponse {
+  ResponseHeader header = 1;
+  bool committed = 2;
+  repeated OperationResult results = 3;
+  ChangeSummary changes = 4;
+}
+
+enum TransactionState {
+  TRANSACTION_STATE_UNSPECIFIED = 0;
+  TRANSACTION_STATE_OPEN = 1;
+  TRANSACTION_STATE_COMMITTED = 2;
+  TRANSACTION_STATE_ABORTED = 3;
+  TRANSACTION_STATE_FAILED = 4;
+}
+
+message Transaction {
+  string transaction_id = 1;
+  TransactionState state = 2;
+  string description = 3;
+  int32 staged_operations = 4;
+  uint64 base_project_revision = 5;   // commit fails with CONFLICT when the project moved on
+  ValidationResult validation = 6;
+}
+
+message BeginTransactionRequest { RequestHeader header = 1; string description = 2; }
+message BeginTransactionResponse { ResponseHeader header = 1; Transaction transaction = 2; }
+message StageOperationsRequest { RequestHeader header = 1; string transaction_id = 2; repeated BatchOperation operations = 3; }
+message StageOperationsResponse { ResponseHeader header = 1; Transaction transaction = 2; }
+message ValidateTransactionRequest { RequestHeader header = 1; string transaction_id = 2; }
+message ValidateTransactionResponse { ResponseHeader header = 1; Transaction transaction = 2; repeated OperationResult results = 3; }
+message CommitTransactionRequest { RequestHeader header = 1; string transaction_id = 2; }
+message CommitTransactionResponse { ResponseHeader header = 1; Transaction transaction = 2; repeated OperationResult results = 3; ChangeSummary changes = 4; }
+message AbortTransactionRequest { RequestHeader header = 1; string transaction_id = 2; }
+message AbortTransactionResponse { ResponseHeader header = 1; Transaction transaction = 2; }
+message GetTransactionRequest { RequestHeader header = 1; string transaction_id = 2; }
+message GetTransactionResponse { ResponseHeader header = 1; Transaction transaction = 2; }
+
+// Atomic batches and staged transactions of project changes.
+service TransactionService {
+  // Applies the operations all together (one undo step), or none if one fails. A dry run validates
+  // and reports the plan.
+  rpc ExecuteBatch(ExecuteBatchRequest) returns (ExecuteBatchResponse);
+  // Opens a transaction on the current project revision.
+  rpc BeginTransaction(BeginTransactionRequest) returns (BeginTransactionResponse);
+  // Adds operations to an open transaction. Nothing changes yet.
+  rpc StageOperations(StageOperationsRequest) returns (StageOperationsResponse);
+  // Runs the staged operations on a copy and reports what would fail.
+  rpc ValidateTransaction(ValidateTransactionRequest) returns (ValidateTransactionResponse);
+  // Applies the staged operations as one undo step. Refused with CONFLICT when the project changed
+  // since the transaction began.
+  rpc CommitTransaction(CommitTransactionRequest) returns (CommitTransactionResponse);
+  // Discards an open transaction.
+  rpc AbortTransaction(AbortTransactionRequest) returns (AbortTransactionResponse);
+  // A transaction of the caller's session.
+  rpc GetTransaction(GetTransactionRequest) returns (GetTransactionResponse);
+}

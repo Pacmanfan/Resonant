@@ -1,0 +1,417 @@
+{
+  "request_id": "REQ-CHAT-20261126-012",
+  "source": "chat",
+  "type": "FEATURE",
+  "priority": "NORMAL",
+  "created": "2026-11-26T21:40:21-05:00",
+  "created_utc": "2026-11-27T02:40:21+00:00",
+  "id_date": "2026-11-26",
+  "timezone": "EST (UTC-05:00)",
+  "status": "completed",
+  "original_text": "# PROMPT 15 \u2014 RESONANT Automation Framework\n## Comprehensive Architecture Audit, Protobuf API, Application Services, gRPC, Events, Transactions, and Multi-Client Automation\n\nYou are working on RESONANT \u2014 Wave Field Engineering Studio.\n\nYour task is to perform a comprehensive audit of the existing application and then design and implement a foundational, production-quality automation framework.\n\nThis is a major architectural milestone. Do not treat it as a small API feature or an isolated gRPC server.\n\nThe objective is to make RESONANT an automation-native scientific engineering platform in which every meaningful application capability can be accessed programmatically through a formally defined, versioned Google Protocol Buffers interface.\n\nThis interface will eventually support:\n\n- The native Qt desktop application.\n- Local automation clients.\n- Python scripting and scientific workflows.\n- gRPC clients.\n- Model Context Protocol (MCP) servers and AI agents.\n- Remote web interfaces and dashboards.\n- External engineering applications.\n- Automated experiments and optimization workflows.\n- Future hardware control and instrument integration.\n\nThe GUI must not contain exclusive implementations of application functionality. The application service layer must own the actual operations, and all interfaces must use it.\n\n**This prompt requires an audit followed by implementation. Do not stop after producing an architecture document.**\n\n---\n\n# PART 1 \u2014 FUNDAMENTAL ARCHITECTURAL REQUIREMENTS\n\n## 1.1 Establish the automation-first principle\n\nAdopt the following permanent architectural rule:\n\nEvery meaningful application capability must be implemented through an authoritative application service and exposed through a versioned, machine-readable automation interface.\n\nIf a user can perform a meaningful operation through the GUI, a corresponding programmatic capability must exist.\n\nThis includes, but is not limited to:\n\n- Creating, opening, closing, saving and modifying projects.\n- Creating, inspecting, modifying, positioning, rotating, scaling, duplicating, grouping and deleting scene objects.\n- Creating and modifying geometry.\n- Importing and exporting geometry and other supported files.\n- Creating and editing materials.\n- Creating, configuring and positioning emitters.\n- Creating and configuring emitter arrays.\n- Configuring wave manipulators.\n- Creating and editing targets and measurement locations.\n- Configuring simulation regions and boundary conditions.\n- Selecting and configuring solvers.\n- Validating models and configurations.\n- Starting, monitoring and cancelling simulations.\n- Retrieving simulation results.\n- Creating field visualizations and cross-sections.\n- Configuring visualization properties and camera positions.\n- Creating and executing optimization problems.\n- Managing experiments and measurements.\n- Accessing diagnostics, logs and application status.\n- Managing project history, undo and redo.\n- Managing user preferences where appropriate.\n- Accessing available documentation and demonstration capabilities.\n\nAlso expose lower-level operations needed for precise control, not merely high-level workflows.\n\nFor example, both of these must be supported:\n\n- `CreateCircularArray`\n- `UpdateEmitterPosition`\n\nLikewise, support both:\n\n- `ConfigureSimulationForFocusing`\n- `SetSolverBoundaryCondition`\n\nCompound operations must not replace fine-grained control.\n\n## 1.2 One implementation, multiple interfaces\n\nImplement a common application service layer.\n\nThe intended architecture is:\n\n    Qt GUI --------------------+\n    Python bindings ----------|\n    gRPC clients -------------|\n    MCP adapter --------------+----> Application Service Layer\n    Web interface ------------|               |\n    External automation ------+               |\n                                               v\n                                      Domain Implementations\n                                               |\n                     +-------------------------+---------------------+\n                     |                         |                     |\n                 Geometry                 Physics Engines         Storage\n                     |                         |                     |\n                     +-------------------------+---------------------+\n\nThe application service layer is authoritative.\n\nThe Qt GUI must call application services rather than directly implementing business logic through widget callbacks or manipulating internal domain objects independently.\n\nThe Python API must use the same underlying services.\n\nThe gRPC server must translate Protobuf requests into application service calls.\n\nThe MCP server must eventually adapt tool calls into the same automation contract, preferably through gRPC.\n\nThe web interface must use the same services through an appropriate network-facing adapter.\n\nDo not create separate implementations of the same functionality for each interface.\n\nDo not require gRPC to be running for the native GUI to operate. The application service layer must work in-process independently of network transports.\n\n## 1.3 Preserve physics-domain independence\n\nRESONANT contains separate scientific domains:\n\n- Acoustics.\n- Mechanical waves and structural vibration.\n- Electromagnetics.\n\nThe automation framework must provide shared infrastructure without incorrectly unifying the physics.\n\nShared concepts may include projects, geometry references, object identities, jobs, events, solver metadata and result references.\n\nDomain-specific physics messages must remain appropriately distinct.\n\nFor example, acoustic pressure, mechanical displacement and electromagnetic electric fields must not be represented as interchangeable quantities merely because they can all be visualized.\n\n---\n\n# PART 2 \u2014 AUDIT THE EXISTING APPLICATION\n\nBefore modifying code, perform a thorough audit.\n\nInspect:\n\n- Repository structure.\n- Existing architecture and architecture documents.\n- C++20 application core.\n- Qt6 GUI architecture.\n- Scene graph and object model.\n- Geometry and materials systems.\n- Acoustic, mechanical and electromagnetic modules.\n- Simulation and solver interfaces.\n- Optimization framework.\n- Project persistence and serialization.\n- HDF5 integration.\n- Job and background-processing architecture.\n- Undo/redo implementation, if present.\n- Python integration and pybind11 bindings.\n- Plugin architecture.\n- Help and demonstration system.\n- Logging and diagnostics.\n- Existing tests.\n- Build and packaging configuration.\n\nIdentify where functionality currently lives.\n\nSpecifically determine:\n\n1. Which operations are implemented directly in GUI classes.\n2. Which operations already have reusable service interfaces.\n3. Which domain classes are tightly coupled to Qt.\n4. Which operations manipulate mutable global or singleton state.\n5. Which operations are unsafe to invoke from background threads.\n6. Which operations lack stable object identifiers.\n7. Which operations cannot be serialized or reproduced.\n8. Which existing job-management facilities can be reused.\n9. Which parts of the application are currently placeholders or experimental.\n10. Which functionality is planned but not implemented.\n\nDo not claim an operation is implemented merely because a button or menu entry exists.\n\nProduce:\n\n`docs/reference/AUTOMATION_AUDIT.md`\n\nInclude:\n\n- Existing architecture.\n- Current automation capabilities.\n- GUI-only functionality.\n- Existing service boundaries.\n- State-management weaknesses.\n- Threading and concurrency concerns.\n- Persistence limitations.\n- Proposed migration strategy.\n- Risks and dependencies.\n- Recommended implementation order.\n\nAlso create:\n\n`docs/architecture/AUTOMATION_ARCHITECTURE.md`\n\nThis document must describe the intended architecture and its relationship to existing application modules.\n\nCreate or update:\n\n`docs/architecture/AUTOMATION_DECISIONS.md`\n\nRecord important architectural decisions and their rationale.\n\nDo not perform a wholesale rewrite. Preserve working functionality and make changes incrementally.\n\n---\n\n# PART 3 \u2014 PROTOBUF CONTRACT ARCHITECTURE\n\n## 3.1 Protobuf is the authoritative external contract\n\nUse Google Protocol Buffers as the canonical machine-readable definition of the RESONANT automation API.\n\nUse proto3 syntax.\n\nUse versioned packages, initially:\n\n`resonant.v1`\n\nThe schema must be designed as a stable public interface, independent of internal C++ object layouts.\n\nUse generated C++ types and generated client libraries where appropriate.\n\nUse gRPC as the initial RPC transport.\n\nKeep the application service interfaces independent of gRPC so that local in-process callers do not need network transport.\n\nDo not implement a generic string-based command interpreter as the primary API.\n\nAvoid interfaces such as:\n\n    ExecuteCommand(\"create_sphere\", \"{...}\")\n\nUse strongly typed requests, responses, services and enums.\n\n## 3.2 Organize the schema into logical packages\n\nCreate a structure similar to:\n\n    proto/\n      resonant/\n        v1/\n          common/\n            identifiers.proto\n            resources.proto\n            units.proto\n            geometry.proto\n            transforms.proto\n            errors.proto\n            pagination.proto\n            events.proto\n            jobs.proto\n            validation.proto\n            metadata.proto\n\n          application/\n            application_service.proto\n            capabilities.proto\n            diagnostics.proto\n            settings.proto\n\n          project/\n            project_service.proto\n            project.proto\n\n          scene/\n            scene_service.proto\n            scene.proto\n            selection.proto\n            transforms.proto\n\n          geometry/\n            geometry_service.proto\n            primitives.proto\n            imports.proto\n            exports.proto\n\n          materials/\n            material_service.proto\n            material.proto\n\n          emitters/\n            emitter_service.proto\n            emitter.proto\n\n          arrays/\n            array_service.proto\n            array.proto\n\n          manipulators/\n            manipulator_service.proto\n            manipulator.proto\n\n          targets/\n            target_service.proto\n            target.proto\n\n          acoustics/\n            acoustics_service.proto\n            acoustic_models.proto\n\n          mechanics/\n            mechanics_service.proto\n            mechanical_models.proto\n\n          electromagnetics/\n            electromagnetics_service.proto\n            electromagnetic_models.proto\n\n          simulation/\n            simulation_service.proto\n            solver.proto\n            simulation.proto\n\n          results/\n            results_service.proto\n            fields.proto\n            probes.proto\n            slices.proto\n\n          optimization/\n            optimization_service.proto\n            optimization.proto\n\n          experiments/\n            experiment_service.proto\n            measurement.proto\n\n          visualization/\n            visualization_service.proto\n            visualization.proto\n\n          files/\n            file_service.proto\n            file_formats.proto\n\n          automation/\n            transaction_service.proto\n            workflow_service.proto\n            subscription_service.proto\n            session_service.proto\n\n          help/\n            help_service.proto\n\nThe exact package boundaries may be adjusted after the audit, but maintain clear separation and avoid one enormous schema file.\n\nDo not create empty services simply to fill out this directory. Define the complete intended API architecture, then implement the services appropriate to the existing application state.\n\n## 3.3 Define common message conventions\n\nEstablish shared types for:\n\n- Resource identifiers.\n- Project identifiers.\n- Object identifiers.\n- Job identifiers.\n- Transaction identifiers.\n- Request identifiers.\n- Session identifiers.\n- Revision numbers.\n- Timestamps.\n- Coordinate frames.\n- Transformations.\n- Physical units where necessary.\n- Resource metadata.\n- Validation results.\n- Structured errors.\n- Pagination.\n- Capability descriptions.\n\nUse UUID-based stable resource identifiers.\n\nDo not use scene indices, display names or object ordering as permanent identifiers.\n\nNames may change. IDs must not.\n\nEvery resource should expose enough metadata to support inspection and reliable automation.\n\n## 3.4 Naming conventions\n\nUse consistent RPC naming:\n\n- `Create...`\n- `Get...`\n- `List...`\n- `Update...`\n- `Delete...`\n- `Validate...`\n- `Execute...`\n- `Cancel...`\n- `Import...`\n- `Export...`\n- `Subscribe...`\n\nUse explicit field names.\n\nExamples:\n\n- `frequency_hz`\n- `phase_radians`\n- `position_meters`\n- `amplitude_peak_pa`\n- `temperature_kelvin`\n- `time_seconds`\n\nWhere a unit cannot reasonably be included in the field name, define it explicitly in the schema documentation and type.\n\nDo not use ambiguous fields such as `value`, `frequency`, `amplitude` or `position` without sufficient context.\n\n## 3.5 Schema evolution\n\nEstablish strict Protobuf compatibility rules:\n\n- Never reuse a deleted field number.\n- Reserve deleted field numbers and names.\n- Do not silently change field semantics.\n- Add optional capabilities in backward-compatible ways.\n- Version breaking API changes.\n- Maintain deprecation notices.\n- Document migrations.\n- Keep generated code reproducible.\n- Run automated schema compatibility checks in CI.\n\nUse a tool such as Buf if appropriate after checking availability, version, license and integration requirements.\n\nDocument the compatibility policy.\n\n---\n\n# PART 4 \u2014 APPLICATION SERVICE LAYER\n\nThis is the most important implementation component.\n\n## 4.1 Create authoritative application services\n\nCreate clean service interfaces between the public automation contract and internal domain implementations.\n\nExamples:\n\n- `ProjectService`\n- `SceneService`\n- `GeometryService`\n- `MaterialService`\n- `EmitterService`\n- `ArrayService`\n- `ManipulatorService`\n- `TargetService`\n- `SimulationService`\n- `ResultsService`\n- `OptimizationService`\n- `ExperimentService`\n- `VisualizationService`\n- `FileService`\n- `ApplicationService`\n- `TransactionService`\n- `WorkflowService`\n\nUse interfaces and dependency injection where appropriate.\n\nAvoid giant manager classes with hundreds of unrelated responsibilities.\n\nAvoid global mutable state.\n\nAvoid coupling service implementations to Qt widgets.\n\nServices must be usable by:\n\n- Native GUI.\n- In-process Python.\n- gRPC.\n- Future MCP and web adapters.\n\n## 4.2 Implement complete resource lifecycle operations\n\nFor all relevant resource types, support appropriate lifecycle operations:\n\n- Create.\n- Get.\n- List.\n- Update.\n- Delete.\n- Duplicate.\n- Validate.\n- Inspect.\n- Export or serialize where appropriate.\n\nNot every object needs every operation, but omissions must be deliberate and documented.\n\n## 4.3 Stable object identity\n\nEvery persistent object must have a UUID.\n\nSupport:\n\n- Stable IDs across save/load.\n- New IDs for duplicated resources.\n- Explicit relationship references.\n- Revision tracking.\n- Clear deletion behavior.\n- Resource existence queries.\n- Resource type discovery.\n\nImplement a consistent resource reference structure.\n\nAvoid fragile references based on names or scene-tree positions.\n\n## 4.4 Revision and concurrency model\n\nEvery mutable resource should have a revision number or equivalent change token.\n\nSupport optimistic concurrency:\n\nA client can request:\n\n    UpdateEmitter(\n        emitter_id,\n        expected_revision,\n        changes\n    )\n\nIf the object has changed since the client's last observation, reject the stale update with a structured conflict response.\n\nDo not silently overwrite another client's modifications.\n\nSupport project-level revision information for compound operations.\n\n---\n\n# PART 5 \u2014 COMMANDS, QUERIES AND APPLICATION STATE\n\n## 5.1 Separate commands from queries\n\nUse clear conceptual separation:\n\n**Commands** modify state.\n\nExamples:\n\n- Create geometry.\n- Move emitter.\n- Assign material.\n- Start simulation.\n- Delete object.\n\n**Queries** inspect state.\n\nExamples:\n\n- Get emitter.\n- List materials.\n- Get scene hierarchy.\n- Get project metadata.\n- Get simulation configuration.\n- Retrieve results metadata.\n\n**Subscriptions** receive state changes and events.\n\nMaintain consistent behavior across all services.\n\n## 5.2 Application and scene snapshots\n\nProvide operations to retrieve:\n\n- Application status.\n- Current project state.\n- Scene hierarchy.\n- Object metadata.\n- Resource revisions.\n- Available solvers.\n- Active jobs.\n- Current selections where appropriate.\n- Current visualization state.\n\nProvide incremental change notifications after the initial snapshot.\n\nDo not require remote clients to repeatedly retrieve the entire project.\n\n## 5.3 Application capability discovery\n\nCreate a formal capability registry.\n\nA client must be able to discover:\n\n- Available physics domains.\n- Available solver backends.\n- Supported solver methods.\n- Available geometry types.\n- Supported material models.\n- Available optimization algorithms.\n- Supported file formats.\n- Available plugins.\n- Available visualization modes.\n- Optional dependencies.\n- Hardware capabilities.\n- Feature maturity.\n- Known limitations.\n\nEach capability should have metadata such as:\n\n- Stable capability identifier.\n- Display name.\n- Description.\n- Availability.\n- Maturity: stable, experimental, planned or unavailable.\n- Required dependencies.\n- Supported physics domain.\n- Supported dimensions.\n- Relevant parameter constraints.\n- Known limitations.\n\nThe capability registry must reflect actual application availability.\n\nDo not advertise a solver or feature as available when it is only planned.\n\nUse the registry as the source for GUI feature availability, API discovery and future MCP tool discovery.\n\n---\n\n# PART 6 \u2014 EVENT AND JOB FRAMEWORK\n\n## 6.1 Unified event system\n\nCreate an application-wide event framework.\n\nEvents should cover:\n\n- Project created, opened, modified, saved and closed.\n- Scene objects created, modified and deleted.\n- Geometry modified.\n- Materials changed.\n- Emitter and array configuration changed.\n- Simulation queued, started, progressed, completed, failed and cancelled.\n- Optimization progress and completion.\n- Measurement creation.\n- Experiment state changes.\n- Result creation.\n- Application state changes.\n- Capability changes where relevant.\n- Diagnostic events.\n\nEach event should include:\n\n- Event ID.\n- Event type.\n- Timestamp.\n- Sequence number.\n- Source client or subsystem.\n- Project ID where relevant.\n- Resource ID where relevant.\n- Revision information where relevant.\n- Structured event payload.\n\nUse typed Protobuf event messages.\n\nAvoid sending arbitrary unstructured strings as the only event content.\n\n## 6.2 Event subscriptions\n\nProvide subscription interfaces.\n\nSupport filtering by:\n\n- Project.\n- Resource.\n- Event category.\n- Job.\n- Session.\n\nSupport:\n\n- Initial snapshot followed by incremental events.\n- Reconnection.\n- Sequence tracking.\n- Detection of missed events.\n- Resynchronization.\n- Subscription cancellation.\n\nUse streaming RPCs where appropriate.\n\nDo not assume network connections will remain uninterrupted.\n\n## 6.3 Unified background job manager\n\nImplement or integrate a common job framework.\n\nUse it for:\n\n- Simulations.\n- Optimization.\n- Geometry processing.\n- Mesh generation.\n- Large imports and exports.\n- Result processing.\n- Long-running workflows.\n\nA job should expose:\n\n- Job ID.\n- Job type.\n- State.\n- Progress.\n- Current phase.\n- Start time.\n- Elapsed time.\n- Completion time.\n- Error information.\n- Cancellation support.\n- Result references.\n\nUse well-defined states such as:\n\n- CREATED\n- QUEUED\n- RUNNING\n- CANCELLING\n- CANCELLED\n- COMPLETED\n- FAILED\n\nA long-running RPC should normally return a job reference promptly rather than hold the client connection open until completion.\n\nThe GUI, Python and remote clients must observe the same job state.\n\nSupport job inspection, cancellation and result retrieval.\n\nImplement progress reporting without excessive event flooding.\n\n---\n\n# PART 7 \u2014 TRANSACTIONS, BATCHING AND WORKFLOWS\n\n## 7.1 Batch operations\n\nSupport efficient batch operations.\n\nExamples:\n\n- Create multiple geometry objects.\n- Populate arrays with many emitters.\n- Update multiple emitter phases.\n- Assign materials to multiple objects.\n- Apply transforms to groups.\n- Configure a simulation in one operation.\n\nBatch operations should avoid unnecessary scene rebuilding and expensive recalculation after every individual modification.\n\nUse appropriate internal batching and deferred recomputation.\n\n## 7.2 Transactions\n\nImplement transactions where practical.\n\nSupport:\n\n- Begin transaction.\n- Stage operations.\n- Validate transaction.\n- Commit transaction.\n- Abort transaction.\n- Retrieve transaction status.\n\nA transaction should provide atomic behavior when the operation set can genuinely be committed atomically.\n\nFor operations with irreversible external side effects, such as hardware measurements or file exports, explicitly define partial completion and failure behavior.\n\nDo not falsely advertise universal rollback.\n\nSupport transaction grouping in the undo/redo history.\n\n## 7.3 Dry-run and planning\n\nProvide a validation and planning mode.\n\nAn automation client should be able to submit a proposed sequence of changes and request:\n\n- Validation.\n- Expected modifications.\n- Dependency checks.\n- Resource requirements.\n- Potential conflicts.\n- Warnings.\n- Estimated memory and computational requirements where possible.\n- Expected side effects.\n\nA dry-run must not mutate project state.\n\nProvide a clear distinction between validation and actual execution.\n\n## 7.4 Workflow execution engine\n\nEstablish the architecture for executing compound workflows.\n\nSupport a sequence or dependency graph of operations.\n\nA workflow should eventually support:\n\n- Ordered steps.\n- Dependency relationships.\n- Conditional execution.\n- Checkpoints.\n- Progress.\n- Cancellation.\n- Safe retries.\n- Structured outputs.\n- Error recovery.\n- Workflow history.\n\nBuild a practical initial implementation if the existing architecture permits it.\n\nDo not create an unnecessarily complicated general-purpose workflow platform before the basic application services are stable.\n\n---\n\n# PART 8 \u2014 IDEMPOTENCY, RETRIES AND MULTI-CLIENT COORDINATION\n\n## 8.1 Idempotency\n\nSupport request IDs and idempotency keys for operations where duplicate execution could be harmful.\n\nExample:\n\nA client creates an emitter, loses its connection before receiving the response and retries.\n\nThe system must avoid creating duplicate resources when the same idempotency key is used.\n\nDefine retention and scope rules for idempotency records.\n\n## 8.2 Retry semantics\n\nDocument:\n\n- Which operations are safe to retry.\n- Which operations require idempotency keys.\n- Which operations must not be automatically retried.\n- How clients discover whether an operation completed after a connection failure.\n\n## 8.3 Multi-client coordination\n\nAllow simultaneous clients:\n\n- Desktop GUI.\n- Python scripts.\n- Remote automation clients.\n- MCP agents.\n- Web dashboards.\n\nDefine:\n\n- Session identity.\n- Client identity.\n- Resource ownership where appropriate.\n- Locking where necessary.\n- Conflict detection.\n- Revision checking.\n- Event visibility.\n- Client disconnection behavior.\n\nDo not assume a single-client application.\n\nAvoid locking entire projects for routine edits when resource-level conflict detection is sufficient.\n\n---\n\n# PART 9 \u2014 SCIENTIFIC DATA AND UNIT SAFETY\n\n## 9.1 Units and coordinate conventions\n\nEstablish authoritative conventions:\n\n- SI internally.\n- Explicit coordinate systems.\n- Right-handed coordinate convention.\n- World and local coordinate frames.\n- Explicit transform semantics.\n- Explicit phase conventions.\n- Radians internally unless an interface field explicitly defines otherwise.\n- Explicit amplitude definitions.\n- Explicit RMS versus peak conventions.\n- Explicit decibel reference quantities.\n- Explicit time and frequency units.\n\nDocument the global world coordinate convention:\n\n- X: horizontal.\n- Y: depth.\n- Z: vertical.\n\nAllow object-local coordinate frames.\n\nNever assume a position is expressed in world coordinates when it may be local.\n\n## 9.2 Scientific result provenance\n\nEvery result must retain relevant provenance:\n\n- Physics domain.\n- Solver identity and version.\n- Solver configuration.\n- Material data and provenance.\n- Geometry revision.\n- Source configuration.\n- Boundary conditions.\n- Mesh configuration.\n- Time-step or frequency settings.\n- Numerical assumptions.\n- Calibration information where relevant.\n- Units.\n- Approximation level.\n- Relevant uncertainty or limitations.\n\nA remote client must be able to determine how a result was produced.\n\nDo not present results from approximate models as equivalent to full-wave numerical solutions.\n\n## 9.3 Large-data transfer\n\nDo not use Protobuf messages as an unrestricted container for massive numerical arrays.\n\nSeparate the control plane from the bulk data plane.\n\n**Control plane: Protobuf/gRPC**\n\nUse for:\n\n- Commands.\n- Queries.\n- Metadata.\n- Job status.\n- Event notifications.\n- Result references.\n- Small data responses.\n\n**Data plane: appropriate binary transfer**\n\nUse for:\n\n- Large 2D and 3D fields.\n- Complex-valued simulation volumes.\n- Meshes.\n- Measurement datasets.\n- Large optimization results.\n- Waveforms.\n\nEvaluate:\n\n- Chunked binary streaming.\n- HDF5-backed access.\n- Local memory-mapped files.\n- Remote streaming.\n- Compression.\n- Downsampling.\n- Region-of-interest extraction.\n\nProvide efficient result access operations such as:\n\n- Retrieve a selected 2D slice.\n- Retrieve a bounded 3D region.\n- Retrieve selected sample points.\n- Retrieve a probe history.\n- Retrieve result metadata.\n- Retrieve a downsampled field.\n\nDo not require downloading an entire volume to inspect one plane.\n\nResult references must include sufficient metadata to identify the dataset, dimensions, data type, units and coordinate frame.\n\nDo not expose arbitrary filesystem paths to untrusted remote clients.\n\n---\n\n# PART 10 \u2014 COMPLETE SERVICE COVERAGE\n\nDefine and implement service interfaces for the following areas.\n\n## 10.1 Application and project services\n\n- Application status.\n- Version information.\n- Capabilities.\n- Diagnostics.\n- Project creation.\n- Project opening.\n- Project saving.\n- Project closing.\n- Project cloning.\n- Project metadata.\n- Project revisions.\n- Project recovery.\n- Undo and redo.\n- Project validation.\n\n## 10.2 Scene and geometry services\n\n- Create primitives.\n- Create parametric geometry.\n- Import supported geometry formats.\n- Export supported geometry formats.\n- Retrieve geometry metadata.\n- Update dimensions and parameters.\n- Position, rotate and scale.\n- Duplicate and delete.\n- Group and ungroup.\n- Hide and show.\n- Lock and unlock.\n- Inspect geometry.\n- Generate or modify simulation meshes.\n- Validate geometry.\n- Manage coordinate frames.\n\nInclude operations for existing geometry types and future custom geometry.\n\n## 10.3 Materials services\n\n- Create material.\n- Get material.\n- List materials.\n- Update properties.\n- Delete material.\n- Assign material.\n- Remove material assignment.\n- Import material data.\n- Retrieve provenance.\n- Validate material compatibility.\n\nPreserve domain-specific material models.\n\n## 10.4 Emitters and arrays\n\nSupport:\n\n- Create emitter.\n- Delete emitter.\n- Inspect emitter.\n- Update individual properties.\n- Move and rotate emitter.\n- Set frequency.\n- Set amplitude.\n- Set phase.\n- Set waveform.\n- Set directivity.\n- Set orientation.\n- Set source model.\n- Create array.\n- Populate array.\n- Configure array geometry.\n- Configure element spacing.\n- Configure array coordinate frame.\n- Configure phase and delay distributions.\n- Inspect individual array elements.\n- Batch update array elements.\n- Create custom arrays.\n\nSupport all relevant emitter types without forcing acoustic, mechanical and electromagnetic sources into an inappropriate shared physical model.\n\n## 10.5 Wave manipulators\n\nSupport operations for:\n\n- Parabolic reflectors.\n- Elliptical reflectors.\n- Spherical reflectors.\n- Acoustic lenses.\n- Waveguides.\n- Resonant cavities.\n- Diffraction structures.\n- Layered structures.\n- Custom geometry.\n- Other supported domain-specific manipulators.\n\nProvide geometry, material, placement and simulation configuration operations.\n\n## 10.6 Physics and simulation services\n\nSupport domain-specific configuration and execution.\n\nInclude:\n\n- Solver discovery.\n- Solver configuration.\n- Solver validation.\n- Simulation region configuration.\n- Boundary conditions.\n- Mesh settings.\n- Frequency-domain settings.\n- Time-domain settings.\n- Resource estimates.\n- Simulation start.\n- Simulation cancellation.\n- Simulation status.\n- Simulation results.\n- Solver diagnostics.\n\nMaintain domain-specific service contracts.\n\n## 10.7 Results and measurements\n\nSupport:\n\n- Result discovery.\n- Result metadata.\n- Field sampling.\n- Cross-sections.\n- Probes.\n- Time histories.\n- Frequency sweeps.\n- Result comparisons.\n- Export.\n- Measurement ingestion.\n- Measurement metadata.\n- Calibration references.\n\n## 10.8 Optimization services\n\nSupport:\n\n- Create optimization problem.\n- Configure variables.\n- Configure objectives.\n- Configure constraints.\n- Configure algorithms.\n- Validate problem.\n- Estimate requirements.\n- Execute.\n- Monitor.\n- Cancel.\n- Inspect candidates.\n- Compare candidates.\n- Export selected candidate.\n- Retrieve optimization history.\n\n## 10.9 Visualization services\n\nExpose meaningful visualization state and operations:\n\n- Camera position.\n- Camera orientation.\n- View presets.\n- Object visibility.\n- Display modes.\n- Field quantity.\n- Color scale.\n- Clipping planes.\n- Slice creation and modification.\n- Isosurfaces.\n- Volume rendering settings.\n- Animation controls.\n- Screenshot capture.\n- Visualization export.\n\nKeep rendering state separate from physical simulation state.\n\nVisualization changes must not unnecessarily trigger solver recomputation.\n\n## 10.10 File services\n\nSupport:\n\n- Supported format discovery.\n- File inspection.\n- Import.\n- Export.\n- Progress.\n- Cancellation.\n- Structured errors.\n- Validation.\n- File metadata.\n\nRespect the application's security model and file access boundaries.\n\n---\n\n# PART 11 \u2014 ERROR HANDLING AND VALIDATION\n\nCreate a consistent structured error system.\n\nSupport clear error categories:\n\n- INVALID_ARGUMENT.\n- NOT_FOUND.\n- ALREADY_EXISTS.\n- FAILED_PRECONDITION.\n- RESOURCE_EXHAUSTED.\n- PERMISSION_DENIED.\n- UNAUTHENTICATED.\n- ABORTED.\n- CONFLICT.\n- UNAVAILABLE.\n- DEADLINE_EXCEEDED.\n- CANCELLED.\n- INTERNAL.\n\nMap these appropriately to gRPC status codes and structured application error details.\n\nErrors should identify:\n\n- Failed operation.\n- Relevant resource.\n- Invalid parameter where applicable.\n- Explanation.\n- Suggested correction where possible.\n- Whether the operation changed any state.\n- Whether retrying is safe.\n\nProvide detailed validation messages.\n\nExamples:\n\n- Unsupported solver for selected physics domain.\n- Invalid material properties.\n- Geometry is non-manifold.\n- Insufficient mesh resolution.\n- Unstable time step.\n- Missing boundary conditions.\n- Unsupported emitter configuration.\n- Resource estimate exceeds configured limits.\n\nAvoid generic \"operation failed\" responses.\n\nValidation must be available before committing important changes.\n\n---\n\n# PART 12 \u2014 SECURITY AND TRUST BOUNDARIES\n\nDesign the framework for both local and future remote use.\n\n## 12.1 Local access\n\nSupport a secure local transport strategy.\n\nEvaluate:\n\n- Localhost gRPC.\n- Unix domain sockets.\n- Other appropriate local IPC.\n\nPrefer local IPC for native local automation where practical.\n\nDo not expose an unrestricted network listener by default.\n\n## 12.2 Remote access preparation\n\nEstablish architecture for:\n\n- Authentication.\n- Authorization.\n- TLS.\n- Client identity.\n- Session management.\n- Permission scopes.\n- Request auditing.\n- Rate limiting.\n- Resource limits.\n- Connection management.\n\n## 12.3 Permissions\n\nDefine permission categories such as:\n\n- Application inspection.\n- Project read.\n- Project modification.\n- Geometry modification.\n- Simulation execution.\n- Optimization execution.\n- File import/export.\n- Python execution.\n- Hardware control.\n- Administrative configuration.\n\nEnforce permissions at the service layer, not only in the GUI or MCP adapter.\n\n## 12.4 Dangerous operations\n\nPython execution, plugin installation, external file access and future hardware control require explicit permission boundaries.\n\nDo not assume that an authenticated client is automatically trusted with unrestricted access.\n\nDo not add telemetry or external data transmission without explicit user consent.\n\nCreate:\n\n`docs/security/AUTOMATION_SECURITY.md`\n\n---\n\n# PART 13 \u2014 PYTHON INTEGRATION\n\nAudit the existing Python integration planned for RESONANT.\n\nRefactor or extend it to use the same application services.\n\nThe Python API should provide intuitive access to:\n\n- Projects.\n- Scene objects.\n- Geometry.\n- Materials.\n- Emitters.\n- Arrays.\n- Wave manipulators.\n- Acoustic simulation.\n- Mechanical simulation.\n- Electromagnetic simulation.\n- Results.\n- Optimization.\n- Experiments.\n- Visualization.\n- File operations.\n- Automation workflows.\n\nUse pybind11 for appropriate in-process C++ bindings.\n\nDo not create a second implementation of domain logic in Python.\n\nSupport both:\n\n1. Efficient in-process Python access.\n2. Future remote Python access through the Protobuf/gRPC interface.\n\nKeep long-running scientific operations asynchronous where appropriate.\n\nDocument object lifetime and thread-safety requirements.\n\n---\n\n# PART 14 \u2014 MCP ARCHITECTURE AND FUTURE WEB ACCESS\n\nThe immediate priority is the Protobuf API and application service layer.\n\nHowever, explicitly design the interfaces to support future MCP and web clients.\n\n## 14.1 MCP adapter\n\nCreate:\n\n`docs/architecture/MCP_INTEGRATION.md`\n\nDefine how Protobuf services map to MCP tools and resources.\n\nThe adapter should eventually support:\n\n- Tool discovery.\n- Typed input schemas.\n- Structured output.\n- Resource references.\n- Long-running jobs.\n- Progress.\n- Cancellation.\n- Capability discovery.\n- Permission checks.\n- Error translation.\n\nDo not duplicate business logic in MCP tools.\n\nDo not overwhelm AI agents with hundreds of simultaneously exposed tools.\n\nSupport categorized discovery and high-level compound operations alongside fine-grained operations.\n\nIf implementation is practical without compromising the core framework, implement a small working MCP adapter demonstrating:\n\n- Project inspection.\n- Scene inspection.\n- Geometry creation.\n- Emitter creation or modification.\n- Simulation submission.\n- Job status retrieval.\n\nOtherwise, provide a complete adapter design and a documented integration boundary.\n\n## 14.2 Future web interface\n\nPrepare the API for a web dashboard and remote control interface.\n\nThe web interface should eventually be able to:\n\n- Inspect project state.\n- Inspect scene objects.\n- Modify supported properties.\n- Submit simulations.\n- Monitor progress.\n- Retrieve results.\n- View selected visualizations.\n- Manage jobs.\n\nDo not build an entire web application in this milestone.\n\nThe objective is to ensure no architectural rework will be required to support one later.\n\n---\n\n# PART 15 \u2014 GUI INTEGRATION\n\nThe existing Qt GUI must be refactored to use the application service layer.\n\nAudit every significant GUI action.\n\nReplace direct business-logic implementations with service calls.\n\nExamples:\n\n- Create Sphere button \u2192 `GeometryService.CreatePrimitive`.\n- Move Emitter action \u2192 `EmitterService.UpdateEmitter`.\n- Assign Material action \u2192 `MaterialService.AssignMaterial`.\n- Start Simulation action \u2192 `SimulationService.StartSimulation`.\n- Save Project action \u2192 `ProjectService.SaveProject`.\n\nThe GUI may still contain presentation-specific behavior, but it must not be the exclusive implementation of meaningful application operations.\n\nPreserve existing user workflows.\n\nMaintain responsive GUI behavior.\n\nUse asynchronous service calls for expensive operations.\n\nEnsure service calls marshal state updates safely onto the appropriate Qt thread.\n\nDo not allow remote clients to manipulate Qt widgets directly.\n\nThe GUI should receive state changes through the shared event/state architecture.\n\n---\n\n# PART 16 \u2014 AUTOMATION DIAGNOSTICS AND AUDIT TRAIL\n\nCreate a unified audit and diagnostic system.\n\nFor every meaningful mutation, record:\n\n- Timestamp.\n- Request ID.\n- Client identity.\n- Session identity.\n- Source interface.\n- Operation.\n- Affected resource IDs.\n- Before/after revision where applicable.\n- Result.\n- Error details if failed.\n\nSupport querying the audit history.\n\nDo not log passwords, tokens, private credentials or sensitive file contents.\n\nProvide diagnostic APIs for:\n\n- Application health.\n- Service availability.\n- Active sessions.\n- Active jobs.\n- Resource usage.\n- Recent errors.\n- Solver availability.\n- Dependency status.\n\nMake logs useful for debugging without overwhelming the system.\n\nAudit history should be persisted or exportable where appropriate and associated with reproducible engineering workflows.\n\n---\n\n# PART 17 \u2014 BUILD SYSTEM AND DEPENDENCIES\n\nAudit the existing CMake configuration.\n\nEvaluate and integrate appropriate dependencies for:\n\n- Protocol Buffers.\n- gRPC.\n- Protobuf code generation.\n- Schema compatibility checking.\n- UUID handling if needed.\n- Existing JSON and serialization infrastructure.\n- Testing.\n\nCheck dependency versions, availability, licenses and redistribution requirements.\n\nDo not blindly add dependencies.\n\nPrefer CMake-integrated and reproducible dependency management.\n\nEnsure generated code is built consistently.\n\nDecide whether generated Protobuf code should be committed or generated during the build, and document the rationale.\n\nSupport clean builds from a fresh checkout.\n\nAvoid coupling the entire application to gRPC libraries if only the transport adapter requires them.\n\n---\n\n# PART 18 \u2014 TESTING AND QUALITY ASSURANCE\n\nThis framework must be testable independently of the GUI.\n\n## 18.1 Unit tests\n\nTest:\n\n- Service behavior.\n- Resource lifecycle.\n- UUID stability.\n- Revision management.\n- Validation.\n- Transaction behavior.\n- Idempotency.\n- Conflict detection.\n- Event sequencing.\n- Job state transitions.\n- Error mapping.\n\n## 18.2 Protobuf contract tests\n\nTest:\n\n- Request serialization.\n- Response serialization.\n- Schema compatibility.\n- Enum behavior.\n- Default values.\n- Field presence semantics.\n- Error structures.\n- Version compatibility.\n\n## 18.3 gRPC integration tests\n\nTest:\n\n- Server startup.\n- Client connection.\n- Every implemented service.\n- Authentication boundaries.\n- Request validation.\n- Concurrent clients.\n- Disconnection and reconnection.\n- Streaming events.\n- Cancellation.\n- Timeouts.\n- Large-data access.\n\n## 18.4 GUI/service conformance tests\n\nVerify that performing an operation through the GUI-facing service path and through the gRPC API produces equivalent application state.\n\nTest representative workflows:\n\n1. Create project.\n2. Create geometry.\n3. Position an emitter.\n4. Configure emitter properties.\n5. Assign material.\n6. Create a target.\n7. Configure a simulation.\n8. Submit a job.\n9. Monitor progress.\n10. Retrieve results.\n11. Save and reload the project.\n\n## 18.5 Python tests\n\nVerify that Python operations invoke the same underlying application behavior.\n\nTest representative workflows from a clean Python process where appropriate.\n\n## 18.6 Performance tests\n\nBenchmark:\n\n- Individual RPC operations.\n- Batch operations.\n- Large scene inspection.\n- Event throughput.\n- Concurrent clients.\n- Large geometry transfers.\n- Result chunking.\n- Job submission.\n- Memory consumption.\n\nAvoid introducing unnecessary serialization overhead into local in-process GUI operations.\n\n## 18.7 Regression tests\n\nRun the existing application test suite.\n\nPreserve existing project compatibility.\n\nDo not sacrifice existing physics functionality to implement automation.\n\n---\n\n# PART 19 \u2014 DOCUMENTATION\n\nCreate comprehensive documentation.\n\nRequired documents:\n\n- `docs/reference/AUTOMATION_AUDIT.md`\n- `docs/architecture/AUTOMATION_ARCHITECTURE.md`\n- `docs/architecture/AUTOMATION_DECISIONS.md`\n- `docs/security/AUTOMATION_SECURITY.md`\n- `docs/architecture/MCP_INTEGRATION.md`\n- `docs/reference/PROTOBUF_API.md`\n- `docs/reference/GRPC_CLIENT_GUIDE.md`\n- `docs/reference/PYTHON_AUTOMATION.md`\n- `docs/reference/EVENTS_AND_JOBS.md`\n- `docs/reference/TRANSACTIONS_AND_WORKFLOWS.md`\n- `docs/development/ADDING_AUTOMATION_OPERATIONS.md`\n\nThe developer guide must explain exactly how to add a new application capability:\n\n1. Implement or extend the application service.\n2. Define the Protobuf messages and RPC.\n3. Implement the adapter.\n4. Register the capability.\n5. Connect the GUI.\n6. Add Python exposure where appropriate.\n7. Add tests.\n8. Update documentation.\n\nThe guide must make it difficult for future developers to accidentally create GUI-only functionality.\n\nGenerate reference documentation from the Protobuf schemas where practical.\n\n---\n\n# PART 20 \u2014 IMPLEMENTATION PHASES\n\nPerform the implementation in controlled phases.\n\nDo not attempt to rewrite the entire application in one pass.\n\n## Phase A \u2014 Audit and architecture\n\n- Inspect existing code.\n- Produce audit.\n- Define service boundaries.\n- Define Protobuf conventions.\n- Define threading and state ownership.\n- Define event/job architecture.\n- Define migration strategy.\n- Document dependencies and risks.\n\n## Phase B \u2014 Core automation foundation\n\nImplement:\n\n- Protobuf build integration.\n- Common message types.\n- Application service interfaces.\n- Resource IDs.\n- Revision model.\n- Structured errors.\n- Capability registry.\n- Basic event architecture.\n\n## Phase C \u2014 Core service implementations\n\nImplement representative services:\n\n- Application.\n- Project.\n- Scene.\n- Geometry.\n- Materials.\n- Emitters.\n- Arrays.\n\nUse actual existing functionality.\n\nDo not fabricate unsupported operations.\n\n## Phase D \u2014 Jobs, events and transactions\n\nImplement:\n\n- Unified job manager.\n- Event publishing.\n- Subscriptions.\n- Job inspection.\n- Cancellation.\n- Batch operations.\n- Transactions where feasible.\n- Dry-run validation.\n\n## Phase E \u2014 gRPC transport\n\nImplement:\n\n- Local server.\n- Generated C++ stubs.\n- Client connection.\n- Service adapters.\n- Structured error translation.\n- Streaming events.\n- Integration tests.\n\nThe GUI must continue to function without requiring the gRPC server.\n\n## Phase F \u2014 GUI integration\n\nRefactor representative GUI workflows to invoke the shared application services.\n\nExpand this to all significant existing operations as the architecture permits.\n\n## Phase G \u2014 Python integration\n\nConnect the Python API to the same service layer.\n\nPreserve efficient in-process access.\n\n## Phase H \u2014 MCP readiness\n\nDocument MCP mapping and implement a small working adapter if practical.\n\n## Phase I \u2014 Validation and documentation\n\nRun full regression tests.\n\nTest the end-to-end automation workflows.\n\nComplete documentation and update the roadmap.\n\nAt the end of each phase, provide a clear implementation report with:\n\n- Files changed.\n- Architecture changes.\n- Functionality implemented.\n- Tests run.\n- Test results.\n- Known limitations.\n- Remaining work.\n\n---\n\n# PART 21 \u2014 STRICT ENGINEERING RULES\n\n1. Audit before implementation.\n2. Preserve working functionality.\n3. Do not perform a wholesale rewrite.\n4. Do not create parallel business-logic implementations.\n5. Do not allow the GUI to bypass application services for meaningful operations.\n6. Do not couple domain models to Protobuf-generated classes.\n7. Do not couple the application service layer to gRPC.\n8. Do not require gRPC for native GUI operation.\n9. Do not use string-based generic commands as the main API.\n10. Do not expose internal C++ memory layouts.\n11. Do not use unstable object indices as resource identifiers.\n12. Do not silently overwrite concurrent modifications.\n13. Do not claim universal transaction rollback.\n14. Do not send enormous scientific datasets as single Protobuf messages.\n15. Do not invent scientific units or ambiguous field semantics.\n16. Do not advertise unimplemented capabilities.\n17. Do not introduce unnecessary dependencies.\n18. Do not weaken security to simplify implementation.\n19. Do not implement placeholder services that return fabricated success.\n20. Do not sacrifice physics correctness for API convenience.\n21. Do not allow remote clients to access Qt widgets directly.\n22. Do not expose unrestricted Python execution or hardware control by default.\n23. Keep all new code documented and tested.\n24. Maintain C++20 and the existing Qt6/CMake architecture.\n25. Follow the project's existing coding standards and `AGENTS.md` instructions.\n\nWhere the existing application architecture conflicts with these requirements, document the conflict and implement the smallest safe migration that establishes the intended boundary.\n\n---\n\n# PART 22 \u2014 ACCEPTANCE CRITERIA\n\nThis milestone is successful when all applicable criteria below are met.\n\n### Architecture\n\n- [ ] A documented application service layer exists.\n- [ ] The GUI uses application services for representative operations.\n- [ ] Protobuf schemas define the public automation contract.\n- [ ] Application services do not depend on gRPC.\n- [ ] Domain implementations do not depend on generated Protobuf classes.\n- [ ] Stable resource identifiers exist.\n- [ ] Revision and concurrency behavior is documented and tested.\n\n### API\n\n- [ ] Protobuf and gRPC build successfully.\n- [ ] Common message conventions are established.\n- [ ] Project, scene, geometry, material and emitter services have working implementations.\n- [ ] Supported operations have typed request/response messages.\n- [ ] Capability discovery reports actual application functionality.\n- [ ] Structured errors are returned.\n- [ ] API versioning policy is documented.\n\n### Events and jobs\n\n- [ ] Long-running work uses a unified job model.\n- [ ] Clients can retrieve job status.\n- [ ] Clients can cancel eligible jobs.\n- [ ] Event subscriptions work.\n- [ ] Event sequence and reconnection behavior are documented.\n- [ ] GUI and remote clients observe consistent state.\n\n### Transactions and safety\n\n- [ ] Batch operations are supported where appropriate.\n- [ ] Validation can occur before committing changes.\n- [ ] Transaction semantics are documented.\n- [ ] Idempotency is implemented for appropriate operations.\n- [ ] Revision conflicts are detected.\n- [ ] Permission boundaries are established.\n\n### Data\n\n- [ ] Scientific units and coordinate conventions are documented.\n- [ ] Result provenance is preserved.\n- [ ] Large-data transfer is separated from normal control messages.\n- [ ] Result metadata and bounded data retrieval are supported where implemented.\n\n### Integration\n\n- [ ] Native GUI continues to operate independently of the gRPC server.\n- [ ] Representative GUI actions invoke shared application services.\n- [ ] Python integration uses the same underlying services where implemented.\n- [ ] A remote gRPC client can perform representative engineering operations.\n- [ ] MCP integration has a documented and tested boundary.\n\n### Quality\n\n- [ ] Unit tests pass.\n- [ ] Contract tests pass.\n- [ ] Integration tests pass.\n- [ ] GUI regression tests pass.\n- [ ] Build works from a clean checkout.\n- [ ] Documentation is complete and accurate.\n- [ ] No fabricated functionality or results have been introduced.\n\n---\n\n# FINAL DELIVERABLE\n\nAt completion, provide a comprehensive implementation report.\n\nInclude:\n\n1. Original architecture findings.\n2. Major architectural changes.\n3. Protobuf schema inventory.\n4. Implemented services and operations.\n5. GUI integration status.\n6. gRPC server and client status.\n7. Event and job implementation status.\n8. Transaction and batching status.\n9. Python integration status.\n10. MCP readiness.\n11. Security model.\n12. Test coverage and actual test results.\n13. Build and dependency changes.\n14. Performance measurements where available.\n15. Known limitations.\n16. Outstanding work.\n17. Recommended next development milestone.\n\nBe precise about what is implemented, what is experimental and what remains planned.\n\nThe final outcome should be a genuine architectural foundation for an automation-native engineering application.\n\n**The defining principle of RESONANT is now: Every meaningful application capability is available through a stable, discoverable, versioned automation contract, regardless of whether the caller is a human using the GUI, a Python script, an external program, a web interface or an AI agent.**",
+  "file": "requests/inbox/2026-11-26-prompt-15-resonant-automation--req-chat-20261126-012.md",
+  "attachments": [],
+  "context": "User: 'add this as a ticket and process it in order with the rest' (queued after tickets 008-010)",
+  "text_sha256": "52cd5db1d01df6ad4235e04c7782d8771c2f70cd0bdba9631f28ab7e1671f000",
+  "classification": {
+    "proposed_type": "FEATURE",
+    "proposed_source": "override",
+    "normalized_type": "FEATURE",
+    "heuristic_type": "FEATURE",
+    "final_type": "FEATURE",
+    "confidence": "medium",
+    "validation": "PASS",
+    "classifier_reason": "request statement is framed as feature: Framework",
+    "correction_reason": null,
+    "normalization_note": null,
+    "evidence": [
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "Framework",
+        "strength": "strong",
+        "note": "",
+        "sentence": "RESONANT Automation Framework"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "design and implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Your task is to perform a comprehensive audit of the existing application and then design and implement a foundational, production-quality automation framework."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "framework",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Your task is to perform a comprehensive audit of the existing application and then design and implement a foundational, production-quality automation framework."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "milestone",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This is a major architectural milestone."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "feature",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not treat it as a small API feature or an isolated gRPC server."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "objective",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The objective is to make RESONANT an automation-native scientific engineering platform in which every meaningful application capability can be accessed programmatically through a formally defined, ver"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capability",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The objective is to make RESONANT an automation-native scientific engineering platform in which every meaningful application capability can be accessed programmatically through a formally defined, ver"
+      },
+      {
+        "category": "PERFORMANCE",
+        "where": "body",
+        "phrase": "optimization",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Automated experiments and optimization workflows."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "integration",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Future hardware control and instrument integration."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "must use",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The application service layer must own the actual operations, and all interfaces must use it."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capability",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Every meaningful application capability must be implemented through an authoritative application service and exposed through a versioned, machine-readable automation interface."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "user can",
+        "strength": "strong",
+        "note": "",
+        "sentence": "If a user can perform a meaningful operation through the GUI, a corresponding programmatic capability must exist."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capability",
+        "strength": "strong",
+        "note": "",
+        "sentence": "If a user can perform a meaningful operation through the GUI, a corresponding programmatic capability must exist."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Creating",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Creating, opening, closing, saving and modifying projects."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Creating",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Creating, inspecting, modifying, positioning, rotating, scaling, duplicating, grouping and deleting scene objects."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Creating",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Creating and modifying geometry."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Creating",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Creating and editing materials."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Creating",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Creating, configuring and positioning emitters."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Creating",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Creating and configuring emitter arrays."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Creating",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Creating and editing targets and measurement locations."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Creating",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Creating field visualizations and cross-sections."
+      },
+      {
+        "category": "PERFORMANCE",
+        "where": "body",
+        "phrase": "optimization",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Creating and executing optimization problems."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Creating",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Creating and executing optimization problems."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capabilities",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Accessing available documentation and demonstration capabilities."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "expose",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Also expose lower-level operations needed for precise control, not merely high-level workflows."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "support both",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Likewise, support both:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement a common application service layer."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "implementing",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The Qt GUI must call application services rather than directly implementing business logic through widget callbacks or manipulating internal domain objects independently."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "must use",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The Python API must use the same underlying services."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "must use",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The web interface must use the same services through an appropriate network-facing adapter."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not create separate implementations of the same functionality for each interface."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "framework",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The automation framework must provide shared infrastructure without incorrectly unifying the physics."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "must provide",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The automation framework must provide shared infrastructure without incorrectly unifying the physics."
+      },
+      {
+        "category": "PERFORMANCE",
+        "where": "body",
+        "phrase": "Optimization",
+        "strength": "weak",
+        "note": "bullet",
+        "sentence": "Optimization framework."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "framework",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Optimization framework."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "integration",
+        "strength": "strong",
+        "note": "",
+        "sentence": "HDF5 integration."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "integration",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Python integration and pybind11 bindings."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Build",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Build and packaging configuration."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "reusable",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Which operations already have reusable service interfaces."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Produce",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Produce:"
+      }
+    ],
+    "scores": {
+      "FEATURE": {
+        "head": 1,
+        "body": 206
+      },
+      "BUG": {
+        "head": 0,
+        "body": 17
+      },
+      "CRASH": {
+        "head": 0,
+        "body": 2
+      },
+      "REGRESSION": {
+        "head": 0,
+        "body": 0
+      },
+      "PERFORMANCE": {
+        "head": 0,
+        "body": 15
+      },
+      "REFACTOR": {
+        "head": 0,
+        "body": 17
+      },
+      "BUILD": {
+        "head": 0,
+        "body": 1
+      },
+      "DOCUMENTATION": {
+        "head": 0,
+        "body": 34
+      },
+      "INVESTIGATION": {
+        "head": 0,
+        "body": 24
+      },
+      "PROCESS-CHANGE": {
+        "head": 0,
+        "body": 2
+      }
+    },
+    "evidence_total": 319,
+    "validator": "scripts/request_classification.py"
+  },
+  "links": {
+    "work": [
+      "WORK-000014"
+    ]
+  },
+  "commits": [],
+  "resolution": {
+    "from": "processing",
+    "to": "completed",
+    "at": "2026-11-27T22:18:43.463538+00:00",
+    "by": "agent-dev-20261126151713-76f632",
+    "gates": [
+      {
+        "work": "WORK-000014",
+        "at": "2026-11-27T22:18:27.441332+00:00",
+        "verdict": "PASS",
+        "request_fingerprint": "63e087bf93807dbe67df67d7e02e0422c51aca70995e08c5b711b9fb7d4c1144",
+        "test_runs": [
+          "20261127T171415-3885079"
+        ]
+      }
+    ]
+  }
+}

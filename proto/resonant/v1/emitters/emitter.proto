@@ -1,0 +1,47 @@
+syntax = "proto3";
+package resonant.v1;
+
+import "resonant/v1/common/spatial.proto";
+
+enum DirectivityModel {
+  DIRECTIVITY_MODEL_UNSPECIFIED = 0;
+  DIRECTIVITY_MODEL_OMNIDIRECTIONAL = 1;
+  DIRECTIVITY_MODEL_CARDIOID = 2;
+  DIRECTIVITY_MODEL_BAFFLED_PISTON = 3;
+}
+
+// The source settings of an emitter or of an array element (harmonic, free-field point source).
+message SourceSettings {
+  double frequency_hz = 1;
+  double amplitude_peak_pa_at_1m = 2;    // peak pressure amplitude at 1 m on axis
+  double phase_radians = 3;              // positive leads; convention exp(+j omega t)
+  double delay_seconds = 4;              // true time delay
+  bool active = 5;
+  DirectivityModel directivity = 6;
+  double cardioid_order = 7;
+  double piston_radius_meters = 8;
+  double radius_meters = 9;              // physical size; the near-source limit
+  string waveform = 10;                  // designation; the analytical model is harmonic
+}
+
+message Emitter {
+  string object_id = 1;
+  string name = 2;
+  uint64 revision = 3;
+  Transform local_transform = 4;
+  Vector3Meters world_position_meters = 5;
+  SourceSettings source = 6;
+}
+
+// Fields to change; unset fields keep their value.
+message SourceSettingsPatch {
+  optional double frequency_hz = 1;
+  optional double amplitude_peak_pa_at_1m = 2;
+  optional double phase_radians = 3;
+  optional double delay_seconds = 4;
+  optional bool active = 5;
+  optional DirectivityModel directivity = 6;
+  optional double cardioid_order = 7;
+  optional double piston_radius_meters = 8;
+  optional double radius_meters = 9;
+}

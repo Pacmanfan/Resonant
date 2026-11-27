@@ -1,0 +1,71 @@
+// Results: metadata on the control plane; sample data in bounded, chunked
+// streams (never a whole volume unless asked for, never filesystem paths).
+syntax = "proto3";
+package resonant.v1;
+
+import "resonant/v1/common/metadata.proto";
+import "resonant/v1/common/spatial.proto";
+import "resonant/v1/results/result.proto";
+
+message ListResultsRequest { RequestHeader header = 1; }
+message ListResultsResponse { ResponseHeader header = 1; repeated ResultSummary results = 2; }
+
+message GetResultRequest { RequestHeader header = 1; string result_id = 2; }
+message GetResultResponse { ResponseHeader header = 1; ResultSummary result = 2; }
+
+enum SliceAxis {
+  SLICE_AXIS_UNSPECIFIED = 0;
+  SLICE_AXIS_U = 1;
+  SLICE_AXIS_V = 2;
+  SLICE_AXIS_W = 3;
+}
+
+// A 2D slice (or the whole field when w-count is 1) at a fixed index along an
+// axis, optionally downsampled by `stride`. At most 4 194 304 samples per request.
+message ReadFieldSliceRequest {
+  RequestHeader header = 1;
+  string result_id = 2;
+  SliceAxis fixed_axis = 3;     // default W
+  int32 fixed_index = 4;
+  int32 stride = 5;             // 1 (default): every sample
+  int32 chunk_samples = 6;      // samples per streamed chunk; default 65 536
+}
+
+// One chunk of a slice: complex samples as interleaved little-endian float32
+// pairs (real, imag), row-major over the two free axes (the second varies fastest).
+message FieldDataChunk {
+  int32 rows = 1;               // the slice's size along the first free axis (after stride)
+  int32 columns = 2;            // along the second free axis
+  int64 offset = 3;             // index of the first sample of this chunk in the slice
+  int32 count = 4;
+  bytes samples = 5;
+  string unit = 6;
+  bool last = 7;
+}
+
+// Values at points (nearest grid sample; points outside the grid are reported, not extrapolated).
+message ReadFieldSamplesRequest {
+  RequestHeader header = 1;
+  string result_id = 2;
+  repeated Vector3Meters points_world_meters = 3;   // at most 100 000
+}
+message FieldSample {
+  Vector3Meters point_world_meters = 1;
+  bool inside = 2;
+  Complex value = 3;            // peak amplitude, Pa
+  double magnitude = 4;
+}
+message ReadFieldSamplesResponse { ResponseHeader header = 1; repeated FieldSample samples = 2; string unit = 3; }
+
+// Results of jobs, read in bounded pieces.
+service ResultsService {
+  // The results produced in this application run.
+  rpc ListResults(ListResultsRequest) returns (ListResultsResponse);
+  // A result's summary: quantity, unit, grid, frequency, maximum and provenance.
+  rpc GetResult(GetResultRequest) returns (GetResultResponse);
+  // A slice of a sampled field, streamed in chunks of complex float32 pairs. A stride reduces it.
+  // Refused with RESOURCE_EXHAUSTED above 4 194 304 samples.
+  rpc ReadFieldSlice(ReadFieldSliceRequest) returns (stream FieldDataChunk);
+  // The field at given points (the nearest sample; points outside the grid are marked).
+  rpc ReadFieldSamples(ReadFieldSamplesRequest) returns (ReadFieldSamplesResponse);
+}

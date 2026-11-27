@@ -204,6 +204,7 @@
     <addaction name="actionScriptEditor"/>
     <addaction name="actionWorkflows"/>
     <addaction name="actionPlugins"/>
+    <addaction name="actionAutomationServer"/>
     <addaction name="menuExtensions"/>
     <addaction name="separator"/>
     <addaction name="actionShowDemoStudio"/>
@@ -366,6 +367,10 @@
   <action name="actionPlugins">
    <property name="text"><string>P&amp;lugins...</string></property>
    <property name="toolTip"><string>See, enable and disable plugins</string></property>
+  </action>
+  <action name="actionAutomationServer">
+   <property name="text"><string>&amp;Automation Server...</string></property>
+   <property name="toolTip"><string>Let scripts, other programs and AI assistants drive this project through the automation API (off until started)</string></property>
   </action>
   <action name="actionShowDemoStudio">
    <property name="text"><string>&amp;Demo Studio</string></property>

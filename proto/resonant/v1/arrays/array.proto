@@ -1,0 +1,46 @@
+syntax = "proto3";
+package resonant.v1;
+
+import "resonant/v1/common/spatial.proto";
+import "resonant/v1/emitters/emitter.proto";
+
+enum ArrayLayout {
+  ARRAY_LAYOUT_UNSPECIFIED = 0;
+  ARRAY_LAYOUT_LINEAR = 1;
+  ARRAY_LAYOUT_RECTANGULAR_PLANAR = 2;
+  ARRAY_LAYOUT_CIRCULAR = 3;
+  ARRAY_LAYOUT_CYLINDRICAL = 4;
+  ARRAY_LAYOUT_SPHERICAL = 5;
+  ARRAY_LAYOUT_CUSTOM = 6;
+}
+
+// One element: its position in the array's frame and its effective source settings.
+message ArrayElement {
+  int32 index = 1;
+  Vector3Meters local_position_meters = 2;   // COORDINATE_FRAME_OBJECT (the array's frame)
+  SourceSettings source = 3;
+}
+
+message AcousticArray {
+  string object_id = 1;
+  string name = 2;
+  uint64 revision = 3;
+  Transform local_transform = 4;
+  ArrayLayout layout = 5;
+  int32 count_x = 6;                 // per ring for circular layouts
+  int32 count_y = 7;
+  double spacing_x_meters = 8;
+  double spacing_y_meters = 9;
+  double radius_meters = 10;
+  SourceSettings element_defaults = 11;
+  repeated ArrayElement elements = 12;
+}
+
+// Per-element excitation: phases and/or amplitudes by element index.
+message ElementExcitation {
+  int32 index = 1;
+  optional double phase_radians = 2;
+  optional double amplitude_peak_pa_at_1m = 3;
+  optional double delay_seconds = 4;
+  optional bool active = 5;
+}

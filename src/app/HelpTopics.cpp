@@ -41,6 +41,7 @@ const QHash<QString, QString>& registry()
         {QStringLiteral("OutputAuthorizationDialog"), QStringLiteral("exp.safety")},
         {QStringLiteral("PluginsDialog"), QStringLiteral("py.plugins")},
         {QStringLiteral("WorkflowsDialog"), QStringLiteral("py.workflows")},
+        {QStringLiteral("AutomationServerDialog"), QStringLiteral("py.automation-server")},
         {QStringLiteral("AboutDialog"), QStringLiteral("gs.introduction")},
         // Tabs (panel class / tab object name).
         {QStringLiteral("AcousticsPanel/mediumTab"), QStringLiteral("acoustics.materials")},

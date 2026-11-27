@@ -40,6 +40,8 @@ class PythonSession;
 class ScriptEditor;
 class HelpWindow;
 class PluginsDialog;
+class AutomationServer;
+class AutomationServerDialog;
 class WorkflowsDialog;
 class DemoController;
 class DemoStudioPanel;
@@ -108,6 +110,10 @@ public:
     WorkflowsDialog* showWorkflowsDialog();  // non-modal, kept while the window lives
     QDialog* showMaterialsDialog();          // non-modal view of the library (screenshots)
 
+    // The automation server (REQ-CHAT-20261126-012): off until started from its dialog.
+    AutomationServer& automationServer();
+    AutomationServerDialog* showAutomationServerDialog();  // non-modal, kept while the window lives
+
     // Demo Studio and presenter mode.
     DemoController& demos() { return *demos_; }
     DemoStudioPanel& demoStudioPanel();
@@ -162,6 +168,8 @@ private:
 
     std::unique_ptr<Ui::MainWindow> ui_;
     DocumentController* controller_ = nullptr;
+    AutomationServer* automationServer_ = nullptr;  // deleted before the document it serves
+    AutomationServerDialog* automationDialog_ = nullptr;
     DisplayUnits* units_ = nullptr;
     AcousticController* acoustics_ = nullptr;
     FieldAnalysisPanel* fieldAnalysis_ = nullptr;

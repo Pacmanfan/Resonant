@@ -1,0 +1,46 @@
+syntax = "proto3";
+package resonant.v1;
+
+import "google/protobuf/timestamp.proto";
+import "resonant/v1/common/spatial.proto";
+
+// How a result was produced (docs/reference/PROTOBUF_API.md "Provenance").
+message ResultProvenance {
+  string physics_domain = 1;
+  string solver_id = 2;
+  string solver_version = 3;
+  string approximation = 4;            // "analytical (free field)", "Kirchhoff physical optics", "full-wave"
+  repeated string assumptions = 5;
+  uint64 project_revision = 6;         // the project revision the run started from
+  string job_id = 7;
+  // Solver settings, sources, targets, region, reflectors with their materials, as JSON.
+  string configuration_json = 8;
+}
+
+// A sampled field on a region's grid: samples (u, v, w) at origin + u*axis_u*step_u + ...
+message FieldGrid {
+  Vector3Meters origin_world_meters = 1;
+  Vector3 axis_u = 2;
+  Vector3 axis_v = 3;
+  Vector3 axis_w = 4;
+  double step_u_meters = 5;
+  double step_v_meters = 6;
+  double step_w_meters = 7;
+  int32 count_u = 8;
+  int32 count_v = 9;
+  int32 count_w = 10;
+}
+
+message ResultSummary {
+  string result_id = 1;
+  string result_kind = 2;              // "acoustic.field"
+  string display_name = 3;
+  google.protobuf.Timestamp created_time = 4;
+  string quantity = 5;                 // "pressure"
+  string unit = 6;                     // "Pa"
+  string value_type = 7;               // "complex64 (peak amplitude)"
+  double frequency_hz = 8;
+  FieldGrid grid = 9;
+  double max_magnitude = 10;           // in `unit`
+  ResultProvenance provenance = 11;
+}

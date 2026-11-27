@@ -11,5 +11,5 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/index.json ${CMAKE_CURRENT_BINARY_DIR}
         DESTINATION share/resonant/help)
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/demos ${CMAKE_SOURCE_DIR}/examples DESTINATION share/resonant)
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/plugins/examples DESTINATION share/resonant/plugins)
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/python/resonant ${CMAKE_SOURCE_DIR}/python/examples ${CMAKE_SOURCE_DIR}/python/templates
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/python/resonant ${CMAKE_SOURCE_DIR}/python/resonant_api ${CMAKE_SOURCE_DIR}/python/examples ${CMAKE_SOURCE_DIR}/python/templates
         DESTINATION share/resonant/python PATTERN "__pycache__" EXCLUDE)

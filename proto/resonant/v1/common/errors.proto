@@ -1,0 +1,39 @@
+// Structured errors. A failed call returns the transport's status code (gRPC:
+// the matching code) and this message (gRPC: trailing metadata key
+// "resonant-error-bin"; local endpoint: the response frame).
+syntax = "proto3";
+package resonant.v1;
+
+import "resonant/v1/common/identifiers.proto";
+
+enum ErrorCode {
+  ERROR_CODE_UNSPECIFIED = 0;
+  ERROR_CODE_INVALID_ARGUMENT = 1;     // a value is malformed or out of range (see violations)
+  ERROR_CODE_NOT_FOUND = 2;            // a referenced resource does not exist
+  ERROR_CODE_ALREADY_EXISTS = 3;       // an id is taken, or an idempotency key was reused for another request
+  ERROR_CODE_CONFLICT = 4;             // the expected revision differs (see current_revision)
+  ERROR_CODE_FAILED_PRECONDITION = 5;  // the state does not allow the operation (e.g. unsaved project)
+  ERROR_CODE_PERMISSION_DENIED = 6;    // the session lacks the permission
+  ERROR_CODE_RESOURCE_EXHAUSTED = 7;   // a limit (memory, size, rate) would be exceeded
+  ERROR_CODE_UNIMPLEMENTED = 8;        // defined in the contract, not implemented in this version
+  ERROR_CODE_UNAVAILABLE = 9;          // a dependency (solver backend, Python, hardware) is not available
+  ERROR_CODE_CANCELLED = 10;
+  ERROR_CODE_INTERNAL = 11;
+}
+
+message FieldViolation {
+  string field = 1;        // e.g. "parameters.width"
+  string description = 2;
+}
+
+message Error {
+  ErrorCode code = 1;
+  string message = 2;
+  repeated FieldViolation violations = 3;
+  ResourceRef resource = 4;
+  // For CONFLICT: the revision the resource (or project) has now.
+  uint64 current_revision = 5;
+  // True when repeating the same request may succeed (UNAVAILABLE, RESOURCE_EXHAUSTED by rate).
+  bool retryable = 6;
+  string request_id = 7;
+}

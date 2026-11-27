@@ -1,0 +1,40 @@
+// Request and response metadata shared by every RPC.
+syntax = "proto3";
+package resonant.v1;
+
+import "google/protobuf/timestamp.proto";
+import "resonant/v1/common/identifiers.proto";
+
+// Sent with every request.
+message RequestHeader {
+  // The session opened with SessionService.OpenSession (identifies the client and its permissions).
+  string session_id = 1;
+  // A client-chosen id echoed in the response, in events and in the audit trail.
+  string request_id = 2;
+  // For mutations: the same key on a retry returns the first response instead of repeating the change.
+  string idempotency_key = 3;
+  // For mutations: refused with CONFLICT when the project revision differs (optimistic concurrency).
+  optional uint64 expected_project_revision = 4;
+  // Validate and plan only: nothing is changed.
+  bool dry_run = 5;
+}
+
+// Returned with every response.
+message ResponseHeader {
+  string request_id = 1;
+  // The project revision after the call (unchanged by queries and dry runs).
+  uint64 project_revision = 2;
+  repeated string warnings = 3;
+  bool dry_run = 4;
+  // True when the response was replayed for a repeated idempotency key.
+  bool replayed = 5;
+}
+
+// Inspection metadata of a resource.
+message ResourceMetadata {
+  ResourceRef ref = 1;
+  string display_name = 2;
+  // The revision at which the resource last changed.
+  uint64 revision = 3;
+  google.protobuf.Timestamp observed_time = 4;
+}

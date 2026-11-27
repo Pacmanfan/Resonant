@@ -1,0 +1,36 @@
+syntax = "proto3";
+package resonant.v1;
+
+import "resonant/v1/common/spatial.proto";
+
+// Geometry of an object: a kind of the geometry registry with its parameters (SI units: see the kind's parameter units).
+message GeometryInfo {
+  string kind_id = 1;                  // "box", "sphere", "reflector.parabolic", ...
+  map<string, double> parameters = 2;  // key -> value in the parameter's unit (GeometryKind.parameters)
+}
+
+message SceneObject {
+  string object_id = 1;
+  string name = 2;
+  // "group", "geometry", or the domain component type ("acoustic.array", "acoustic.emitter", "em.antenna", ...)
+  string object_type = 3;
+  string parent_id = 4;                // empty at the top level
+  repeated string child_ids = 5;
+  uint64 revision = 6;                 // the project revision at which the object last changed
+  Transform local_transform = 7;       // COORDINATE_FRAME_PARENT
+  Vector3Meters world_position_meters = 8;
+  bool visible = 9;                    // display only: hiding does not switch a source off
+  string material_id = 10;             // empty: none
+  GeometryInfo geometry = 11;          // set for geometry objects
+  // The domain component's data in the project file's JSON form, for types
+  // without a typed message yet (typed: EmitterService, ArrayService).
+  string component_json = 12;
+}
+
+// The hierarchy at one moment: every object, and the event sequence it corresponds to.
+message SceneSnapshot {
+  string project_id = 1;
+  uint64 project_revision = 2;
+  uint64 event_sequence = 3;           // events after this sequence describe later changes
+  repeated SceneObject objects = 4;    // pre-order
+}

@@ -1,0 +1,12 @@
+syntax = "proto3";
+package resonant.v1;
+
+message PageRequest {
+  int32 page_size = 1;   // 0: the server's default (100); at most 1000
+  string page_token = 2; // from the previous response
+}
+
+message PageResponse {
+  string next_page_token = 1;  // empty on the last page
+  int32 total_size = 2;
+}

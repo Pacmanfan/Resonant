@@ -12,3 +12,4 @@ paths these documents name exist.
 * `overview.md` — layers, core modules, data flow, conventions.
 * `roadmap.md` — milestones, the request that delivers each, and the
   product requirements they serve.
+* `AUTOMATION_ARCHITECTURE.md` — the application services, the protobuf contract, transports, threads; `AUTOMATION_DECISIONS.md` (the choices and alternatives); `MCP_INTEGRATION.md` (AI assistants).

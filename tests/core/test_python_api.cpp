@@ -1,6 +1,7 @@
 // The Python API's own tests (python/tests, REQ-CHAT-20261126-010), run from
 // the core suite against the native module of the same build tree
-// (<tree>/src/python/_resonant*.so). Skipped, with the reason, when this build
+// (<tree>/src/python/_resonant*.so), and the automation API's client tests
+// against this tree's headless host. Skipped, with the reason, when this build
 // has no Python module (no pybind11 or Python headers).
 #include <gtest/gtest.h>
 
@@ -41,8 +42,12 @@ TEST(PythonApi, ThePackageTestsPassAgainstThisBuildsModule)
         GTEST_SKIP() << "this build has no Python module (" << dir << "): built only with pybind11 and the Python headers";
     const std::string source = RESONANT_SOURCE_DIR;
     const std::string help = std::filesystem::weakly_canonical(dir / ".." / ".." / "help").string();
-    const std::string command = "cd '" + source + "' && RESONANT_HELP_DIR='" + help + "' RESONANT_PYTHON_MODULE_DIR='" + dir.string() + "' PYTHONPATH='" + source +
-                                "/python' python3 -W ignore::ResourceWarning -m unittest discover -s python/tests 2>&1";
+    // The automation API's tests use this tree's headless host and descriptor set (skipped without them).
+    const std::filesystem::path tree = std::filesystem::weakly_canonical(dir / ".." / "..");
+    const std::string automation = "RESONANT_AUTOMATION_HOST='" + (tree / "src" / "automation_host" / "resonant-automation").string() +
+                                   "' RESONANT_API_DESCRIPTORS='" + (tree / "src" / "automation_api" / "resonant_api.desc").string() + "' ";
+    const std::string command = "cd '" + source + "' && " + automation + "RESONANT_HELP_DIR='" + help + "' RESONANT_PYTHON_MODULE_DIR='" + dir.string() +
+                                "' PYTHONPATH='" + source + "/python' python3 -W ignore::ResourceWarning -m unittest discover -s python/tests 2>&1";
     std::unique_ptr<FILE, int (*)(FILE*)> pipe(popen(command.c_str(), "r"), pclose);
     ASSERT_TRUE(pipe);
     std::string output;

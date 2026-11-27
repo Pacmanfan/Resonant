@@ -35,6 +35,8 @@
 #include "HelpTopics.h"
 #include "HelpWindow.h"
 #include "PluginsDialog.h"
+#include "AutomationServer.h"
+#include "AutomationServerDialog.h"
 #include "PresenterOverlay.h"
 #include "PythonConsole.h"
 #include "PythonSession.h"
@@ -181,7 +183,14 @@ MainWindow::MainWindow(QWidget* parent)
     statusBar()->showMessage(QStringLiteral("Ready"));
 }
 
-MainWindow::~MainWindow() = default;
+MainWindow::~MainWindow()
+{
+    // Remote calls run on this thread against the document: end them before the document goes.
+    delete automationDialog_;
+    automationDialog_ = nullptr;
+    delete automationServer_;
+    automationServer_ = nullptr;
+}
 
 ViewportWidget& MainWindow::viewport() { return *ui_->viewport; }
 SceneTreePanel& MainWindow::sceneTree() { return *ui_->scenePanel; }
@@ -895,6 +904,7 @@ void MainWindow::connectAutomation()
     });
     connect(ui_->actionWorkflows, &QAction::triggered, this, &MainWindow::showWorkflowsDialog);
     connect(ui_->actionPlugins, &QAction::triggered, this, &MainWindow::showPluginsDialog);
+    connect(ui_->actionAutomationServer, &QAction::triggered, this, &MainWindow::showAutomationServerDialog);
 
     const ResourcePaths paths = ResourcePaths::locate();
     plugins_ = std::make_unique<plugins::PluginManager>(
@@ -1074,6 +1084,24 @@ PluginsDialog* MainWindow::showPluginsDialog()
     connect(dialog, &PluginsDialog::helpRequested, this, &MainWindow::showHelp);
     dialog->show();
     return dialog;
+}
+
+AutomationServer& MainWindow::automationServer()
+{
+    if (!automationServer_)
+        automationServer_ = new AutomationServer(*controller_, this);
+    return *automationServer_;
+}
+
+AutomationServerDialog* MainWindow::showAutomationServerDialog()
+{
+    if (!automationDialog_) {
+        automationDialog_ = new AutomationServerDialog(automationServer(), *controller_, this);
+        connect(automationDialog_, &AutomationServerDialog::helpRequested, this, &MainWindow::showHelp);
+    }
+    automationDialog_->show();
+    automationDialog_->raise();
+    return automationDialog_;
 }
 
 WorkflowsDialog* MainWindow::showWorkflowsDialog()

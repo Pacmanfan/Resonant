@@ -5,12 +5,28 @@ TEMPLATE = subdirs
 
 SUBDIRS = gtest core hardware render app main help core_tests app_tests
 
+# The automation API (Protocol Buffers adapter, local endpoint, headless host),
+# when protoc and libprotobuf are found (protobuf.pri).
+include(protobuf.pri)
+equals(RESONANT_AUTOMATION_API, 1) {
+    SUBDIRS += automation_api automation_host
+    automation_api.file = src/automation_api/automation_api.pro
+    automation_api.depends = core
+    automation_host.file = src/automation_host/automation_host.pro
+    automation_host.depends = core automation_api
+    app.depends += automation_api
+    main.depends += automation_api
+    core_tests.depends += automation_api
+    app_tests.depends += automation_api
+}
+
 # The Python API module, when Python and pybind11 are found (python.pri).
 include(python.pri)
 equals(RESONANT_PYTHON, 1) {
     SUBDIRS += python
     python.file = src/python/python.pro
     python.depends = core
+    equals(RESONANT_AUTOMATION_API, 1): python.depends += automation_api
 }
 
 gtest.file = third_party/gt_library.pro

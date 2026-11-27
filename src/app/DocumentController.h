@@ -2,10 +2,18 @@
 // and the background jobs. Every panel and the viewport talk to the project
 // through this controller; it is the only place that turns user actions
 // into core commands, and the only source of change notifications.
+//
+// It hosts the application services (REQ-CHAT-20261126-012, ADR-000216):
+// its meaningful operations (create, rename, move, show / hide, parameters,
+// materials, delete, duplicate, undo, redo, save) call the same service
+// implementation as Python and remote clients, as the application's own
+// session (source GUI). Changes made through any interface produce the same
+// revisions and events.
 #pragma once
 
 #include "commands/Command.h"
 #include "project/Project.h"
+#include "services/ServiceTypes.h"
 #include "simulation/Job.h"
 
 #include <QList>
@@ -14,6 +22,11 @@
 #include <QStringList>
 
 #include <memory>
+
+namespace resonant::services {
+class Services;
+class Session;
+}  // namespace resonant::services
 
 class DocumentController : public QObject {
     Q_OBJECT
@@ -26,6 +39,10 @@ public:
     const resonant::Scene& scene() const { return project_->scene; }
     resonant::CommandStack& commands() { return commands_; }
     resonant::JobManager& jobs() { return *jobs_; }
+    // The application services on this document, and the GUI's call context for them.
+    resonant::services::Session& session() { return *session_; }
+    resonant::services::Services& services();
+    static resonant::services::CallContext guiContext();
 
     // --- document lifecycle -------------------------------------------------
     QString filePath() const { return filePath_; }
@@ -87,7 +104,8 @@ signals:
     void operationFailed(const QString& message);             // an undo / redo or command that failed
 
 private:
-    void installProject(std::unique_ptr<resonant::Project> project, const QString& path);
+    friend class DocumentHost;
+    void installProject(std::unique_ptr<resonant::Project> project, const QString& path, const char* reason = "project.opened");
     void attachSceneListener();
     void pruneSelection();
 
@@ -98,4 +116,7 @@ private:
     QString filePath_;
     int sceneListener_ = 0;
     int jobListener_ = 0;
+    std::unique_ptr<class DocumentHost> host_;
+    std::unique_ptr<resonant::services::Session> session_;  // after the project, history and jobs it uses
+    int eventListener_ = 0;
 };

@@ -3,10 +3,29 @@
 #include "commands/SceneCommands.h"
 #include "foundation/Log.h"
 #include "project/ProjectSerializer.h"
+#include "services/Services.h"
 
 #include <QFileInfo>
 
 using namespace resonant;
+
+// The document as the services' project host.
+class DocumentHost final : public services::ProjectHost {
+public:
+    explicit DocumentHost(DocumentController& d) : d_(d) {}
+    Project& project() override { return d_.project(); }
+    CommandStack& commands() override { return d_.commands(); }
+    JobManager& jobs() override { return d_.jobs(); }
+    std::string filePath() const override { return d_.filePath().toStdString(); }
+    void setFilePath(const std::string& path) override { d_.filePath_ = QString::fromStdString(path); }
+    void installProject(std::unique_ptr<Project> project, const std::string& path) override
+    {
+        d_.installProject(std::move(project), QString::fromStdString(path), path.empty() ? "project.created" : "project.opened");
+    }
+
+private:
+    DocumentController& d_;
+};
 
 DocumentController::DocumentController(QObject* parent)
     : QObject(parent), project_(Project::createNew()), jobs_(std::make_unique<JobManager>(1))
@@ -17,14 +36,49 @@ DocumentController::DocumentController(QObject* parent)
     jobListener_ = jobs_->addListener([this](const JobInfo& info) {
         QMetaObject::invokeMethod(this, [this, info] { emit jobChanged(info); }, Qt::QueuedConnection);
     });
+    host_ = std::make_unique<DocumentHost>(*this);
+    session_ = std::make_unique<services::Session>(*host_, "gui");
+    // Every material change (any interface, undo and redo) reaches the panels; finished jobs are collected.
+    eventListener_ = session_->events().subscribe([this](const services::Event& e) {
+        if (e.category == services::EventCategory::Material)
+            QMetaObject::invokeMethod(this, [this] { emit materialsChanged(); }, Qt::AutoConnection);
+    });
+    connect(this, &DocumentController::jobChanged, this, [this](const JobInfo& info) {
+        if (isFinished(info.state))
+            session_->collectFinishedJobs();
+    });
 }
 
 DocumentController::~DocumentController()
 {
+    session_->events().unsubscribe(eventListener_);
+    session_.reset();  // detaches from the project, history and jobs first
+    host_.reset();
     jobs_->removeListener(jobListener_);
     // Stop the workers before the project they may be reading goes away.
     jobs_.reset();
 }
+
+services::Services& DocumentController::services()
+{
+    return session_->services();
+}
+
+services::CallContext DocumentController::guiContext()
+{
+    services::CallContext c;
+    c.source = services::Interface::Gui;
+    c.clientName = "Resonant";
+    return c;
+}
+
+namespace {
+template <class T>
+Status statusOf(const services::Outcome<T>& outcome)
+{
+    return outcome ? Status::success() : Status::failure(outcome.error().message);
+}
+}  // namespace
 
 QString DocumentController::displayName() const
 {
@@ -48,13 +102,15 @@ void DocumentController::pruneSelection()
         emit selectionChanged();
 }
 
-void DocumentController::installProject(std::unique_ptr<Project> project, const QString& path)
+void DocumentController::installProject(std::unique_ptr<Project> project, const QString& path, const char* reason)
 {
     selection_.clear();
     project_ = std::move(project);
     filePath_ = path;
     commands_.clear();
     attachSceneListener();
+    if (session_)
+        session_->projectReplaced(reason);
     emit projectReplaced();
     emit selectionChanged();
     emit materialsChanged();
@@ -63,7 +119,7 @@ void DocumentController::installProject(std::unique_ptr<Project> project, const 
 
 void DocumentController::newProject()
 {
-    installProject(Project::createNew(), QString());
+    installProject(Project::createNew(), QString(), "project.created");
     logInfo("project", "new project created");
 }
 
@@ -88,16 +144,9 @@ Status DocumentController::saveProject()
 
 Status DocumentController::saveProjectAs(const QString& path)
 {
-    const std::string previousName = project_->name;
-    if (filePath_ != path)
-        project_->name = QFileInfo(path).completeBaseName().toStdString();
-    if (Status status = saveProjectFile(*project_, path.toStdString()); !status) {
-        project_->name = previousName;
-        return status;
-    }
-    filePath_ = path;
-    commands_.markClean();  // also emits documentStateChanged
-    return Status::success();
+    // The service names the project after a new file, saves, sets the path and marks the history clean.
+    // The GUI may save anywhere the user chooses (the application session holds the files permission).
+    return statusOf(services().project.save(guiContext(), QFileInfo(path).absoluteFilePath().toStdString()));
 }
 
 void DocumentController::setSelection(const QList<Id>& ids)
@@ -156,11 +205,15 @@ Result<Id> DocumentController::insertObject(std::unique_ptr<SceneObject> object,
 
 Result<Id> DocumentController::createPrimitive(const QString& kindId)
 {
-    auto geometry = Geometry::create(kindId.toStdString());
-    if (!geometry)
-        return Result<Id>::failure(geometry.message());
-    const std::string name = project_->scene.uniqueName(geometry.value().kind().displayName);
-    return insertObject(makeGeometryObject(name, geometry.take()));
+    services::GeometryService::Create create;
+    create.kind = kindId.toStdString();
+    auto m = services().geometry.createPrimitive(guiContext(), create);
+    if (!m)
+        return Result<Id>::failure(m.error().message);
+    const Id id = m.value().changes.created.front();
+    logInfo("scene", m.value().changes.description);
+    select(id);
+    return id;
 }
 
 Result<Id> DocumentController::createGroup()
@@ -172,63 +225,40 @@ Status DocumentController::deleteSelection()
 {
     if (selection_.isEmpty())
         return Status::failure("nothing is selected");
-    // Deleting an object deletes its descendants: skip selected objects
-    // whose ancestor is selected too.
-    QList<Id> roots;
-    for (const Id& id : selection_) {
-        const SceneObject* object = project_->scene.find(id);
-        bool covered = false;
-        for (const Id& other : selection_) {
-            const SceneObject* candidate = project_->scene.find(other);
-            if (candidate && object && candidate != object && candidate->isAncestorOf(*object))
-                covered = true;
-        }
-        if (object && !covered)
-            roots.append(id);
-    }
-    auto composite = std::make_unique<CompositeCommand>(
-        roots.size() == 1 ? "Delete " + project_->scene.find(roots.first())->state.name
-                          : "Delete " + std::to_string(roots.size()) + " objects");
-    for (const Id& id : roots)
-        composite->add(std::make_unique<RemoveObjectCommand>(project_->scene, id));
-    const std::string description = composite->description();
-    Status status = pushCommand(std::move(composite));
-    if (status)
-        logInfo("scene", description);
-    return status;
+    // The service deletes descendants with their ancestors (a selected child of a selected parent is covered).
+    const std::vector<Id> ids(selection_.begin(), selection_.end());
+    auto m = services().scene.remove(guiContext(), ids);
+    if (m)
+        logInfo("scene", m.value().changes.description);
+    return statusOf(m);
 }
 
 Status DocumentController::duplicateSelection()
 {
     if (selection_.isEmpty())
         return Status::failure("nothing is selected");
-    auto composite = std::make_unique<CompositeCommand>(
-        selection_.size() == 1 ? "Duplicate " + project_->scene.find(selection_.first())->state.name
-                               : "Duplicate " + std::to_string(selection_.size()) + " objects");
+    const std::vector<Id> ids(selection_.begin(), selection_.end());
+    auto m = services().scene.duplicate(guiContext(), ids);
+    if (!m)
+        return Status::failure(m.error().message);
+    logInfo("scene", m.value().changes.description);
+    // The copies are the top-level objects created (their children were copied with them).
     QList<Id> copies;
-    for (const Id& id : selection_) {
-        const SceneObject* object = project_->scene.find(id);
-        if (!object)
-            continue;
-        auto copy = object->cloneSubtree(true);
-        copy->state.name = project_->scene.uniqueName(object->state.name + " copy");
-        copies.append(copy->id());
-        const SceneObject* parent = object->parent();
-        const Id parentId = (parent && !project_->scene.isRoot(*parent)) ? parent->id() : Id();
-        composite->add(std::make_unique<InsertObjectCommand>(project_->scene, std::move(copy), parentId,
-                                                             object->indexInParent() + 1, "Duplicate"));
+    for (const Id& id : m.value().changes.created) {
+        const SceneObject* copy = project_->scene.find(id);
+        const SceneObject* parent = copy ? copy->parent() : nullptr;
+        const bool nested = parent && !project_->scene.isRoot(*parent) &&
+                            std::find(m.value().changes.created.begin(), m.value().changes.created.end(), parent->id()) != m.value().changes.created.end();
+        if (copy && !nested)
+            copies.append(id);
     }
-    const std::string description = composite->description();
-    Status status = pushCommand(std::move(composite));
-    if (status) {
-        logInfo("scene", description);
-        setSelection(copies);
-    }
-    return status;
+    setSelection(copies);
+    return Status::success();
 }
 
 Status DocumentController::setObjectState(const Id& id, ObjectState state, const QString& description)
 {
+    // A whole state from a domain panel (its component settings): applied as one undo step.
     const SceneObject* object = project_->scene.find(id);
     if (!object)
         return Status::failure("the object no longer exists");
@@ -238,31 +268,31 @@ Status DocumentController::setObjectState(const Id& id, ObjectState state, const
         std::make_unique<SetObjectStateCommand>(project_->scene, id, std::move(state), description.toStdString()));
 }
 
+namespace {
+QString nameOf(const Scene& scene, const Id& id)
+{
+    const SceneObject* o = scene.find(id);
+    return o ? QString::fromStdString(o->state.name) : QString();
+}
+}  // namespace
+
 Status DocumentController::renameObject(const Id& id, const QString& name)
 {
-    const SceneObject* object = project_->scene.find(id);
-    if (!object)
+    if (!project_->scene.find(id))
         return Status::failure("the object no longer exists");
-    const QString trimmed = name.trimmed();
-    if (trimmed.isEmpty())
-        return Status::failure("an object name cannot be empty");
-    ObjectState state = object->state;
-    state.name = trimmed.toStdString();
-    return setObjectState(id, std::move(state), QStringLiteral("Rename ") + QString::fromStdString(object->state.name));
+    services::SceneService::Update u;
+    u.name = name.trimmed().toStdString();
+    return statusOf(services().scene.update(guiContext(), id, std::nullopt, u));
 }
 
 Status DocumentController::setTransform(const Id& id, const Transform& transform, const QString& verb)
 {
-    const SceneObject* object = project_->scene.find(id);
-    if (!object)
+    if (!project_->scene.find(id))
         return Status::failure("the object no longer exists");
-    if (!transform.position.allFinite() || !transform.rotation.allFinite() || !transform.scale.allFinite())
-        return Status::failure("transform values must be finite numbers");
-    if ((transform.scale.array() <= 0.0).any())
-        return Status::failure("scale factors must be greater than zero");
-    ObjectState state = object->state;
-    state.local = transform;
-    return setObjectState(id, std::move(state), verb + QLatin1Char(' ') + QString::fromStdString(object->state.name));
+    services::SceneService::Update u;
+    u.transform = transform;
+    u.description = (verb + QLatin1Char(' ') + nameOf(project_->scene, id)).toStdString();
+    return statusOf(services().scene.update(guiContext(), id, std::nullopt, u));
 }
 
 Status DocumentController::setGeometryParameter(const Id& id, const std::string& key, double value)
@@ -270,62 +300,43 @@ Status DocumentController::setGeometryParameter(const Id& id, const std::string&
     const SceneObject* object = project_->scene.find(id);
     if (!object || !object->state.geometry)
         return Status::failure("the object has no geometry");
-    ObjectState state = object->state;
-    if (Status status = state.geometry->setParameter(key, value); !status)
-        return status;
-    return setObjectState(id, std::move(state),
-                          QStringLiteral("Edit ") + QString::fromStdString(object->state.name) + QStringLiteral(" geometry"));
+    return statusOf(services().geometry.updateParameters(guiContext(), id, std::nullopt, {{key, value}}));
 }
 
 Status DocumentController::setMaterial(const Id& id, const Id& materialId)
 {
-    const SceneObject* object = project_->scene.find(id);
-    if (!object)
+    if (!project_->scene.find(id))
         return Status::failure("the object no longer exists");
     if (!materialId.isNull() && !project_->materials.find(materialId))
         return Status::failure("the material is not in the project's library");
-    ObjectState state = object->state;
-    state.materialId = materialId;
-    return setObjectState(id, std::move(state),
-                          QStringLiteral("Assign material to ") + QString::fromStdString(object->state.name));
+    return statusOf(services().materials.assign(guiContext(), materialId, {id}));
 }
 
 Status DocumentController::setVisible(const Id& id, bool visible)
 {
-    const SceneObject* object = project_->scene.find(id);
-    if (!object)
+    if (!project_->scene.find(id))
         return Status::failure("the object no longer exists");
-    ObjectState state = object->state;
-    state.visible = visible;
-    return setObjectState(id, std::move(state),
-                          (visible ? QStringLiteral("Show ") : QStringLiteral("Hide "))
-                              + QString::fromStdString(object->state.name));
+    services::SceneService::Update u;
+    u.visible = visible;
+    u.description = ((visible ? QStringLiteral("Show ") : QStringLiteral("Hide ")) + nameOf(project_->scene, id)).toStdString();
+    return statusOf(services().scene.update(guiContext(), id, std::nullopt, u));
 }
 
 Status DocumentController::moveObject(const Id& id, const Id& newParentId)
 {
-    return pushCommand(std::make_unique<MoveObjectCommand>(project_->scene, id, newParentId));
+    if (!project_->scene.find(id))
+        return Status::failure("the object no longer exists");
+    services::SceneService::Update u;
+    u.parent = newParentId.isNull() ? std::string() : newParentId.str();
+    u.description = ("Move " + nameOf(project_->scene, id)).toStdString();
+    return statusOf(services().scene.update(guiContext(), id, std::nullopt, u));
 }
 
 Status DocumentController::setMaterialLibrary(MaterialLibrary library, const QString& description)
 {
-    if (library == project_->materials)
-        return Status::success();
-    // Objects may refer to a material that the edit removes: clear those
-    // references in the same undo step.
-    auto composite = std::make_unique<CompositeCommand>(description.toStdString());
-    project_->scene.forEach([&](const SceneObject& object) {
-        if (!object.state.materialId.isNull() && !library.find(object.state.materialId)) {
-            ObjectState state = object.state;
-            state.materialId = Id();
-            composite->add(std::make_unique<SetObjectStateCommand>(project_->scene, object.id(), std::move(state),
-                                                                   "Remove material"));
-        }
-    });
-    composite->add(std::make_unique<SetMaterialLibraryCommand>(project_->materials, std::move(library),
-                                                               description.toStdString(),
-                                                               [this] { emit materialsChanged(); }));
-    return pushCommand(std::move(composite));
+    // References to removed materials are cleared in the same undo step (the service does it);
+    // the panels hear of it through the session's material.changed event.
+    return statusOf(services().materials.replaceLibrary(guiContext(), library, description.toStdString()));
 }
 
 void DocumentController::undo()
@@ -333,9 +344,9 @@ void DocumentController::undo()
     if (!commands_.canUndo())
         return;
     const std::string text = commands_.undoText();
-    if (Status status = commands_.undo(); !status) {
-        logError("scene", "undo failed: " + status.message());
-        emit operationFailed(QStringLiteral("Undo failed: ") + QString::fromStdString(status.message()));
+    if (auto undone = services().project.undo(guiContext()); !undone) {
+        logError("scene", "undo failed: " + undone.error().message);
+        emit operationFailed(QStringLiteral("Undo failed: ") + QString::fromStdString(undone.error().message));
         return;
     }
     logInfo("scene", "undo: " + text);
@@ -346,9 +357,9 @@ void DocumentController::redo()
     if (!commands_.canRedo())
         return;
     const std::string text = commands_.redoText();
-    if (Status status = commands_.redo(); !status) {
-        logError("scene", "redo failed: " + status.message());
-        emit operationFailed(QStringLiteral("Redo failed: ") + QString::fromStdString(status.message()));
+    if (auto redone = services().project.redo(guiContext()); !redone) {
+        logError("scene", "redo failed: " + redone.error().message);
+        emit operationFailed(QStringLiteral("Redo failed: ") + QString::fromStdString(redone.error().message));
         return;
     }
     logInfo("scene", "redo: " + text);

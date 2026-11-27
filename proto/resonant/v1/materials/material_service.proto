@@ -1,0 +1,48 @@
+syntax = "proto3";
+package resonant.v1;
+
+import "resonant/v1/common/metadata.proto";
+import "resonant/v1/common/validation.proto";
+import "resonant/v1/materials/material.proto";
+
+message ListMaterialsRequest { RequestHeader header = 1; string domain = 2; }
+message ListMaterialsResponse { ResponseHeader header = 1; repeated Material materials = 2; }
+
+message GetMaterialRequest { RequestHeader header = 1; string material_id = 2; }
+message GetMaterialResponse { ResponseHeader header = 1; Material material = 2; }
+
+// Creates a material from its JSON form (the project file's material format) or from name + properties.
+message CreateMaterialRequest {
+  RequestHeader header = 1;
+  string material_json = 2;              // when set, used as is (validated)
+  string name = 3;
+  string description = 4;
+  repeated MaterialProperty properties = 5;
+}
+message CreateMaterialResponse { ResponseHeader header = 1; Material material = 2; ChangeSummary changes = 3; }
+
+// Deletes a material; assignments to it are removed in the same undoable step.
+message DeleteMaterialRequest { RequestHeader header = 1; string material_id = 2; }
+message DeleteMaterialResponse { ResponseHeader header = 1; ChangeSummary changes = 2; }
+
+message AssignMaterialRequest { RequestHeader header = 1; string material_id = 2; repeated string object_ids = 3; }
+message AssignMaterialResponse { ResponseHeader header = 1; ChangeSummary changes = 2; }
+
+message RemoveMaterialAssignmentRequest { RequestHeader header = 1; repeated string object_ids = 2; }
+message RemoveMaterialAssignmentResponse { ResponseHeader header = 1; ChangeSummary changes = 2; }
+
+// Materials with physical properties and their provenance.
+service MaterialService {
+  // The project's materials, optionally only those with properties of one physics domain.
+  rpc ListMaterials(ListMaterialsRequest) returns (ListMaterialsResponse);
+  // One material with its properties and their provenance.
+  rpc GetMaterial(GetMaterialRequest) returns (GetMaterialResponse);
+  // Adds a material. Every property states its provenance.
+  rpc CreateMaterial(CreateMaterialRequest) returns (CreateMaterialResponse);
+  // Removes a material. Objects that used it lose the assignment in the same undo step.
+  rpc DeleteMaterial(DeleteMaterialRequest) returns (DeleteMaterialResponse);
+  // Assigns a material to objects.
+  rpc AssignMaterial(AssignMaterialRequest) returns (AssignMaterialResponse);
+  // Clears the material of objects.
+  rpc RemoveMaterialAssignment(RemoveMaterialAssignmentRequest) returns (RemoveMaterialAssignmentResponse);
+}

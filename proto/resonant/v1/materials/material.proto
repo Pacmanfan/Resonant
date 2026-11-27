@@ -1,0 +1,32 @@
+syntax = "proto3";
+package resonant.v1;
+
+enum MaterialProvenance {
+  MATERIAL_PROVENANCE_UNSPECIFIED = 0;
+  MATERIAL_PROVENANCE_MEASURED = 1;      // measured on the actual material
+  MATERIAL_PROVENANCE_MANUFACTURER = 2;  // the manufacturer's data sheet
+  MATERIAL_PROVENANCE_LITERATURE = 3;    // derived from published values
+  MATERIAL_PROVENANCE_THEORETICAL = 4;   // a model or estimate
+  MATERIAL_PROVENANCE_ILLUSTRATIVE = 5;  // for demonstration only
+}
+
+// One property of one physics domain. Values are SI (kg/m^3, m/s, Pa, S/m,
+// relative permittivity ...); the key names the quantity.
+message MaterialProperty {
+  string domain = 1;          // "acoustic", "mechanical", "electromagnetic", "thermal", "optical"
+  string key = 2;             // "density", "sound_speed", "youngs_modulus", ...
+  double value_si = 3;
+  reserved 4;
+  MaterialProvenance provenance = 5;
+  string source = 6;          // citation, data sheet, note
+}
+
+message Material {
+  string material_id = 1;
+  string name = 2;
+  string description = 3;
+  repeated string domains = 4;
+  repeated MaterialProperty properties = 5;
+  // The material in the project file's JSON form (frequency tables, validity ranges).
+  string material_json = 6;
+}

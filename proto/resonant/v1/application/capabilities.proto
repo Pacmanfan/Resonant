@@ -1,0 +1,44 @@
+// The capability registry: what this running application can actually do.
+// It reflects real availability (a solver that needs a missing backend is
+// reported UNAVAILABLE; a defined but unimplemented RPC is PLANNED).
+syntax = "proto3";
+package resonant.v1;
+
+enum Maturity {
+  MATURITY_UNSPECIFIED = 0;
+  MATURITY_STABLE = 1;
+  MATURITY_EXPERIMENTAL = 2;
+  MATURITY_PLANNED = 3;
+  MATURITY_UNAVAILABLE = 4;   // implemented, but a dependency is missing here
+}
+
+enum Permission {
+  PERMISSION_UNSPECIFIED = 0;
+  PERMISSION_READ = 1;      // queries, subscriptions
+  PERMISSION_MODIFY = 2;    // project changes (undoable)
+  PERMISSION_EXECUTE = 3;   // jobs: simulations, optimizations, workflows
+  PERMISSION_FILES = 4;     // open / save project files (within the allowed directories)
+  PERMISSION_ADMIN = 5;     // sessions, audit export, server settings
+}
+
+message Capability {
+  string capability_id = 1;     // stable, e.g. "solver.acoustic.freefield"
+  string display_name = 2;
+  string description = 3;
+  string category = 4;          // "domain", "solver", "geometry", "material-model", "optimization", "file-format", "plugin", "dependency", "service"
+  Maturity maturity = 5;
+  bool available = 6;
+  repeated string required_dependencies = 7;
+  string physics_domain = 8;    // "acoustic", "mechanical", "electromagnetic", or empty
+  repeated string dimensions = 9;  // "2D", "3D"
+  repeated string limitations = 10;
+}
+
+// One RPC of the contract and whether this server implements it.
+message OperationCapability {
+  string method = 1;            // "/resonant.v1.SceneService/UpdateObject"
+  Maturity maturity = 2;
+  Permission required_permission = 3;
+  bool mutating = 4;
+  bool idempotent = 5;          // safe to retry without an idempotency key
+}

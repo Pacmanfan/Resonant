@@ -1,0 +1,67 @@
+syntax = "proto3";
+package resonant.v1;
+
+import "resonant/v1/arrays/array.proto";
+import "resonant/v1/common/metadata.proto";
+import "resonant/v1/common/spatial.proto";
+import "resonant/v1/common/validation.proto";
+import "resonant/v1/emitters/emitter.proto";
+
+message CreateArrayRequest {
+  RequestHeader header = 1;
+  string name = 2;
+  Transform local_transform = 3;
+  string parent_id = 4;
+  // Unset fields keep the defaults (a linear array of 8 elements 4.3 mm apart, 40 kHz).
+  ArrayLayout layout = 5;              // UNSPECIFIED: linear
+  optional int32 count_x = 6;
+  optional int32 count_y = 7;
+  optional double spacing_x_meters = 8;
+  optional double spacing_y_meters = 9;
+  optional double radius_meters = 10;
+  SourceSettingsPatch element_defaults = 11;
+}
+message CreateArrayResponse { ResponseHeader header = 1; AcousticArray array = 2; ChangeSummary changes = 3; }
+
+message GetArrayRequest { RequestHeader header = 1; string object_id = 2; }
+message GetArrayResponse { ResponseHeader header = 1; AcousticArray array = 2; }
+
+message SetArrayExcitationRequest {
+  RequestHeader header = 1;
+  string object_id = 2;
+  optional uint64 expected_revision = 3;
+  repeated ElementExcitation elements = 4;
+  bool clear_other_overrides = 5;     // elements not listed return to the defaults
+}
+message SetArrayExcitationResponse { ResponseHeader header = 1; AcousticArray array = 2; ChangeSummary changes = 3; }
+
+enum FocusControl {
+  FOCUS_CONTROL_UNSPECIFIED = 0;
+  FOCUS_CONTROL_PHASE = 1;          // narrowband phases (valid at one frequency)
+  FOCUS_CONTROL_TIME_DELAY = 2;     // true time delays
+}
+
+// Sets the element phases (or delays) so the waves arrive in phase at a target object or a point.
+message FocusArrayRequest {
+  RequestHeader header = 1;
+  string object_id = 2;
+  optional uint64 expected_revision = 3;
+  oneof focus {
+    string target_object_id = 4;
+    Vector3Meters point_world_meters = 5;
+  }
+  FocusControl control = 6;
+}
+message FocusArrayResponse { ResponseHeader header = 1; AcousticArray array = 2; ChangeSummary changes = 3; }
+
+// Acoustic arrays: layout, per-element excitation, focusing.
+service ArrayService {
+  // Adds an acoustic array: a layout of elements sharing default source settings.
+  rpc CreateArray(CreateArrayRequest) returns (CreateArrayResponse);
+  // An array with its layout and every element's position and effective settings.
+  rpc GetArray(GetArrayRequest) returns (GetArrayResponse);
+  // Sets per-element phase, amplitude, delay or activity (overrides of the defaults).
+  rpc SetArrayExcitation(SetArrayExcitationRequest) returns (SetArrayExcitationResponse);
+  // Steers the array to focus on a point or an object, by narrowband phases or true time delays.
+  rpc FocusArray(FocusArrayRequest) returns (FocusArrayResponse);
+}

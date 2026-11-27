@@ -15,5 +15,9 @@ LIBS += $$OUT_PWD/../../src/hardware/libresonant_hardware.a $$OUT_PWD/../../src/
 PRE_TARGETDEPS += $$OUT_PWD/../../src/hardware/libresonant_hardware.a $$OUT_PWD/../../src/core/libresonant_core.a \
     $$OUT_PWD/../../third_party/libresonant_gtest.a
 
+# The automation API's contract tests, when it is built.
+include(../../protobuf.pri)
+equals(RESONANT_AUTOMATION_API, 1): useAutomationApi($$OUT_PWD/../../src/automation_api)
+
 # Lets the tests find the example projects.
 DEFINES += RESONANT_SOURCE_DIR=\\\"$$clean_path($$PWD/../..)\\\"

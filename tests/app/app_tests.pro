@@ -19,5 +19,14 @@ RESONANT_LIBS = $$OUT_PWD/../../src/app/libresonant_app.a $$OUT_PWD/../../src/re
 LIBS += $$RESONANT_LIBS
 PRE_TARGETDEPS += $$RESONANT_LIBS
 
+include(../../protobuf.pri)
+equals(RESONANT_AUTOMATION_API, 1) {
+    DEFINES += RESONANT_HAVE_AUTOMATION_API
+    INCLUDEPATH += $$PWD/../../src/automation_api
+    QMAKE_CXXFLAGS += -isystem $$OUT_PWD/../../src/automation_api/generated $$RESONANT_PROTOBUF_CFLAGS
+    LIBS += $$OUT_PWD/../../src/automation_api/libresonant_automation_api.a $$OUT_PWD/../../src/core/libresonant_core.a $$RESONANT_PROTOBUF_LIBS
+    PRE_TARGETDEPS += $$OUT_PWD/../../src/automation_api/libresonant_automation_api.a
+}
+
 # Lets the tests find the example projects.
 DEFINES += RESONANT_SOURCE_DIR=\\\"$$clean_path($$PWD/../..)\\\"

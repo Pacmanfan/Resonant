@@ -16,7 +16,11 @@ src/app      Qt Widgets application as a library — main window, dock panels
              actions into core commands
 src/render   OpenGL 4.5 Core rendering — shaders, meshes on the GPU, camera,
              grid, field display; knows core data, not the application
-src/core     data model and physics — no Qt, no OpenGL
+src/automation_api  the automation API's protobuf adapter (dispatcher, local
+             endpoint); the only user of generated protobuf types; no Qt
+src/automation_host the headless automation host resonant-automation
+src/core     data model and physics — no Qt, no OpenGL; src/core/services is
+             the application service layer above the domains
 third_party  vendored GoogleTest and nlohmann-json
 tests        GoogleTest suites: tests/core (no display needed),
              tests/app (run on an offscreen platform)
@@ -49,6 +53,7 @@ A higher layer may use a lower one; never the reverse.
 | `experiments` | the domain-independent experiment framework: experiments, the hardware abstraction and simulated instruments, acquisition, calibration, measurement records and their HDF5 store, processing, spatial data, comparison, uncertainty, execution, output safety, reports, archives; the domains add the physical interpretation (`AcousticExperiments`, `MechanicalExperiments`, `RfExperiments`) (`docs/experiments/`) |
 | `optimization` | the domain-independent optimization framework: problems, design variables and derived variables, objectives, constraints, the adapter interface, algorithms (sweeps, sampling, Nelder-Mead, L-BFGS-B, differential evolution, NSGA-II, Bayesian), runs, candidates, Pareto ranking, caching, checkpoints, jobs, sensitivity, surrogates, robust and multi-fidelity evaluation, linear inverse design, persistence; the domains provide adapters (`acoustic_optimization`, `mechanics/MechanicalOptimization` with `TopologyOptimization`, `electromagnetics/EmOptimization`), registered in `coupling/OptimizationRegistry` (`docs/optimization/`) |
 | `geometry/MeshChecks` | mesh integrity, printability checks, STL and OBJ export |
+| `services` | the application services used by the GUI, Python, the protobuf adapter and MCP: one implementation per operation, the session (revisions, events, sessions and permissions, audit, idempotency, jobs and results), batches and transactions (`docs/architecture/AUTOMATION_ARCHITECTURE.md`); no domain includes it |
 | later physics domains | one module per domain, each with its own equations, property sets and solvers |
 
 ## Rendering and application (`src/render`, `src/app`)
