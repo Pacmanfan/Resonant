@@ -6,6 +6,10 @@ add_library(resonant_core STATIC ${RESONANT_CORE_SOURCES} ${RESONANT_CORE_HEADER
 target_include_directories(resonant_core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(resonant_core PUBLIC Eigen3::Eigen resonant_json Threads::Threads PRIVATE resonant_warnings)
 
+if(RESONANT_HAVE_HDF5)
+    target_compile_definitions(resonant_core PUBLIC RESONANT_HAVE_HDF5)
+    target_link_libraries(resonant_core PUBLIC PkgConfig::RESONANT_HDF5)
+endif()
 if(RESONANT_HAVE_VOLK)
     target_compile_definitions(resonant_core PUBLIC RESONANT_HAVE_VOLK)
     target_link_libraries(resonant_core PUBLIC PkgConfig::VOLK)

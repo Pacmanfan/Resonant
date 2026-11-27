@@ -31,3 +31,4 @@ Recorded in the decision that caused them:
 * The deviations of the mechanical milestone from its request are listed in ADR-000210.
 * The deviations of the electromagnetic milestone from its request are listed in ADR-000211 and `IMPLEMENTATION_STATUS.md`.
 * The deviations of the compute-backend work from its request are listed in ADR-000212.
+* The deviations of the experimental-hardware milestone from its request are listed in ADR-000213 and `IMPLEMENTATION_STATUS.md`.

@@ -1,0 +1,2428 @@
+{
+  "application": {
+    "name": "Resonant",
+    "version": "0.1.0"
+  },
+  "extensions": {
+    "experiments": {
+      "calibrations": [
+        {
+          "actuatorId": "",
+          "amplitudeRange": [
+            0.0,
+            0.0
+          ],
+          "channelId": "",
+          "dateUtc": "2026-11-27T00:00:00Z",
+          "delaySeconds": 0.0,
+          "deviceId": "",
+          "files": [],
+          "frequencyErrorPpm": 0.0,
+          "frequencyRangeHz": [
+            0.0,
+            0.0
+          ],
+          "fromSimulatedDevice": true,
+          "id": "cal-sim-load-cell",
+          "operator": "",
+          "phaseRad": 0.0,
+          "positionOffset": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "procedure": "the simulated device's model sensitivity (synthetic: it calibrates the simulated chain only)",
+          "referenceFrequencyHz": 0.0,
+          "referenceInstrument": "",
+          "response": [],
+          "responseColumns": [
+            "frequencyHz",
+            "re",
+            "im",
+            "relativeUncertainty"
+          ],
+          "scalar": 0.0225,
+          "scalarJustification": "the simulated sensor has a flat response by construction",
+          "sensorId": "load-cell",
+          "source": "simulated device model",
+          "supersedes": "",
+          "temperatureC": 0.0,
+          "temperatureRecorded": false,
+          "type": "sensor-sensitivity",
+          "uncertainty": {
+            "components": [],
+            "correlation": "components assumed uncorrelated (root-sum-square)",
+            "coverageFactor": 2.0
+          },
+          "unit": "V/N",
+          "validUntilUtc": "",
+          "version": 1
+        },
+        {
+          "actuatorId": "",
+          "amplitudeRange": [
+            0.0,
+            0.0
+          ],
+          "channelId": "",
+          "dateUtc": "2026-11-27T00:00:00Z",
+          "delaySeconds": 0.0,
+          "deviceId": "",
+          "files": [],
+          "frequencyErrorPpm": 0.0,
+          "frequencyRangeHz": [
+            0.0,
+            0.0
+          ],
+          "fromSimulatedDevice": true,
+          "id": "cal-sim-acc-1",
+          "operator": "",
+          "phaseRad": 0.0,
+          "positionOffset": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "procedure": "the simulated device's model sensitivity (synthetic: it calibrates the simulated chain only)",
+          "referenceFrequencyHz": 0.0,
+          "referenceInstrument": "",
+          "response": [],
+          "responseColumns": [
+            "frequencyHz",
+            "re",
+            "im",
+            "relativeUncertainty"
+          ],
+          "scalar": 0.0102,
+          "scalarJustification": "the simulated sensor has a flat response by construction",
+          "sensorId": "acc-1",
+          "source": "simulated device model",
+          "supersedes": "",
+          "temperatureC": 0.0,
+          "temperatureRecorded": false,
+          "type": "sensor-sensitivity",
+          "uncertainty": {
+            "components": [],
+            "correlation": "components assumed uncorrelated (root-sum-square)",
+            "coverageFactor": 2.0
+          },
+          "unit": "V/m/s^2",
+          "validUntilUtc": "",
+          "version": 1
+        },
+        {
+          "actuatorId": "",
+          "amplitudeRange": [
+            0.0,
+            0.0
+          ],
+          "channelId": "",
+          "dateUtc": "2026-11-27T00:00:00Z",
+          "delaySeconds": 0.0,
+          "deviceId": "",
+          "files": [],
+          "frequencyErrorPpm": 0.0,
+          "frequencyRangeHz": [
+            0.0,
+            0.0
+          ],
+          "fromSimulatedDevice": true,
+          "id": "cal-sim-acc-2",
+          "operator": "",
+          "phaseRad": 0.0,
+          "positionOffset": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "procedure": "the simulated device's model sensitivity (synthetic: it calibrates the simulated chain only)",
+          "referenceFrequencyHz": 0.0,
+          "referenceInstrument": "",
+          "response": [],
+          "responseColumns": [
+            "frequencyHz",
+            "re",
+            "im",
+            "relativeUncertainty"
+          ],
+          "scalar": 0.0102,
+          "scalarJustification": "the simulated sensor has a flat response by construction",
+          "sensorId": "acc-2",
+          "source": "simulated device model",
+          "supersedes": "",
+          "temperatureC": 0.0,
+          "temperatureRecorded": false,
+          "type": "sensor-sensitivity",
+          "uncertainty": {
+            "components": [],
+            "correlation": "components assumed uncorrelated (root-sum-square)",
+            "coverageFactor": 2.0
+          },
+          "unit": "V/m/s^2",
+          "validUntilUtc": "",
+          "version": 1
+        },
+        {
+          "actuatorId": "",
+          "amplitudeRange": [
+            0.0,
+            0.0
+          ],
+          "channelId": "",
+          "dateUtc": "2026-11-27T00:00:00Z",
+          "delaySeconds": 0.0,
+          "deviceId": "",
+          "files": [],
+          "frequencyErrorPpm": 0.0,
+          "frequencyRangeHz": [
+            0.0,
+            0.0
+          ],
+          "fromSimulatedDevice": true,
+          "id": "cal-sim-acc-3",
+          "operator": "",
+          "phaseRad": 0.0,
+          "positionOffset": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "procedure": "the simulated device's model sensitivity (synthetic: it calibrates the simulated chain only)",
+          "referenceFrequencyHz": 0.0,
+          "referenceInstrument": "",
+          "response": [],
+          "responseColumns": [
+            "frequencyHz",
+            "re",
+            "im",
+            "relativeUncertainty"
+          ],
+          "scalar": 0.0102,
+          "scalarJustification": "the simulated sensor has a flat response by construction",
+          "sensorId": "acc-3",
+          "source": "simulated device model",
+          "supersedes": "",
+          "temperatureC": 0.0,
+          "temperatureRecorded": false,
+          "type": "sensor-sensitivity",
+          "uncertainty": {
+            "components": [],
+            "correlation": "components assumed uncorrelated (root-sum-square)",
+            "coverageFactor": 2.0
+          },
+          "unit": "V/m/s^2",
+          "validUntilUtc": "",
+          "version": 1
+        }
+      ],
+      "comparisons": [],
+      "experiments": [
+        {
+          "acquisition": {
+            "blockFrames": 1024,
+            "centerFrequencyHz": 0.0,
+            "clipFraction": 0.999,
+            "durationSeconds": 16.0,
+            "format": "float32",
+            "gainDb": 0.0,
+            "maxBackpressureSeconds": 2.0,
+            "mode": "finite",
+            "queueBlocks": 64,
+            "recordToDisk": true,
+            "repetitions": 1,
+            "sampleRateHz": 8192.0
+          },
+          "actuators": [
+            {
+              "calibrationId": "",
+              "category": "shaker",
+              "commandQuantity": "voltage",
+              "delaySeconds": 0.0,
+              "domain": "mechanical",
+              "id": "shaker",
+              "maxCommandAmplitude": 5.0,
+              "name": "Electrodynamic shaker",
+              "outputQuantity": "force",
+              "pose": {
+                "direction": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "frame": "scene",
+                "orientationUncertaintyDeg": 0.0,
+                "position": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "positionUncertainty": 0.0
+              },
+              "ratedBandHz": [
+                5.0,
+                3000.0
+              ],
+              "status": "ok"
+            }
+          ],
+          "annotations": [],
+          "channels": [
+            {
+              "actuatorId": "",
+              "calibrationId": "",
+              "channelId": "ai0",
+              "deviceId": "sim:daq-4x1",
+              "direction": "input",
+              "externalGain": 1.0,
+              "id": "ch-force",
+              "reference": true,
+              "sensorId": "load-cell"
+            },
+            {
+              "actuatorId": "",
+              "calibrationId": "",
+              "channelId": "ai1",
+              "deviceId": "sim:daq-4x1",
+              "direction": "input",
+              "externalGain": 1.0,
+              "id": "ch-acc-1",
+              "reference": false,
+              "sensorId": "acc-1"
+            },
+            {
+              "actuatorId": "",
+              "calibrationId": "",
+              "channelId": "ai2",
+              "deviceId": "sim:daq-4x1",
+              "direction": "input",
+              "externalGain": 1.0,
+              "id": "ch-acc-2",
+              "reference": false,
+              "sensorId": "acc-2"
+            },
+            {
+              "actuatorId": "",
+              "calibrationId": "",
+              "channelId": "ai3",
+              "deviceId": "sim:daq-4x1",
+              "direction": "input",
+              "externalGain": 1.0,
+              "id": "ch-acc-3",
+              "reference": false,
+              "sensorId": "acc-3"
+            },
+            {
+              "actuatorId": "shaker",
+              "calibrationId": "",
+              "channelId": "ao0",
+              "deviceId": "sim:daq-4x1",
+              "direction": "output",
+              "externalGain": 1.0,
+              "id": "ch-shaker",
+              "reference": false,
+              "sensorId": ""
+            }
+          ],
+          "description": "Random excitation through a shaker; force at the drive point and acceleration at three points; accelerance FRFs (H1) from which the resonances are identified.",
+          "devices": {
+            "sim:daq-4x1": {
+              "blockFrames": 1024,
+              "centerFrequencyHz": 0.0,
+              "clockSource": "internal",
+              "format": "float32",
+              "gainDb": 0.0,
+              "inputChannels": [],
+              "options": {},
+              "outputChannels": [],
+              "sampleRateHz": 8192.0,
+              "triggerSource": "immediate"
+            }
+          },
+          "domain": "mechanical",
+          "environment": {
+            "notes": "",
+            "pressurePa": 0.0,
+            "recorded": false,
+            "relativeHumidity": 0.0,
+            "temperatureC": 20.0
+          },
+          "history": [],
+          "id": "ex-exp-modal",
+          "name": "Structural modal test",
+          "notes": "",
+          "positionerDeviceId": "",
+          "positions": {
+            "axisU": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "axisV": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "axisW": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "center": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "count": 0,
+            "end": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "frame": "scene",
+            "kind": "fixed",
+            "nu": 0,
+            "nv": 0,
+            "nw": 1,
+            "origin": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "plane": "azimuth",
+            "points": [],
+            "positionUncertainty": 0.0,
+            "radius": 1.0,
+            "source": "",
+            "start": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "startDeg": 0.0,
+            "stepDeg": 10.0,
+            "stopDeg": 360.0
+          },
+          "probeBindingId": "",
+          "processing": [
+            {
+              "description": "",
+              "operation": "calibrate",
+              "parameters": {
+                "bindings": [
+                  "ch-force",
+                  "ch-acc-1",
+                  "ch-acc-2",
+                  "ch-acc-3"
+                ]
+              }
+            },
+            {
+              "description": "",
+              "operation": "transfer-function",
+              "parameters": {
+                "bindings": [
+                  "ch-acc-1",
+                  "ch-acc-2",
+                  "ch-acc-3"
+                ],
+                "overlap": 0.5,
+                "reference": "ch-force",
+                "segmentLength": 16384,
+                "window": "hann"
+              }
+            }
+          ],
+          "projectId": "ex-exp-mechanical",
+          "requireCalibration": false,
+          "resultIds": [],
+          "revision": 1,
+          "safety": {
+            "allowedOutputChannels": [
+              "ch-shaker"
+            ],
+            "amplitudeUnit": "V",
+            "exposureWarningSplDb": 85.0,
+            "maxDurationSeconds": 60.0,
+            "maxDutyCycle": 1.0,
+            "maxFrequencyHz": 4096.0,
+            "maxOutputAmplitude": 2.0,
+            "maxTransmitPowerDbm": -1000.0,
+            "minFrequencyHz": 0.0,
+            "regulatoryNote": "",
+            "requireInterlock": false
+          },
+          "sensors": [
+            {
+              "calibrationId": "cal-sim-load-cell",
+              "category": "load-cell",
+              "domain": "mechanical",
+              "dynamicRange": [
+                0.0,
+                0.0
+              ],
+              "frequencyResponse": "",
+              "id": "load-cell",
+              "measures": "force",
+              "name": "Force transducer (stinger)",
+              "noiseFloor": 0.0,
+              "nominalSensitivity": 0.0225,
+              "pose": {
+                "direction": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "frame": "scene",
+                "orientationUncertaintyDeg": 0.0,
+                "position": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "positionUncertainty": 0.0
+              },
+              "status": "ok",
+              "uncertainty": {
+                "components": [],
+                "correlation": "components assumed uncorrelated (root-sum-square)",
+                "coverageFactor": 2.0
+              },
+              "unit": "N"
+            },
+            {
+              "calibrationId": "cal-sim-acc-1",
+              "category": "accelerometer",
+              "domain": "mechanical",
+              "dynamicRange": [
+                0.0,
+                0.0
+              ],
+              "frequencyResponse": "",
+              "id": "acc-1",
+              "measures": "acceleration",
+              "name": "Accelerometer 1",
+              "noiseFloor": 0.0,
+              "nominalSensitivity": 0.0102,
+              "pose": {
+                "direction": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "frame": "scene",
+                "orientationUncertaintyDeg": 0.0,
+                "position": [
+                  0.1,
+                  0.0,
+                  0.0
+                ],
+                "positionUncertainty": 0.0
+              },
+              "status": "ok",
+              "uncertainty": {
+                "components": [],
+                "correlation": "components assumed uncorrelated (root-sum-square)",
+                "coverageFactor": 2.0
+              },
+              "unit": "m/s^2"
+            },
+            {
+              "calibrationId": "cal-sim-acc-2",
+              "category": "accelerometer",
+              "domain": "mechanical",
+              "dynamicRange": [
+                0.0,
+                0.0
+              ],
+              "frequencyResponse": "",
+              "id": "acc-2",
+              "measures": "acceleration",
+              "name": "Accelerometer 2",
+              "noiseFloor": 0.0,
+              "nominalSensitivity": 0.0102,
+              "pose": {
+                "direction": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "frame": "scene",
+                "orientationUncertaintyDeg": 0.0,
+                "position": [
+                  0.25,
+                  0.0,
+                  0.0
+                ],
+                "positionUncertainty": 0.0
+              },
+              "status": "ok",
+              "uncertainty": {
+                "components": [],
+                "correlation": "components assumed uncorrelated (root-sum-square)",
+                "coverageFactor": 2.0
+              },
+              "unit": "m/s^2"
+            },
+            {
+              "calibrationId": "cal-sim-acc-3",
+              "category": "accelerometer",
+              "domain": "mechanical",
+              "dynamicRange": [
+                0.0,
+                0.0
+              ],
+              "frequencyResponse": "",
+              "id": "acc-3",
+              "measures": "acceleration",
+              "name": "Accelerometer 3",
+              "noiseFloor": 0.0,
+              "nominalSensitivity": 0.0102,
+              "pose": {
+                "direction": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "frame": "scene",
+                "orientationUncertaintyDeg": 0.0,
+                "position": [
+                  0.4,
+                  0.0,
+                  0.0
+                ],
+                "positionUncertainty": 0.0
+              },
+              "status": "ok",
+              "uncertainty": {
+                "components": [],
+                "correlation": "components assumed uncorrelated (root-sum-square)",
+                "coverageFactor": 2.0
+              },
+              "unit": "m/s^2"
+            }
+          ],
+          "state": "draft",
+          "stimulus": {
+            "amplitude": 1.0,
+            "channelDelaySeconds": {},
+            "channelGain": {},
+            "durationSeconds": 16.0,
+            "dutyCycle": 1.0,
+            "endHz": 2000.0,
+            "fadeSeconds": 0.05,
+            "kind": "white-noise",
+            "outputBindings": [
+              "ch-shaker"
+            ],
+            "powerDbm": -1000.0,
+            "seed": 1,
+            "startHz": 5.0
+          },
+          "sweep": {
+            "ifBandwidthHz": 1000.0,
+            "points": 201,
+            "ports": [
+              1
+            ],
+            "powerDbm": -10.0,
+            "startHz": 0.0,
+            "stopHz": 0.0
+          },
+          "sweepDeviceId": "",
+          "synchronization": {
+            "channelDelayCorrection": {},
+            "clockDomains": [],
+            "phaseSensitive": true,
+            "strategy": "single-device",
+            "timingCalibrationIds": []
+          },
+          "templateId": "mechanical.modal-test",
+          "trigger": {
+            "kind": "immediate",
+            "level": 0.0,
+            "preTriggerSeconds": 0.0,
+            "risingEdge": true,
+            "source": "",
+            "timeoutSeconds": 10.0
+          }
+        },
+        {
+          "acquisition": {
+            "blockFrames": 1024,
+            "centerFrequencyHz": 0.0,
+            "clipFraction": 0.999,
+            "durationSeconds": 4.0,
+            "format": "float32",
+            "gainDb": 0.0,
+            "maxBackpressureSeconds": 2.0,
+            "mode": "finite",
+            "queueBlocks": 64,
+            "recordToDisk": true,
+            "repetitions": 1,
+            "sampleRateHz": 8192.0
+          },
+          "actuators": [
+            {
+              "calibrationId": "",
+              "category": "shaker",
+              "commandQuantity": "voltage",
+              "delaySeconds": 0.0,
+              "domain": "mechanical",
+              "id": "shaker",
+              "maxCommandAmplitude": 5.0,
+              "name": "Electrodynamic shaker",
+              "outputQuantity": "force",
+              "pose": {
+                "direction": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "frame": "scene",
+                "orientationUncertaintyDeg": 0.0,
+                "position": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "positionUncertainty": 0.0
+              },
+              "ratedBandHz": [
+                5.0,
+                3000.0
+              ],
+              "status": "ok"
+            }
+          ],
+          "annotations": [],
+          "channels": [
+            {
+              "actuatorId": "",
+              "calibrationId": "",
+              "channelId": "ai0",
+              "deviceId": "sim:daq-4x1",
+              "direction": "input",
+              "externalGain": 1.0,
+              "id": "ch-force",
+              "reference": true,
+              "sensorId": "load-cell"
+            },
+            {
+              "actuatorId": "",
+              "calibrationId": "",
+              "channelId": "ai1",
+              "deviceId": "sim:daq-4x1",
+              "direction": "input",
+              "externalGain": 1.0,
+              "id": "ch-acc-1",
+              "reference": false,
+              "sensorId": "acc-1"
+            },
+            {
+              "actuatorId": "",
+              "calibrationId": "",
+              "channelId": "ai2",
+              "deviceId": "sim:daq-4x1",
+              "direction": "input",
+              "externalGain": 1.0,
+              "id": "ch-acc-2",
+              "reference": false,
+              "sensorId": "acc-2"
+            },
+            {
+              "actuatorId": "",
+              "calibrationId": "",
+              "channelId": "ai3",
+              "deviceId": "sim:daq-4x1",
+              "direction": "input",
+              "externalGain": 1.0,
+              "id": "ch-acc-3",
+              "reference": false,
+              "sensorId": "acc-3"
+            },
+            {
+              "actuatorId": "shaker",
+              "calibrationId": "",
+              "channelId": "ao0",
+              "deviceId": "sim:daq-4x1",
+              "direction": "output",
+              "externalGain": 1.0,
+              "id": "ch-shaker",
+              "reference": false,
+              "sensorId": ""
+            }
+          ],
+          "description": "A controlled sinusoidal excitation; the acceleration amplitude and phase at three points relative to the measured force.",
+          "devices": {
+            "sim:daq-4x1": {
+              "blockFrames": 1024,
+              "centerFrequencyHz": 0.0,
+              "clockSource": "internal",
+              "format": "float32",
+              "gainDb": 0.0,
+              "inputChannels": [],
+              "options": {},
+              "outputChannels": [],
+              "sampleRateHz": 8192.0,
+              "triggerSource": "immediate"
+            }
+          },
+          "domain": "mechanical",
+          "environment": {
+            "notes": "",
+            "pressurePa": 0.0,
+            "recorded": false,
+            "relativeHumidity": 0.0,
+            "temperatureC": 20.0
+          },
+          "history": [],
+          "id": "ex-exp-vibration",
+          "name": "Vibration characterization",
+          "notes": "",
+          "positionerDeviceId": "",
+          "positions": {
+            "axisU": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "axisV": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "axisW": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "center": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "count": 0,
+            "end": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "frame": "scene",
+            "kind": "fixed",
+            "nu": 0,
+            "nv": 0,
+            "nw": 1,
+            "origin": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "plane": "azimuth",
+            "points": [],
+            "positionUncertainty": 0.0,
+            "radius": 1.0,
+            "source": "",
+            "start": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "startDeg": 0.0,
+            "stepDeg": 10.0,
+            "stopDeg": 360.0
+          },
+          "probeBindingId": "",
+          "processing": [
+            {
+              "description": "",
+              "operation": "segment",
+              "parameters": {
+                "durationSeconds": 2.0,
+                "startSeconds": 1.0
+              }
+            },
+            {
+              "description": "",
+              "operation": "tone",
+              "parameters": {
+                "frequencyHz": 120.0,
+                "window": "hann"
+              }
+            }
+          ],
+          "projectId": "ex-exp-mechanical",
+          "requireCalibration": false,
+          "resultIds": [],
+          "revision": 1,
+          "safety": {
+            "allowedOutputChannels": [
+              "ch-shaker"
+            ],
+            "amplitudeUnit": "V",
+            "exposureWarningSplDb": 85.0,
+            "maxDurationSeconds": 60.0,
+            "maxDutyCycle": 1.0,
+            "maxFrequencyHz": 2000.0,
+            "maxOutputAmplitude": 2.0,
+            "maxTransmitPowerDbm": -1000.0,
+            "minFrequencyHz": 5.0,
+            "regulatoryNote": "",
+            "requireInterlock": false
+          },
+          "sensors": [
+            {
+              "calibrationId": "cal-sim-load-cell",
+              "category": "load-cell",
+              "domain": "mechanical",
+              "dynamicRange": [
+                0.0,
+                0.0
+              ],
+              "frequencyResponse": "",
+              "id": "load-cell",
+              "measures": "force",
+              "name": "Force transducer (stinger)",
+              "noiseFloor": 0.0,
+              "nominalSensitivity": 0.0225,
+              "pose": {
+                "direction": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "frame": "scene",
+                "orientationUncertaintyDeg": 0.0,
+                "position": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "positionUncertainty": 0.0
+              },
+              "status": "ok",
+              "uncertainty": {
+                "components": [],
+                "correlation": "components assumed uncorrelated (root-sum-square)",
+                "coverageFactor": 2.0
+              },
+              "unit": "N"
+            },
+            {
+              "calibrationId": "cal-sim-acc-1",
+              "category": "accelerometer",
+              "domain": "mechanical",
+              "dynamicRange": [
+                0.0,
+                0.0
+              ],
+              "frequencyResponse": "",
+              "id": "acc-1",
+              "measures": "acceleration",
+              "name": "Accelerometer 1",
+              "noiseFloor": 0.0,
+              "nominalSensitivity": 0.0102,
+              "pose": {
+                "direction": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "frame": "scene",
+                "orientationUncertaintyDeg": 0.0,
+                "position": [
+                  0.1,
+                  0.0,
+                  0.0
+                ],
+                "positionUncertainty": 0.0
+              },
+              "status": "ok",
+              "uncertainty": {
+                "components": [],
+                "correlation": "components assumed uncorrelated (root-sum-square)",
+                "coverageFactor": 2.0
+              },
+              "unit": "m/s^2"
+            },
+            {
+              "calibrationId": "cal-sim-acc-2",
+              "category": "accelerometer",
+              "domain": "mechanical",
+              "dynamicRange": [
+                0.0,
+                0.0
+              ],
+              "frequencyResponse": "",
+              "id": "acc-2",
+              "measures": "acceleration",
+              "name": "Accelerometer 2",
+              "noiseFloor": 0.0,
+              "nominalSensitivity": 0.0102,
+              "pose": {
+                "direction": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "frame": "scene",
+                "orientationUncertaintyDeg": 0.0,
+                "position": [
+                  0.25,
+                  0.0,
+                  0.0
+                ],
+                "positionUncertainty": 0.0
+              },
+              "status": "ok",
+              "uncertainty": {
+                "components": [],
+                "correlation": "components assumed uncorrelated (root-sum-square)",
+                "coverageFactor": 2.0
+              },
+              "unit": "m/s^2"
+            },
+            {
+              "calibrationId": "cal-sim-acc-3",
+              "category": "accelerometer",
+              "domain": "mechanical",
+              "dynamicRange": [
+                0.0,
+                0.0
+              ],
+              "frequencyResponse": "",
+              "id": "acc-3",
+              "measures": "acceleration",
+              "name": "Accelerometer 3",
+              "noiseFloor": 0.0,
+              "nominalSensitivity": 0.0102,
+              "pose": {
+                "direction": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "frame": "scene",
+                "orientationUncertaintyDeg": 0.0,
+                "position": [
+                  0.4,
+                  0.0,
+                  0.0
+                ],
+                "positionUncertainty": 0.0
+              },
+              "status": "ok",
+              "uncertainty": {
+                "components": [],
+                "correlation": "components assumed uncorrelated (root-sum-square)",
+                "coverageFactor": 2.0
+              },
+              "unit": "m/s^2"
+            }
+          ],
+          "state": "draft",
+          "stimulus": {
+            "amplitude": 0.5,
+            "channelDelaySeconds": {},
+            "channelGain": {},
+            "durationSeconds": 4.0,
+            "dutyCycle": 1.0,
+            "endHz": 120.0,
+            "fadeSeconds": 0.01,
+            "kind": "sine",
+            "outputBindings": [
+              "ch-shaker"
+            ],
+            "powerDbm": -1000.0,
+            "seed": 1,
+            "startHz": 120.0
+          },
+          "sweep": {
+            "ifBandwidthHz": 1000.0,
+            "points": 201,
+            "ports": [
+              1
+            ],
+            "powerDbm": -10.0,
+            "startHz": 0.0,
+            "stopHz": 0.0
+          },
+          "sweepDeviceId": "",
+          "synchronization": {
+            "channelDelayCorrection": {},
+            "clockDomains": [],
+            "phaseSensitive": true,
+            "strategy": "single-device",
+            "timingCalibrationIds": []
+          },
+          "templateId": "mechanical.vibration-characterization",
+          "trigger": {
+            "kind": "immediate",
+            "level": 0.0,
+            "preTriggerSeconds": 0.0,
+            "risingEdge": true,
+            "source": "",
+            "timeoutSeconds": 10.0
+          }
+        },
+        {
+          "acquisition": {
+            "blockFrames": 1024,
+            "centerFrequencyHz": 0.0,
+            "clipFraction": 0.999,
+            "durationSeconds": 8.0,
+            "format": "float32",
+            "gainDb": 0.0,
+            "maxBackpressureSeconds": 2.0,
+            "mode": "finite",
+            "queueBlocks": 64,
+            "recordToDisk": true,
+            "repetitions": 1,
+            "sampleRateHz": 8192.0
+          },
+          "actuators": [
+            {
+              "calibrationId": "",
+              "category": "shaker",
+              "commandQuantity": "voltage",
+              "delaySeconds": 0.0,
+              "domain": "mechanical",
+              "id": "shaker",
+              "maxCommandAmplitude": 5.0,
+              "name": "Electrodynamic shaker",
+              "outputQuantity": "force",
+              "pose": {
+                "direction": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "frame": "scene",
+                "orientationUncertaintyDeg": 0.0,
+                "position": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "positionUncertainty": 0.0
+              },
+              "ratedBandHz": [
+                5.0,
+                3000.0
+              ],
+              "status": "ok"
+            }
+          ],
+          "annotations": [],
+          "channels": [
+            {
+              "actuatorId": "",
+              "calibrationId": "",
+              "channelId": "ai0",
+              "deviceId": "sim:daq-4x1",
+              "direction": "input",
+              "externalGain": 1.0,
+              "id": "ch-force",
+              "reference": true,
+              "sensorId": "load-cell"
+            },
+            {
+              "actuatorId": "",
+              "calibrationId": "",
+              "channelId": "ai1",
+              "deviceId": "sim:daq-4x1",
+              "direction": "input",
+              "externalGain": 1.0,
+              "id": "ch-acc-1",
+              "reference": false,
+              "sensorId": "acc-1"
+            },
+            {
+              "actuatorId": "",
+              "calibrationId": "",
+              "channelId": "ai2",
+              "deviceId": "sim:daq-4x1",
+              "direction": "input",
+              "externalGain": 1.0,
+              "id": "ch-acc-2",
+              "reference": false,
+              "sensorId": "acc-2"
+            },
+            {
+              "actuatorId": "",
+              "calibrationId": "",
+              "channelId": "ai3",
+              "deviceId": "sim:daq-4x1",
+              "direction": "input",
+              "externalGain": 1.0,
+              "id": "ch-acc-3",
+              "reference": false,
+              "sensorId": "acc-3"
+            },
+            {
+              "actuatorId": "shaker",
+              "calibrationId": "",
+              "channelId": "ao0",
+              "deviceId": "sim:daq-4x1",
+              "direction": "output",
+              "externalGain": 1.0,
+              "id": "ch-shaker",
+              "reference": false,
+              "sensorId": ""
+            }
+          ],
+          "description": "The shaker's transfer function from drive voltage to force (measured with the load cell): commanded output against physical output.",
+          "devices": {
+            "sim:daq-4x1": {
+              "blockFrames": 1024,
+              "centerFrequencyHz": 0.0,
+              "clockSource": "internal",
+              "format": "float32",
+              "gainDb": 0.0,
+              "inputChannels": [],
+              "options": {},
+              "outputChannels": [],
+              "sampleRateHz": 8192.0,
+              "triggerSource": "immediate"
+            }
+          },
+          "domain": "mechanical",
+          "environment": {
+            "notes": "",
+            "pressurePa": 0.0,
+            "recorded": false,
+            "relativeHumidity": 0.0,
+            "temperatureC": 20.0
+          },
+          "history": [],
+          "id": "ex-exp-shaker",
+          "name": "Shaker calibration",
+          "notes": "",
+          "positionerDeviceId": "",
+          "positions": {
+            "axisU": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "axisV": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "axisW": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "center": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "count": 0,
+            "end": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "frame": "scene",
+            "kind": "fixed",
+            "nu": 0,
+            "nv": 0,
+            "nw": 1,
+            "origin": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "plane": "azimuth",
+            "points": [],
+            "positionUncertainty": 0.0,
+            "radius": 1.0,
+            "source": "",
+            "start": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "startDeg": 0.0,
+            "stepDeg": 10.0,
+            "stopDeg": 360.0
+          },
+          "probeBindingId": "",
+          "processing": [
+            {
+              "description": "",
+              "operation": "calibrate",
+              "parameters": {
+                "bindings": [
+                  "ch-force"
+                ]
+              }
+            },
+            {
+              "description": "",
+              "operation": "transfer-function",
+              "parameters": {
+                "bindings": [
+                  "ch-force"
+                ],
+                "overlap": 0.5,
+                "reference": "ch-shaker",
+                "segmentLength": 4096,
+                "window": "hann"
+              }
+            }
+          ],
+          "projectId": "ex-exp-mechanical",
+          "requireCalibration": false,
+          "resultIds": [],
+          "revision": 1,
+          "safety": {
+            "allowedOutputChannels": [
+              "ch-shaker"
+            ],
+            "amplitudeUnit": "V",
+            "exposureWarningSplDb": 85.0,
+            "maxDurationSeconds": 60.0,
+            "maxDutyCycle": 1.0,
+            "maxFrequencyHz": 2000.0,
+            "maxOutputAmplitude": 2.0,
+            "maxTransmitPowerDbm": -1000.0,
+            "minFrequencyHz": 5.0,
+            "regulatoryNote": "",
+            "requireInterlock": false
+          },
+          "sensors": [
+            {
+              "calibrationId": "cal-sim-load-cell",
+              "category": "load-cell",
+              "domain": "mechanical",
+              "dynamicRange": [
+                0.0,
+                0.0
+              ],
+              "frequencyResponse": "",
+              "id": "load-cell",
+              "measures": "force",
+              "name": "Force transducer (stinger)",
+              "noiseFloor": 0.0,
+              "nominalSensitivity": 0.0225,
+              "pose": {
+                "direction": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "frame": "scene",
+                "orientationUncertaintyDeg": 0.0,
+                "position": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "positionUncertainty": 0.0
+              },
+              "status": "ok",
+              "uncertainty": {
+                "components": [],
+                "correlation": "components assumed uncorrelated (root-sum-square)",
+                "coverageFactor": 2.0
+              },
+              "unit": "N"
+            },
+            {
+              "calibrationId": "cal-sim-acc-1",
+              "category": "accelerometer",
+              "domain": "mechanical",
+              "dynamicRange": [
+                0.0,
+                0.0
+              ],
+              "frequencyResponse": "",
+              "id": "acc-1",
+              "measures": "acceleration",
+              "name": "Accelerometer 1",
+              "noiseFloor": 0.0,
+              "nominalSensitivity": 0.0102,
+              "pose": {
+                "direction": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "frame": "scene",
+                "orientationUncertaintyDeg": 0.0,
+                "position": [
+                  0.1,
+                  0.0,
+                  0.0
+                ],
+                "positionUncertainty": 0.0
+              },
+              "status": "ok",
+              "uncertainty": {
+                "components": [],
+                "correlation": "components assumed uncorrelated (root-sum-square)",
+                "coverageFactor": 2.0
+              },
+              "unit": "m/s^2"
+            },
+            {
+              "calibrationId": "cal-sim-acc-2",
+              "category": "accelerometer",
+              "domain": "mechanical",
+              "dynamicRange": [
+                0.0,
+                0.0
+              ],
+              "frequencyResponse": "",
+              "id": "acc-2",
+              "measures": "acceleration",
+              "name": "Accelerometer 2",
+              "noiseFloor": 0.0,
+              "nominalSensitivity": 0.0102,
+              "pose": {
+                "direction": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "frame": "scene",
+                "orientationUncertaintyDeg": 0.0,
+                "position": [
+                  0.25,
+                  0.0,
+                  0.0
+                ],
+                "positionUncertainty": 0.0
+              },
+              "status": "ok",
+              "uncertainty": {
+                "components": [],
+                "correlation": "components assumed uncorrelated (root-sum-square)",
+                "coverageFactor": 2.0
+              },
+              "unit": "m/s^2"
+            },
+            {
+              "calibrationId": "cal-sim-acc-3",
+              "category": "accelerometer",
+              "domain": "mechanical",
+              "dynamicRange": [
+                0.0,
+                0.0
+              ],
+              "frequencyResponse": "",
+              "id": "acc-3",
+              "measures": "acceleration",
+              "name": "Accelerometer 3",
+              "noiseFloor": 0.0,
+              "nominalSensitivity": 0.0102,
+              "pose": {
+                "direction": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "frame": "scene",
+                "orientationUncertaintyDeg": 0.0,
+                "position": [
+                  0.4,
+                  0.0,
+                  0.0
+                ],
+                "positionUncertainty": 0.0
+              },
+              "status": "ok",
+              "uncertainty": {
+                "components": [],
+                "correlation": "components assumed uncorrelated (root-sum-square)",
+                "coverageFactor": 2.0
+              },
+              "unit": "m/s^2"
+            }
+          ],
+          "state": "draft",
+          "stimulus": {
+            "amplitude": 1.0,
+            "channelDelaySeconds": {},
+            "channelGain": {},
+            "durationSeconds": 8.0,
+            "dutyCycle": 1.0,
+            "endHz": 2000.0,
+            "fadeSeconds": 0.01,
+            "kind": "log-sweep",
+            "outputBindings": [
+              "ch-shaker"
+            ],
+            "powerDbm": -1000.0,
+            "seed": 1,
+            "startHz": 10.0
+          },
+          "sweep": {
+            "ifBandwidthHz": 1000.0,
+            "points": 201,
+            "ports": [
+              1
+            ],
+            "powerDbm": -10.0,
+            "startHz": 0.0,
+            "stopHz": 0.0
+          },
+          "sweepDeviceId": "",
+          "synchronization": {
+            "channelDelayCorrection": {},
+            "clockDomains": [],
+            "phaseSensitive": true,
+            "strategy": "single-device",
+            "timingCalibrationIds": []
+          },
+          "templateId": "mechanical.actuator-calibration",
+          "trigger": {
+            "kind": "immediate",
+            "level": 0.0,
+            "preTriggerSeconds": 0.0,
+            "risingEdge": true,
+            "source": "",
+            "timeoutSeconds": 10.0
+          }
+        }
+      ],
+      "measurements": [],
+      "spatial": [],
+      "version": 1
+    }
+  },
+  "format": "resonant-project",
+  "materials": [
+    {
+      "description": "Dry air near 20 degrees C at sea-level pressure (example).",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Both depend on temperature, pressure and humidity.",
+            "value": 1.204
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Both depend on temperature, pressure and humidity.",
+            "value": 343.0
+          }
+        },
+        "electromagnetic": {
+          "conductivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 0.0
+          },
+          "relativePermeability": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 1.0
+          },
+          "relativePermittivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 1.0006
+          }
+        }
+      },
+      "id": "mat-air",
+      "name": "Air"
+    },
+    {
+      "description": "Fresh water near 20 degrees C (example).",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Sound speed depends on temperature, salinity and pressure.",
+            "value": 998.0
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Sound speed depends on temperature, salinity and pressure.",
+            "value": 1482.0
+          }
+        },
+        "electromagnetic": {
+          "conductivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Static permittivity; strongly frequency dependent. Conductivity varies by orders of magnitude with dissolved ions.",
+            "value": 0.005
+          },
+          "relativePermeability": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Static permittivity; strongly frequency dependent. Conductivity varies by orders of magnitude with dissolved ions.",
+            "value": 1.0
+          },
+          "relativePermittivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Static permittivity; strongly frequency dependent. Conductivity varies by orders of magnitude with dissolved ions.",
+            "value": 80.0
+          }
+        }
+      },
+      "id": "mat-water",
+      "name": "Water"
+    },
+    {
+      "description": "Generic aluminum (example); alloys differ.",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 2700.0
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 6320.0
+          }
+        },
+        "electromagnetic": {
+          "conductivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Relative permittivity is not a meaningful quantity for a good conductor; 1 is a placeholder.",
+            "value": 35000000.0
+          },
+          "relativePermeability": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Relative permittivity is not a meaningful quantity for a good conductor; 1 is a placeholder.",
+            "value": 1.0
+          },
+          "relativePermittivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Relative permittivity is not a meaningful quantity for a good conductor; 1 is a placeholder.",
+            "value": 1.0
+          }
+        },
+        "mechanical": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 2700.0
+          },
+          "poissonsRatio": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 0.33
+          },
+          "youngsModulus": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 69000000000.0
+          }
+        }
+      },
+      "id": "mat-aluminum",
+      "name": "Aluminum"
+    },
+    {
+      "description": "Generic carbon steel (example); grades differ widely.",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 7850.0
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 5900.0
+          }
+        },
+        "electromagnetic": {
+          "conductivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Permeability of steel varies from about 1 (austenitic stainless) to thousands and is nonlinear; 100 is only a placeholder. Relative permittivity is a placeholder.",
+            "value": 6000000.0
+          },
+          "relativePermeability": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Permeability of steel varies from about 1 (austenitic stainless) to thousands and is nonlinear; 100 is only a placeholder. Relative permittivity is a placeholder.",
+            "value": 100.0
+          },
+          "relativePermittivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Permeability of steel varies from about 1 (austenitic stainless) to thousands and is nonlinear; 100 is only a placeholder. Relative permittivity is a placeholder.",
+            "value": 1.0
+          }
+        },
+        "mechanical": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 7850.0
+          },
+          "poissonsRatio": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 0.29
+          },
+          "youngsModulus": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 200000000000.0
+          }
+        }
+      },
+      "id": "mat-steel",
+      "name": "Steel"
+    },
+    {
+      "description": "Generic copper (example).",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 8960.0
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 4760.0
+          }
+        },
+        "electromagnetic": {
+          "conductivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Relative permittivity is not a meaningful quantity for a good conductor; 1 is a placeholder.",
+            "value": 58000000.0
+          },
+          "relativePermeability": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Relative permittivity is not a meaningful quantity for a good conductor; 1 is a placeholder.",
+            "value": 1.0
+          },
+          "relativePermittivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Relative permittivity is not a meaningful quantity for a good conductor; 1 is a placeholder.",
+            "value": 1.0
+          }
+        },
+        "mechanical": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 8960.0
+          },
+          "poissonsRatio": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 0.34
+          },
+          "youngsModulus": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 117000000000.0
+          }
+        }
+      },
+      "id": "mat-copper",
+      "name": "Copper"
+    },
+    {
+      "description": "Generic soda-lime glass (example).",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 2500.0
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 5600.0
+          }
+        },
+        "electromagnetic": {
+          "conductivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Permittivity depends on composition and frequency.",
+            "value": 1e-12
+          },
+          "relativePermeability": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Permittivity depends on composition and frequency.",
+            "value": 1.0
+          },
+          "relativePermittivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Permittivity depends on composition and frequency.",
+            "value": 6.0
+          }
+        },
+        "mechanical": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 2500.0
+          },
+          "poissonsRatio": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 0.22
+          },
+          "youngsModulus": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 70000000000.0
+          }
+        }
+      },
+      "id": "mat-glass",
+      "name": "Glass"
+    },
+    {
+      "description": "Generic cast acrylic, PMMA (example).",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 1180.0
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 2730.0
+          }
+        },
+        "electromagnetic": {
+          "conductivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Permittivity depends on frequency.",
+            "value": 1e-14
+          },
+          "relativePermeability": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Permittivity depends on frequency.",
+            "value": 1.0
+          },
+          "relativePermittivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Permittivity depends on frequency.",
+            "value": 3.0
+          }
+        },
+        "mechanical": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Polymers are viscoelastic: stiffness depends on frequency and temperature.",
+            "value": 1180.0
+          },
+          "poissonsRatio": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Polymers are viscoelastic: stiffness depends on frequency and temperature.",
+            "value": 0.37
+          },
+          "youngsModulus": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Polymers are viscoelastic: stiffness depends on frequency and temperature.",
+            "value": 3200000000.0
+          }
+        }
+      },
+      "id": "mat-acrylic",
+      "name": "Acrylic"
+    },
+    {
+      "description": "Generic structural concrete (example); mixes differ widely.",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 2400.0
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 3700.0
+          }
+        },
+        "mechanical": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 2400.0
+          },
+          "poissonsRatio": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 0.2
+          },
+          "youngsModulus": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 30000000000.0
+          }
+        }
+      },
+      "id": "mat-concrete",
+      "name": "Concrete"
+    },
+    {
+      "description": "Generic soft rubber (example); compounds differ by orders of magnitude.",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Longitudinal bulk-wave speed; rubber is strongly lossy and frequency dependent.",
+            "value": 1100.0
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Longitudinal bulk-wave speed; rubber is strongly lossy and frequency dependent.",
+            "value": 1600.0
+          }
+        },
+        "mechanical": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Stiffness varies by orders of magnitude between compounds and with frequency.",
+            "value": 1100.0
+          },
+          "poissonsRatio": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Stiffness varies by orders of magnitude between compounds and with frequency.",
+            "value": 0.49
+          },
+          "youngsModulus": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Stiffness varies by orders of magnitude between compounds and with frequency.",
+            "value": 5000000.0
+          }
+        }
+      },
+      "id": "mat-rubber",
+      "name": "Rubber"
+    },
+    {
+      "description": "Generic softwood along the grain (example); wood is anisotropic.",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Along the grain; across the grain the speed is several times lower.",
+            "value": 500.0
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Along the grain; across the grain the speed is several times lower.",
+            "value": 3300.0
+          }
+        },
+        "mechanical": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Along the grain; wood is orthotropic and a single modulus is a simplification.",
+            "value": 500.0
+          },
+          "poissonsRatio": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Along the grain; wood is orthotropic and a single modulus is a simplification.",
+            "value": 0.3
+          },
+          "youngsModulus": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Along the grain; wood is orthotropic and a single modulus is a simplification.",
+            "value": 10000000000.0
+          }
+        }
+      },
+      "id": "mat-wood",
+      "name": "Wood"
+    },
+    {
+      "description": "Generic austenitic stainless steel, 304 type (example).",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 8000.0
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 5790.0
+          }
+        },
+        "electromagnetic": {
+          "conductivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Austenitic grades are nearly non-magnetic; cold work raises the permeability. Relative permittivity is a placeholder.",
+            "value": 1400000.0
+          },
+          "relativePermeability": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Austenitic grades are nearly non-magnetic; cold work raises the permeability. Relative permittivity is a placeholder.",
+            "value": 1.0
+          },
+          "relativePermittivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Austenitic grades are nearly non-magnetic; cold work raises the permeability. Relative permittivity is a placeholder.",
+            "value": 1.0
+          }
+        },
+        "mechanical": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Typical handbook value for annealed austenitic grades; cold work and grade change it.",
+            "value": 8000.0
+          },
+          "poissonsRatio": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Typical handbook value for annealed austenitic grades; cold work and grade change it.",
+            "value": 0.29
+          },
+          "youngsModulus": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Typical handbook value for annealed austenitic grades; cold work and grade change it.",
+            "value": 193000000000.0
+          }
+        }
+      },
+      "id": "mat-stainless-steel",
+      "name": "Stainless steel"
+    },
+    {
+      "description": "Generic yellow brass (example); compositions differ.",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 8500.0
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 4700.0
+          }
+        },
+        "electromagnetic": {
+          "conductivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Relative permittivity is not a meaningful quantity for a good conductor; 1 is a placeholder.",
+            "value": 15000000.0
+          },
+          "relativePermeability": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Relative permittivity is not a meaningful quantity for a good conductor; 1 is a placeholder.",
+            "value": 1.0
+          },
+          "relativePermittivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Relative permittivity is not a meaningful quantity for a good conductor; 1 is a placeholder.",
+            "value": 1.0
+          }
+        },
+        "mechanical": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Varies with zinc content and temper.",
+            "value": 8500.0
+          },
+          "poissonsRatio": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Varies with zinc content and temper.",
+            "value": 0.34
+          },
+          "youngsModulus": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Varies with zinc content and temper.",
+            "value": 100000000000.0
+          }
+        }
+      },
+      "id": "mat-brass",
+      "name": "Brass"
+    },
+    {
+      "description": "Generic Ti-6Al-4V titanium alloy (example).",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 4430.0
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 6100.0
+          }
+        },
+        "electromagnetic": {
+          "conductivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Relative permittivity is a placeholder.",
+            "value": 580000.0
+          },
+          "relativePermeability": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Relative permittivity is a placeholder.",
+            "value": 1.0
+          },
+          "relativePermittivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Relative permittivity is a placeholder.",
+            "value": 1.0
+          }
+        },
+        "mechanical": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Typical value for annealed Ti-6Al-4V; heat treatment and texture change it.",
+            "value": 4430.0
+          },
+          "poissonsRatio": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Typical value for annealed Ti-6Al-4V; heat treatment and texture change it.",
+            "value": 0.34
+          },
+          "youngsModulus": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Typical value for annealed Ti-6Al-4V; heat treatment and texture change it.",
+            "value": 114000000000.0
+          }
+        }
+      },
+      "id": "mat-titanium",
+      "name": "Titanium alloy"
+    },
+    {
+      "description": "Generic acrylonitrile butadiene styrene, moulded (example).",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 1050.0
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 2250.0
+          }
+        },
+        "mechanical": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Polymers are viscoelastic: stiffness depends on frequency, temperature and grade.",
+            "value": 1050.0
+          },
+          "poissonsRatio": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Polymers are viscoelastic: stiffness depends on frequency, temperature and grade.",
+            "value": 0.35
+          },
+          "youngsModulus": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Polymers are viscoelastic: stiffness depends on frequency, temperature and grade.",
+            "value": 2200000000.0
+          }
+        }
+      },
+      "id": "mat-abs",
+      "name": "ABS"
+    },
+    {
+      "description": "Generic polylactic acid, bulk (example).",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 1240.0
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 2200.0
+          }
+        },
+        "mechanical": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Bulk value. 3D-printed parts are porous and anisotropic (layer direction, infill) and much softer than this; polymers are viscoelastic.",
+            "value": 1240.0
+          },
+          "poissonsRatio": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Bulk value. 3D-printed parts are porous and anisotropic (layer direction, infill) and much softer than this; polymers are viscoelastic.",
+            "value": 0.36
+          },
+          "youngsModulus": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Bulk value. 3D-printed parts are porous and anisotropic (layer direction, infill) and much softer than this; polymers are viscoelastic.",
+            "value": 3500000000.0
+          }
+        }
+      },
+      "id": "mat-pla",
+      "name": "PLA"
+    },
+    {
+      "description": "Generic polyamide 6, dry as moulded (example).",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 1140.0
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 2600.0
+          }
+        },
+        "mechanical": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Dry value: absorbed moisture lowers the modulus by up to half. Viscoelastic.",
+            "value": 1140.0
+          },
+          "poissonsRatio": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Dry value: absorbed moisture lowers the modulus by up to half. Viscoelastic.",
+            "value": 0.39
+          },
+          "youngsModulus": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Dry value: absorbed moisture lowers the modulus by up to half. Viscoelastic.",
+            "value": 2700000000.0
+          }
+        }
+      },
+      "id": "mat-nylon",
+      "name": "Nylon"
+    },
+    {
+      "description": "Generic polycarbonate (example).",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 1200.0
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 2270.0
+          }
+        },
+        "electromagnetic": {
+          "conductivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Permittivity depends on frequency.",
+            "value": 1e-14
+          },
+          "relativePermeability": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Permittivity depends on frequency.",
+            "value": 1.0
+          },
+          "relativePermittivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Permittivity depends on frequency.",
+            "value": 2.9
+          }
+        },
+        "mechanical": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Polymers are viscoelastic: stiffness depends on frequency and temperature.",
+            "value": 1200.0
+          },
+          "poissonsRatio": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Polymers are viscoelastic: stiffness depends on frequency and temperature.",
+            "value": 0.37
+          },
+          "youngsModulus": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Polymers are viscoelastic: stiffness depends on frequency and temperature.",
+            "value": 2400000000.0
+          }
+        }
+      },
+      "id": "mat-polycarbonate",
+      "name": "Polycarbonate"
+    },
+    {
+      "description": "Generic 96 % alumina ceramic (example).",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 3720.0
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 9800.0
+          }
+        },
+        "electromagnetic": {
+          "conductivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Permittivity depends on purity and frequency.",
+            "value": 1e-12
+          },
+          "relativePermeability": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Permittivity depends on purity and frequency.",
+            "value": 1.0
+          },
+          "relativePermittivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Permittivity depends on purity and frequency.",
+            "value": 9.0
+          }
+        },
+        "mechanical": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Depends strongly on purity and porosity.",
+            "value": 3720.0
+          },
+          "poissonsRatio": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Depends strongly on purity and porosity.",
+            "value": 0.21
+          },
+          "youngsModulus": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Depends strongly on purity and porosity.",
+            "value": 300000000000.0
+          }
+        }
+      },
+      "id": "mat-alumina",
+      "name": "Alumina ceramic"
+    }
+  ],
+  "project": {
+    "createdUtc": "2026-11-27T00:00:00Z",
+    "id": "ex-exp-mechanical",
+    "modifiedUtc": "2026-11-27T00:00:00Z",
+    "name": "Mechanical experiments (simulated devices)"
+  },
+  "scene": {
+    "objects": []
+  },
+  "schemaVersion": 1,
+  "simulations": [],
+  "units": {
+    "angle": "rad",
+    "axes": "right-handed; X horizontal, Y depth, Z vertical (up)",
+    "frequency": "Hz",
+    "length": "m",
+    "mass": "kg",
+    "rotation": "intrinsic Z-Y-X Euler angles stored as [x, y, z]",
+    "time": "s"
+  }
+}

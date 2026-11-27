@@ -15,6 +15,8 @@ EIGEN_INCLUDES = $$system(pkg-config --cflags-only-I eigen3)
 QMAKE_CXXFLAGS += $$replace(EIGEN_INCLUDES, -I, -isystem )
 
 include($$PWD/acceleration.pri)
+include($$PWD/hdf5.pri)
+include($$PWD/hardware.pri)
 
 # Qt 6.4's moc cannot parse the C++20 syntax in libstdc++ 13 headers
 # (<compare>, <concepts>, <numbers>, ...). moc only needs our own class

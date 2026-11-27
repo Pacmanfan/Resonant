@@ -169,6 +169,13 @@
     <addaction name="actionEvaluateEmField"/>
     <addaction name="actionRunEmFullWave"/>
    </widget>
+   <widget class="QMenu" name="menuExperiments">
+    <property name="title"><string>E&amp;xperiments</string></property>
+    <addaction name="actionShowExperiments"/>
+    <addaction name="actionDiscoverDevices"/>
+    <addaction name="separator"/>
+    <addaction name="actionEmergencyStop"/>
+   </widget>
    <widget class="QMenu" name="menuSimulation">
     <property name="title"><string>S&amp;imulation</string></property>
     <addaction name="actionRunFullWave"/>
@@ -204,6 +211,7 @@
    <addaction name="menuManipulators"/>
    <addaction name="menuMechanics"/>
    <addaction name="menuElectromagnetics"/>
+   <addaction name="menuExperiments"/>
    <addaction name="menuSimulation"/>
    <addaction name="menuTools"/>
    <addaction name="menuHelp"/>
@@ -287,6 +295,11 @@
    <property name="windowTitle"><string>Electromagnetics</string></property>
    <attribute name="dockWidgetArea"><number>2</number></attribute>
    <widget class="EmPanel" name="emPanel"/>
+  </widget>
+  <widget class="QDockWidget" name="experimentsDock">
+   <property name="windowTitle"><string>Experimental Hardware</string></property>
+   <attribute name="dockWidgetArea"><number>2</number></attribute>
+   <widget class="ExperimentsPanel" name="experimentsPanel"/>
   </widget>
   <widget class="QDockWidget" name="solverDock">
    <property name="windowTitle"><string>Full-Wave Solver</string></property>
@@ -726,6 +739,19 @@
    <property name="toolTip"><string>Add a circular array of half-wave dipoles</string></property>
    <property name="statusTip"><string>Add a circular array of half-wave dipoles</string></property>
   </action>
+  <action name="actionShowExperiments">
+   <property name="text"><string>&amp;Experimental Hardware Panel</string></property>
+   <property name="toolTip"><string>Show the experiments, devices, calibrations and measurements</string></property>
+  </action>
+  <action name="actionDiscoverDevices">
+   <property name="text"><string>&amp;Discover Devices</string></property>
+   <property name="toolTip"><string>Look for instruments (simulated and real) without blocking the application</string></property>
+  </action>
+  <action name="actionEmergencyStop">
+   <property name="text"><string>EMERGENCY &amp;STOP</string></property>
+   <property name="toolTip"><string>Stop every physical output at once (latched until reset)</string></property>
+   <property name="shortcut"><string>Ctrl+Shift+Space</string></property>
+  </action>
   <action name="actionAddEmRectangularGuide">
    <property name="text"><string>Add Rectangular &amp;Waveguide (EM)</string></property>
    <property name="toolTip"><string>Add a WR-90 rectangular waveguide</string></property>
@@ -841,6 +867,7 @@
   <customwidget><class>AnalysisPanel</class><extends>QWidget</extends><header>AnalysisPanel.h</header><container>1</container></customwidget>
   <customwidget><class>MechanicsPanel</class><extends>QWidget</extends><header>MechanicsPanel.h</header><container>1</container></customwidget>
   <customwidget><class>EmPanel</class><extends>QWidget</extends><header>EmPanel.h</header><container>1</container></customwidget>
+  <customwidget><class>ExperimentsPanel</class><extends>QWidget</extends><header>ExperimentsPanel.h</header><container>1</container></customwidget>
   <customwidget><class>FdtdPanel</class><extends>QWidget</extends><header>FdtdPanel.h</header><container>1</container></customwidget>
   <customwidget><class>AcousticsPanel</class><extends>QWidget</extends><header>AcousticsPanel.h</header><container>1</container></customwidget>
  </customwidgets>

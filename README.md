@@ -32,8 +32,10 @@ discover is something you can trust.
 * **Radio waves and antennas** — dipoles, monopoles and loops with their
   impedance, gain and patterns; phased arrays you can steer and taper;
   waveguides; near fields; Maxwell's equations solved on a grid.
-* **Coming next** — experiments with real hardware, optimization, Python
-  scripting and guided demonstrations.
+* **Real measurements** — experiments with microphones, accelerometers and
+  radios (or simulated instruments), calibration, and measured fields set
+  beside the simulation; outputs only ever start when you authorize them.
+* **Coming next** — optimization, Python scripting and guided demos.
 
 `IMPLEMENTATION_STATUS.md` is the honest, capability-by-capability record;
 `examples/README.md` lists ready-to-open projects for every area.

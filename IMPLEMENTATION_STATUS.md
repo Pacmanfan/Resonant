@@ -232,9 +232,35 @@ Milestones and the requests that deliver them are in
 | Threaded analytical EM fields and pattern sampling | Tested | bit-identical |
 | CUDA backend for both full-wave solvers (double precision, no FMA) | Partial | implemented and compiled (sm_75..sm_120 + PTX); GPU comparison tests skipped here because the GPU's memory was taken by another program: NOT validated yet |
 | Backend choice in the panels, plan "Runs on", refusal without a usable device, backend in results | Tested | never a silent fall-back |
-| VOLK vector kernels with plain fallbacks | Tested | used for field display magnitudes; ready for measured sample streams (request 008) |
+| VOLK vector kernels with plain fallbacks | Tested | used for field display magnitudes and complex field components |
 | Optional VOLK / CUDA in CMake and qmake; static CUDA runtime | Tested | builds without either work (stubs) |
 | Compute capabilities in Diagnostics and the startup log | Tested | |
 | Benchmark in the perf lane | Tested | figures in `docs/compute/ACCELERATION_AUDIT.md` |
 | Vendor-neutral GPU backend; single precision on the GPU | Missing | the stepper interface allows them |
 | Mechanics solvers accelerated | Missing | by decision (ADR-000212) |
+
+## Experimental hardware, measurement and calibration — `docs/requirements/experiments.md`, `docs/experiments/`
+
+| Capability | State | Notes |
+|---|---|---|
+| Domain-independent experiment framework; drivers in `resonant_hardware`; layering rules | Tested | `tools/check_layering.py` |
+| Experiment definition, templates (10), validation without hardware, persistence in the project | Tested | run-time states not saved |
+| Hardware abstraction, capabilities, statuses, asynchronous discovery | Tested | |
+| Simulated instruments (audio interface, vibration DAQ, RF receiver, signal generator, VNA, positioner) with fault injection | Tested | data marked generated, not measured |
+| Asynchronous acquisition: bounded queue, backpressure, gaps as NaN, clipping, timestamps, device errors, live view | Tested | |
+| Measurement records and the HDF5 / binary store next to the project (exclusive, read-only) | Tested | HDF5 1.10 here |
+| Calibration records, append-only library, frequency-dependent application, procedures | Tested | calibrator, comparison, channel-to-channel, actuator, ultrasonic and RF arrays |
+| Processing: 17 explicit operations, deterministic ids, reproduction from archives | Tested | Welch, H1 with coherence, filters, resampling, delay |
+| Spatial scans and plane reconstruction with coverage flags | Tested | inverse-distance weighting only |
+| Comparison with simulation (generic and per domain) | Tested | acoustic free field, antenna S11, modes, patterns; relative only on request |
+| Uncertainty budgets carried through calibration and processing | Tested | uncorrelated components only |
+| Execution engine (13 steps, states), background job, cancellation | Tested | |
+| Output authorization, safety limits, latched emergency stop | Tested | never saved; checked per output block |
+| HTML reports, experiment archives | Tested | |
+| Acoustic, mechanical and RF workflows; N-port Touchstone 1.1 / 2.0 | Tested | on simulated devices |
+| ALSA capture and playback | Partial | tested on the ALSA `null` device only; no physical interface was used |
+| SoapySDR | Partial | discovery and capabilities; streaming not implemented (no SDR to test) |
+| Experimental Hardware dock, Experiments menu, viewport markers, `--run-experiment` / `--authorize-output` | Tested | |
+| Level triggering; motorized positioners other than the simulated one; SCPI / VISA, UHD, libiio, PortAudio drivers | Missing | the abstraction admits them (ADR-000213) |
+| Correlated uncertainty, Monte Carlo propagation | Missing | |
+

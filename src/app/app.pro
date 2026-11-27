@@ -11,4 +11,4 @@ INCLUDEPATH += $$PWD $$PWD/.. $$PWD/../core
 SOURCES += $$files($$PWD/*.cpp)
 HEADERS += $$files($$PWD/*.h)
 FORMS += $$files($$PWD/forms/*.ui)
-PRE_TARGETDEPS += $$OUT_PWD/../core/libresonant_core.a $$OUT_PWD/../render/libresonant_render.a
+PRE_TARGETDEPS += $$OUT_PWD/../core/libresonant_core.a $$OUT_PWD/../hardware/libresonant_hardware.a $$OUT_PWD/../render/libresonant_render.a

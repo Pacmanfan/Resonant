@@ -14,6 +14,8 @@
 #include "EmEditor.h"
 #include "EmMarkers.h"
 #include "EmPanel.h"
+#include "ExperimentsController.h"
+#include "ExperimentsPanel.h"
 #include "MechanicsController.h"
 #include "MechanicsMarkers.h"
 #include "MechanicsPanel.h"
@@ -68,6 +70,7 @@ MainWindow::MainWindow(QWidget* parent)
     ui_->menuPanels->addAction(ui_->solverDock->toggleViewAction());
     ui_->menuPanels->addAction(ui_->mechanicsDock->toggleViewAction());
     ui_->menuPanels->addAction(ui_->emDock->toggleViewAction());
+    ui_->menuPanels->addAction(ui_->experimentsDock->toggleViewAction());
     ui_->menuPanels->addSeparator();
     ui_->menuPanels->addAction(ui_->fileToolBar->toggleViewAction());
     ui_->menuPanels->addAction(ui_->geometryToolBar->toggleViewAction());
@@ -109,6 +112,7 @@ MainWindow::MainWindow(QWidget* parent)
     connectFullWave();
     connectMechanics();
     connectElectromagnetics();
+    connectExperiments();
 
     unsavedChangesPrompt = [this] {
         return QMessageBox::warning(this, QStringLiteral("Unsaved changes"),
@@ -129,6 +133,7 @@ MainWindow::MainWindow(QWidget* parent)
     tabifyDockWidget(ui_->acousticsDock, ui_->solverDock);
     tabifyDockWidget(ui_->solverDock, ui_->mechanicsDock);
     tabifyDockWidget(ui_->mechanicsDock, ui_->emDock);
+    tabifyDockWidget(ui_->emDock, ui_->experimentsDock);
     ui_->propertiesDock->raise();
     resizeDocks({ui_->sceneDock, ui_->propertiesDock}, {280, 380}, Qt::Horizontal);
     resizeDocks({ui_->analysisDock}, {220}, Qt::Vertical);
@@ -487,6 +492,36 @@ void MainWindow::connectMechanics()
 EmPanel& MainWindow::emPanel()
 {
     return *ui_->emPanel;
+}
+
+ExperimentsPanel& MainWindow::experimentsPanel()
+{
+    return *ui_->experimentsPanel;
+}
+
+void MainWindow::connectExperiments()
+{
+    experiments_ = new ExperimentsController(controller_, this);
+    ui_->experimentsPanel->setController(experiments_);
+    const auto showPanel = [this] {
+        ui_->experimentsDock->show();
+        ui_->experimentsDock->raise();
+    };
+    connect(ui_->actionShowExperiments, &QAction::triggered, this, showPanel);
+    connect(ui_->actionDiscoverDevices, &QAction::triggered, this, [this, showPanel] {
+        showPanel();
+        experiments_->discoverDevices();
+    });
+    connect(ui_->actionEmergencyStop, &QAction::triggered, this, [this] { ui_->experimentsPanel->emergencyStop(); });
+    // Sensors, actuators, scan positions and measured points of the selected experiment.
+    const auto updateMarkers = [this] {
+        ui_->viewport->setExtraItems(experiments_->markers(ui_->experimentsPanel->selectedExperiment()));
+    };
+    connect(experiments_, &ExperimentsController::markersChanged, this, updateMarkers);
+    connect(ui_->experimentsPanel, &ExperimentsPanel::selectedExperimentChanged, this, updateMarkers);
+    connect(experiments_, &ExperimentsController::runFinished, this, [this](const QString& message) {
+        statusBar()->showMessage(tr("Experiment: %1").arg(message), 8000);
+    });
 }
 
 void MainWindow::connectElectromagnetics()

@@ -31,6 +31,10 @@ public:
     // lines drawn with it (its undeformed outline). Null clears both.
     void setScalarMesh(std::shared_ptr<const resonant::render::ScalarMesh> mesh, std::vector<resonant::render::LineItem> lines = {});
     const resonant::render::ScalarMesh* scalarMesh() const;
+    // Extra solids drawn with the scene (experiment sensors, actuators and
+    // measured points); not pickable.
+    void setExtraItems(std::vector<resonant::render::DrawItem> items);
+    size_t extraItemCount() const { return extraItems_.size(); }
     bool graphicsReady() const { return renderer_.isInitialized(); }
     QString graphicsError() const { return graphicsError_; }
 
@@ -76,6 +80,7 @@ private:
     SceneRenderBridge::Frame frame_;
     bool frameStale_ = true;
     std::vector<resonant::render::LineItem> extraLines_;
+    std::vector<resonant::render::DrawItem> extraItems_;
     QString graphicsError_;
     QMetaObject::Connection contextConnection_;
 

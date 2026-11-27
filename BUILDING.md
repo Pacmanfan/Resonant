@@ -27,6 +27,9 @@ The source is published at https://github.com/Pacmanfan/Resonant
 | xvfb (optional) | any | MIT/X11 | runs the application tests without a display |
 | VOLK (optional) | 3.1.2 | LGPL-3.0 (dynamically linked) | SIMD kernels for single-precision data (display conversions, measured samples) |
 | CUDA toolkit (optional) | 13.5 | NVIDIA CUDA EULA (runtime linked statically) | the optional GPU backend of the full-wave solvers |
+| HDF5 (optional) | 1.10.10 | BSD-style (dynamically linked) | measurement data next to the project (otherwise a binary format) |
+| ALSA (optional) | 1.2.11 | LGPL-2.1 (dynamically linked) | the audio-interface driver |
+| SoapySDR (optional) | 0.8.1 | BSL-1.0 (dynamically linked) | SDR discovery |
 
 On Ubuntu 24.04:
 
@@ -39,6 +42,13 @@ Optional: `sudo apt install libvolk-dev` for VOLK, and NVIDIA's CUDA
 toolkit for the GPU backend. Both builds find them by themselves and build
 without them (`docs/compute/COMPUTE_BACKENDS.md`); the configure step
 reports `Resonant acceleration: VOLK ON|OFF, CUDA ON|OFF`.
+
+Optional measurement libraries: `sudo apt install libhdf5-dev libasound2-dev`
+(and SoapySDR from its project). The CMake configure step reports
+`Resonant measurement libraries: HDF5 ON|OFF, ALSA ON|OFF, SoapySDR ON|OFF`;
+switches `-DRESONANT_WITH_HDF5|ALSA|SOAPYSDR=OFF`, qmake `CONFIG+=no_hdf5`,
+`no_alsa`, `no_soapysdr`. The drivers are built into the separate
+`resonant_hardware` library (`docs/experiments/HARDWARE_INTEGRATIONS.md`).
 
 Nothing in the build refers to a path on a particular machine.
 

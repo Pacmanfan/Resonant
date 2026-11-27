@@ -237,7 +237,9 @@
    },
    "inputs": [
     "examples/**",
-    "acceleration.pri"
+    "acceleration.pri",
+    "hdf5.pri",
+    "hardware.pri"
    ]
   },
   {

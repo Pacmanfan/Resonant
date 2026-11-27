@@ -8,7 +8,7 @@ add_library(resonant_app STATIC ${RESONANT_APP_SOURCES} ${RESONANT_APP_HEADERS} 
 set_target_properties(resonant_app PROPERTIES AUTOUIC_SEARCH_PATHS ${CMAKE_CURRENT_SOURCE_DIR}/forms)
 target_include_directories(resonant_app PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(resonant_app
-    PUBLIC resonant_render resonant_core Qt6::Widgets Qt6::OpenGLWidgets
+    PUBLIC resonant_render resonant_hardware resonant_core Qt6::Widgets Qt6::OpenGLWidgets
     PRIVATE resonant_warnings)
 
 add_executable(resonant ${CMAKE_CURRENT_SOURCE_DIR}/../main/main.cpp)

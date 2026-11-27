@@ -62,12 +62,21 @@ void ViewportWidget::refresh()
     update();
 }
 
+void ViewportWidget::setExtraItems(std::vector<render::DrawItem> items)
+{
+    extraItems_ = std::move(items);
+    frameStale_ = true;
+    update();
+}
+
 void ViewportWidget::rebuildFrame()
 {
     if (!controller_)
         return;
     frame_ = bridge_.build(controller_->scene(), controller_->selection());
-    renderer_.meshes().setItems(frame_.items);
+    std::vector<render::DrawItem> items = frame_.items;
+    items.insert(items.end(), extraItems_.begin(), extraItems_.end());
+    renderer_.meshes().setItems(items);
     std::vector<render::LineItem> lines = frame_.lines;
     lines.insert(lines.end(), extraLines_.begin(), extraLines_.end());
     renderer_.lines().setLines(lines);

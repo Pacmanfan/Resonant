@@ -8,6 +8,8 @@
 #include "MechanicsController.h"
 #include "EmController.h"
 #include "EmPanel.h"
+#include "ExperimentsController.h"
+#include "ExperimentsPanel.h"
 #include "MechanicsPanel.h"
 #include "ViewportWidget.h"
 #include "foundation/Log.h"
@@ -60,6 +62,18 @@ int main(int argc, char** argv)
                        "shows the 3D pattern of its first antenna or array, 'full-wave' runs the Yee solver on its first region."),
         QStringLiteral("what"));
     parser.addOption(runEmOption);
+    const QCommandLineOption runExperimentOption(
+        QStringLiteral("run-experiment"),
+        QStringLiteral("After opening the (saved) project: run its experiment with this id (or its first experiment for 'first'). "
+                       "An experiment with physical outputs runs only with --authorize-output."),
+        QStringLiteral("id"));
+    parser.addOption(runExperimentOption);
+    const QCommandLineOption authorizeOutputOption(
+        QStringLiteral("authorize-output"),
+        QStringLiteral("Authorize the physical outputs of the --run-experiment run, as this operator (an explicit act: outputs are never "
+                       "started without it)."),
+        QStringLiteral("operator"));
+    parser.addOption(authorizeOutputOption);
     parser.process(application);
 
     int result = 0;
@@ -144,8 +158,36 @@ int main(int argc, char** argv)
                 resonant::logError("application", "--run-em " + what.toStdString() + ": nothing suitable in the project, or it was refused ("
                                                       + panel.planText().toStdString() + ")");
         }
+        bool waitingForExperiment = false;
+        if (parser.isSet(runExperimentOption)) {
+            ExperimentsPanel& panel = window.experimentsPanel();
+            if (auto* dock = qobject_cast<QDockWidget*>(panel.parentWidget())) {
+                dock->show();
+                dock->raise();
+            }
+            const auto experiments = window.experiments().workspace().experiments;
+            std::string id = parser.value(runExperimentOption).toStdString();
+            if (id == "first" && !experiments.empty())
+                id = experiments.front().id;
+            panel.selectExperiment(id);
+            bool ready = panel.selectedExperiment() == id;
+            if (!ready)
+                resonant::logError("application", "--run-experiment: the project has no experiment '" + id + "'");
+            if (ready && parser.isSet(authorizeOutputOption))
+                ready = panel.authorizeSelected(parser.value(authorizeOutputOption));
+            if (ready)
+                waitingForExperiment = panel.runSelected();
+            if (!waitingForExperiment)
+                resonant::logError("application", "--run-experiment: " + panel.statusText().toStdString());
+            else
+                QObject::connect(&window.experiments(), &ExperimentsController::runFinished, &window, [](const QString& message) {
+                    resonant::logInfo("application", "--run-experiment: " + message.toStdString());
+                });
+        }
         if (parser.isSet(screenshotOption)) {
-            if (waitingForEm)
+            if (waitingForExperiment)
+                QObject::connect(&window.experiments(), &ExperimentsController::runFinished, &window, capture);
+            else if (waitingForEm)
                 QObject::connect(&window.electromagnetics(), &EmController::resultsChanged, &window, capture);
             else if (waitingForMechanics)
                 QObject::connect(&window.mechanics(), &MechanicsController::resultsChanged, &window, capture);

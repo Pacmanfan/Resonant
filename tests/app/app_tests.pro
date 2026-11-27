@@ -15,7 +15,7 @@ QMAKE_CXXFLAGS += -isystem $$PWD/../../third_party/googletest/include
 SOURCES += $$files($$PWD/*.cpp)
 
 RESONANT_LIBS = $$OUT_PWD/../../src/app/libresonant_app.a $$OUT_PWD/../../src/render/libresonant_render.a \
-    $$OUT_PWD/../../src/core/libresonant_core.a $$OUT_PWD/../../third_party/libresonant_gtest.a
+    $$OUT_PWD/../../src/hardware/libresonant_hardware.a $$OUT_PWD/../../src/core/libresonant_core.a $$OUT_PWD/../../third_party/libresonant_gtest.a
 LIBS += $$RESONANT_LIBS
 PRE_TARGETDEPS += $$RESONANT_LIBS
 

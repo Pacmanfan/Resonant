@@ -1,0 +1,417 @@
+{
+  "request_id": "REQ-CHAT-20261126-008",
+  "source": "chat",
+  "type": "FEATURE",
+  "priority": "NORMAL",
+  "created": "2026-11-26T15:47:24-05:00",
+  "created_utc": "2026-11-26T20:47:24+00:00",
+  "id_date": "2026-11-26",
+  "timezone": "EST (UTC-05:00)",
+  "status": "completed",
+  "original_text": "# PROMPT 12 \u2014 RESONANT: EXPERIMENTAL HARDWARE, MEASUREMENT ACQUISITION, CALIBRATION AND SIMULATION CORRELATION\n\nYou are continuing development of **RESONANT \u2014 Wave Field Engineering Studio**.\n\nThis milestone introduces the unified experimental measurement and hardware integration architecture.\n\nResonant must evolve beyond offline simulation. It should eventually be capable of controlling physical equipment, acquiring measurements, calibrating hardware, reconstructing real-world wave fields, and comparing measured behavior against numerical predictions.\n\nThis must be a shared experimental framework serving all three existing physics domains:\n\n1. Acoustic wave engineering.\n2. Mechanical wave engineering.\n3. Electromagnetic wave engineering.\n\nDo not create three unrelated hardware frameworks.\n\nInstead, establish a common experiment infrastructure with domain-specific instrument drivers, sensors, actuators, signal-processing pipelines, calibration models, and measurement interpretation.\n\nThe architecture must remain hardware-independent. Users must be able to design and simulate experiments without owning or connecting any physical equipment.\n\nDo not make hardware connectivity mandatory for normal application operation.\n\n---\n\n## 1. Mission and objectives\n\nImplement a unified experimental system supporting:\n\n- Experiment definition and management.\n- Hardware discovery and device registration.\n- Instrument configuration.\n- Sensor definitions.\n- Actuator definitions.\n- Measurement acquisition.\n- Signal recording.\n- Channel synchronization.\n- Hardware calibration.\n- Sensor calibration.\n- Actuator characterization.\n- Measurement preprocessing.\n- Signal analysis.\n- Spatial field reconstruction.\n- Simulation-to-measurement comparison.\n- Experimental uncertainty.\n- Measurement provenance.\n- Repeatable experiment execution.\n- Hardware-independent offline testing.\n\nThe architecture must eventually support:\n\n**Acoustic**\n- Microphones.\n- Microphone arrays.\n- Ultrasonic microphones and receivers.\n- Acoustic pressure probes.\n- Speakers.\n- Ultrasonic transducers.\n- Multichannel audio interfaces.\n- Signal generators and amplifiers.\n\n**Mechanical**\n- Accelerometers.\n- Velocity sensors.\n- Displacement sensors.\n- Strain gauges.\n- Load cells.\n- Laser vibrometers.\n- Mechanical shakers.\n- Piezoelectric actuators.\n- Multichannel data acquisition systems.\n\n**Electromagnetic**\n- Software-defined radios.\n- Vector network analyzers.\n- Spectrum analyzers.\n- Signal generators.\n- RF power meters.\n- Antenna measurement systems.\n- Near-field probes.\n- RF field-strength sensors.\n- Multichannel coherent RF receivers and transmitters.\n\nDo not attempt to implement every device driver in this milestone.\n\nEstablish the architecture, implement a small number of useful integrations where feasible, and provide simulated hardware for development and testing.\n\n## 2. Unified experiment architecture\n\nIntroduce a first-class **Experiment** object.\n\nAn experiment should contain:\n\n- Stable experiment ID.\n- Name.\n- Description.\n- Physics domain.\n- Project association.\n- Experiment configuration.\n- Hardware configuration.\n- Sensors.\n- Actuators.\n- Measurement channels.\n- Calibration references.\n- Acquisition settings.\n- Trigger configuration.\n- Synchronization configuration.\n- Spatial measurement positions.\n- Environmental conditions.\n- Safety limits.\n- Execution history.\n- Result references.\n- Notes and annotations.\n\nAn experiment must be serializable and reproducible.\n\nSupport multiple experiments inside one project.\n\nSupport experiment templates for common workflows.\n\nSeparate experiment definition from experiment execution.\n\nA user should be able to create, configure, save, inspect, and validate an experiment without connected hardware.\n\n## 3. Hardware abstraction layer\n\nImplement a hardware abstraction layer independent of Qt widgets and individual physics domains.\n\nDefine common concepts:\n\n- HardwareDevice.\n- HardwareInterface.\n- DeviceDriver.\n- DeviceCapabilities.\n- InputChannel.\n- OutputChannel.\n- ClockSource.\n- TriggerSource.\n- DeviceConfiguration.\n- DeviceStatus.\n- DeviceError.\n- AcquisitionSession.\n- OutputSession.\n\nEach hardware device must expose its capabilities.\n\nExamples:\n\n- Number of input channels.\n- Number of output channels.\n- Sample rates.\n- Supported frequencies.\n- Resolution.\n- Input ranges.\n- Output ranges.\n- Clock capabilities.\n- Trigger capabilities.\n- Synchronization capabilities.\n- Supported operating modes.\n\nDo not assume all devices support the same timing, sample rate, or synchronization model.\n\nKeep hardware drivers behind stable interfaces.\n\nThe application must not depend directly on a specific vendor SDK.\n\n## 4. Device discovery and management\n\nCreate a hardware management interface.\n\nSupport:\n\n- Device discovery.\n- Device identification.\n- Device registration.\n- Device configuration.\n- Device status.\n- Connection status.\n- Capability inspection.\n- Device disconnection.\n- Error reporting.\n- Driver version reporting.\n\nSupport different connection types:\n\n- USB.\n- Ethernet.\n- PCIe.\n- Serial.\n- Network APIs.\n- Vendor-specific SDKs.\n\nDevice discovery must be optional and must not block application startup.\n\nDo not allow a missing hardware device to prevent offline simulation.\n\nImplement clear device status states:\n\n- Disconnected.\n- Discovering.\n- Connecting.\n- Connected.\n- Configured.\n- Acquiring.\n- Transmitting.\n- Error.\n\nOnly expose states that the device driver can actually establish.\n\n## 5. Instrument driver architecture\n\nCreate a plugin-friendly instrument driver framework.\n\nEach driver should implement the relevant subset of supported capabilities.\n\nInvestigate appropriate integration options:\n\n- VISA-compatible instruments.\n- SCPI.\n- USB device APIs.\n- Vendor SDKs.\n- ALSA and PortAudio for audio.\n- SoapySDR for software-defined radios.\n- UHD where applicable.\n- libiio where applicable.\n- Network-based instrument protocols.\n- Generic serial interfaces.\n\nDo not assume a single protocol covers every instrument.\n\nFor each proposed integration, inspect:\n\n- Licensing.\n- Platform support.\n- API stability.\n- Device compatibility.\n- Dependency availability.\n- Redistribution restrictions.\n\nImplement a mock instrument driver for automated testing.\n\nDo not introduce unnecessary vendor dependencies into the core application.\n\n## 6. Sensor architecture\n\nIntroduce a first-class **Sensor** object.\n\nA sensor should contain:\n\n- Stable ID.\n- Sensor category.\n- Physics domain.\n- Position.\n- Orientation.\n- Coordinate frame.\n- Measurement type.\n- Measurement units.\n- Sensitivity.\n- Frequency response.\n- Dynamic range.\n- Noise characteristics.\n- Calibration reference.\n- Uncertainty.\n- Connected device.\n- Input channel.\n- Status.\n\nSupport point sensors and spatially distributed sensor arrays.\n\nDistinguish a physical sensor from the instrument channel that acquires its output.\n\nFor example, a microphone and its audio interface input are separate objects.\n\nSupport sensor positioning within the scene.\n\nAllow measured values to be associated with exact spatial coordinates and coordinate frames.\n\n## 7. Actuator architecture\n\nIntroduce a first-class **Actuator** object.\n\nSupport:\n\n- Physical speakers.\n- Ultrasonic transducers.\n- Mechanical shakers.\n- Piezoelectric actuators.\n- RF transmitters.\n- Antenna elements.\n- Generic controlled sources.\n\nAn actuator should contain:\n\n- Stable ID.\n- Physics domain.\n- Position.\n- Orientation.\n- Output type.\n- Operating range.\n- Frequency response.\n- Amplitude limits.\n- Phase response.\n- Delay.\n- Calibration.\n- Connected hardware.\n- Output channel.\n- Safety limits.\n\nDistinguish commanded output from actual physical output.\n\nAn output command does not guarantee that the physical actuator produces the requested field.\n\nModel the transfer characteristics between command signal and physical response.\n\n## 8. Acquisition and recording engine\n\nImplement a dedicated measurement acquisition subsystem.\n\nSupport:\n\n- Single-channel acquisition.\n- Multichannel acquisition.\n- Continuous recording.\n- Triggered recording.\n- Finite-duration acquisition.\n- Frequency sweeps.\n- Repeated acquisitions.\n- Segmented acquisition where supported.\n- Streaming acquisition.\n- Configurable buffering.\n- Data recording to disk.\n\nEach acquisition must retain:\n\n- Device identity.\n- Channel identity.\n- Sample rate.\n- Sample format.\n- Time reference.\n- Start time.\n- Duration.\n- Trigger information.\n- Calibration state.\n- Measurement units.\n- Data quality metadata.\n\nSupport common sample formats, including appropriate integer and floating-point representations.\n\nDo not silently discard samples.\n\nDetect and report:\n\n- Buffer overruns.\n- Dropped samples.\n- Clock discontinuities.\n- Invalid timestamps.\n- Clipping.\n- Saturation.\n- Device errors.\n\nAcquisition must run asynchronously without blocking the GUI.\n\n## 9. Timing and synchronization\n\nSynchronization is a critical requirement.\n\nSupport several timing models:\n\n- Independent device clocks.\n- Shared reference clocks.\n- Shared trigger signals.\n- Hardware timestamps.\n- Software timestamps.\n- Synchronized sample clocks.\n- External PPS or equivalent timing references where appropriate.\n\nRepresent clock domains explicitly.\n\nTrack:\n\n- Sample-clock frequency.\n- Clock source.\n- Reference frequency.\n- Trigger source.\n- Time offset.\n- Clock drift.\n- Synchronization uncertainty.\n\nDo not claim coherent acquisition simply because multiple devices report the same nominal sample rate.\n\nFor phase-sensitive experiments, require a suitable synchronization and calibration strategy.\n\nSupport per-channel timing correction.\n\nFor RF and phased-array experiments, prepare for shared frequency references, coherent local oscillators, and phase calibration.\n\nFor acoustic and mechanical experiments, support synchronized multichannel acquisition and output.\n\n## 10. Calibration framework\n\nImplement a unified calibration system.\n\nA calibration record should include:\n\n- Calibration ID.\n- Device.\n- Channel.\n- Sensor or actuator.\n- Calibration type.\n- Date.\n- Calibration procedure.\n- Reference instrument.\n- Calibration coefficients.\n- Frequency range.\n- Amplitude range.\n- Temperature conditions.\n- Uncertainty.\n- Validity period.\n- Operator or source metadata.\n- Calibration file references.\n\nSupport:\n\n- Amplitude calibration.\n- Phase calibration.\n- Timing calibration.\n- Frequency calibration.\n- Position calibration.\n- Orientation calibration.\n- Sensor sensitivity calibration.\n- Actuator transfer-function calibration.\n- Channel-to-channel calibration.\n\nAllow calibration data to be frequency-dependent.\n\nDo not reduce a complex frequency-dependent calibration into one scalar value unless that approximation is explicitly justified.\n\nMaintain calibration history.\n\nNever overwrite an old calibration record when a new calibration is performed.\n\nAllow the user to select which calibration applies to a particular experiment.\n\n## 11. Acoustic experimental workflows\n\nImplement acoustic-specific measurement and output models.\n\nSupport:\n\n- Microphone sensitivity.\n- Acoustic pressure.\n- Sound pressure level.\n- Frequency response.\n- Phase response.\n- Microphone position and orientation.\n- Speaker output response.\n- Ultrasonic transducer response.\n- Multichannel microphone acquisition.\n\nSupport acoustic measurements such as:\n\n- Time-domain pressure.\n- RMS pressure.\n- Frequency spectrum.\n- Phase.\n- Transfer functions.\n- Impulse response.\n- Frequency response.\n- Spatial pressure distributions.\n\nSupport acoustic experiment templates:\n\n**A. Speaker characterization**\n- Sweep a speaker.\n- Record microphone response.\n- Calculate frequency response.\n- Compare against the expected response.\n\n**B. Acoustic field mapping**\n- Move or select microphones at spatial coordinates.\n- Record pressure and phase.\n- Construct a spatial measurement map.\n\n**C. Ultrasonic array calibration**\n- Characterize each transducer.\n- Measure amplitude and phase.\n- Determine channel timing.\n- Store per-element calibration.\n\n**D. Acoustic focusing validation**\n- Configure a simulated target focus.\n- Execute a supported physical output experiment.\n- Measure pressure at target and comparison locations.\n- Compare predicted and measured results.\n\nClearly distinguish acoustic pressure measurements from calculated intensity or power.\n\n## 12. Mechanical experimental workflows\n\nImplement mechanical-specific measurement and output models.\n\nSupport:\n\n- Accelerometer sensitivity.\n- Displacement sensor calibration.\n- Velocity sensor calibration.\n- Strain measurements.\n- Force measurements.\n- Load-cell calibration.\n- Sensor orientation.\n- Mechanical actuator response.\n\nSupport measured quantities:\n\n- Displacement.\n- Velocity.\n- Acceleration.\n- Force.\n- Stress where appropriately inferred.\n- Strain.\n- Frequency response.\n- Phase.\n- Resonance.\n- Damping.\n\nDo not imply that stress can be directly measured by an ordinary accelerometer.\n\nSupport mechanical experiment templates:\n\n**A. Structural modal testing**\n- Excite a structure.\n- Record synchronized responses.\n- Calculate frequency response functions.\n- Identify resonant modes where supported.\n\n**B. Vibration characterization**\n- Apply a controlled excitation.\n- Measure acceleration or displacement.\n- Compare against simulation.\n\n**C. Mechanical actuator calibration**\n- Characterize actuator output.\n- Determine frequency response and phase.\n- Store calibration.\n\n**D. Structural vibration mapping**\n- Associate measurements with physical positions.\n- Construct spatial mode or response visualizations.\n\n## 13. Electromagnetic experimental workflows\n\nImplement RF-specific measurement models.\n\nSupport:\n\n- Complex RF samples.\n- I/Q data.\n- Frequency sweeps.\n- S-parameters.\n- Spectrum measurements.\n- RF power.\n- Antenna patterns.\n- Near-field measurements.\n- Phase measurements.\n- Channel calibration.\n\nSupport importing Touchstone files:\n\n- .s1p\n- .s2p\n- .s3p\n- .s4p\n- Higher-port formats where supported.\n\nPreserve:\n- Reference impedance.\n- Frequency units.\n- Magnitude/phase or real/imaginary representation.\n- Port ordering.\n- File metadata.\n\nPrepare for SDR integration using appropriate hardware abstraction.\n\nSupport RF experiment templates:\n\n**A. Antenna impedance measurement**\n- Import or acquire S11.\n- Display impedance.\n- Calculate return loss.\n- Calculate VSWR.\n- Compare against simulated antenna results.\n\n**B. Antenna array channel calibration**\n- Acquire per-element measurements.\n- Determine relative phase and amplitude.\n- Store calibration.\n- Apply calibration to array excitation calculations.\n\n**C. RF field mapping**\n- Associate probe measurements with spatial coordinates.\n- Display measured field distributions.\n\n**D. Antenna radiation-pattern experiment**\n- Record angular measurements.\n- Associate samples with antenna orientation.\n- Construct measured radiation patterns.\n- Compare against simulation.\n\nDo not assume an SDR provides calibrated absolute field strength.\n\nAccount for receiver gain, antenna factor, cable loss, frequency response, and other relevant measurement-chain characteristics.\n\n## 14. Measurement data model\n\nIntroduce a unified measurement representation.\n\nA measurement must include:\n\n- Stable ID.\n- Experiment ID.\n- Measurement channel.\n- Sensor ID.\n- Physics domain.\n- Quantity.\n- Units.\n- Timestamp or time base.\n- Spatial coordinates where applicable.\n- Coordinate frame.\n- Sample data reference.\n- Calibration reference.\n- Uncertainty.\n- Quality indicators.\n- Acquisition configuration.\n\nSupport both:\n\n- Time-series data.\n- Frequency-domain data.\n- Complex-valued measurements.\n- Spatial measurement datasets.\n- Scalar measurements.\n- Vector measurements.\n\nDo not force all measurements into one scalar time-series abstraction.\n\nPreserve original raw data.\n\nDerived and processed measurements must retain links to their source data and processing history.\n\n## 15. Signal processing pipeline\n\nCreate a reusable signal-processing framework.\n\nSupport:\n\n- Windowing.\n- FFT.\n- Spectral estimation.\n- Averaging.\n- Filtering.\n- Decimation.\n- Resampling.\n- Cross-correlation.\n- Autocorrelation.\n- Transfer-function estimation.\n- Phase extraction.\n- Coherence estimation.\n- Impulse-response estimation.\n\nUse appropriate algorithms for each measurement type.\n\nKeep the raw acquisition immutable.\n\nStore processing parameters and derived results separately.\n\nSupport processing chains that can be reproduced.\n\nDistinguish calibrated measurements from raw instrument readings.\n\nAvoid silently applying windowing, normalization, filtering, or unit conversions.\n\n## 16. Spatial measurement and field reconstruction\n\nIntroduce a measurement-position system.\n\nSupport:\n\n- Fixed sensor locations.\n- Manually entered coordinates.\n- Imported coordinate lists.\n- Linear measurement scans.\n- Planar scans.\n- Volumetric scans.\n- Angular measurement sweeps.\n- Probe arrays.\n\nAssociate each measurement with its actual position and orientation.\n\nImplement spatial field reconstruction appropriate to the available data.\n\nSupport:\n\n- Point-cloud visualization.\n- Measured field slices.\n- Interpolation where justified.\n- Measured-versus-simulated field comparison.\n\nClearly identify interpolated regions.\n\nDo not imply that sparse measurements constitute a fully measured continuous field.\n\nPrepare for future automated scanning systems and motorized positioning hardware.\n\n## 17. Simulation-to-measurement correlation\n\nThis is one of the most important capabilities in Resonant.\n\nImplement a unified comparison framework.\n\nAllow users to compare:\n\n- Simulated fields.\n- Measured fields.\n- Calibrated fields.\n- Reconstructed fields.\n- Multiple experiments.\n- Different calibration versions.\n\nSupport comparison metrics appropriate to the physics domain.\n\nExamples:\n\n**Acoustic**\n- Pressure magnitude error.\n- Phase error.\n- Frequency response error.\n- Focal location.\n- Focal width.\n- Sidelobe levels.\n\n**Mechanical**\n- Displacement error.\n- Acceleration error.\n- Resonance-frequency error.\n- Modal correlation.\n- Frequency response error.\n\n**Electromagnetic**\n- Complex field error.\n- Magnitude error.\n- Phase error.\n- Radiation-pattern difference.\n- S-parameter error.\n- Beam-pointing error.\n\nDo not compare incompatible quantities or units.\n\nRequire appropriate spatial, temporal, frequency, and coordinate alignment.\n\nReport uncertainty and measurement limitations.\n\n## 18. Experimental uncertainty\n\nIntroduce uncertainty representation throughout the measurement system.\n\nSupport uncertainty sources such as:\n\n- Sensor calibration.\n- Instrument accuracy.\n- Quantization.\n- Noise.\n- Position uncertainty.\n- Orientation uncertainty.\n- Clock uncertainty.\n- Temperature variation.\n- Repeatability.\n- Material uncertainty.\n\nDo not present measurements as infinitely precise.\n\nWhere feasible, propagate uncertainty into derived measurements and simulation comparisons.\n\nDistinguish:\n- Instrument specifications.\n- Calibration uncertainty.\n- Statistical uncertainty.\n- Model uncertainty.\n- Numerical simulation uncertainty.\n\nProvide clear metadata and visual indicators where uncertainty is available.\n\n## 19. Experiment execution engine\n\nImplement an asynchronous experiment execution framework.\n\nSupport a configurable workflow:\n\n1. Validate the experiment.\n2. Verify device availability.\n3. Verify hardware capabilities.\n4. Verify calibration status.\n5. Verify synchronization requirements.\n6. Check safety limits.\n7. Configure instruments.\n8. Arm triggers.\n9. Execute acquisition and permitted outputs.\n10. Record data.\n11. Verify data integrity.\n12. Process results.\n13. Generate a report.\n\nUse explicit experiment states:\n\n- Draft.\n- Validating.\n- Ready.\n- Armed.\n- Running.\n- Stopping.\n- Completed.\n- Failed.\n- Cancelled.\n\nAllow users to inspect execution progress.\n\nProvide clear error reporting and recovery.\n\nDo not silently continue after critical acquisition or synchronization failures.\n\nSupport cancellation without corrupting saved measurement data.\n\n## 20. Hardware safety and output authorization\n\nPhysical output must be explicitly controlled.\n\nImplement safety checks before enabling actuators or transmitters.\n\nSupport configurable:\n\n- Output amplitude limits.\n- Frequency limits.\n- Duty-cycle limits.\n- Duration limits.\n- Channel limits.\n- Hardware interlocks where available.\n- Emergency stop behavior.\n\nFor acoustic and ultrasonic experiments, provide appropriate exposure and equipment safety warnings.\n\nFor mechanical systems, account for actuator and structural limits.\n\nFor RF systems, provide configurable transmit-power limits and regulatory compliance warnings.\n\nDo not assume that a software warning establishes legal or regulatory compliance.\n\nDo not automatically transmit RF signals or activate physical actuators when opening a project or loading an experiment.\n\nRequire an explicit user action to authorize physical output.\n\nWhere supported, provide a prominent stop control.\n\nTreat hardware errors and loss of control communications as safety-relevant events.\n\n## 21. Experiment UI and workflow\n\nIntegrate the experiment framework into the existing Qt6 interface.\n\nCreate an **Experimental Hardware** workspace.\n\nInclude:\n\n- Device browser.\n- Device status panel.\n- Experiment hierarchy.\n- Sensor list.\n- Actuator list.\n- Channel configuration.\n- Calibration manager.\n- Acquisition controls.\n- Live measurement display.\n- Measurement browser.\n- Experiment results.\n- Simulation comparison.\n\nProvide a guided experiment setup workflow without making the interface cumbersome.\n\nAllow users to inspect all relevant hardware and measurement metadata.\n\nSupport dockable panels and saved workspace layouts.\n\nLive acquisition displays must not block the GUI.\n\n## 22. Data storage and provenance\n\nUse the existing project storage architecture.\n\nStore:\n\n- Experiment definitions.\n- Device configurations.\n- Sensor and actuator definitions.\n- Calibration records.\n- Acquisition metadata.\n- Raw measurements.\n- Derived measurements.\n- Processing histories.\n- Comparison results.\n- Experiment reports.\n\nUse HDF5 or an appropriate scientific data format for large measurement arrays.\n\nUse project metadata for relationships and configuration.\n\nNever overwrite raw measurements during processing.\n\nSupport experiment export and import.\n\nMake it possible to archive a complete experiment and reproduce its analysis without requiring the original hardware.\n\n## 23. Hardware simulation and automated testing\n\nImplement simulated hardware drivers.\n\nThe simulated devices must provide realistic interface behavior, not merely return constant values.\n\nCreate mock devices for:\n\n- Multichannel audio acquisition.\n- Microphone input.\n- Mechanical accelerometer.\n- Mechanical actuator.\n- RF receiver.\n- RF signal generator.\n- VNA measurement data.\n\nGenerate test signals with known properties.\n\nInclude:\n- Noise.\n- Frequency response.\n- Phase offset.\n- Timing offset.\n- Gain mismatch.\n- Clipping.\n- Dropped samples.\n- Device disconnection.\n- Acquisition errors.\n\nUse these devices to test synchronization, calibration, acquisition, and processing without physical equipment.\n\n## 24. Initial real hardware integrations\n\nAfter the architecture and simulated drivers are working, investigate practical integrations.\n\nPrioritize integrations based on existing project needs and development environment availability.\n\nPotential starting points:\n\n- ALSA or PortAudio for audio devices.\n- SoapySDR for SDR devices.\n- libiio for compatible RF hardware.\n- SCPI/VISA for laboratory instruments.\n- Generic file import for VNA and measurement data.\n\nDo not require all integrations to be completed in this milestone.\n\nFor each integration, document:\n- Supported hardware.\n- Required dependencies.\n- Installation requirements.\n- Licensing.\n- Platform support.\n- Tested operations.\n- Unsupported operations.\n\nDo not claim a device is supported merely because a generic protocol exists.\n\n## 25. Experiment reporting\n\nImplement experiment reports.\n\nA report should include:\n\n- Experiment description.\n- Physics domain.\n- Hardware used.\n- Device configurations.\n- Sensor and actuator details.\n- Calibration information.\n- Acquisition parameters.\n- Environmental conditions.\n- Processing methods.\n- Measurement results.\n- Simulation comparisons.\n- Uncertainty.\n- Known limitations.\n\nSupport export to a suitable document format.\n\nReports must identify raw, calibrated, processed, simulated, and reconstructed data distinctly.\n\n## 26. Performance and reliability\n\nMeasurement acquisition must be robust.\n\nSeparate:\n\n- Hardware communication.\n- Acquisition.\n- Buffer management.\n- Disk recording.\n- Processing.\n- Visualization.\n\nAvoid copying large arrays unnecessarily.\n\nUse bounded queues and explicit backpressure behavior.\n\nDo not let visualization performance determine acquisition reliability.\n\nSupport long-running experiments.\n\nMonitor:\n- Buffer occupancy.\n- Acquisition rate.\n- Disk write rate.\n- Dropped samples.\n- Device health.\n- Processing backlog.\n\nEnsure graceful handling of application shutdown and device disconnection.\n\n## 27. Documentation\n\nCreate or update:\n\n- EXPERIMENT_ARCHITECTURE.md\n- HARDWARE_ABSTRACTION.md\n- DEVICE_DRIVER_FRAMEWORK.md\n- SENSOR_AND_ACTUATOR_MODELS.md\n- MEASUREMENT_DATA_MODEL.md\n- ACQUISITION_AND_SYNCHRONIZATION.md\n- CALIBRATION_FRAMEWORK.md\n- SIGNAL_PROCESSING_PIPELINE.md\n- SPATIAL_MEASUREMENT.md\n- SIMULATION_MEASUREMENT_CORRELATION.md\n- EXPERIMENT_SAFETY.md\n- HARDWARE_INTEGRATIONS.md\n- EXPERIMENT_VALIDATION.md\n- IMPLEMENTATION_STATUS.md\n- DECISIONS.md\n\nDocument supported hardware, synchronization limitations, calibration conventions, measurement units, uncertainty, and safety assumptions.\n\n## 28. Implementation sequence\n\n**Phase A \u2014 Experiment architecture**\n- Experiment objects.\n- Measurement data model.\n- Hardware abstraction.\n- Sensor and actuator models.\n- Serialization.\n\n**Phase B \u2014 Simulated hardware**\n- Mock devices.\n- Acquisition engine.\n- Error simulation.\n- Automated tests.\n\n**Phase C \u2014 Calibration framework**\n- Calibration records.\n- Amplitude calibration.\n- Phase calibration.\n- Timing calibration.\n- Sensor and actuator response.\n\n**Phase D \u2014 Measurement acquisition**\n- Multichannel acquisition.\n- Buffer management.\n- Triggering.\n- Timestamping.\n- Recording.\n\n**Phase E \u2014 Signal processing**\n- FFT.\n- Filtering.\n- Transfer functions.\n- Cross-correlation.\n- Coherence.\n- Derived data storage.\n\n**Phase F \u2014 Spatial measurement**\n- Sensor positioning.\n- Scan definitions.\n- Spatial datasets.\n- Field reconstruction.\n\n**Phase G \u2014 Simulation correlation**\n- Measurement import.\n- Coordinate alignment.\n- Frequency alignment.\n- Comparison metrics.\n- Uncertainty.\n\n**Phase H \u2014 Domain-specific workflows**\n- Acoustic experiments.\n- Mechanical experiments.\n- RF experiments.\n\n**Phase I \u2014 Initial hardware integration**\n- Prioritized drivers.\n- Device discovery.\n- Configuration.\n- Real acquisition testing.\n\n**Phase J \u2014 Experiment execution and reporting**\n- Execution state machine.\n- Safety checks.\n- Reports.\n- Archival and reproducibility.\n\n**Phase K \u2014 Verification**\n- Automated tests.\n- Simulated-device testing.\n- Hardware testing where available.\n- Long-duration reliability tests.\n- Documentation.\n\nWork incrementally. Keep offline operation fully functional throughout development.\n\n## 29. Acceptance criteria\n\nThis milestone is complete only when:\n\n1. Experiments can be created, saved, and reopened.\n2. The hardware abstraction layer is independent of the physics domains.\n3. Sensors and actuators are represented as first-class objects.\n4. Simulated hardware can be discovered and configured.\n5. Multichannel acquisition works with simulated devices.\n6. Acquisition runs asynchronously.\n7. Raw measurements are preserved.\n8. Timing and synchronization metadata are recorded.\n9. Calibration records can be created, versioned, and applied.\n10. Frequency-dependent calibration is supported where appropriate.\n11. Measurement processing is reproducible.\n12. Spatial measurements can be visualized.\n13. Measurements can be compared with simulation results.\n14. Uncertainty and data quality are represented.\n15. Hardware failures are detected and reported.\n16. Physical output requires explicit authorization.\n17. At least one practical hardware integration is implemented if the development environment supports it.\n18. Example experiments exist for acoustic, mechanical, and electromagnetic domains.\n19. Automated tests cover acquisition, calibration, synchronization, and error handling.\n20. Existing offline simulation workflows remain fully functional.\n\n## 30. Critical development rules\n\n- Build one shared experimental framework.\n- Keep physics-specific measurement interpretation in the appropriate domain.\n- Never confuse a sensor with its acquisition channel.\n- Never confuse commanded actuator output with measured physical output.\n- Preserve raw measurements.\n- Keep calibration history.\n- Track timing and synchronization explicitly.\n- Never claim coherent acquisition without evidence.\n- Never claim absolute RF field strength without a calibrated measurement chain.\n- Never silently discard samples.\n- Do not let GUI performance compromise acquisition.\n- Do not activate physical outputs automatically.\n- Treat hardware errors as potentially safety-critical.\n- Make offline operation independent of physical hardware.\n- Preserve reproducibility and measurement provenance.\n\n**The goal is to make Resonant an experimental engineering platform: design a wave system, simulate its behavior, connect real instruments, measure the physical result, calibrate the system, reconstruct the field, and quantitatively determine how well reality matches the model.**",
+  "file": "requests/inbox/2026-11-26-prompt-12-resonant-experimenta-req-chat-20261126-008.md",
+  "attachments": [],
+  "context": "Eighth ticket, submitted by the user in chat while REQ-CHAT-20261126-002 was being processed, with the instruction to process it in order (after REQ-CHAT-20261126-007). Shared experimental framework for the acoustic (003-005), mechanical (006) and electromagnetic (007) domains. Standing operator instructions for all tickets: keep qmake support in addition to CMake; Qt user interfaces use .ui files. Safety note for whoever processes it: no physical output may be activated automatically; development and tests use simulated devices.",
+  "text_sha256": "44d902c5ba8924cf810660662fd711ba6daf0609a657001561abb6c96a6218ca",
+  "classification": {
+    "proposed_type": "FEATURE",
+    "proposed_source": "override",
+    "normalized_type": "FEATURE",
+    "heuristic_type": "FEATURE",
+    "final_type": "FEATURE",
+    "confidence": "medium",
+    "validation": "PASS",
+    "classifier_reason": "request statement is framed as feature: Implement",
+    "correction_reason": null,
+    "normalization_note": null,
+    "evidence": [
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "milestone",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This milestone introduces the unified experimental measurement and hardware integration architecture."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "introduces",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This milestone introduces the unified experimental measurement and hardware integration architecture."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "integration",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This milestone introduces the unified experimental measurement and hardware integration architecture."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "evolve",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Resonant must evolve beyond offline simulation."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "framework",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This must be a shared experimental framework serving all three existing physics domains:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not create three unrelated hardware frameworks."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "must be able",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Users must be able to design and simulate experiments without owning or connecting any physical equipment."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement a unified experimental system supporting:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not attempt to implement every device driver in this milestone."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "milestone",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not attempt to implement every device driver in this milestone."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Establish the architecture, implement a small number of useful integrations where feasible, and provide simulated hardware for development and testing."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "integrations",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Establish the architecture, implement a small number of useful integrations where feasible, and provide simulated hardware for development and testing."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "provide",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Establish the architecture, implement a small number of useful integrations where feasible, and provide simulated hardware for development and testing."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Introduce",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Introduce a first-class **Experiment** object."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "first-class",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Introduce a first-class **Experiment** object."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support multiple",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support multiple experiments inside one project."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support experiment templates for common workflows."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "should be able to",
+        "strength": "strong",
+        "note": "",
+        "sentence": "A user should be able to create, configure, save, inspect, and validate an experiment without connected hardware."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "A user should be able to create, configure, save, inspect, and validate an experiment without connected hardware."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement a hardware abstraction layer independent of Qt widgets and individual physics domains."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "must expose",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Each hardware device must expose its capabilities."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capabilities",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Each hardware device must expose its capabilities."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Create a hardware management interface."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Capability",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Capability inspection."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support different connection types:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "allow",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not allow a missing hardware device to prevent offline simulation."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement clear device status states:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "expose",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Only expose states that the device driver can actually establish."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Create a plugin-friendly instrument driver framework."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "framework",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Create a plugin-friendly instrument driver framework."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Each driver should implement the relevant subset of supported capabilities."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capabilities",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Each driver should implement the relevant subset of supported capabilities."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "integration",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Investigate appropriate integration options:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "integration",
+        "strength": "strong",
+        "note": "",
+        "sentence": "For each proposed integration, inspect:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement a mock instrument driver for automated testing."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "introduce",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not introduce unnecessary vendor dependencies into the core application."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Introduce",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Introduce a first-class **Sensor** object."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "first-class",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Introduce a first-class **Sensor** object."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support point sensors and spatially distributed sensor arrays."
+      }
+    ],
+    "scores": {
+      "FEATURE": {
+        "head": 1,
+        "body": 135
+      },
+      "BUG": {
+        "head": 0,
+        "body": 9
+      },
+      "CRASH": {
+        "head": 0,
+        "body": 0
+      },
+      "REGRESSION": {
+        "head": 0,
+        "body": 0
+      },
+      "PERFORMANCE": {
+        "head": 0,
+        "body": 4
+      },
+      "REFACTOR": {
+        "head": 0,
+        "body": 0
+      },
+      "BUILD": {
+        "head": 0,
+        "body": 0
+      },
+      "DOCUMENTATION": {
+        "head": 0,
+        "body": 3
+      },
+      "INVESTIGATION": {
+        "head": 1,
+        "body": 21
+      },
+      "PROCESS-CHANGE": {
+        "head": 0,
+        "body": 0
+      }
+    },
+    "evidence_total": 174,
+    "validator": "scripts/request_classification.py"
+  },
+  "links": {
+    "work": [
+      "WORK-000011"
+    ]
+  },
+  "commits": [],
+  "resolution": {
+    "from": "processing",
+    "to": "completed",
+    "at": "2026-11-27T06:47:04.652930+00:00",
+    "by": "agent-dev-20261126151713-76f632",
+    "gates": [
+      {
+        "work": "WORK-000011",
+        "at": "2026-11-27T06:47:04.455891+00:00",
+        "verdict": "PASS",
+        "request_fingerprint": "b6ef1a6d680f3c25d345a9e9cc9f159c9a6c71fb4e7e45c1a456be60d0c15c9b",
+        "test_runs": [
+          "20261127T013109-998624"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,2840 @@
+{
+  "application": {
+    "name": "Resonant",
+    "version": "0.1.0"
+  },
+  "extensions": {
+    "experiments": {
+      "calibrations": [
+        {
+          "actuatorId": "",
+          "amplitudeRange": [
+            0.0,
+            0.0
+          ],
+          "channelId": "",
+          "dateUtc": "2026-11-27T00:00:00Z",
+          "delaySeconds": 0.0,
+          "deviceId": "",
+          "files": [],
+          "frequencyErrorPpm": 0.0,
+          "frequencyRangeHz": [
+            0.0,
+            0.0
+          ],
+          "fromSimulatedDevice": true,
+          "id": "cal-sim-mic-1",
+          "operator": "",
+          "phaseRad": 0.0,
+          "positionOffset": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "procedure": "the simulated device's model sensitivity (synthetic: it calibrates the simulated chain only)",
+          "referenceFrequencyHz": 0.0,
+          "referenceInstrument": "",
+          "response": [],
+          "responseColumns": [
+            "frequencyHz",
+            "re",
+            "im",
+            "relativeUncertainty"
+          ],
+          "scalar": 0.0158,
+          "scalarJustification": "the simulated sensor has a flat response by construction",
+          "sensorId": "mic-1",
+          "source": "simulated device model",
+          "supersedes": "",
+          "temperatureC": 0.0,
+          "temperatureRecorded": false,
+          "type": "sensor-sensitivity",
+          "uncertainty": {
+            "components": [],
+            "correlation": "components assumed uncorrelated (root-sum-square)",
+            "coverageFactor": 2.0
+          },
+          "unit": "FS/Pa",
+          "validUntilUtc": "",
+          "version": 1
+        }
+      ],
+      "comparisons": [],
+      "experiments": [
+        {
+          "acquisition": {
+            "blockFrames": 2048,
+            "centerFrequencyHz": 0.0,
+            "clipFraction": 0.999,
+            "durationSeconds": 2.5,
+            "format": "float32",
+            "gainDb": 0.0,
+            "maxBackpressureSeconds": 2.0,
+            "mode": "finite",
+            "queueBlocks": 64,
+            "recordToDisk": true,
+            "repetitions": 1,
+            "sampleRateHz": 48000.0
+          },
+          "actuators": [
+            {
+              "calibrationId": "",
+              "category": "speaker",
+              "commandQuantity": "full-scale",
+              "delaySeconds": 0.0,
+              "domain": "acoustic",
+              "id": "spk-1",
+              "maxCommandAmplitude": 0.8,
+              "name": "Loudspeaker",
+              "outputQuantity": "pressure",
+              "pose": {
+                "direction": [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                "frame": "scene",
+                "orientationUncertaintyDeg": 0.0,
+                "position": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "positionUncertainty": 0.0
+              },
+              "ratedBandHz": [
+                50.0,
+                20000.0
+              ],
+              "status": "ok"
+            }
+          ],
+          "annotations": [],
+          "channels": [
+            {
+              "actuatorId": "",
+              "calibrationId": "",
+              "channelId": "in0",
+              "deviceId": "sim:audio-8x2",
+              "direction": "input",
+              "externalGain": 1.0,
+              "id": "ch-mic",
+              "reference": false,
+              "sensorId": "mic-1"
+            },
+            {
+              "actuatorId": "",
+              "calibrationId": "",
+              "channelId": "in7",
+              "deviceId": "sim:audio-8x2",
+              "direction": "input",
+              "externalGain": 1.0,
+              "id": "ch-ref",
+              "reference": true,
+              "sensorId": "drive-ref"
+            },
+            {
+              "actuatorId": "spk-1",
+              "calibrationId": "",
+              "channelId": "out0",
+              "deviceId": "sim:audio-8x2",
+              "direction": "output",
+              "externalGain": 1.0,
+              "id": "ch-spk",
+              "reference": false,
+              "sensorId": ""
+            }
+          ],
+          "description": "Sweep the loudspeaker, record a microphone 1 m in front of it and the electrical loopback of the drive, and estimate the frequency response (H1, microphone over drive).",
+          "devices": {
+            "sim:audio-8x2": {
+              "blockFrames": 1024,
+              "centerFrequencyHz": 0.0,
+              "clockSource": "internal",
+              "format": "float32",
+              "gainDb": 0.0,
+              "inputChannels": [],
+              "options": {
+                "micPositions": [
+                  [
+                    0.0,
+                    1.0,
+                    0.0
+                  ]
+                ]
+              },
+              "outputChannels": [],
+              "sampleRateHz": 48000.0,
+              "triggerSource": "immediate"
+            }
+          },
+          "domain": "acoustic",
+          "environment": {
+            "notes": "assumed laboratory conditions",
+            "pressurePa": 0.0,
+            "recorded": false,
+            "relativeHumidity": 0.0,
+            "temperatureC": 20.0
+          },
+          "history": [],
+          "id": "ex-exp-speaker",
+          "name": "Speaker characterization",
+          "notes": "",
+          "positionerDeviceId": "",
+          "positions": {
+            "axisU": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "axisV": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "axisW": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "center": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "count": 0,
+            "end": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "frame": "scene",
+            "kind": "fixed",
+            "nu": 0,
+            "nv": 0,
+            "nw": 1,
+            "origin": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "plane": "azimuth",
+            "points": [],
+            "positionUncertainty": 0.0,
+            "radius": 1.0,
+            "source": "",
+            "start": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "startDeg": 0.0,
+            "stepDeg": 10.0,
+            "stopDeg": 360.0
+          },
+          "probeBindingId": "",
+          "processing": [
+            {
+              "description": "",
+              "operation": "transfer-function",
+              "parameters": {
+                "bindings": [
+                  "ch-mic"
+                ],
+                "overlap": 0.5,
+                "reference": "ch-ref",
+                "segmentLength": 16384,
+                "window": "hann"
+              }
+            },
+            {
+              "description": "",
+              "operation": "calibrate",
+              "parameters": {
+                "bindings": [
+                  "ch-mic"
+                ]
+              }
+            }
+          ],
+          "projectId": "ex-exp-acoustic",
+          "requireCalibration": false,
+          "resultIds": [],
+          "revision": 1,
+          "safety": {
+            "allowedOutputChannels": [
+              "ch-spk"
+            ],
+            "amplitudeUnit": "FS",
+            "exposureWarningSplDb": 85.0,
+            "maxDurationSeconds": 30.0,
+            "maxDutyCycle": 1.0,
+            "maxFrequencyHz": 20000.0,
+            "maxOutputAmplitude": 0.5,
+            "maxTransmitPowerDbm": -1000.0,
+            "minFrequencyHz": 20.0,
+            "regulatoryNote": "",
+            "requireInterlock": false
+          },
+          "sensors": [
+            {
+              "calibrationId": "cal-sim-mic-1",
+              "category": "microphone",
+              "domain": "acoustic",
+              "dynamicRange": [
+                0.0,
+                0.0
+              ],
+              "frequencyResponse": "",
+              "id": "mic-1",
+              "measures": "pressure",
+              "name": "Measurement microphone",
+              "noiseFloor": 0.0,
+              "nominalSensitivity": 0.0,
+              "pose": {
+                "direction": [
+                  0.0,
+                  -1.0,
+                  0.0
+                ],
+                "frame": "scene",
+                "orientationUncertaintyDeg": 0.0,
+                "position": [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                "positionUncertainty": 0.0
+              },
+              "status": "ok",
+              "uncertainty": {
+                "components": [],
+                "correlation": "components assumed uncorrelated (root-sum-square)",
+                "coverageFactor": 2.0
+              },
+              "unit": "Pa"
+            },
+            {
+              "calibrationId": "",
+              "category": "generic-voltage",
+              "domain": "acoustic",
+              "dynamicRange": [
+                0.0,
+                0.0
+              ],
+              "frequencyResponse": "",
+              "id": "drive-ref",
+              "measures": "full-scale",
+              "name": "Drive loopback (electrical)",
+              "noiseFloor": 0.0,
+              "nominalSensitivity": 0.0,
+              "pose": {
+                "direction": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "frame": "scene",
+                "orientationUncertaintyDeg": 0.0,
+                "position": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "positionUncertainty": 0.0
+              },
+              "status": "ok",
+              "uncertainty": {
+                "components": [],
+                "correlation": "components assumed uncorrelated (root-sum-square)",
+                "coverageFactor": 2.0
+              },
+              "unit": "FS"
+            }
+          ],
+          "state": "draft",
+          "stimulus": {
+            "amplitude": 0.25,
+            "channelDelaySeconds": {},
+            "channelGain": {},
+            "durationSeconds": 2.0,
+            "dutyCycle": 1.0,
+            "endHz": 15000.0,
+            "fadeSeconds": 0.01,
+            "kind": "log-sweep",
+            "outputBindings": [
+              "ch-spk"
+            ],
+            "powerDbm": -1000.0,
+            "seed": 1,
+            "startHz": 50.0
+          },
+          "sweep": {
+            "ifBandwidthHz": 1000.0,
+            "points": 201,
+            "ports": [
+              1
+            ],
+            "powerDbm": -10.0,
+            "startHz": 0.0,
+            "stopHz": 0.0
+          },
+          "sweepDeviceId": "",
+          "synchronization": {
+            "channelDelayCorrection": {},
+            "clockDomains": [],
+            "phaseSensitive": false,
+            "strategy": "none",
+            "timingCalibrationIds": []
+          },
+          "templateId": "acoustic.speaker-characterization",
+          "trigger": {
+            "kind": "immediate",
+            "level": 0.0,
+            "preTriggerSeconds": 0.0,
+            "risingEdge": true,
+            "source": "",
+            "timeoutSeconds": 10.0
+          }
+        },
+        {
+          "acquisition": {
+            "blockFrames": 2048,
+            "centerFrequencyHz": 0.0,
+            "clipFraction": 0.999,
+            "durationSeconds": 1.0,
+            "format": "float32",
+            "gainDb": 0.0,
+            "maxBackpressureSeconds": 2.0,
+            "mode": "finite",
+            "queueBlocks": 64,
+            "recordToDisk": true,
+            "repetitions": 1,
+            "sampleRateHz": 48000.0
+          },
+          "actuators": [
+            {
+              "calibrationId": "",
+              "category": "speaker",
+              "commandQuantity": "full-scale",
+              "delaySeconds": 0.0,
+              "domain": "acoustic",
+              "id": "spk-1",
+              "maxCommandAmplitude": 0.8,
+              "name": "Loudspeaker",
+              "outputQuantity": "pressure",
+              "pose": {
+                "direction": [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                "frame": "scene",
+                "orientationUncertaintyDeg": 0.0,
+                "position": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "positionUncertainty": 0.0
+              },
+              "ratedBandHz": [
+                50.0,
+                20000.0
+              ],
+              "status": "ok"
+            }
+          ],
+          "annotations": [],
+          "channels": [
+            {
+              "actuatorId": "",
+              "calibrationId": "",
+              "channelId": "in0",
+              "deviceId": "sim:audio-8x2",
+              "direction": "input",
+              "externalGain": 1.0,
+              "id": "ch-mic-1",
+              "reference": false,
+              "sensorId": "mic-1"
+            },
+            {
+              "actuatorId": "",
+              "calibrationId": "",
+              "channelId": "in1",
+              "deviceId": "sim:audio-8x2",
+              "direction": "input",
+              "externalGain": 1.0,
+              "id": "ch-mic-2",
+              "reference": false,
+              "sensorId": "mic-2"
+            },
+            {
+              "actuatorId": "",
+              "calibrationId": "",
+              "channelId": "in2",
+              "deviceId": "sim:audio-8x2",
+              "direction": "input",
+              "externalGain": 1.0,
+              "id": "ch-mic-3",
+              "reference": false,
+              "sensorId": "mic-3"
+            },
+            {
+              "actuatorId": "",
+              "calibrationId": "",
+              "channelId": "in3",
+              "deviceId": "sim:audio-8x2",
+              "direction": "input",
+              "externalGain": 1.0,
+              "id": "ch-mic-4",
+              "reference": false,
+              "sensorId": "mic-4"
+            },
+            {
+              "actuatorId": "",
+              "calibrationId": "",
+              "channelId": "in4",
+              "deviceId": "sim:audio-8x2",
+              "direction": "input",
+              "externalGain": 1.0,
+              "id": "ch-mic-5",
+              "reference": false,
+              "sensorId": "mic-5"
+            },
+            {
+              "actuatorId": "",
+              "calibrationId": "",
+              "channelId": "in5",
+              "deviceId": "sim:audio-8x2",
+              "direction": "input",
+              "externalGain": 1.0,
+              "id": "ch-mic-6",
+              "reference": false,
+              "sensorId": "mic-6"
+            },
+            {
+              "actuatorId": "",
+              "calibrationId": "",
+              "channelId": "in6",
+              "deviceId": "sim:audio-8x2",
+              "direction": "input",
+              "externalGain": 1.0,
+              "id": "ch-mic-7",
+              "reference": false,
+              "sensorId": "mic-7"
+            },
+            {
+              "actuatorId": "spk-1",
+              "calibrationId": "",
+              "channelId": "out0",
+              "deviceId": "sim:audio-8x2",
+              "direction": "output",
+              "externalGain": 1.0,
+              "id": "ch-spk",
+              "reference": false,
+              "sensorId": ""
+            }
+          ],
+          "description": "Drive the loudspeaker with a tone and record seven microphones on a line 1 m in front of it; the tone's complex amplitude at each microphone is a measured point of the field.",
+          "devices": {
+            "sim:audio-8x2": {
+              "blockFrames": 1024,
+              "centerFrequencyHz": 0.0,
+              "clockSource": "internal",
+              "format": "float32",
+              "gainDb": 0.0,
+              "inputChannels": [],
+              "options": {},
+              "outputChannels": [],
+              "sampleRateHz": 48000.0,
+              "triggerSource": "immediate"
+            }
+          },
+          "domain": "acoustic",
+          "environment": {
+            "notes": "assumed laboratory conditions",
+            "pressurePa": 0.0,
+            "recorded": false,
+            "relativeHumidity": 0.0,
+            "temperatureC": 20.0
+          },
+          "history": [],
+          "id": "ex-exp-field-map",
+          "name": "Acoustic field mapping",
+          "notes": "",
+          "positionerDeviceId": "",
+          "positions": {
+            "axisU": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "axisV": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "axisW": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "center": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "count": 0,
+            "end": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "frame": "scene",
+            "kind": "fixed",
+            "nu": 0,
+            "nv": 0,
+            "nw": 1,
+            "origin": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "plane": "azimuth",
+            "points": [],
+            "positionUncertainty": 0.0,
+            "radius": 1.0,
+            "source": "",
+            "start": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "startDeg": 0.0,
+            "stepDeg": 10.0,
+            "stopDeg": 360.0
+          },
+          "probeBindingId": "",
+          "processing": [
+            {
+              "description": "",
+              "operation": "segment",
+              "parameters": {
+                "durationSeconds": 0.5,
+                "startSeconds": 0.25
+              }
+            },
+            {
+              "description": "",
+              "operation": "tone",
+              "parameters": {
+                "frequencyHz": 2000.0,
+                "window": "hann"
+              }
+            }
+          ],
+          "projectId": "ex-exp-acoustic",
+          "requireCalibration": false,
+          "resultIds": [],
+          "revision": 1,
+          "safety": {
+            "allowedOutputChannels": [
+              "ch-spk"
+            ],
+            "amplitudeUnit": "FS",
+            "exposureWarningSplDb": 85.0,
+            "maxDurationSeconds": 30.0,
+            "maxDutyCycle": 1.0,
+            "maxFrequencyHz": 20000.0,
+            "maxOutputAmplitude": 0.5,
+            "maxTransmitPowerDbm": -1000.0,
+            "minFrequencyHz": 20.0,
+            "regulatoryNote": "",
+            "requireInterlock": false
+          },
+          "sensors": [
+            {
+              "calibrationId": "",
+              "category": "microphone",
+              "domain": "acoustic",
+              "dynamicRange": [
+                0.0,
+                0.0
+              ],
+              "frequencyResponse": "",
+              "id": "mic-1",
+              "measures": "pressure",
+              "name": "Microphone 1",
+              "noiseFloor": 0.0,
+              "nominalSensitivity": 0.0,
+              "pose": {
+                "direction": [
+                  0.0,
+                  -1.0,
+                  0.0
+                ],
+                "frame": "scene",
+                "orientationUncertaintyDeg": 0.0,
+                "position": [
+                  -0.3,
+                  1.0,
+                  0.0
+                ],
+                "positionUncertainty": 0.0
+              },
+              "status": "ok",
+              "uncertainty": {
+                "components": [],
+                "correlation": "components assumed uncorrelated (root-sum-square)",
+                "coverageFactor": 2.0
+              },
+              "unit": "Pa"
+            },
+            {
+              "calibrationId": "",
+              "category": "microphone",
+              "domain": "acoustic",
+              "dynamicRange": [
+                0.0,
+                0.0
+              ],
+              "frequencyResponse": "",
+              "id": "mic-2",
+              "measures": "pressure",
+              "name": "Microphone 2",
+              "noiseFloor": 0.0,
+              "nominalSensitivity": 0.0,
+              "pose": {
+                "direction": [
+                  0.0,
+                  -1.0,
+                  0.0
+                ],
+                "frame": "scene",
+                "orientationUncertaintyDeg": 0.0,
+                "position": [
+                  -0.19999999999999998,
+                  1.0,
+                  0.0
+                ],
+                "positionUncertainty": 0.0
+              },
+              "status": "ok",
+              "uncertainty": {
+                "components": [],
+                "correlation": "components assumed uncorrelated (root-sum-square)",
+                "coverageFactor": 2.0
+              },
+              "unit": "Pa"
+            },
+            {
+              "calibrationId": "",
+              "category": "microphone",
+              "domain": "acoustic",
+              "dynamicRange": [
+                0.0,
+                0.0
+              ],
+              "frequencyResponse": "",
+              "id": "mic-3",
+              "measures": "pressure",
+              "name": "Microphone 3",
+              "noiseFloor": 0.0,
+              "nominalSensitivity": 0.0,
+              "pose": {
+                "direction": [
+                  0.0,
+                  -1.0,
+                  0.0
+                ],
+                "frame": "scene",
+                "orientationUncertaintyDeg": 0.0,
+                "position": [
+                  -0.09999999999999998,
+                  1.0,
+                  0.0
+                ],
+                "positionUncertainty": 0.0
+              },
+              "status": "ok",
+              "uncertainty": {
+                "components": [],
+                "correlation": "components assumed uncorrelated (root-sum-square)",
+                "coverageFactor": 2.0
+              },
+              "unit": "Pa"
+            },
+            {
+              "calibrationId": "",
+              "category": "microphone",
+              "domain": "acoustic",
+              "dynamicRange": [
+                0.0,
+                0.0
+              ],
+              "frequencyResponse": "",
+              "id": "mic-4",
+              "measures": "pressure",
+              "name": "Microphone 4",
+              "noiseFloor": 0.0,
+              "nominalSensitivity": 0.0,
+              "pose": {
+                "direction": [
+                  0.0,
+                  -1.0,
+                  0.0
+                ],
+                "frame": "scene",
+                "orientationUncertaintyDeg": 0.0,
+                "position": [
+                  5.551115123125783e-17,
+                  1.0,
+                  0.0
+                ],
+                "positionUncertainty": 0.0
+              },
+              "status": "ok",
+              "uncertainty": {
+                "components": [],
+                "correlation": "components assumed uncorrelated (root-sum-square)",
+                "coverageFactor": 2.0
+              },
+              "unit": "Pa"
+            },
+            {
+              "calibrationId": "",
+              "category": "microphone",
+              "domain": "acoustic",
+              "dynamicRange": [
+                0.0,
+                0.0
+              ],
+              "frequencyResponse": "",
+              "id": "mic-5",
+              "measures": "pressure",
+              "name": "Microphone 5",
+              "noiseFloor": 0.0,
+              "nominalSensitivity": 0.0,
+              "pose": {
+                "direction": [
+                  0.0,
+                  -1.0,
+                  0.0
+                ],
+                "frame": "scene",
+                "orientationUncertaintyDeg": 0.0,
+                "position": [
+                  0.10000000000000003,
+                  1.0,
+                  0.0
+                ],
+                "positionUncertainty": 0.0
+              },
+              "status": "ok",
+              "uncertainty": {
+                "components": [],
+                "correlation": "components assumed uncorrelated (root-sum-square)",
+                "coverageFactor": 2.0
+              },
+              "unit": "Pa"
+            },
+            {
+              "calibrationId": "",
+              "category": "microphone",
+              "domain": "acoustic",
+              "dynamicRange": [
+                0.0,
+                0.0
+              ],
+              "frequencyResponse": "",
+              "id": "mic-6",
+              "measures": "pressure",
+              "name": "Microphone 6",
+              "noiseFloor": 0.0,
+              "nominalSensitivity": 0.0,
+              "pose": {
+                "direction": [
+                  0.0,
+                  -1.0,
+                  0.0
+                ],
+                "frame": "scene",
+                "orientationUncertaintyDeg": 0.0,
+                "position": [
+                  0.2,
+                  1.0,
+                  0.0
+                ],
+                "positionUncertainty": 0.0
+              },
+              "status": "ok",
+              "uncertainty": {
+                "components": [],
+                "correlation": "components assumed uncorrelated (root-sum-square)",
+                "coverageFactor": 2.0
+              },
+              "unit": "Pa"
+            },
+            {
+              "calibrationId": "",
+              "category": "microphone",
+              "domain": "acoustic",
+              "dynamicRange": [
+                0.0,
+                0.0
+              ],
+              "frequencyResponse": "",
+              "id": "mic-7",
+              "measures": "pressure",
+              "name": "Microphone 7",
+              "noiseFloor": 0.0,
+              "nominalSensitivity": 0.0,
+              "pose": {
+                "direction": [
+                  0.0,
+                  -1.0,
+                  0.0
+                ],
+                "frame": "scene",
+                "orientationUncertaintyDeg": 0.0,
+                "position": [
+                  0.3000000000000001,
+                  1.0,
+                  0.0
+                ],
+                "positionUncertainty": 0.0
+              },
+              "status": "ok",
+              "uncertainty": {
+                "components": [],
+                "correlation": "components assumed uncorrelated (root-sum-square)",
+                "coverageFactor": 2.0
+              },
+              "unit": "Pa"
+            }
+          ],
+          "state": "draft",
+          "stimulus": {
+            "amplitude": 0.2,
+            "channelDelaySeconds": {},
+            "channelGain": {},
+            "durationSeconds": 1.0,
+            "dutyCycle": 1.0,
+            "endHz": 2000.0,
+            "fadeSeconds": 0.01,
+            "kind": "sine",
+            "outputBindings": [
+              "ch-spk"
+            ],
+            "powerDbm": -1000.0,
+            "seed": 1,
+            "startHz": 2000.0
+          },
+          "sweep": {
+            "ifBandwidthHz": 1000.0,
+            "points": 201,
+            "ports": [
+              1
+            ],
+            "powerDbm": -10.0,
+            "startHz": 0.0,
+            "stopHz": 0.0
+          },
+          "sweepDeviceId": "",
+          "synchronization": {
+            "channelDelayCorrection": {},
+            "clockDomains": [],
+            "phaseSensitive": true,
+            "strategy": "single-device",
+            "timingCalibrationIds": []
+          },
+          "templateId": "acoustic.field-mapping",
+          "trigger": {
+            "kind": "immediate",
+            "level": 0.0,
+            "preTriggerSeconds": 0.0,
+            "risingEdge": true,
+            "source": "",
+            "timeoutSeconds": 10.0
+          }
+        },
+        {
+          "acquisition": {
+            "blockFrames": 2048,
+            "centerFrequencyHz": 0.0,
+            "clipFraction": 0.999,
+            "durationSeconds": 1.0,
+            "format": "float32",
+            "gainDb": 0.0,
+            "maxBackpressureSeconds": 2.0,
+            "mode": "finite",
+            "queueBlocks": 64,
+            "recordToDisk": true,
+            "repetitions": 1,
+            "sampleRateHz": 48000.0
+          },
+          "actuators": [
+            {
+              "calibrationId": "",
+              "category": "speaker",
+              "commandQuantity": "full-scale",
+              "delaySeconds": 0.0,
+              "domain": "acoustic",
+              "id": "spk-1",
+              "maxCommandAmplitude": 0.8,
+              "name": "Loudspeaker",
+              "outputQuantity": "pressure",
+              "pose": {
+                "direction": [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                "frame": "scene",
+                "orientationUncertaintyDeg": 0.0,
+                "position": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "positionUncertainty": 0.0
+              },
+              "ratedBandHz": [
+                50.0,
+                20000.0
+              ],
+              "status": "ok"
+            },
+            {
+              "calibrationId": "",
+              "category": "speaker",
+              "commandQuantity": "full-scale",
+              "delaySeconds": 0.0,
+              "domain": "acoustic",
+              "id": "spk-2",
+              "maxCommandAmplitude": 0.8,
+              "name": "Loudspeaker 2",
+              "outputQuantity": "pressure",
+              "pose": {
+                "direction": [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                "frame": "scene",
+                "orientationUncertaintyDeg": 0.0,
+                "position": [
+                  0.5,
+                  0.0,
+                  0.0
+                ],
+                "positionUncertainty": 0.0
+              },
+              "ratedBandHz": [
+                50.0,
+                20000.0
+              ],
+              "status": "ok"
+            }
+          ],
+          "annotations": [],
+          "channels": [
+            {
+              "actuatorId": "",
+              "calibrationId": "",
+              "channelId": "in0",
+              "deviceId": "sim:audio-8x2",
+              "direction": "input",
+              "externalGain": 1.0,
+              "id": "ch-mic-1",
+              "reference": false,
+              "sensorId": "mic-1"
+            },
+            {
+              "actuatorId": "",
+              "calibrationId": "",
+              "channelId": "in1",
+              "deviceId": "sim:audio-8x2",
+              "direction": "input",
+              "externalGain": 1.0,
+              "id": "ch-mic-2",
+              "reference": false,
+              "sensorId": "mic-2"
+            },
+            {
+              "actuatorId": "",
+              "calibrationId": "",
+              "channelId": "in2",
+              "deviceId": "sim:audio-8x2",
+              "direction": "input",
+              "externalGain": 1.0,
+              "id": "ch-mic-3",
+              "reference": false,
+              "sensorId": "mic-3"
+            },
+            {
+              "actuatorId": "",
+              "calibrationId": "",
+              "channelId": "in3",
+              "deviceId": "sim:audio-8x2",
+              "direction": "input",
+              "externalGain": 1.0,
+              "id": "ch-mic-4",
+              "reference": false,
+              "sensorId": "mic-4"
+            },
+            {
+              "actuatorId": "",
+              "calibrationId": "",
+              "channelId": "in4",
+              "deviceId": "sim:audio-8x2",
+              "direction": "input",
+              "externalGain": 1.0,
+              "id": "ch-mic-5",
+              "reference": false,
+              "sensorId": "mic-5"
+            },
+            {
+              "actuatorId": "",
+              "calibrationId": "",
+              "channelId": "in5",
+              "deviceId": "sim:audio-8x2",
+              "direction": "input",
+              "externalGain": 1.0,
+              "id": "ch-mic-6",
+              "reference": false,
+              "sensorId": "mic-6"
+            },
+            {
+              "actuatorId": "",
+              "calibrationId": "",
+              "channelId": "in6",
+              "deviceId": "sim:audio-8x2",
+              "direction": "input",
+              "externalGain": 1.0,
+              "id": "ch-mic-7",
+              "reference": false,
+              "sensorId": "mic-7"
+            },
+            {
+              "actuatorId": "spk-1",
+              "calibrationId": "",
+              "channelId": "out0",
+              "deviceId": "sim:audio-8x2",
+              "direction": "output",
+              "externalGain": 1.0,
+              "id": "ch-spk",
+              "reference": false,
+              "sensorId": ""
+            },
+            {
+              "actuatorId": "spk-2",
+              "calibrationId": "",
+              "channelId": "out1",
+              "deviceId": "sim:audio-8x2",
+              "direction": "output",
+              "externalGain": 1.0,
+              "id": "ch-spk-2",
+              "reference": false,
+              "sensorId": ""
+            }
+          ],
+          "description": "Two loudspeakers driven with delays that align their arrivals at a target point; the microphone line measures the pressure at and around the target for comparison with the predicted focus.",
+          "devices": {
+            "sim:audio-8x2": {
+              "blockFrames": 1024,
+              "centerFrequencyHz": 0.0,
+              "clockSource": "internal",
+              "format": "float32",
+              "gainDb": 0.0,
+              "inputChannels": [],
+              "options": {
+                "speakerPositions": [
+                  [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.5,
+                    0.0,
+                    0.0
+                  ]
+                ]
+              },
+              "outputChannels": [],
+              "sampleRateHz": 48000.0,
+              "triggerSource": "immediate"
+            }
+          },
+          "domain": "acoustic",
+          "environment": {
+            "notes": "assumed laboratory conditions",
+            "pressurePa": 0.0,
+            "recorded": false,
+            "relativeHumidity": 0.0,
+            "temperatureC": 20.0
+          },
+          "history": [],
+          "id": "ex-exp-focus",
+          "name": "Acoustic focusing validation",
+          "notes": "",
+          "positionerDeviceId": "",
+          "positions": {
+            "axisU": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "axisV": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "axisW": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "center": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "count": 0,
+            "end": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "frame": "scene",
+            "kind": "fixed",
+            "nu": 0,
+            "nv": 0,
+            "nw": 1,
+            "origin": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "plane": "azimuth",
+            "points": [],
+            "positionUncertainty": 0.0,
+            "radius": 1.0,
+            "source": "",
+            "start": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "startDeg": 0.0,
+            "stepDeg": 10.0,
+            "stopDeg": 360.0
+          },
+          "probeBindingId": "",
+          "processing": [
+            {
+              "description": "",
+              "operation": "segment",
+              "parameters": {
+                "durationSeconds": 0.5,
+                "startSeconds": 0.25
+              }
+            },
+            {
+              "description": "",
+              "operation": "tone",
+              "parameters": {
+                "frequencyHz": 4000.0,
+                "window": "hann"
+              }
+            }
+          ],
+          "projectId": "ex-exp-acoustic",
+          "requireCalibration": false,
+          "resultIds": [],
+          "revision": 1,
+          "safety": {
+            "allowedOutputChannels": [
+              "ch-spk",
+              "ch-spk-2"
+            ],
+            "amplitudeUnit": "FS",
+            "exposureWarningSplDb": 85.0,
+            "maxDurationSeconds": 30.0,
+            "maxDutyCycle": 1.0,
+            "maxFrequencyHz": 20000.0,
+            "maxOutputAmplitude": 0.5,
+            "maxTransmitPowerDbm": -1000.0,
+            "minFrequencyHz": 20.0,
+            "regulatoryNote": "",
+            "requireInterlock": false
+          },
+          "sensors": [
+            {
+              "calibrationId": "",
+              "category": "microphone",
+              "domain": "acoustic",
+              "dynamicRange": [
+                0.0,
+                0.0
+              ],
+              "frequencyResponse": "",
+              "id": "mic-1",
+              "measures": "pressure",
+              "name": "Microphone 1",
+              "noiseFloor": 0.0,
+              "nominalSensitivity": 0.0,
+              "pose": {
+                "direction": [
+                  0.0,
+                  -1.0,
+                  0.0
+                ],
+                "frame": "scene",
+                "orientationUncertaintyDeg": 0.0,
+                "position": [
+                  -0.3,
+                  1.0,
+                  0.0
+                ],
+                "positionUncertainty": 0.0
+              },
+              "status": "ok",
+              "uncertainty": {
+                "components": [],
+                "correlation": "components assumed uncorrelated (root-sum-square)",
+                "coverageFactor": 2.0
+              },
+              "unit": "Pa"
+            },
+            {
+              "calibrationId": "",
+              "category": "microphone",
+              "domain": "acoustic",
+              "dynamicRange": [
+                0.0,
+                0.0
+              ],
+              "frequencyResponse": "",
+              "id": "mic-2",
+              "measures": "pressure",
+              "name": "Microphone 2",
+              "noiseFloor": 0.0,
+              "nominalSensitivity": 0.0,
+              "pose": {
+                "direction": [
+                  0.0,
+                  -1.0,
+                  0.0
+                ],
+                "frame": "scene",
+                "orientationUncertaintyDeg": 0.0,
+                "position": [
+                  -0.19999999999999998,
+                  1.0,
+                  0.0
+                ],
+                "positionUncertainty": 0.0
+              },
+              "status": "ok",
+              "uncertainty": {
+                "components": [],
+                "correlation": "components assumed uncorrelated (root-sum-square)",
+                "coverageFactor": 2.0
+              },
+              "unit": "Pa"
+            },
+            {
+              "calibrationId": "",
+              "category": "microphone",
+              "domain": "acoustic",
+              "dynamicRange": [
+                0.0,
+                0.0
+              ],
+              "frequencyResponse": "",
+              "id": "mic-3",
+              "measures": "pressure",
+              "name": "Microphone 3",
+              "noiseFloor": 0.0,
+              "nominalSensitivity": 0.0,
+              "pose": {
+                "direction": [
+                  0.0,
+                  -1.0,
+                  0.0
+                ],
+                "frame": "scene",
+                "orientationUncertaintyDeg": 0.0,
+                "position": [
+                  -0.09999999999999998,
+                  1.0,
+                  0.0
+                ],
+                "positionUncertainty": 0.0
+              },
+              "status": "ok",
+              "uncertainty": {
+                "components": [],
+                "correlation": "components assumed uncorrelated (root-sum-square)",
+                "coverageFactor": 2.0
+              },
+              "unit": "Pa"
+            },
+            {
+              "calibrationId": "",
+              "category": "microphone",
+              "domain": "acoustic",
+              "dynamicRange": [
+                0.0,
+                0.0
+              ],
+              "frequencyResponse": "",
+              "id": "mic-4",
+              "measures": "pressure",
+              "name": "Microphone 4",
+              "noiseFloor": 0.0,
+              "nominalSensitivity": 0.0,
+              "pose": {
+                "direction": [
+                  0.0,
+                  -1.0,
+                  0.0
+                ],
+                "frame": "scene",
+                "orientationUncertaintyDeg": 0.0,
+                "position": [
+                  5.551115123125783e-17,
+                  1.0,
+                  0.0
+                ],
+                "positionUncertainty": 0.0
+              },
+              "status": "ok",
+              "uncertainty": {
+                "components": [],
+                "correlation": "components assumed uncorrelated (root-sum-square)",
+                "coverageFactor": 2.0
+              },
+              "unit": "Pa"
+            },
+            {
+              "calibrationId": "",
+              "category": "microphone",
+              "domain": "acoustic",
+              "dynamicRange": [
+                0.0,
+                0.0
+              ],
+              "frequencyResponse": "",
+              "id": "mic-5",
+              "measures": "pressure",
+              "name": "Microphone 5",
+              "noiseFloor": 0.0,
+              "nominalSensitivity": 0.0,
+              "pose": {
+                "direction": [
+                  0.0,
+                  -1.0,
+                  0.0
+                ],
+                "frame": "scene",
+                "orientationUncertaintyDeg": 0.0,
+                "position": [
+                  0.10000000000000003,
+                  1.0,
+                  0.0
+                ],
+                "positionUncertainty": 0.0
+              },
+              "status": "ok",
+              "uncertainty": {
+                "components": [],
+                "correlation": "components assumed uncorrelated (root-sum-square)",
+                "coverageFactor": 2.0
+              },
+              "unit": "Pa"
+            },
+            {
+              "calibrationId": "",
+              "category": "microphone",
+              "domain": "acoustic",
+              "dynamicRange": [
+                0.0,
+                0.0
+              ],
+              "frequencyResponse": "",
+              "id": "mic-6",
+              "measures": "pressure",
+              "name": "Microphone 6",
+              "noiseFloor": 0.0,
+              "nominalSensitivity": 0.0,
+              "pose": {
+                "direction": [
+                  0.0,
+                  -1.0,
+                  0.0
+                ],
+                "frame": "scene",
+                "orientationUncertaintyDeg": 0.0,
+                "position": [
+                  0.2,
+                  1.0,
+                  0.0
+                ],
+                "positionUncertainty": 0.0
+              },
+              "status": "ok",
+              "uncertainty": {
+                "components": [],
+                "correlation": "components assumed uncorrelated (root-sum-square)",
+                "coverageFactor": 2.0
+              },
+              "unit": "Pa"
+            },
+            {
+              "calibrationId": "",
+              "category": "microphone",
+              "domain": "acoustic",
+              "dynamicRange": [
+                0.0,
+                0.0
+              ],
+              "frequencyResponse": "",
+              "id": "mic-7",
+              "measures": "pressure",
+              "name": "Microphone 7",
+              "noiseFloor": 0.0,
+              "nominalSensitivity": 0.0,
+              "pose": {
+                "direction": [
+                  0.0,
+                  -1.0,
+                  0.0
+                ],
+                "frame": "scene",
+                "orientationUncertaintyDeg": 0.0,
+                "position": [
+                  0.3000000000000001,
+                  1.0,
+                  0.0
+                ],
+                "positionUncertainty": 0.0
+              },
+              "status": "ok",
+              "uncertainty": {
+                "components": [],
+                "correlation": "components assumed uncorrelated (root-sum-square)",
+                "coverageFactor": 2.0
+              },
+              "unit": "Pa"
+            }
+          ],
+          "state": "draft",
+          "stimulus": {
+            "amplitude": 0.2,
+            "channelDelaySeconds": {
+              "ch-spk": 7.063191887025667e-05,
+              "ch-spk-2": 0.0
+            },
+            "channelGain": {},
+            "durationSeconds": 1.0,
+            "dutyCycle": 1.0,
+            "endHz": 4000.0,
+            "fadeSeconds": 0.01,
+            "kind": "sine",
+            "outputBindings": [
+              "ch-spk",
+              "ch-spk-2"
+            ],
+            "powerDbm": -1000.0,
+            "seed": 1,
+            "startHz": 4000.0
+          },
+          "sweep": {
+            "ifBandwidthHz": 1000.0,
+            "points": 201,
+            "ports": [
+              1
+            ],
+            "powerDbm": -10.0,
+            "startHz": 0.0,
+            "stopHz": 0.0
+          },
+          "sweepDeviceId": "",
+          "synchronization": {
+            "channelDelayCorrection": {},
+            "clockDomains": [],
+            "phaseSensitive": true,
+            "strategy": "single-device",
+            "timingCalibrationIds": []
+          },
+          "templateId": "acoustic.focusing-validation",
+          "trigger": {
+            "kind": "immediate",
+            "level": 0.0,
+            "preTriggerSeconds": 0.0,
+            "risingEdge": true,
+            "source": "",
+            "timeoutSeconds": 10.0
+          }
+        },
+        {
+          "acquisition": {
+            "blockFrames": 2048,
+            "centerFrequencyHz": 0.0,
+            "clipFraction": 0.999,
+            "durationSeconds": 0.06,
+            "format": "float32",
+            "gainDb": 0.0,
+            "maxBackpressureSeconds": 2.0,
+            "mode": "finite",
+            "queueBlocks": 64,
+            "recordToDisk": true,
+            "repetitions": 1,
+            "sampleRateHz": 192000.0
+          },
+          "actuators": [
+            {
+              "calibrationId": "",
+              "category": "ultrasonic-transducer",
+              "commandQuantity": "full-scale",
+              "delaySeconds": 0.0,
+              "domain": "acoustic",
+              "id": "tx-a",
+              "maxCommandAmplitude": 0.8,
+              "name": "Transducer A",
+              "outputQuantity": "pressure",
+              "pose": {
+                "direction": [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                "frame": "scene",
+                "orientationUncertaintyDeg": 0.0,
+                "position": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "positionUncertainty": 0.0
+              },
+              "ratedBandHz": [
+                35000.0,
+                45000.0
+              ],
+              "status": "ok"
+            },
+            {
+              "calibrationId": "",
+              "category": "ultrasonic-transducer",
+              "commandQuantity": "full-scale",
+              "delaySeconds": 0.0,
+              "domain": "acoustic",
+              "id": "tx-b",
+              "maxCommandAmplitude": 0.8,
+              "name": "Transducer B",
+              "outputQuantity": "pressure",
+              "pose": {
+                "direction": [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                "frame": "scene",
+                "orientationUncertaintyDeg": 0.0,
+                "position": [
+                  0.5,
+                  0.0,
+                  0.0
+                ],
+                "positionUncertainty": 0.0
+              },
+              "ratedBandHz": [
+                35000.0,
+                45000.0
+              ],
+              "status": "ok"
+            }
+          ],
+          "annotations": [],
+          "channels": [
+            {
+              "actuatorId": "",
+              "calibrationId": "",
+              "channelId": "in0",
+              "deviceId": "sim:audio-8x2",
+              "direction": "input",
+              "externalGain": 1.0,
+              "id": "ch-mic",
+              "reference": false,
+              "sensorId": "mic-1"
+            },
+            {
+              "actuatorId": "tx-a",
+              "calibrationId": "",
+              "channelId": "out0",
+              "deviceId": "sim:audio-8x2",
+              "direction": "output",
+              "externalGain": 1.0,
+              "id": "out-a",
+              "reference": false,
+              "sensorId": ""
+            },
+            {
+              "actuatorId": "tx-b",
+              "calibrationId": "",
+              "channelId": "out1",
+              "deviceId": "sim:audio-8x2",
+              "direction": "output",
+              "externalGain": 1.0,
+              "id": "out-b",
+              "reference": false,
+              "sensorId": ""
+            }
+          ],
+          "description": "Drive one 40 kHz transducer of an array alone with a tone burst and record its amplitude and phase at a reference microphone. One run per element; elementCalibration() combines the runs.",
+          "devices": {
+            "sim:audio-8x2": {
+              "blockFrames": 1024,
+              "centerFrequencyHz": 0.0,
+              "clockSource": "internal",
+              "format": "float32",
+              "gainDb": 0.0,
+              "inputChannels": [],
+              "options": {
+                "speakerHighPassHz": 1000.0
+              },
+              "outputChannels": [],
+              "sampleRateHz": 192000.0,
+              "triggerSource": "immediate"
+            }
+          },
+          "domain": "acoustic",
+          "environment": {
+            "notes": "assumed laboratory conditions",
+            "pressurePa": 0.0,
+            "recorded": false,
+            "relativeHumidity": 0.0,
+            "temperatureC": 20.0
+          },
+          "history": [],
+          "id": "ex-exp-element-a",
+          "name": "Ultrasonic element characterization",
+          "notes": "",
+          "positionerDeviceId": "",
+          "positions": {
+            "axisU": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "axisV": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "axisW": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "center": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "count": 0,
+            "end": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "frame": "scene",
+            "kind": "fixed",
+            "nu": 0,
+            "nv": 0,
+            "nw": 1,
+            "origin": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "plane": "azimuth",
+            "points": [],
+            "positionUncertainty": 0.0,
+            "radius": 1.0,
+            "source": "",
+            "start": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "startDeg": 0.0,
+            "stepDeg": 10.0,
+            "stopDeg": 360.0
+          },
+          "probeBindingId": "",
+          "processing": [
+            {
+              "description": "",
+              "operation": "segment",
+              "parameters": {
+                "durationSeconds": 0.03,
+                "startSeconds": 0.01
+              }
+            },
+            {
+              "description": "",
+              "operation": "tone",
+              "parameters": {
+                "frequencyHz": 40000.0,
+                "window": "hann"
+              }
+            }
+          ],
+          "projectId": "ex-exp-acoustic",
+          "requireCalibration": false,
+          "resultIds": [],
+          "revision": 1,
+          "safety": {
+            "allowedOutputChannels": [
+              "out-a",
+              "out-b"
+            ],
+            "amplitudeUnit": "FS",
+            "exposureWarningSplDb": 85.0,
+            "maxDurationSeconds": 30.0,
+            "maxDutyCycle": 1.0,
+            "maxFrequencyHz": 45000.0,
+            "maxOutputAmplitude": 0.5,
+            "maxTransmitPowerDbm": -1000.0,
+            "minFrequencyHz": 35000.0,
+            "regulatoryNote": "",
+            "requireInterlock": false
+          },
+          "sensors": [
+            {
+              "calibrationId": "",
+              "category": "ultrasonic-receiver",
+              "domain": "acoustic",
+              "dynamicRange": [
+                0.0,
+                0.0
+              ],
+              "frequencyResponse": "",
+              "id": "mic-1",
+              "measures": "pressure",
+              "name": "Ultrasonic receiver",
+              "noiseFloor": 0.0,
+              "nominalSensitivity": 0.0,
+              "pose": {
+                "direction": [
+                  0.0,
+                  -1.0,
+                  0.0
+                ],
+                "frame": "scene",
+                "orientationUncertaintyDeg": 0.0,
+                "position": [
+                  0.0,
+                  0.3,
+                  0.0
+                ],
+                "positionUncertainty": 0.0
+              },
+              "status": "ok",
+              "uncertainty": {
+                "components": [],
+                "correlation": "components assumed uncorrelated (root-sum-square)",
+                "coverageFactor": 2.0
+              },
+              "unit": "Pa"
+            }
+          ],
+          "state": "draft",
+          "stimulus": {
+            "amplitude": 0.3,
+            "channelDelaySeconds": {},
+            "channelGain": {},
+            "durationSeconds": 0.05,
+            "dutyCycle": 1.0,
+            "endHz": 40000.0,
+            "fadeSeconds": 0.002,
+            "kind": "sine",
+            "outputBindings": [
+              "out-a"
+            ],
+            "powerDbm": -1000.0,
+            "seed": 1,
+            "startHz": 40000.0
+          },
+          "sweep": {
+            "ifBandwidthHz": 1000.0,
+            "points": 201,
+            "ports": [
+              1
+            ],
+            "powerDbm": -10.0,
+            "startHz": 0.0,
+            "stopHz": 0.0
+          },
+          "sweepDeviceId": "",
+          "synchronization": {
+            "channelDelayCorrection": {},
+            "clockDomains": [],
+            "phaseSensitive": false,
+            "strategy": "none",
+            "timingCalibrationIds": []
+          },
+          "templateId": "acoustic.ultrasonic-element",
+          "trigger": {
+            "kind": "immediate",
+            "level": 0.0,
+            "preTriggerSeconds": 0.0,
+            "risingEdge": true,
+            "source": "",
+            "timeoutSeconds": 10.0
+          }
+        }
+      ],
+      "measurements": [],
+      "spatial": [],
+      "version": 1
+    }
+  },
+  "format": "resonant-project",
+  "materials": [
+    {
+      "description": "Dry air near 20 degrees C at sea-level pressure (example).",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Both depend on temperature, pressure and humidity.",
+            "value": 1.204
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Both depend on temperature, pressure and humidity.",
+            "value": 343.0
+          }
+        },
+        "electromagnetic": {
+          "conductivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 0.0
+          },
+          "relativePermeability": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 1.0
+          },
+          "relativePermittivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 1.0006
+          }
+        }
+      },
+      "id": "mat-air",
+      "name": "Air"
+    },
+    {
+      "description": "Fresh water near 20 degrees C (example).",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Sound speed depends on temperature, salinity and pressure.",
+            "value": 998.0
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Sound speed depends on temperature, salinity and pressure.",
+            "value": 1482.0
+          }
+        },
+        "electromagnetic": {
+          "conductivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Static permittivity; strongly frequency dependent. Conductivity varies by orders of magnitude with dissolved ions.",
+            "value": 0.005
+          },
+          "relativePermeability": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Static permittivity; strongly frequency dependent. Conductivity varies by orders of magnitude with dissolved ions.",
+            "value": 1.0
+          },
+          "relativePermittivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Static permittivity; strongly frequency dependent. Conductivity varies by orders of magnitude with dissolved ions.",
+            "value": 80.0
+          }
+        }
+      },
+      "id": "mat-water",
+      "name": "Water"
+    },
+    {
+      "description": "Generic aluminum (example); alloys differ.",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 2700.0
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 6320.0
+          }
+        },
+        "electromagnetic": {
+          "conductivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Relative permittivity is not a meaningful quantity for a good conductor; 1 is a placeholder.",
+            "value": 35000000.0
+          },
+          "relativePermeability": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Relative permittivity is not a meaningful quantity for a good conductor; 1 is a placeholder.",
+            "value": 1.0
+          },
+          "relativePermittivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Relative permittivity is not a meaningful quantity for a good conductor; 1 is a placeholder.",
+            "value": 1.0
+          }
+        },
+        "mechanical": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 2700.0
+          },
+          "poissonsRatio": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 0.33
+          },
+          "youngsModulus": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 69000000000.0
+          }
+        }
+      },
+      "id": "mat-aluminum",
+      "name": "Aluminum"
+    },
+    {
+      "description": "Generic carbon steel (example); grades differ widely.",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 7850.0
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 5900.0
+          }
+        },
+        "electromagnetic": {
+          "conductivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Permeability of steel varies from about 1 (austenitic stainless) to thousands and is nonlinear; 100 is only a placeholder. Relative permittivity is a placeholder.",
+            "value": 6000000.0
+          },
+          "relativePermeability": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Permeability of steel varies from about 1 (austenitic stainless) to thousands and is nonlinear; 100 is only a placeholder. Relative permittivity is a placeholder.",
+            "value": 100.0
+          },
+          "relativePermittivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Permeability of steel varies from about 1 (austenitic stainless) to thousands and is nonlinear; 100 is only a placeholder. Relative permittivity is a placeholder.",
+            "value": 1.0
+          }
+        },
+        "mechanical": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 7850.0
+          },
+          "poissonsRatio": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 0.29
+          },
+          "youngsModulus": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 200000000000.0
+          }
+        }
+      },
+      "id": "mat-steel",
+      "name": "Steel"
+    },
+    {
+      "description": "Generic copper (example).",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 8960.0
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 4760.0
+          }
+        },
+        "electromagnetic": {
+          "conductivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Relative permittivity is not a meaningful quantity for a good conductor; 1 is a placeholder.",
+            "value": 58000000.0
+          },
+          "relativePermeability": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Relative permittivity is not a meaningful quantity for a good conductor; 1 is a placeholder.",
+            "value": 1.0
+          },
+          "relativePermittivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Relative permittivity is not a meaningful quantity for a good conductor; 1 is a placeholder.",
+            "value": 1.0
+          }
+        },
+        "mechanical": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 8960.0
+          },
+          "poissonsRatio": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 0.34
+          },
+          "youngsModulus": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 117000000000.0
+          }
+        }
+      },
+      "id": "mat-copper",
+      "name": "Copper"
+    },
+    {
+      "description": "Generic soda-lime glass (example).",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 2500.0
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 5600.0
+          }
+        },
+        "electromagnetic": {
+          "conductivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Permittivity depends on composition and frequency.",
+            "value": 1e-12
+          },
+          "relativePermeability": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Permittivity depends on composition and frequency.",
+            "value": 1.0
+          },
+          "relativePermittivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Permittivity depends on composition and frequency.",
+            "value": 6.0
+          }
+        },
+        "mechanical": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 2500.0
+          },
+          "poissonsRatio": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 0.22
+          },
+          "youngsModulus": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 70000000000.0
+          }
+        }
+      },
+      "id": "mat-glass",
+      "name": "Glass"
+    },
+    {
+      "description": "Generic cast acrylic, PMMA (example).",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 1180.0
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 2730.0
+          }
+        },
+        "electromagnetic": {
+          "conductivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Permittivity depends on frequency.",
+            "value": 1e-14
+          },
+          "relativePermeability": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Permittivity depends on frequency.",
+            "value": 1.0
+          },
+          "relativePermittivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Permittivity depends on frequency.",
+            "value": 3.0
+          }
+        },
+        "mechanical": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Polymers are viscoelastic: stiffness depends on frequency and temperature.",
+            "value": 1180.0
+          },
+          "poissonsRatio": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Polymers are viscoelastic: stiffness depends on frequency and temperature.",
+            "value": 0.37
+          },
+          "youngsModulus": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Polymers are viscoelastic: stiffness depends on frequency and temperature.",
+            "value": 3200000000.0
+          }
+        }
+      },
+      "id": "mat-acrylic",
+      "name": "Acrylic"
+    },
+    {
+      "description": "Generic structural concrete (example); mixes differ widely.",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 2400.0
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 3700.0
+          }
+        },
+        "mechanical": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 2400.0
+          },
+          "poissonsRatio": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 0.2
+          },
+          "youngsModulus": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 30000000000.0
+          }
+        }
+      },
+      "id": "mat-concrete",
+      "name": "Concrete"
+    },
+    {
+      "description": "Generic soft rubber (example); compounds differ by orders of magnitude.",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Longitudinal bulk-wave speed; rubber is strongly lossy and frequency dependent.",
+            "value": 1100.0
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Longitudinal bulk-wave speed; rubber is strongly lossy and frequency dependent.",
+            "value": 1600.0
+          }
+        },
+        "mechanical": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Stiffness varies by orders of magnitude between compounds and with frequency.",
+            "value": 1100.0
+          },
+          "poissonsRatio": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Stiffness varies by orders of magnitude between compounds and with frequency.",
+            "value": 0.49
+          },
+          "youngsModulus": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Stiffness varies by orders of magnitude between compounds and with frequency.",
+            "value": 5000000.0
+          }
+        }
+      },
+      "id": "mat-rubber",
+      "name": "Rubber"
+    },
+    {
+      "description": "Generic softwood along the grain (example); wood is anisotropic.",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Along the grain; across the grain the speed is several times lower.",
+            "value": 500.0
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Along the grain; across the grain the speed is several times lower.",
+            "value": 3300.0
+          }
+        },
+        "mechanical": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Along the grain; wood is orthotropic and a single modulus is a simplification.",
+            "value": 500.0
+          },
+          "poissonsRatio": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Along the grain; wood is orthotropic and a single modulus is a simplification.",
+            "value": 0.3
+          },
+          "youngsModulus": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Along the grain; wood is orthotropic and a single modulus is a simplification.",
+            "value": 10000000000.0
+          }
+        }
+      },
+      "id": "mat-wood",
+      "name": "Wood"
+    },
+    {
+      "description": "Generic austenitic stainless steel, 304 type (example).",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 8000.0
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 5790.0
+          }
+        },
+        "electromagnetic": {
+          "conductivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Austenitic grades are nearly non-magnetic; cold work raises the permeability. Relative permittivity is a placeholder.",
+            "value": 1400000.0
+          },
+          "relativePermeability": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Austenitic grades are nearly non-magnetic; cold work raises the permeability. Relative permittivity is a placeholder.",
+            "value": 1.0
+          },
+          "relativePermittivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Austenitic grades are nearly non-magnetic; cold work raises the permeability. Relative permittivity is a placeholder.",
+            "value": 1.0
+          }
+        },
+        "mechanical": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Typical handbook value for annealed austenitic grades; cold work and grade change it.",
+            "value": 8000.0
+          },
+          "poissonsRatio": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Typical handbook value for annealed austenitic grades; cold work and grade change it.",
+            "value": 0.29
+          },
+          "youngsModulus": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Typical handbook value for annealed austenitic grades; cold work and grade change it.",
+            "value": 193000000000.0
+          }
+        }
+      },
+      "id": "mat-stainless-steel",
+      "name": "Stainless steel"
+    },
+    {
+      "description": "Generic yellow brass (example); compositions differ.",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 8500.0
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 4700.0
+          }
+        },
+        "electromagnetic": {
+          "conductivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Relative permittivity is not a meaningful quantity for a good conductor; 1 is a placeholder.",
+            "value": 15000000.0
+          },
+          "relativePermeability": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Relative permittivity is not a meaningful quantity for a good conductor; 1 is a placeholder.",
+            "value": 1.0
+          },
+          "relativePermittivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Relative permittivity is not a meaningful quantity for a good conductor; 1 is a placeholder.",
+            "value": 1.0
+          }
+        },
+        "mechanical": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Varies with zinc content and temper.",
+            "value": 8500.0
+          },
+          "poissonsRatio": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Varies with zinc content and temper.",
+            "value": 0.34
+          },
+          "youngsModulus": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Varies with zinc content and temper.",
+            "value": 100000000000.0
+          }
+        }
+      },
+      "id": "mat-brass",
+      "name": "Brass"
+    },
+    {
+      "description": "Generic Ti-6Al-4V titanium alloy (example).",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 4430.0
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 6100.0
+          }
+        },
+        "electromagnetic": {
+          "conductivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Relative permittivity is a placeholder.",
+            "value": 580000.0
+          },
+          "relativePermeability": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Relative permittivity is a placeholder.",
+            "value": 1.0
+          },
+          "relativePermittivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Relative permittivity is a placeholder.",
+            "value": 1.0
+          }
+        },
+        "mechanical": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Typical value for annealed Ti-6Al-4V; heat treatment and texture change it.",
+            "value": 4430.0
+          },
+          "poissonsRatio": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Typical value for annealed Ti-6Al-4V; heat treatment and texture change it.",
+            "value": 0.34
+          },
+          "youngsModulus": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Typical value for annealed Ti-6Al-4V; heat treatment and texture change it.",
+            "value": 114000000000.0
+          }
+        }
+      },
+      "id": "mat-titanium",
+      "name": "Titanium alloy"
+    },
+    {
+      "description": "Generic acrylonitrile butadiene styrene, moulded (example).",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 1050.0
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 2250.0
+          }
+        },
+        "mechanical": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Polymers are viscoelastic: stiffness depends on frequency, temperature and grade.",
+            "value": 1050.0
+          },
+          "poissonsRatio": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Polymers are viscoelastic: stiffness depends on frequency, temperature and grade.",
+            "value": 0.35
+          },
+          "youngsModulus": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Polymers are viscoelastic: stiffness depends on frequency, temperature and grade.",
+            "value": 2200000000.0
+          }
+        }
+      },
+      "id": "mat-abs",
+      "name": "ABS"
+    },
+    {
+      "description": "Generic polylactic acid, bulk (example).",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 1240.0
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 2200.0
+          }
+        },
+        "mechanical": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Bulk value. 3D-printed parts are porous and anisotropic (layer direction, infill) and much softer than this; polymers are viscoelastic.",
+            "value": 1240.0
+          },
+          "poissonsRatio": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Bulk value. 3D-printed parts are porous and anisotropic (layer direction, infill) and much softer than this; polymers are viscoelastic.",
+            "value": 0.36
+          },
+          "youngsModulus": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Bulk value. 3D-printed parts are porous and anisotropic (layer direction, infill) and much softer than this; polymers are viscoelastic.",
+            "value": 3500000000.0
+          }
+        }
+      },
+      "id": "mat-pla",
+      "name": "PLA"
+    },
+    {
+      "description": "Generic polyamide 6, dry as moulded (example).",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 1140.0
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 2600.0
+          }
+        },
+        "mechanical": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Dry value: absorbed moisture lowers the modulus by up to half. Viscoelastic.",
+            "value": 1140.0
+          },
+          "poissonsRatio": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Dry value: absorbed moisture lowers the modulus by up to half. Viscoelastic.",
+            "value": 0.39
+          },
+          "youngsModulus": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Dry value: absorbed moisture lowers the modulus by up to half. Viscoelastic.",
+            "value": 2700000000.0
+          }
+        }
+      },
+      "id": "mat-nylon",
+      "name": "Nylon"
+    },
+    {
+      "description": "Generic polycarbonate (example).",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 1200.0
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 2270.0
+          }
+        },
+        "electromagnetic": {
+          "conductivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Permittivity depends on frequency.",
+            "value": 1e-14
+          },
+          "relativePermeability": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Permittivity depends on frequency.",
+            "value": 1.0
+          },
+          "relativePermittivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Permittivity depends on frequency.",
+            "value": 2.9
+          }
+        },
+        "mechanical": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Polymers are viscoelastic: stiffness depends on frequency and temperature.",
+            "value": 1200.0
+          },
+          "poissonsRatio": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Polymers are viscoelastic: stiffness depends on frequency and temperature.",
+            "value": 0.37
+          },
+          "youngsModulus": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Polymers are viscoelastic: stiffness depends on frequency and temperature.",
+            "value": 2400000000.0
+          }
+        }
+      },
+      "id": "mat-polycarbonate",
+      "name": "Polycarbonate"
+    },
+    {
+      "description": "Generic 96 % alumina ceramic (example).",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 3720.0
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 9800.0
+          }
+        },
+        "electromagnetic": {
+          "conductivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Permittivity depends on purity and frequency.",
+            "value": 1e-12
+          },
+          "relativePermeability": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Permittivity depends on purity and frequency.",
+            "value": 1.0
+          },
+          "relativePermittivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Permittivity depends on purity and frequency.",
+            "value": 9.0
+          }
+        },
+        "mechanical": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Depends strongly on purity and porosity.",
+            "value": 3720.0
+          },
+          "poissonsRatio": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Depends strongly on purity and porosity.",
+            "value": 0.21
+          },
+          "youngsModulus": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Depends strongly on purity and porosity.",
+            "value": 300000000000.0
+          }
+        }
+      },
+      "id": "mat-alumina",
+      "name": "Alumina ceramic"
+    }
+  ],
+  "project": {
+    "createdUtc": "2026-11-27T00:00:00Z",
+    "id": "ex-exp-acoustic",
+    "modifiedUtc": "2026-11-27T00:00:00Z",
+    "name": "Acoustic experiments (simulated devices)"
+  },
+  "scene": {
+    "objects": []
+  },
+  "schemaVersion": 1,
+  "simulations": [],
+  "units": {
+    "angle": "rad",
+    "axes": "right-handed; X horizontal, Y depth, Z vertical (up)",
+    "frequency": "Hz",
+    "length": "m",
+    "mass": "kg",
+    "rotation": "intrinsic Z-Y-X Euler angles stored as [x, y, z]",
+    "time": "s"
+  }
+}

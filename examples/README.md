@@ -58,3 +58,18 @@ The electromagnetics examples are analysed from the Electromagnetics menu
 or panel (example G with **Run Full-Wave** in the Fields tab); their
 settings are stored in the project. They are generated and checked by
 `tests/core/test_electromagnetics_scene.cpp`.
+
+## Experiments
+
+| Project | Shows | Assumptions and limits |
+|---|---|---|
+| `experiments/acoustic_experiments.resonant` | speaker characterization (H1, calibrated to Pa/FS), field mapping at 2 kHz, focusing validation with two delayed loudspeakers, ultrasonic element characterization | **simulated devices**: generated data; the microphone calibration is the simulated model's sensitivity |
+| `experiments/mechanical_experiments.resonant` | modal test (accelerance FRFs, resonances), vibration characterization at 120 Hz, shaker calibration | simulated vibration DAQ and modal structure; nominal sensitivities as calibrations |
+| `experiments/rf_experiments.resonant` | antenna S11 with a VNA, array channel calibration, radiation pattern from an angular scan | simulated RF devices; transmission only with authorization |
+| `experiments/rlc_antenna_and_line.s2p` | a two-port Touchstone file | **synthetic**, from the simulated VNA's model: not a measurement |
+
+Every experiment with an output needs an explicit authorization before it
+runs (Run > Authorize Output...), and a saved project (raw data is stored
+next to it). They are generated and checked by
+`tests/core/test_experiment_examples.cpp`.
+
