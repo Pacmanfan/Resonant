@@ -1,9 +1,9 @@
-#include "fdtd/SolidModel.h"
+#include "geometry/SolidModel.h"
 
 #include <algorithm>
 #include <cmath>
 
-namespace resonant::fdtd {
+namespace resonant {
 namespace {
 
 std::string thickened(double designed, double used)
@@ -194,10 +194,104 @@ std::optional<SolidModel> solidModelOf(const Geometry& g, double minThickness)
         };
         const double largest = periodic ? std::max(p("radiusA"), p("radiusB")) : std::max(p("inputRadius"), p("outputRadius"));
         model.boundingRadius = std::hypot(largest, 0.5 * length);
+    } else if (kind == "antenna.dipole") {
+        // Two arms with a feed gap; wires thinner than the grid are thickened.
+        const double h = 0.5 * p("length"), a = std::max(p("wireRadius"), 0.5 * minThickness), gap = std::min(0.5 * p("wireRadius"), 0.05 * h);
+        if (p("wireRadius") < 0.5 * minThickness)
+            model.note = thickened(2.0 * p("wireRadius"), 2.0 * a) + " (wire diameter)";
+        model.contains = [h, a, gap](const Vec3& q) {
+            return std::abs(q.z()) <= h && std::abs(q.z()) >= gap && q.x() * q.x() + q.y() * q.y() <= a * a;
+        };
+        model.boundingRadius = std::hypot(h, a);
+    } else if (kind == "antenna.monopole") {
+        const double h = p("height"), a = std::max(p("wireRadius"), 0.5 * minThickness), ground = p("groundRadius"), t = minThickness;
+        if (p("wireRadius") < 0.5 * minThickness)
+            model.note = thickened(2.0 * p("wireRadius"), 2.0 * a) + " (wire diameter)";
+        model.contains = [h, a, ground, t](const Vec3& q) {
+            const double r2 = q.x() * q.x() + q.y() * q.y();
+            return (q.z() >= 0.0 && q.z() <= h && r2 <= a * a) || (q.z() <= 0.0 && q.z() >= -t && r2 <= ground * ground);
+        };
+        model.boundingRadius = std::max(std::hypot(ground, t), h);
+    } else if (kind == "antenna.loop") {
+        const double b = p("loopRadius"), a = std::max(p("wireRadius"), 0.5 * minThickness);
+        if (p("wireRadius") < 0.5 * minThickness)
+            model.note = thickened(2.0 * p("wireRadius"), 2.0 * a) + " (wire diameter)";
+        model.contains = [b, a](const Vec3& q) { return std::hypot(std::hypot(q.x(), q.y()) - b, q.z()) <= a; };
+        model.boundingRadius = b + a;
+    } else if (kind == "antenna.patch") {
+        // The substrate block (the patch and ground metal are not separate bodies).
+        const double half = 0.5 * p("substrateSize"), t = std::max(p("substrateThickness"), minThickness);
+        model.note = "only its substrate is represented; the patch and ground metal are not separate bodies";
+        model.contains = [half, t](const Vec3& q) { return std::abs(q.x()) <= half && std::abs(q.y()) <= half && q.z() <= 0.0 && q.z() >= -t; };
+        model.boundingRadius = std::hypot(half * std::sqrt(2.0), t);
+    } else if (kind == "antenna.horn") {
+        // Thin conducting walls of the flare (0 <= z <= L) and of the feed guide (-L/2 <= z < 0).
+        const double A = 0.5 * p("apertureA"), B = 0.5 * p("apertureB"), a = 0.5 * p("guideA"), b = 0.5 * p("guideB"), L = p("length");
+        const double t = minThickness;
+        model.note = "its walls are represented " + std::to_string(t * 1e3) + " mm thick";
+        model.contains = [A, B, a, b, L, t](const Vec3& q) {
+            if (q.z() < -0.5 * L || q.z() > L)
+                return false;
+            const double s = q.z() > 0.0 ? q.z() / L : 0.0;
+            const double ax = a + (A - a) * s, by = b + (B - b) * s;
+            const double x = std::abs(q.x()), y = std::abs(q.y());
+            return (x >= ax && x <= ax + t && y <= by + t) || (y >= by && y <= by + t && x <= ax + t);
+        };
+        model.boundingRadius = std::hypot(std::hypot(A + t, B + t), L);
+    } else if (kind == "antenna.helix") {
+        const double r = 0.5 * p("diameter"), pitch = p("pitch"), turns = p("turns");
+        const double a = std::max(p("wireRadius"), 0.5 * minThickness), top = pitch * turns, ground = 1.5 * r, t = minThickness;
+        if (p("wireRadius") < 0.5 * minThickness)
+            model.note = thickened(2.0 * p("wireRadius"), 2.0 * a) + " (wire diameter)";
+        model.contains = [r, pitch, a, top, ground, t](const Vec3& q) {
+            if (q.z() <= 0.0 && q.z() >= -t && q.x() * q.x() + q.y() * q.y() <= ground * ground)
+                return true;  // ground disc
+            if (q.z() < -a || q.z() > top + a)
+                return false;
+            const double phi = std::atan2(q.y(), q.x());
+            const double turn = std::round((q.z() / pitch) - phi / (2.0 * 3.14159265358979323846));
+            for (int m = -1; m <= 1; ++m) {
+                const double angle = phi + 2.0 * 3.14159265358979323846 * (turn + m);
+                const double z = pitch * angle / (2.0 * 3.14159265358979323846);
+                if (z < 0.0 || z > top)
+                    continue;
+                if ((q - Vec3(r * std::cos(angle), r * std::sin(angle), z)).norm() <= a)
+                    return true;
+            }
+            return false;
+        };
+        model.boundingRadius = std::hypot(std::max(ground, r + a), top + a);
+    } else if (kind == "guide.rectangular" || kind == "cavity.rectangular.em") {
+        // Conducting walls around the inner box (open ends for a guide, closed for a cavity).
+        const bool closed = kind == "cavity.rectangular.em";
+        const double a = 0.5 * p("a"), b = 0.5 * p("b"), h = 0.5 * (closed ? p("d") : p("length")), t = minThickness;
+        model.note = "its walls are represented " + std::to_string(t * 1e3) + " mm thick";
+        model.contains = [a, b, h, t, closed](const Vec3& q) {
+            const double x = std::abs(q.x()), y = std::abs(q.y()), z = std::abs(q.z());
+            if (x > a + t || y > b + t || z > h + (closed ? t : 0.0))
+                return false;
+            return x >= a || y >= b || (closed && z >= h);
+        };
+        model.boundingRadius = Vec3(a + t, b + t, h + t).norm();
+    } else if (kind == "guide.circular") {
+        const double r = p("radius"), h = 0.5 * p("length"), t = minThickness;
+        model.note = "its wall is represented " + std::to_string(t * 1e3) + " mm thick";
+        model.contains = [r, h, t](const Vec3& q) {
+            const double rr = std::hypot(q.x(), q.y());
+            return std::abs(q.z()) <= h && rr >= r && rr <= r + t;
+        };
+        model.boundingRadius = std::hypot(r + t, h);
+    } else if (kind == "guide.coaxial") {
+        const double ri = std::max(p("innerRadius"), 0.5 * minThickness), ro = p("outerRadius"), h = 0.5 * p("length"), t = minThickness;
+        model.contains = [ri, ro, h, t](const Vec3& q) {
+            const double rr = std::hypot(q.x(), q.y());
+            return std::abs(q.z()) <= h && (rr <= ri || (rr >= ro && rr <= ro + t));
+        };
+        model.boundingRadius = std::hypot(ro + t, h);
     } else {
         return std::nullopt;
     }
     return model;
 }
 
-}  // namespace resonant::fdtd
+}  // namespace resonant

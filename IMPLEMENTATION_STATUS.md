@@ -90,7 +90,6 @@ Milestones and the requests that deliver them are in
 | Capability | State | Notes |
 |---|---|---|
 | Numerical (full-wave) acoustic solvers | Missing | request 005 |
-| Mechanical and electromagnetic solvers | Missing | requests 006 and 007 |
 | Wave manipulators, reflectors, lenses | Missing | request 004 |
 | Geometry import from CAD or mesh files | Missing | no request covers it yet; it is part of V1 (RES-PRODUCT-015) |
 | Python scripting | Missing | request 010 |
@@ -195,3 +194,31 @@ Milestones and the requests that deliver them are in
 | One-way sound radiation from plates and membranes (Rayleigh) | Tested | two-way fluid-structure interaction: Missing |
 | Threads, SIMD, GPU backends | Missing | single-threaded sparse direct solvers |
 | Example projects A to H in `examples/mechanics` | Tested | |
+
+## Electromagnetic waves, antennas and RF — `docs/requirements/electromagnetics.md`, `docs/electromagnetics/`
+
+| Capability | State | Notes |
+|---|---|---|
+| Separate electromagnetic module; conventions `e^{+jωt}`, peak phasors, SI | Tested | |
+| Electromagnetic materials: er, mur, sigma, loss tangent, classification, skin depth | Tested | example values illustrative; dispersive models (Debye, Drude, Lorentz) Missing |
+| Ideal sources: electric dipole, magnetic dipole, plane wave | Tested | |
+| Antennas: dipole, monopole (infinite ground), small loop — analytical | Tested | thin-wire, assumed current; moment-method wire solver Missing |
+| Antennas: patch, horn, helix — design estimates only | Partial | no field, pattern or impedance calculated |
+| Feed impedance (induced EMF), matching, sweeps, VSWR, return loss | Tested | |
+| Directivity, radiation efficiency (conductor loss), gain, realized gain | Tested | dielectric and ground losses Missing |
+| Patterns: 2D cuts and 3D surface | Tested | |
+| Exact near fields, probes, fields on regions, far-field distance | Tested | |
+| Arrays: linear, planar, circular, custom; per-element overrides; markers | Tested | mutual coupling Missing (stated everywhere) |
+| Array factor analysis, phase / true-time-delay steering, squint | Tested | |
+| Grating-lobe prediction and warnings | Tested | regular lattices; other layouts via near-equal maxima |
+| Dolph-Chebyshev tapers; least-squares beam and null synthesis | Tested | |
+| Lines: coax, microstrip, stripline, CPW; loaded lines, transformers, L-networks, losses | Tested | |
+| Guides and cavities: modes, propagation, TE10 field; guide objects | Tested | waveguide fields other than TE10 Missing |
+| Yee FDTD full-wave solver (2D TM, 3D; PML; PEC; materials; thin wires) | Tested | validated against series solutions with refinement |
+| Full-wave setup from a scene: dipoles, monopoles, current elements, bodies | Tested | loops, patches, horns, helices, plane waves, arrays not represented |
+| Field display: components, magnitude / phase / instantaneous / dB, normalized or absolute | Tested | the viewport shows one field at a time |
+| Touchstone one-port import and export; measured vs calculated | Tested | multi-port Missing; no instrument control |
+| Reproducibility metadata and run records | Tested | fields kept in memory, not in the project file |
+| Electromagnetic optimization | Partial | synthesis, tapers, resonant length, matching; general optimization: request 009 |
+| Threads, SIMD, GPU backends | Missing | CPU, double precision, one thread |
+| Example projects A to G in `examples/electromagnetics` | Tested | |

@@ -1,6 +1,7 @@
 #include "ObjectLabels.h"
 
 #include "AcousticMarkers.h"
+#include "EmEditor.h"
 #include "MechanicsMarkers.h"
 
 QString structureSuffix(const resonant::SceneObject& object);
@@ -11,6 +12,8 @@ QString objectTypeLabel(const SceneObject& object)
 {
     if (object.type() == object_types::Group)
         return QStringLiteral("Group");
+    if (const QString label = emTypeLabel(object); !label.isEmpty())
+        return label;
     if (object.state.geometry)
         return QString::fromStdString(object.state.geometry->kind().displayName) + structureSuffix(object);
     if (const QString label = acousticTypeLabel(object); !label.isEmpty())

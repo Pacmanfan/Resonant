@@ -6,12 +6,15 @@
 #include "FdtdPanel.h"
 #include "MainWindow.h"
 #include "MechanicsController.h"
+#include "EmController.h"
+#include "EmPanel.h"
 #include "MechanicsPanel.h"
 #include "ViewportWidget.h"
 #include "foundation/Log.h"
 
 #include <QApplication>
 #include <QCommandLineParser>
+#include <QDockWidget>
 #include <QMessageBox>
 #include <QTimer>
 
@@ -51,6 +54,12 @@ int main(int argc, char** argv)
         QStringLiteral("Run a mechanical analysis (modal, harmonic, transient or static) of the project's first structure after opening it."),
         QStringLiteral("analysis"));
     parser.addOption(runMechanicsOption);
+    const QCommandLineOption runEmOption(
+        QStringLiteral("run-em"),
+        QStringLiteral("After opening the project: 'field' evaluates the analytical electromagnetic field on its first region, 'pattern' "
+                       "shows the 3D pattern of its first antenna or array, 'full-wave' runs the Yee solver on its first region."),
+        QStringLiteral("what"));
+    parser.addOption(runEmOption);
     parser.process(application);
 
     int result = 0;
@@ -103,8 +112,42 @@ int main(int argc, char** argv)
             if (!waitingForMechanics)
                 resonant::logError("application", "--run-mechanics: " + panel.statusText().toStdString());
         }
+        bool waitingForEm = false;
+        if (parser.isSet(runEmOption)) {
+            window.viewport().frameAll();
+            EmController& em = window.electromagnetics();
+            EmPanel& panel = window.emPanel();
+            if (auto* dock = qobject_cast<QDockWidget*>(panel.parentWidget())) {
+                dock->show();
+                dock->raise();
+            }
+            const QString what = parser.value(runEmOption);
+            const auto regions = em.regions();
+            const auto objects = em.objects();
+            bool done = false;
+            if (what == QLatin1String("pattern") && !objects.empty()) {
+                panel.selectObject(objects.front().first);
+                panel.showTab(QStringLiteral("patternTab"));
+                panel.calculatePattern();
+                done = panel.showPattern3D();
+            } else if ((what == QLatin1String("field") || what == QLatin1String("full-wave")) && !regions.empty()) {
+                if (!objects.empty())
+                    panel.selectObject(objects.front().first);
+                panel.selectRegion(regions.front().first);
+                panel.showTab(QStringLiteral("fieldsTab"));
+                if (what == QLatin1String("field"))
+                    done = panel.evaluateRegion();
+                else
+                    done = waitingForEm = panel.runFullWave();
+            }
+            if (!done)
+                resonant::logError("application", "--run-em " + what.toStdString() + ": nothing suitable in the project, or it was refused ("
+                                                      + panel.planText().toStdString() + ")");
+        }
         if (parser.isSet(screenshotOption)) {
-            if (waitingForMechanics)
+            if (waitingForEm)
+                QObject::connect(&window.electromagnetics(), &EmController::resultsChanged, &window, capture);
+            else if (waitingForMechanics)
                 QObject::connect(&window.mechanics(), &MechanicsController::resultsChanged, &window, capture);
             else if (waitingForFullWave)
                 QObject::connect(&window.fullWave(), &FdtdController::resultsChanged, &window, capture);

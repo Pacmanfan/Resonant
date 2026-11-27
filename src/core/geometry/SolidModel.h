@@ -1,7 +1,7 @@
 #pragma once
 
-// Simulation geometry for grid solvers: which points lie inside the body of
-// a parametric shape.
+// Simulation geometry for grid solvers of every domain: which points lie
+// inside the body of a parametric shape.
 //
 // This is derived from the shape's mathematical definition, never from its
 // display mesh. Shells and plates thinner than a solver can represent are
@@ -11,7 +11,7 @@
 #include <functional>
 #include <optional>
 
-namespace resonant::fdtd {
+namespace resonant {
 
 struct SolidModel {
     // True when the point (in the shape's local frame, metres) is inside the body.
@@ -25,4 +25,4 @@ struct SolidModel {
 // Empty when no solid model exists for the geometry kind.
 std::optional<SolidModel> solidModelOf(const Geometry& geometry, double minThickness);
 
-}  // namespace resonant::fdtd
+}  // namespace resonant

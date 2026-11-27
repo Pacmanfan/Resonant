@@ -32,6 +32,13 @@ silently go stale.
 | `mechanics/f-vibration-concentration.resonant` | four actuators on a plate, one 10 um target and two quiet points at 150 Hz, with solved inputs | harmonic, loss factor 0.01 |
 | `mechanics/g-phononic-rod.resonant` | a steel rod of 8 cells of two diameters | longitudinal waves; band structure from the Mechanics panel |
 | `mechanics/h-stepped-horn.resonant` | a stepped titanium horn 20 / 10 mm | half-wave axial mode with displacement gain 4 |
+| `electromagnetics/a-half-wave-dipole.resonant` | a copper half-wave dipole at 1 GHz | analytical: 73.08 + j42.51 ohm, directivity 1.64, gain and realized gain against 50 ohm |
+| `electromagnetics/b-quarter-wave-monopole.resonant` | a quarter-wave monopole at 1 GHz | analytical, infinite ground plane by images: half the impedance, twice the directivity |
+| `electromagnetics/c-linear-array.resonant` | 16 half-wave dipoles, half-wave spacing, Dolph-Chebyshev 30 dB | array factor (no coupling): -30 dB sidelobes |
+| `electromagnetics/d-phased-array-steering.resonant` | an 8 x 8 planar array steered to (30, 45) deg | array factor; widen the spacing to see a grating-lobe warning |
+| `electromagnetics/e-near-field.resonant` | the dipole with an XZ field plane of two wavelengths | analytical exact near field; Fields tab: evaluate, probe |
+| `electromagnetics/f-rectangular-waveguide.resonant` | a WR-90 guide at 10 GHz | closed-form modes (TE10 cut-off 6.557 GHz) and the TE10 cross-section |
+| `electromagnetics/g-full-wave-scattering.resonant` | a copper cylinder (radius lambda / 2) lit by a line source, 5 x 5 wavelength plane | full-wave Yee FDTD, 2D TM, 30 cells per wavelength; checked against the exact series |
 
 Run **Acoustics > Run Field Simulation** (F5) after opening an acoustic
 example: the sampled field is not stored in the project file. The acoustic
@@ -46,3 +53,8 @@ are generated and checked by `tests/core/test_fdtd_scene.cpp`.
 The mechanics examples are run from the Mechanics menu or panel; their
 analysis settings are stored in the project. They are generated and checked
 by `tests/core/test_mechanics_scene.cpp`.
+
+The electromagnetics examples are analysed from the Electromagnetics menu
+or panel (example G with **Run Full-Wave** in the Fields tab); their
+settings are stored in the project. They are generated and checked by
+`tests/core/test_electromagnetics_scene.cpp`.

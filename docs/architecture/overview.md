@@ -1,7 +1,7 @@
 # Resonant — Architecture Overview
 
 **Status:** current. Decisions: ADR-000204 (stack, build systems),
-ADR-000205 (layers, domains), ADR-000207 (acoustics), ADR-000208 (manipulators), ADR-000209 (full-wave solver), ADR-000210 (mechanics). Requirements: `docs/requirements/product.md`.
+ADR-000205 (layers, domains), ADR-000207 (acoustics), ADR-000208 (manipulators), ADR-000209 (full-wave solver), ADR-000210 (mechanics), ADR-000211 (electromagnetics). Requirements: `docs/requirements/product.md`.
 
 This document describes the architecture every milestone builds on. Each
 subsystem gets its own document in this directory when it is implemented;
@@ -42,6 +42,8 @@ A higher layer may use a lower one; never the reverse.
 | `solvers` | declarations of what each solver represents, and the assessment of a problem against them |
 | `dsp` | signals over time and spectra, shared by every domain |
 | `mechanics` | the mechanical domain: elastic materials, structural idealization, finite elements, eigensolver, static / modal / harmonic / transient analyses, actuators, sensors, targets, targeting, horns, periodic rods, measured data (`docs/mechanics/`) |
+| `electromagnetics` | the electromagnetic domain: materials, sources, antennas (analytical models and estimates), impedance and matching, patterns, near fields, arrays (array factor, steering, grating lobes, tapers, synthesis), lines, guides and cavities, the Yee FDTD solver and its setup from a project, Touchstone data (`docs/electromagnetics/`) |
+| `geometry/SolidModel` | simulation bodies (an inside test per geometry kind) shared by the acoustic and electromagnetic full-wave setups |
 | `coupling` | the only code that uses two domains: sound radiated by vibrating plates |
 | later physics domains | one module per domain, each with its own equations, property sets and solvers |
 
@@ -52,7 +54,7 @@ A higher layer may use a lower one; never the reverse.
 | `render/Camera` | orbit camera mathematics and pick rays; no OpenGL calls |
 | `render/ShaderLibrary`, `render/GpuMesh` | shader programs with reported build errors; meshes and line buffers on the GPU |
 | `render/RenderLayer`, `render/Layers` | a frame is a sequence of layers: grid and axes, lit meshes, marker lines; new visualizations are new layers |
-| `render/FieldLayer` | draws a complex field on a grid (plane or volume slices) from a texture; quantity, scale and animation phase are uniforms |
+| `render/FieldLayer` | draws a complex field on a grid (plane or volume slices) from a texture; quantity (magnitude, phase, instantaneous, relative intensity, dB), scale and animation phase are uniforms |
 | `render/Renderer` | lifecycle (initialize, resize, render, shutdown), requires OpenGL 4.5 Core |
 | `app/DocumentController` | the project, the command stack, the selection and the jobs; the only path from the user interface to the core |
 | `app/SceneRenderBridge` | scene objects to draw items; cached display meshes; picking |
@@ -62,6 +64,7 @@ A higher layer may use a lower one; never the reverse.
 | `app/ManipulatorController`, `app/ManipulatorEditor` | adding manipulators, their property editor, focal markers and ray paths, reflector optimization |
 | `app/FdtdController`, `app/FdtdPanel`, `app/TimeSignalPanel`, `app/PlotWidget` | the full-wave solver's settings, preflight, runs, recorded signals and spectra |
 | `app/MechanicsController`, `app/MechanicsPanel`, `app/MechanicalEditor`, `app/MechanicsMarkers`, `render/ScalarMeshLayer` | mechanical objects, analyses, results, deformed display |
+| `app/EmController`, `app/EmPanel`, `app/EmEditor`, `app/EmMarkers` | electromagnetic objects, reports, sweeps, patterns (3D through `ScalarMeshLayer`), arrays, fields, full-wave runs, measured data |
 | `app/DisplayUnits` | the single boundary between displayed units and SI |
 | `app/MainWindow` | wires the actions of `forms/MainWindow.ui` to the controller |
 

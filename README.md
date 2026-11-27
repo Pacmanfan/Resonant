@@ -29,8 +29,11 @@ discover is something you can trust.
   frequencies and mode shapes, frequency responses, impulses, waves along
   rods, vibration steered to a chosen spot, phononic rods with stop bands,
   and the sound a vibrating plate sends out.
-* **Coming next** — electromagnetic waves and antennas, experiments with
-  real hardware, optimization, Python scripting and guided demonstrations.
+* **Radio waves and antennas** — dipoles, monopoles and loops with their
+  impedance, gain and patterns; phased arrays you can steer and taper;
+  waveguides; near fields; Maxwell's equations solved on a grid.
+* **Coming next** — experiments with real hardware, optimization, Python
+  scripting and guided demonstrations.
 
 `IMPLEMENTATION_STATUS.md` is the honest, capability-by-capability record;
 `examples/README.md` lists ready-to-open projects for every area.

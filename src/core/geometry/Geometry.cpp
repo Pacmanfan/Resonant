@@ -15,6 +15,7 @@ const ParameterDef* GeometryKind::findParameter(std::string_view key) const
 // Defined by the modules that own the wave-manipulator and mechanical kinds.
 void registerManipulatorGeometry(GeometryRegistry& registry);
 void registerMechanicalGeometry(GeometryRegistry& registry);
+void registerAntennaGeometry(GeometryRegistry& registry);
 
 GeometryRegistry& GeometryRegistry::instance()
 {
@@ -23,6 +24,7 @@ GeometryRegistry& GeometryRegistry::instance()
         registerPrimitiveGeometry(created);
         registerManipulatorGeometry(created);
         registerMechanicalGeometry(created);
+        registerAntennaGeometry(created);
         return created;
     }();
     return registry;

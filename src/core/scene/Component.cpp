@@ -15,6 +15,9 @@ void registerManipulatorComponents(ComponentRegistry& registry);
 namespace mechanics {
 void registerMechanicalComponents(ComponentRegistry& registry);
 }
+namespace em {
+void registerElectromagneticComponents(ComponentRegistry& registry);
+}
 
 ComponentRegistry& ComponentRegistry::instance()
 {
@@ -23,6 +26,7 @@ ComponentRegistry& ComponentRegistry::instance()
         acoustics::registerAcousticComponents(created);
         manipulators::registerManipulatorComponents(created);
         mechanics::registerMechanicalComponents(created);
+        em::registerElectromagneticComponents(created);
         return created;
     }();
     return registry;

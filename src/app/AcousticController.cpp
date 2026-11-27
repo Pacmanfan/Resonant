@@ -520,6 +520,7 @@ QString AcousticController::displayDescription() const
     case render::FieldQuantity::Magnitude: quantity = QStringLiteral("Pressure magnitude |P| (peak)"); break;
     case render::FieldQuantity::Phase: return QStringLiteral("Pressure phase, -180 to +180 degrees (cyclic colours)");
     case render::FieldQuantity::Instantaneous: quantity = QStringLiteral("Instantaneous pressure Re{P exp(j wt)}"); break;
+    case render::FieldQuantity::Decibels: quantity = QStringLiteral("Pressure level, dB over the 40 dB below the colour-scale top"); break;
     case render::FieldQuantity::RelativeIntensity:
         return QStringLiteral("Relative intensity |P|^2 / |P|max^2 (normalized; not an absolute intensity)")
                + (normalization_ == Normalization::Absolute

@@ -7,7 +7,7 @@
 // region a three-dimensional one. Emitters become volume-velocity sources,
 // probes and targets become recorded positions, and objects with geometry
 // become rigid, pressure-release or fluid-like material cells, from their
-// own definitions (SolidModel.h).
+// own definitions (geometry/SolidModel.h).
 //
 // Nothing here reduces the accuracy that was asked for: when the request
 // cannot be met within the limits, the plan is refused with the reason and

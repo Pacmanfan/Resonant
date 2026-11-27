@@ -277,7 +277,7 @@
       "t2"
      ],
      "exclusive": true,
-     "expected_seconds": 120
+     "expected_seconds": 420
     }
    }
   },

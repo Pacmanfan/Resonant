@@ -143,6 +143,32 @@
     <addaction name="actionRunTransient"/>
     <addaction name="actionRunStatic"/>
    </widget>
+   <widget class="QMenu" name="menuElectromagnetics">
+    <property name="title"><string>&amp;Electromagnetics</string></property>
+    <addaction name="actionAddDipoleAntenna"/>
+    <addaction name="actionAddMonopoleAntenna"/>
+    <addaction name="actionAddLoopAntenna"/>
+    <addaction name="actionAddPatchAntenna"/>
+    <addaction name="actionAddHornAntenna"/>
+    <addaction name="actionAddHelixAntenna"/>
+    <addaction name="separator"/>
+    <addaction name="actionAddElectricDipoleSource"/>
+    <addaction name="actionAddMagneticDipoleSource"/>
+    <addaction name="actionAddPlaneWaveSource"/>
+    <addaction name="separator"/>
+    <addaction name="actionAddLinearRfArray"/>
+    <addaction name="actionAddPlanarRfArray"/>
+    <addaction name="actionAddCircularRfArray"/>
+    <addaction name="separator"/>
+    <addaction name="actionAddEmRectangularGuide"/>
+    <addaction name="actionAddEmCircularGuide"/>
+    <addaction name="actionAddCoaxialLine"/>
+    <addaction name="actionAddEmCavity"/>
+    <addaction name="separator"/>
+    <addaction name="actionAnalyseEm"/>
+    <addaction name="actionEvaluateEmField"/>
+    <addaction name="actionRunEmFullWave"/>
+   </widget>
    <widget class="QMenu" name="menuSimulation">
     <property name="title"><string>S&amp;imulation</string></property>
     <addaction name="actionRunFullWave"/>
@@ -177,6 +203,7 @@
    <addaction name="menuAcoustics"/>
    <addaction name="menuManipulators"/>
    <addaction name="menuMechanics"/>
+   <addaction name="menuElectromagnetics"/>
    <addaction name="menuSimulation"/>
    <addaction name="menuTools"/>
    <addaction name="menuHelp"/>
@@ -255,6 +282,11 @@
    <property name="windowTitle"><string>Mechanics</string></property>
    <attribute name="dockWidgetArea"><number>2</number></attribute>
    <widget class="MechanicsPanel" name="mechanicsPanel"/>
+  </widget>
+  <widget class="QDockWidget" name="emDock">
+   <property name="windowTitle"><string>Electromagnetics</string></property>
+   <attribute name="dockWidgetArea"><number>2</number></attribute>
+   <widget class="EmPanel" name="emPanel"/>
   </widget>
   <widget class="QDockWidget" name="solverDock">
    <property name="windowTitle"><string>Full-Wave Solver</string></property>
@@ -634,6 +666,101 @@
    <property name="toolTip"><string>Static deformation of the selected structure</string></property>
    <property name="statusTip"><string>Static deformation of the selected structure</string></property>
   </action>
+  <action name="actionAddDipoleAntenna">
+   <property name="text"><string>Add &amp;Dipole Antenna</string></property>
+   <property name="toolTip"><string>Add a half-wave dipole for 1 GHz (copper wire) along local Z</string></property>
+   <property name="statusTip"><string>Add a half-wave dipole for 1 GHz (copper wire) along local Z</string></property>
+  </action>
+  <action name="actionAddMonopoleAntenna">
+   <property name="text"><string>Add &amp;Monopole Antenna</string></property>
+   <property name="toolTip"><string>Add a quarter-wave monopole for 1 GHz over a ground plane</string></property>
+   <property name="statusTip"><string>Add a quarter-wave monopole for 1 GHz over a ground plane</string></property>
+  </action>
+  <action name="actionAddLoopAntenna">
+   <property name="text"><string>Add Small &amp;Loop Antenna</string></property>
+   <property name="toolTip"><string>Add an electrically small loop antenna</string></property>
+   <property name="statusTip"><string>Add an electrically small loop antenna</string></property>
+  </action>
+  <action name="actionAddPatchAntenna">
+   <property name="text"><string>Add &amp;Patch Antenna</string></property>
+   <property name="toolTip"><string>Add a rectangular patch (design estimates only)</string></property>
+   <property name="statusTip"><string>Add a rectangular patch (design estimates only)</string></property>
+  </action>
+  <action name="actionAddHornAntenna">
+   <property name="text"><string>Add &amp;Horn Antenna</string></property>
+   <property name="toolTip"><string>Add a pyramidal horn (design estimates only)</string></property>
+   <property name="statusTip"><string>Add a pyramidal horn (design estimates only)</string></property>
+  </action>
+  <action name="actionAddHelixAntenna">
+   <property name="text"><string>Add H&amp;elical Antenna</string></property>
+   <property name="toolTip"><string>Add a helical antenna (design estimates only)</string></property>
+   <property name="statusTip"><string>Add a helical antenna (design estimates only)</string></property>
+  </action>
+  <action name="actionAddElectricDipoleSource">
+   <property name="text"><string>Add &amp;Electric Dipole Source</string></property>
+   <property name="toolTip"><string>Add an ideal current element (Hertzian dipole)</string></property>
+   <property name="statusTip"><string>Add an ideal current element (Hertzian dipole)</string></property>
+  </action>
+  <action name="actionAddMagneticDipoleSource">
+   <property name="text"><string>Add Ma&amp;gnetic Dipole Source</string></property>
+   <property name="toolTip"><string>Add an ideal magnetic dipole (small current loop)</string></property>
+   <property name="statusTip"><string>Add an ideal magnetic dipole (small current loop)</string></property>
+  </action>
+  <action name="actionAddPlaneWaveSource">
+   <property name="text"><string>Add Plane &amp;Wave</string></property>
+   <property name="toolTip"><string>Add an incident plane wave</string></property>
+   <property name="statusTip"><string>Add an incident plane wave</string></property>
+  </action>
+  <action name="actionAddLinearRfArray">
+   <property name="text"><string>Add Linear &amp;RF Array</string></property>
+   <property name="toolTip"><string>Add a linear array of half-wave dipoles at half-wavelength spacing</string></property>
+   <property name="statusTip"><string>Add a linear array of half-wave dipoles at half-wavelength spacing</string></property>
+  </action>
+  <action name="actionAddPlanarRfArray">
+   <property name="text"><string>Add Planar RF &amp;Array</string></property>
+   <property name="toolTip"><string>Add a planar array (cosine elements) at half-wavelength spacing</string></property>
+   <property name="statusTip"><string>Add a planar array (cosine elements) at half-wavelength spacing</string></property>
+  </action>
+  <action name="actionAddCircularRfArray">
+   <property name="text"><string>Add &amp;Circular RF Array</string></property>
+   <property name="toolTip"><string>Add a circular array of half-wave dipoles</string></property>
+   <property name="statusTip"><string>Add a circular array of half-wave dipoles</string></property>
+  </action>
+  <action name="actionAddEmRectangularGuide">
+   <property name="text"><string>Add Rectangular &amp;Waveguide (EM)</string></property>
+   <property name="toolTip"><string>Add a WR-90 rectangular waveguide</string></property>
+   <property name="statusTip"><string>Add a WR-90 rectangular waveguide</string></property>
+  </action>
+  <action name="actionAddEmCircularGuide">
+   <property name="text"><string>Add Circular Wa&amp;veguide (EM)</string></property>
+   <property name="toolTip"><string>Add a circular waveguide</string></property>
+   <property name="statusTip"><string>Add a circular waveguide</string></property>
+  </action>
+  <action name="actionAddCoaxialLine">
+   <property name="text"><string>Add Coa&amp;xial Line</string></property>
+   <property name="toolTip"><string>Add a coaxial line section</string></property>
+   <property name="statusTip"><string>Add a coaxial line section</string></property>
+  </action>
+  <action name="actionAddEmCavity">
+   <property name="text"><string>Add Rectangular Ca&amp;vity</string></property>
+   <property name="toolTip"><string>Add a rectangular cavity resonator</string></property>
+   <property name="statusTip"><string>Add a rectangular cavity resonator</string></property>
+  </action>
+  <action name="actionAnalyseEm">
+   <property name="text"><string>A&amp;nalyse Selected</string></property>
+   <property name="toolTip"><string>Report, impedance and pattern of the selected antenna, array or guide</string></property>
+   <property name="statusTip"><string>Report, impedance and pattern of the selected antenna, array or guide</string></property>
+  </action>
+  <action name="actionEvaluateEmField">
+   <property name="text"><string>Evaluate Analytical &amp;Field</string></property>
+   <property name="toolTip"><string>Analytical electromagnetic field of all active radiators on the chosen region</string></property>
+   <property name="statusTip"><string>Analytical electromagnetic field of all active radiators on the chosen region</string></property>
+  </action>
+  <action name="actionRunEmFullWave">
+   <property name="text"><string>Run Electromagnetic &amp;Full-Wave (Yee)</string></property>
+   <property name="toolTip"><string>Run the Yee FDTD solver on the chosen region</string></property>
+   <property name="statusTip"><string>Run the Yee FDTD solver on the chosen region</string></property>
+  </action>
   <action name="actionRunFullWave">
    <property name="text"><string>Run &amp;Full-Wave Simulation</string></property>
    <property name="toolTip"><string>Run the time-domain full-wave solver on the chosen region</string></property>
@@ -713,6 +840,7 @@
   <customwidget><class>PropertiesPanel</class><extends>QWidget</extends><header>PropertiesPanel.h</header><container>1</container></customwidget>
   <customwidget><class>AnalysisPanel</class><extends>QWidget</extends><header>AnalysisPanel.h</header><container>1</container></customwidget>
   <customwidget><class>MechanicsPanel</class><extends>QWidget</extends><header>MechanicsPanel.h</header><container>1</container></customwidget>
+  <customwidget><class>EmPanel</class><extends>QWidget</extends><header>EmPanel.h</header><container>1</container></customwidget>
   <customwidget><class>FdtdPanel</class><extends>QWidget</extends><header>FdtdPanel.h</header><container>1</container></customwidget>
   <customwidget><class>AcousticsPanel</class><extends>QWidget</extends><header>AcousticsPanel.h</header><container>1</container></customwidget>
  </customwidgets>

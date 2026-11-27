@@ -2,7 +2,7 @@
 
 #include "acoustics/Components.h"
 #include "acoustics/Propagation.h"
-#include "fdtd/SolidModel.h"
+#include "geometry/SolidModel.h"
 #include "manipulators/Manipulator.h"
 
 #include <cmath>

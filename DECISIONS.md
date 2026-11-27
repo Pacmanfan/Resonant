@@ -15,6 +15,7 @@ development-control system, not the application.
 | [ADR-000208](docs/decisions/ADR-000208-wave-manipulators-and-reflector-model.md) | Manipulators as scene objects with design data, parametric geometry and a separate simulation representation; support levels; a Kirchhoff reflector model as a selectable propagation model; the field model as a recorded project setting; rays as a geometric aid; minimal optimization interfaces; constraints as checks | M3 |
 | [ADR-000209](docs/decisions/ADR-000209-full-wave-fdtd-solver.md) | Staggered-grid FDTD as the first full-wave solver, validated as a scene-independent core; split-field PML; calibrated soft sources; 2D as a stated different problem; simulation geometry from definitions; solids as fluids; steady state as an ordinary field result; a solver registry that assesses and never selects; refuse rather than degrade | M4 |
 | [ADR-000210](docs/decisions/ADR-000210-mechanical-domain.md) | Mechanical domain with an own finite-element core; explicit idealizations; frame, ACM plate, membrane and hexahedral elements; Lanczos eigensolver with residuals; explicit damping models; Newmark transients; shared dsp module; separate coupling module | M5 |
+| [ADR-000211](docs/decisions/ADR-000211-electromagnetic-domain.md) | Electromagnetic domain: analytical thin-wire antennas and induced-EMF impedance; arrays as an array-factor model without coupling; an own Yee FDTD solver (split-field PML, PEC, thin wires, 2D TM); setup separate from numerics with refusal instead of coarsening; simulation bodies shared in the geometry module; guide objects; one-port Touchstone; a dB field view | M6 |
 
 ## Deviations from requests
 
@@ -27,3 +28,4 @@ Recorded in the decision that caused them:
 * The deviations of passive wave manipulation from its request are listed in ADR-000208.
 * The deviations of the full-wave solver milestone from its request are listed in ADR-000209.
 * The deviations of the mechanical milestone from its request are listed in ADR-000210.
+* The deviations of the electromagnetic milestone from its request are listed in ADR-000211 and `IMPLEMENTATION_STATUS.md`.

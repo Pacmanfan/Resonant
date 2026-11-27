@@ -1,0 +1,417 @@
+{
+  "request_id": "REQ-CHAT-20261126-007",
+  "source": "chat",
+  "type": "FEATURE",
+  "priority": "NORMAL",
+  "created": "2026-11-26T15:34:55-05:00",
+  "created_utc": "2026-11-26T20:34:55+00:00",
+  "id_date": "2026-11-26",
+  "timezone": "EST (UTC-05:00)",
+  "status": "completed",
+  "original_text": "# PROMPT 11 \u2014 RESONANT: ELECTROMAGNETIC WAVE ENGINEERING, RF PROPAGATION AND ANTENNA ARRAY SIMULATION\n\nYou are continuing development of **RESONANT \u2014 Wave Field Engineering Studio**.\n\nThis milestone introduces the third major physics domain: **electromagnetic wave engineering**.\n\nThe objective is to make Resonant capable of designing, analyzing, simulating, and optimizing electromagnetic structures, RF antennas, antenna arrays, phased arrays, and electromagnetic propagation environments.\n\nThis includes conventional antenna engineering, near-field and far-field analysis, electromagnetic interference, field distribution, polarization, impedance, radiation patterns, and eventually full-wave electromagnetic simulation.\n\nBuild on the existing Resonant application, geometry, material, simulation, visualization, and solver architectures.\n\nDo not replace the acoustic or mechanical subsystems. Electromagnetic physics must be a distinct domain with its own governing equations, constitutive material properties, boundary conditions, and numerical methods.\n\n---\n\n## 1. Mission and objectives\n\nImplement a modular electromagnetic physics subsystem supporting:\n\n- Electromagnetic wave propagation.\n- Electric and magnetic field calculations.\n- RF antenna modeling.\n- Antenna radiation patterns.\n- Near-field analysis.\n- Far-field analysis.\n- Antenna arrays.\n- Phased arrays.\n- Beam steering.\n- Beamforming.\n- Polarization analysis.\n- Electromagnetic interference.\n- Reflection and transmission.\n- Diffraction and scattering.\n- Material interactions.\n- Resonant structures.\n- Waveguides and transmission lines.\n- Electromagnetic cavities.\n- Impedance analysis.\n- Frequency sweeps.\n- Broadband and transient propagation.\n- Electromagnetic field focusing.\n- Metamaterials and engineered electromagnetic structures.\n\nThe initial priority is a useful RF antenna and array engineering workflow, followed by progressively more rigorous electromagnetic simulation.\n\nThe system should eventually support complex electromagnetic environments and real physical antenna structures.\n\nDo not attempt to implement every electromagnetic solver or physical effect in one milestone.\n\nPrioritize correct, independently validated capabilities.\n\n## 2. Electromagnetic physics architecture\n\nCreate a dedicated electromagnetic physics subsystem.\n\nKeep it independent from the acoustic and mechanical physics engines.\n\nThe subsystem should include:\n\n- Electromagnetic domain data models.\n- RF source definitions.\n- Antenna models.\n- Antenna array models.\n- Electromagnetic materials.\n- Propagation media.\n- Boundary conditions.\n- Electromagnetic geometry.\n- Solver interfaces.\n- Field evaluation.\n- Radiation analysis.\n- Frequency-domain analysis.\n- Time-domain analysis.\n- Optimization.\n- Result storage.\n- Visualization interfaces.\n\nReuse appropriate generic application infrastructure:\n\n- Scene management.\n- Geometry.\n- Coordinate transforms.\n- Units.\n- Material metadata.\n- Mesh infrastructure.\n- Simulation jobs.\n- Rendering.\n- Project persistence.\n- Result storage.\n\nDo not reuse acoustic Green's functions, acoustic material properties, or mechanical solver formulations as substitutes for electromagnetic equations.\n\n## 3. Electromagnetic material models\n\nExtend the material system with electromagnetic properties.\n\nSupport:\n\n- Relative permittivity.\n- Relative permeability.\n- Electrical conductivity.\n- Dielectric loss.\n- Magnetic loss.\n- Complex permittivity.\n- Complex permeability.\n- Anisotropy where supported.\n- Frequency dependence.\n- Temperature dependence where available.\n- Dispersion where supported.\n\nSupport initial materials such as:\n\n- Vacuum.\n- Air.\n- Water.\n- Copper.\n- Aluminum.\n- Silver.\n- Brass.\n- Steel.\n- Glass.\n- Acrylic.\n- FR-4.\n- PTFE.\n- Common plastics.\n- Ceramic substrates.\n- Ferrite materials.\n- Dielectric composites.\n\nMaterial records must include:\n\n- Source and provenance.\n- Measurement conditions.\n- Frequency validity range.\n- Temperature validity range where available.\n- Units and conventions.\n- Confidence or quality metadata.\n\nDo not invent authoritative material constants.\n\nDo not assume FR-4 or other manufactured composites have one universal dielectric constant or loss tangent.\n\nAllow frequency-dependent material properties to be represented by suitable functions or tabulated data.\n\nClearly distinguish ideal conductors, finite-conductivity conductors, dielectric materials, and magnetic materials.\n\n## 4. Maxwell equation foundation\n\nEstablish a mathematically correct electromagnetic physics foundation.\n\nUse Maxwell's equations as the governing physical framework.\n\nIn differential form:\n\n\\[\n\\nabla\\cdot\\mathbf{D}=\\rho\n\\]\n\n\\[\n\\nabla\\cdot\\mathbf{B}=0\n\\]\n\n\\[\n\\nabla\\times\\mathbf{E}\n=\n-\\frac{\\partial\\mathbf{B}}{\\partial t}\n\\]\n\n\\[\n\\nabla\\times\\mathbf{H}\n=\n\\mathbf{J}\n+\n\\frac{\\partial\\mathbf{D}}{\\partial t}\n\\]\n\nwhere:\n\n- \\(\\mathbf{E}\\) is electric field.\n- \\(\\mathbf{H}\\) is magnetic field.\n- \\(\\mathbf{D}\\) is electric flux density.\n- \\(\\mathbf{B}\\) is magnetic flux density.\n- \\(\\mathbf{J}\\) is current density.\n- \\(\\rho\\) is electric charge density.\n\nImplement appropriate constitutive relationships:\n\n\\[\n\\mathbf{D}=\\boldsymbol{\\epsilon}\\mathbf{E}\n\\]\n\n\\[\n\\mathbf{B}=\\boldsymbol{\\mu}\\mathbf{H}\n\\]\n\n\\[\n\\mathbf{J}=\\boldsymbol{\\sigma}\\mathbf{E}\n\\]\n\nUse tensor formulations when anisotropic materials are supported.\n\nDocument the time-harmonic convention explicitly.\n\nFor frequency-domain solvers, define whether the implementation uses:\n\n\\[\ne^{j\\omega t}\n\\]\n\nor:\n\n\\[\ne^{-j\\omega t}\n\\]\n\nMaintain consistent phase, propagation, and complex-field conventions throughout the system.\n\nDo not mix phasor conventions between solvers.\n\n## 5. RF source model\n\nIntroduce a first-class **Electromagnetic Source** object.\n\nSupport:\n\n- Stable ID.\n- Position.\n- Orientation.\n- Frequency.\n- Amplitude.\n- Phase.\n- Time delay.\n- Waveform.\n- Polarization.\n- Source type.\n- Active/inactive state.\n- Optional physical dimensions.\n- Optional source impedance.\n\nSupport initial idealized source models where mathematically appropriate.\n\nDistinguish between:\n\n- Mathematical point sources.\n- Idealized current sources.\n- Electric dipoles.\n- Magnetic dipoles.\n- Hertzian dipoles.\n- Plane-wave excitation.\n- Port excitation.\n- Physical antenna models.\n\nDo not represent a physical antenna as an idealized point source without identifying the approximation.\n\nPrepare for real antenna feed structures and port definitions.\n\n## 6. Antenna engineering subsystem\n\nIntroduce a dedicated **Antenna** scene object.\n\nAn antenna should support:\n\n- Stable ID.\n- Antenna category.\n- Geometry.\n- Feed position.\n- Feed type.\n- Operating frequency range.\n- Polarization.\n- Orientation.\n- Impedance information.\n- Radiation model.\n- Material assignments.\n- Optional measured data.\n- Optional calibration information.\n\nImplement initial antenna design models:\n\n- Half-wave dipole.\n- Monopole.\n- Quarter-wave monopole.\n- Simple loop antenna.\n- Helical antenna.\n- Patch antenna.\n- Horn antenna.\n- Yagi-Uda antenna.\n- Basic aperture antenna.\n\nThe initial priority should be dipoles, monopoles, and simple antenna models with well-understood analytical references.\n\nOther antenna types may initially be represented parametrically, but must not be presented as accurately simulated until their electromagnetic behavior is supported.\n\nFor each antenna, distinguish:\n\n- Geometric design.\n- Idealized analytical model.\n- Numerical electromagnetic model.\n- Measured antenna model.\n\nAllow physical dimensions and operating frequency to be edited.\n\nProvide useful initial design estimates based on wavelength, while clearly identifying their approximations.\n\n## 7. Antenna feed and impedance modeling\n\nImplement antenna feed definitions.\n\nSupport:\n\n- Lumped-port concepts.\n- Voltage excitation.\n- Current excitation.\n- Wave-port concepts where applicable.\n- Feed position.\n- Feed impedance.\n- Reference impedance.\n- Port orientation.\n\nIntroduce impedance analysis.\n\nSupport:\n\n- Input impedance.\n- Resistance.\n- Reactance.\n- Complex impedance.\n- Reflection coefficient.\n- Return loss.\n- VSWR.\n- Frequency-dependent impedance.\n\nUse consistent reference impedance conventions.\n\nFor example, define the reflection coefficient:\n\n\\[\n\\Gamma=\\frac{Z_{in}-Z_0}{Z_{in}+Z_0}\n\\]\n\nand calculate VSWR where meaningful:\n\n\\[\nVSWR=\\frac{1+|\\Gamma|}{1-|\\Gamma|}\n\\]\n\nClearly distinguish ideal analytical estimates from numerically calculated feed impedance.\n\nPrepare for multiport systems and S-parameter matrices.\n\n## 8. Antenna radiation analysis\n\nImplement antenna radiation analysis.\n\nSupport:\n\n- Radiation patterns.\n- Directivity.\n- Gain.\n- Realized gain where supported.\n- Radiation efficiency.\n- Polarization.\n- Main-lobe direction.\n- Beamwidth.\n- Sidelobe levels.\n- Front-to-back ratio.\n- Near-field distribution.\n- Far-field distribution.\n\nSupport 2D angular cuts:\n\n- Azimuth.\n- Elevation.\n\nSupport 3D radiation-pattern visualization.\n\nClearly distinguish:\n\n- Directivity.\n- Gain.\n- Realized gain.\n- Radiation efficiency.\n- Relative normalized radiation pattern.\n\nDo not label a normalized pattern as absolute gain.\n\nUse appropriate definitions for radiated power and radiation intensity.\n\nInclude polarization information.\n\nFor example, support co-polarized and cross-polarized field components where the selected antenna model permits them.\n\n## 9. Near-field and far-field analysis\n\nImplement distinct near-field and far-field analysis capabilities.\n\nSupport:\n\n- Reactive near-field visualization where calculated.\n- Radiating near-field analysis.\n- Far-field radiation patterns.\n- Electric field distribution.\n- Magnetic field distribution.\n- Poynting vector.\n- Time-averaged power flow.\n- Polarization analysis.\n\nUse physically appropriate far-field approximations and applicability criteria.\n\nDo not assume every point outside a fixed distance is automatically in the far field.\n\nFor antenna radiation, provide the user with a documented far-field distance estimate based on antenna dimensions and wavelength where applicable.\n\nAllow users to inspect field magnitude and phase across spatial planes and volumes.\n\nKeep near-field and far-field quantities clearly identified.\n\n## 10. Antenna arrays\n\nImplement an **Electromagnetic Array** scene object.\n\nSupport:\n\n- Linear arrays.\n- Rectangular planar arrays.\n- Circular arrays.\n- Cylindrical arrays.\n- Spherical arrays.\n- Custom element placement.\n\nEach array must support:\n\n- Element count.\n- Element spacing.\n- Array geometry.\n- Array orientation.\n- Element type.\n- Element frequency.\n- Element amplitude.\n- Element phase.\n- Element delay.\n- Element polarization.\n- Individual element activation.\n- Element feed configuration.\n\nAllow individual antennas to be selected and modified after array generation.\n\nChanging array geometry must not unnecessarily destroy per-element configurations.\n\nSupport element patterns and array geometry as separate concepts.\n\n## 11. Array-factor calculations\n\nImplement an array-factor engine.\n\nFor an idealized array, calculate the combined far-field response using element positions and complex excitation weights.\n\nA representative expression is:\n\n\\[\nAF(\\hat{\\mathbf{r}})\n=\n\\sum_{n=1}^{N}\nw_n e^{jk\\hat{\\mathbf{r}}\\cdot\\mathbf{r}_n}\n\\]\n\nwhere:\n\n- \\(w_n\\) is the complex excitation weight.\n- \\(k\\) is the wavenumber.\n- \\(\\hat{\\mathbf{r}}\\) is the observation direction.\n- \\(\\mathbf{r}_n\\) is the element position.\n\nCombine the array factor with individual element patterns where appropriate.\n\nSupport:\n\n- Uniform excitation.\n- Amplitude tapering.\n- Phase tapering.\n- Steering phase.\n- Element failure or deactivation.\n- Custom excitation weights.\n\nClearly identify the assumptions of idealized array-factor modeling.\n\nAn array-factor model does not automatically account for:\n\n- Mutual coupling.\n- Element impedance changes.\n- Feed-network effects.\n- Surface currents.\n- Structural interactions.\n- Scattering from neighboring elements.\n\nDo not present array-factor results as full-wave array simulations.\n\n## 12. Beam steering and beamforming\n\nImplement active beam steering.\n\nAllow users to define a desired pointing direction.\n\nCalculate the required per-element phase settings for narrowband steering.\n\nSupport:\n\n- Azimuth steering.\n- Elevation steering.\n- Two-dimensional beam steering.\n- Amplitude tapering.\n- Phase tapering.\n- Element weighting.\n- Multiple array configurations.\n\nImplement true time-delay configuration as a distinct control method.\n\nDo not represent broadband time-delay steering as a fixed phase offset.\n\nSupport steering across a configurable frequency range.\n\nShow:\n\n- Desired steering direction.\n- Calculated beam direction.\n- Main-lobe direction.\n- Beamwidth.\n- Sidelobe level.\n- Grating-lobe locations where identifiable.\n\nProvide warnings when element spacing and frequency create significant grating-lobe concerns.\n\n## 13. Multiple beams and field constraints\n\nIntroduce an electromagnetic target-field representation.\n\nSupport:\n\n- Point targets.\n- Directional targets.\n- Multiple beam directions.\n- Desired field magnitude.\n- Desired phase.\n- Suppression directions.\n- Spatial regions.\n- Null placement.\n\nFor the initial implementation, support multiple directional targets where the selected array model permits.\n\nIntroduce inverse-design interfaces.\n\nFor sampled field constraints, construct a suitable complex propagation or array-response matrix:\n\n\\[\nAw\\approx b\n\\]\n\nSolve for complex element weights using a stable least-squares method.\n\nSupport regularization and configurable amplitude constraints.\n\nReport residual error and identify infeasible target configurations.\n\nDo not imply that an arbitrary target field can be achieved with a finite array.\n\n## 14. Electromagnetic propagation\n\nImplement initial propagation models.\n\nSupport appropriate analytical models for:\n\n- Plane waves.\n- Spherical waves.\n- Idealized dipoles.\n- Simple antenna radiation.\n- Free-space propagation.\n\nWhere appropriate, calculate:\n\n- Electric field.\n- Magnetic field.\n- Phase.\n- Power density.\n- Poynting vector.\n\nImplement free-space path calculations with clearly documented assumptions.\n\nPrepare for propagation through:\n\n- Dielectric materials.\n- Conductive materials.\n- Layered media.\n- Interfaces.\n- Obstacles.\n- Reflectors.\n- Waveguides.\n\nDo not treat free-space propagation models as substitutes for general electromagnetic interaction with geometry.\n\n## 15. Electromagnetic material interactions\n\nImplement the architecture for:\n\n- Reflection.\n- Transmission.\n- Refraction.\n- Scattering.\n- Absorption.\n- Conductor losses.\n- Dielectric losses.\n- Surface currents.\n\nSupport appropriate boundary conditions for electromagnetic solvers.\n\nDistinguish:\n\n- Perfect electric conductor.\n- Perfect magnetic conductor where relevant.\n- Finite-conductivity conductor.\n- Dielectric interface.\n- Impedance boundary.\n- Periodic boundary.\n- Radiation boundary.\n\nFor interfaces, implement physically consistent continuity conditions.\n\nDo not use arbitrary reflection coefficients where the actual material and geometry should determine the interaction.\n\n## 16. Numerical electromagnetic solvers\n\nThe analytical and array-factor models are only the beginning.\n\nEstablish a modular numerical solver architecture.\n\nInvestigate and integrate appropriate methods:\n\n**Finite Difference Time Domain**\n- Time-domain Maxwell equations.\n- Broadband propagation.\n- Transient electromagnetic fields.\n- Scattering.\n- Conductive and dielectric media.\n\n**Finite Element Method**\n- Frequency-domain electromagnetic analysis.\n- Complex geometry.\n- Material variation.\n- Resonant structures.\n- Waveguides and cavities.\n\n**Method of Moments**\n- Antenna radiation and scattering.\n- Surface-current formulations.\n- Conducting structures.\n- Appropriate integral-equation problems.\n\n**Finite Integration Technique**\n- Time- and frequency-domain electromagnetic formulations where appropriate.\n\n**Transmission-line and modal methods**\n- Transmission lines.\n- Waveguides.\n- Resonant cavities.\n- Multimode propagation.\n\nDo not force all methods into one solver.\n\nFor each method, document:\n- Governing equations.\n- Supported dimensions.\n- Material assumptions.\n- Boundary conditions.\n- Mesh requirements.\n- Numerical stability.\n- Convergence.\n- Computational cost.\n\nPrioritize integrating or implementing a validated full-wave electromagnetic method for a limited set of configurations.\n\nDo not claim full-wave accuracy for an array-factor calculation.\n\n## 17. Electromagnetic waveguides and resonant structures\n\nIntroduce electromagnetic waveguide and cavity objects.\n\nSupport geometry for:\n\n- Rectangular waveguides.\n- Circular waveguides.\n- Coaxial structures.\n- Parallel-plate waveguides.\n- Dielectric waveguides.\n- Resonant cavities.\n\nWhere appropriate, calculate analytical cutoff frequencies and modal properties.\n\nFor a rectangular waveguide, implement the relevant analytical mode calculations under documented assumptions.\n\nSupport:\n\n- TE modes.\n- TM modes.\n- Propagation constants.\n- Cutoff frequencies.\n- Characteristic impedance where applicable.\n- Mode visualization where supported.\n\nPrepare for numerical analysis of complex waveguide geometry.\n\nDistinguish analytical ideal-waveguide calculations from full numerical field simulation.\n\n## 18. Transmission lines and RF networks\n\nIntroduce a transmission-line subsystem.\n\nSupport:\n\n- Coaxial lines.\n- Microstrip.\n- Stripline.\n- Coplanar waveguide.\n- Ideal transmission-line models.\n\nProvide calculations for:\n\n- Characteristic impedance.\n- Propagation constant.\n- Wavelength in the medium.\n- Phase velocity.\n- Attenuation.\n- Reflection coefficient.\n- Standing-wave ratio.\n- Input impedance.\n- Matching networks.\n\nPrepare for multiport network analysis.\n\nSupport S-parameter data import and export where practical.\n\nAllow users to connect antenna ports and transmission-line components conceptually.\n\nDo not turn Resonant into a full circuit simulator unless a later milestone justifies that expansion.\n\n## 19. Electromagnetic field visualization\n\nConnect electromagnetic results to the OpenGL rendering subsystem.\n\nVisualize actual numerical or analytical field results.\n\nImplement:\n\n**Electric field**\n- Ex, Ey, Ez.\n- Magnitude.\n- Phase.\n- Polarization.\n\n**Magnetic field**\n- Hx, Hy, Hz.\n- Magnitude.\n- Phase.\n\n**Power flow**\n- Poynting vector.\n- Power density.\n- Directional flow.\n\n**Antenna visualization**\n- 2D radiation patterns.\n- 3D radiation patterns.\n- Near-field slices.\n- Far-field angular maps.\n- Array element excitation.\n- Beam direction.\n\n**Wave propagation**\n- Animated electromagnetic fields.\n- Phase progression.\n- Transient propagation.\n- Field interaction with supported structures.\n\nProvide selectable field components, color scales, normalization, and visualization controls.\n\nDo not use decorative radiation lobes or generic wave graphics as substitutes for calculated results.\n\nEnsure field visualization remains separate from the numerical solver.\n\n## 20. RF measurements and experimental calibration preparation\n\nPrepare the electromagnetic subsystem for real RF measurement data.\n\nIntroduce data models for:\n\n- Antenna measurements.\n- S-parameters.\n- Return loss.\n- VSWR.\n- Radiation patterns.\n- Field-strength measurements.\n- Frequency sweeps.\n- Phase measurements.\n- Antenna calibration.\n- Measurement uncertainty.\n\nSupport importing standard or documented formats where practical.\n\nAllow simulated and measured results to be compared.\n\nPrepare for future integration with:\n\n- Vector network analyzers.\n- Spectrum analyzers.\n- Signal generators.\n- Software-defined radios.\n- RF power meters.\n- Near-field probes.\n- Antenna measurement systems.\n\nDo not implement uncontrolled RF hardware transmission in this milestone.\n\nThe architecture should support safe, explicitly configured measurement and calibration workflows.\n\n## 21. Electromagnetic optimization\n\nIntroduce inverse-design and optimization interfaces.\n\nSupport optimization variables such as:\n\n- Antenna dimensions.\n- Element spacing.\n- Array geometry.\n- Element amplitude.\n- Element phase.\n- Element delay.\n- Feed position.\n- Material properties.\n- Matching-network parameters.\n- Reflector geometry.\n\nSupport objectives such as:\n\n- Maximize gain in a target direction.\n- Improve impedance matching.\n- Reduce sidelobes.\n- Improve beamwidth.\n- Place radiation nulls.\n- Improve efficiency.\n- Reduce unwanted radiation.\n- Shape near-field distributions.\n\nUse appropriate optimization methods.\n\nDo not optimize geometry using a simplified model and imply that the result is guaranteed to work in a full-wave physical design.\n\nClearly identify the model used for every optimization run.\n\n## 22. Performance and compute backends\n\nBegin with a correct CPU reference implementation.\n\nInvestigate:\n\n- Sparse matrix methods.\n- Eigen-based linear algebra.\n- OpenMP.\n- SIMD.\n- CUDA.\n- OpenCL or other suitable compute backends.\n- GPU-accelerated FDTD.\n- GPU-accelerated field evaluation.\n\nDo not make the electromagnetic physics engine dependent on one GPU vendor.\n\nKeep solver physics independent from compute execution.\n\nValidate accelerated results against CPU reference calculations.\n\nReport precision, convergence, and numerical tolerances.\n\n## 23. Resource management and numerical preflight\n\nElectromagnetic simulations can become computationally expensive, particularly at high frequencies and in three dimensions.\n\nImplement preflight estimates for:\n\n- Wavelength.\n- Mesh resolution.\n- Grid dimensions.\n- Number of degrees of freedom.\n- Time-step count.\n- Memory.\n- Matrix storage.\n- Expected computational workload.\n- Field recording requirements.\n\nFor explicit time-domain solvers, enforce the appropriate stability condition.\n\nFor frequency-domain solvers, estimate matrix and memory requirements before assembly.\n\nWarn about:\n- Insufficient wavelength resolution.\n- Invalid material frequency ranges.\n- Unstable timesteps.\n- Excessive mesh sizes.\n- Inadequate boundary treatment.\n- Insufficient simulation duration.\n- Unresolved geometric features.\n\nDo not silently lower resolution or alter solver settings.\n\n## 24. Reproducibility and data management\n\nEvery electromagnetic simulation must retain:\n\n- Project ID.\n- Simulation ID.\n- Solver name and version.\n- Electromagnetic formulation.\n- Frequency or frequency range.\n- Material definitions.\n- Antenna and source configurations.\n- Array configuration.\n- Boundary conditions.\n- Mesh configuration.\n- Numerical settings.\n- Execution backend.\n- Precision settings.\n- Result metadata.\n- Model assumptions.\n\nKeep large numerical results separate from project metadata.\n\nUse HDF5 or another appropriate scientific data format for large field datasets.\n\nSupport reproducible reruns and comparison between simulation versions.\n\n## 25. Validation and scientific credibility\n\nImplement a serious electromagnetic validation program.\n\nValidate:\n\n- Free-space plane-wave propagation.\n- Spherical-wave propagation where applicable.\n- Dipole radiation.\n- Monopole radiation.\n- Antenna polarization.\n- Radiation patterns.\n- Array-factor calculations.\n- Beam steering.\n- Grating-lobe predictions.\n- Waveguide cutoff frequencies.\n- Transmission-line impedance.\n- Reflection and transmission at material interfaces.\n- Conductor losses where implemented.\n- Resonant cavity behavior.\n- Numerical solver convergence.\n\nUse analytical solutions and independent reference calculations.\n\nFor full-wave solvers, perform mesh-refinement and numerical convergence studies.\n\nCompare against trusted external tools or published benchmark problems where possible.\n\nDocument:\n- Error metrics.\n- Solver tolerances.\n- Mesh resolution.\n- Boundary conditions.\n- Material data.\n- Validity assumptions.\n\nDo not use visual similarity as proof of electromagnetic accuracy.\n\n## 26. Example projects\n\nCreate reproducible example projects.\n\n**Example A \u2014 Dipole antenna**\n- Half-wave dipole.\n- Configurable frequency.\n- Radiation pattern.\n- Polarization.\n- Impedance analysis where supported.\n\n**Example B \u2014 Monopole antenna**\n- Quarter-wave monopole.\n- Ground-plane representation.\n- Radiation pattern.\n- Analytical comparison.\n\n**Example C \u2014 Linear antenna array**\n- Configurable element count and spacing.\n- Array-factor calculation.\n- Radiation-pattern visualization.\n- Sidelobe analysis.\n\n**Example D \u2014 Phased-array beam steering**\n- Planar array.\n- Adjustable steering direction.\n- Calculated element phase.\n- Beam direction verification.\n- Grating-lobe analysis.\n\n**Example E \u2014 Near-field visualization**\n- Antenna model.\n- Spatial field region.\n- Electric and magnetic field visualization.\n- Probe measurements.\n\n**Example F \u2014 Rectangular waveguide**\n- Configurable dimensions.\n- TE/TM mode analysis.\n- Cutoff frequency calculation.\n- Field visualization where supported.\n\n**Example G \u2014 Electromagnetic full-wave validation**\n- A tractable antenna or scattering geometry.\n- Numerical solution.\n- Analytical or independent reference.\n- Mesh-convergence demonstration.\n\nAll examples must use actual implemented calculations.\n\nClearly identify whether results are analytical, array-factor, numerical full-wave, or imported measurement data.\n\n## 27. Documentation\n\nCreate or update:\n\n- ELECTROMAGNETIC_PHYSICS.md\n- MAXWELL_EQUATIONS.md\n- ELECTROMAGNETIC_MATERIALS.md\n- ANTENNA_ENGINEERING.md\n- ANTENNA_ARRAYS.md\n- ARRAY_FACTOR_AND_BEAMFORMING.md\n- NEAR_FIELD_FAR_FIELD.md\n- RF_IMPEDANCE_AND_S_PARAMETERS.md\n- TRANSMISSION_LINES.md\n- WAVEGUIDES_AND_CAVITIES.md\n- ELECTROMAGNETIC_SOLVERS.md\n- ELECTROMAGNETIC_VALIDATION.md\n- PERFORMANCE_AND_GPU.md\n- IMPLEMENTATION_STATUS.md\n- DECISIONS.md\n\nDocument governing equations, conventions, units, material assumptions, solver capabilities, numerical limitations, and validation results.\n\n## 28. Implementation sequence\n\n**Phase A \u2014 Electromagnetic domain architecture**\n- Domain models.\n- Material properties.\n- Source models.\n- Antenna models.\n- Solver interfaces.\n\n**Phase B \u2014 Analytical RF foundation**\n- Free-space propagation.\n- Dipole models.\n- Monopole models.\n- Field calculations.\n- Radiation patterns.\n\n**Phase C \u2014 Antenna array system**\n- Parametric array geometry.\n- Array factor.\n- Element weighting.\n- Beam steering.\n- Sidelobe analysis.\n\n**Phase D \u2014 RF analysis**\n- Feed impedance.\n- Reflection coefficient.\n- Return loss.\n- VSWR.\n- Polarization.\n- Near-field and far-field analysis.\n\n**Phase E \u2014 Transmission lines and waveguides**\n- Analytical models.\n- Characteristic impedance.\n- Cutoff frequencies.\n- Mode calculations.\n\n**Phase F \u2014 Full-wave solver framework**\n- Solver interfaces.\n- Material interactions.\n- Boundary conditions.\n- Mesh integration.\n- Resource estimation.\n\n**Phase G \u2014 Full-wave numerical implementation or integration**\n- Prioritized FDTD, FEM, or Method of Moments implementation.\n- Field calculation.\n- Validation.\n- Example geometry.\n\n**Phase H \u2014 Advanced array analysis**\n- More realistic element patterns.\n- Mutual coupling where supported.\n- Multiple targets.\n- Inverse design.\n\n**Phase I \u2014 Optimization and experimental preparation**\n- Antenna geometry optimization.\n- Array optimization.\n- Measurement import.\n- Calibration structures.\n\n**Phase J \u2014 Verification**\n- Analytical comparisons.\n- Numerical convergence.\n- Example projects.\n- Performance tests.\n- Documentation.\n\nWork incrementally.\n\nA validated antenna and phased-array workflow is more valuable than a broad collection of incomplete electromagnetic features.\n\n## 29. Acceptance criteria\n\nThis milestone is complete only when:\n\n1. Electromagnetic physics is implemented as a distinct modular domain.\n2. Electromagnetic material properties are supported.\n3. RF source objects can be created and configured.\n4. Initial antenna models can be designed.\n5. Analytical antenna radiation models work.\n6. Radiation patterns can be visualized.\n7. Near-field and far-field analysis are clearly distinguished.\n8. Antenna arrays can be generated parametrically.\n9. Array-factor calculations are validated.\n10. Beam steering produces the expected pointing direction.\n11. Grating-lobe warnings work for supported configurations.\n12. Basic impedance analysis works.\n13. Transmission-line and waveguide analytical calculations work where implemented.\n14. At least one full-wave electromagnetic numerical solver is implemented or successfully integrated and validated.\n15. Actual electromagnetic field components can be visualized.\n16. Material and geometry interactions are supported by the selected numerical solver.\n17. Results retain reproducibility metadata.\n18. Numerical accuracy is independently evaluated.\n19. Automated tests pass.\n20. Existing acoustic and mechanical capabilities remain functional.\n21. Documentation distinguishes analytical models from full-wave results.\n\n## 30. Critical development rules\n\n- Electromagnetic physics must remain separate from acoustic and mechanical physics.\n- Use Maxwell's equations as the physical foundation.\n- Maintain consistent phasor and phase conventions.\n- Do not confuse array-factor calculations with full-wave simulations.\n- Do not confuse gain, directivity, and realized gain.\n- Do not label normalized fields as absolute field strength.\n- Do not invent material properties.\n- Do not ignore antenna feed and impedance effects when claiming realistic antenna performance.\n- Do not claim mutual coupling is modeled unless it is actually calculated.\n- Do not claim far-field accuracy for near-field approximations.\n- Do not silently reduce mesh resolution.\n- Validate numerical methods independently.\n- Preserve the existing application and physics subsystems.\n- Keep numerical computation separate from visualization.\n- Maintain reproducibility.\n- Record architectural decisions and known limitations.\n\n**The goal is to make Resonant a capable RF and electromagnetic engineering environment: design antennas, create arrays, steer beams, calculate electromagnetic fields, analyze propagation, model physical interactions, and progressively advance toward full-wave electromagnetic simulation.**",
+  "file": "requests/inbox/2026-11-26-prompt-11-resonant-electromagn-req-chat-20261126-007.md",
+  "attachments": [],
+  "context": "Seventh ticket, submitted by the user in chat while REQ-CHAT-20261126-002 was being processed, with the instruction to process it in order (after REQ-CHAT-20261126-006). Third physics domain; builds on the application foundation (002) and the solver framework (005). Standing operator instructions for all tickets: keep qmake support in addition to CMake; Qt user interfaces use .ui files.",
+  "text_sha256": "3725d14e73fa00761d95f3622ac61f2c6ad5e69391d139cee652db27df783b84",
+  "classification": {
+    "proposed_type": "FEATURE",
+    "proposed_source": "override",
+    "normalized_type": "FEATURE",
+    "heuristic_type": "FEATURE",
+    "final_type": "FEATURE",
+    "confidence": "high",
+    "validation": "PASS",
+    "classifier_reason": "request statement is framed as feature: Implement, capabilities, implement, milestone",
+    "correction_reason": null,
+    "normalization_note": null,
+    "evidence": [
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "milestone",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This milestone introduces the third major physics domain: **electromagnetic wave engineering**."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "introduces",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This milestone introduces the third major physics domain: **electromagnetic wave engineering**."
+      },
+      {
+        "category": "PERFORMANCE",
+        "where": "body",
+        "phrase": "optimizing",
+        "strength": "weak",
+        "note": "enumeration",
+        "sentence": "The objective is to make Resonant capable of designing, analyzing, simulating, and optimizing electromagnetic structures, RF antennas, antenna arrays, phased arrays, and electromagnetic propagation en"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "objective",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The objective is to make Resonant capable of designing, analyzing, simulating, and optimizing electromagnetic structures, RF antennas, antenna arrays, phased arrays, and electromagnetic propagation en"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Build",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Build on the existing Resonant application, geometry, material, simulation, visualization, and solver architectures."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement a modular electromagnetic physics subsystem supporting:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not attempt to implement every electromagnetic solver or physical effect in one milestone."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "milestone",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not attempt to implement every electromagnetic solver or physical effect in one milestone."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "capabilities",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Prioritize correct, independently validated capabilities."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Create a dedicated electromagnetic physics subsystem."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "should include",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The subsystem should include:"
+      },
+      {
+        "category": "PERFORMANCE",
+        "where": "body",
+        "phrase": "Optimization",
+        "strength": "weak",
+        "note": "bullet",
+        "sentence": "Optimization."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Reuse",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Reuse appropriate generic application infrastructure:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "reuse",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not reuse acoustic Green's functions, acoustic material properties, or mechanical solver formulations as substitutes for electromagnetic equations."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Extend",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Extend the material system with electromagnetic properties."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support initial materials such as:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "must include",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Material records must include:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Allow",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Allow frequency-dependent material properties to be represented by suitable functions or tabulated data."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "framework",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Use Maxwell's equations as the governing physical framework."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement appropriate constitutive relationships:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Introduce",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Introduce a first-class **Electromagnetic Source** object."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "first-class",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Introduce a first-class **Electromagnetic Source** object."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support initial idealized source models where mathematically appropriate."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Introduce",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Introduce a dedicated **Antenna** scene object."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "should support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "An antenna should support:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement initial antenna design models:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Allow",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Allow physical dimensions and operating frequency to be edited."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Provide",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Provide useful initial design estimates based on wavelength, while clearly identifying their approximations."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement antenna feed definitions."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Introduce",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Introduce impedance analysis."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement antenna radiation analysis."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support 2D angular cuts:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support 3D radiation-pattern visualization."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement distinct near-field and far-field analysis capabilities."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capabilities",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement distinct near-field and far-field analysis capabilities."
+      }
+    ],
+    "scores": {
+      "FEATURE": {
+        "head": 4,
+        "body": 105
+      },
+      "BUG": {
+        "head": 0,
+        "body": 6
+      },
+      "CRASH": {
+        "head": 0,
+        "body": 0
+      },
+      "REGRESSION": {
+        "head": 0,
+        "body": 0
+      },
+      "PERFORMANCE": {
+        "head": 0,
+        "body": 8
+      },
+      "REFACTOR": {
+        "head": 0,
+        "body": 11
+      },
+      "BUILD": {
+        "head": 0,
+        "body": 0
+      },
+      "DOCUMENTATION": {
+        "head": 0,
+        "body": 8
+      },
+      "INVESTIGATION": {
+        "head": 0,
+        "body": 10
+      },
+      "PROCESS-CHANGE": {
+        "head": 0,
+        "body": 1
+      }
+    },
+    "evidence_total": 153,
+    "validator": "scripts/request_classification.py"
+  },
+  "links": {
+    "work": [
+      "WORK-000008"
+    ]
+  },
+  "commits": [],
+  "resolution": {
+    "from": "processing",
+    "to": "completed",
+    "at": "2026-11-27T03:28:27.844455+00:00",
+    "by": "agent-dev-20261126151713-76f632",
+    "gates": [
+      {
+        "work": "WORK-000008",
+        "at": "2026-11-27T03:28:27.659542+00:00",
+        "verdict": "PASS",
+        "request_fingerprint": "42c040c680ebfde0f05916dafd1f60358f202dbfc147b2c21a74e2849c3f6f0d",
+        "test_runs": [
+          "20261126T222137-89790"
+        ]
+      }
+    ]
+  }
+}

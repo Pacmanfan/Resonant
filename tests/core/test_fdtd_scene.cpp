@@ -6,7 +6,7 @@
 #include "acoustics/Focusing.h"
 #include "acoustics/Settings.h"
 #include "fdtd/FdtdSetup.h"
-#include "fdtd/SolidModel.h"
+#include "geometry/SolidModel.h"
 #include "foundation/Units.h"
 #include "manipulators/Analytics.h"
 #include "manipulators/Manipulator.h"

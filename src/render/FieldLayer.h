@@ -40,12 +40,15 @@ enum class FieldQuantity {
     Phase,              // arg P, cyclic colours
     Instantaneous,      // Re{P exp(j phase)} / scale, diverging colours
     RelativeIntensity,  // |P|^2 / scale^2, sequential colours
+    Decibels,           // 20 log10(|P| / scale) from -decibelRange to 0 dB, sequential colours
 };
 
 struct FieldDisplay {
     FieldQuantity quantity = FieldQuantity::Magnitude;
     // The value mapped to the top of the colour scale, in the field's unit.
     double scale = 1.0;
+    // The span of the decibel view below the top of the colour scale.
+    double decibelRange = 40.0;
     // Phase of exp(j omega t) for the instantaneous view, radians.
     double animationPhase = 0.0;
     // Slice positions through a volume as fractions in [0, 1] of each axis.

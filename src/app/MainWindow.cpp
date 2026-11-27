@@ -10,6 +10,10 @@
 #include "FdtdPanel.h"
 #include "ManipulatorController.h"
 #include "MechanicalEditor.h"
+#include "EmController.h"
+#include "EmEditor.h"
+#include "EmMarkers.h"
+#include "EmPanel.h"
 #include "MechanicsController.h"
 #include "MechanicsMarkers.h"
 #include "MechanicsPanel.h"
@@ -63,6 +67,7 @@ MainWindow::MainWindow(QWidget* parent)
     ui_->menuPanels->addAction(ui_->acousticsDock->toggleViewAction());
     ui_->menuPanels->addAction(ui_->solverDock->toggleViewAction());
     ui_->menuPanels->addAction(ui_->mechanicsDock->toggleViewAction());
+    ui_->menuPanels->addAction(ui_->emDock->toggleViewAction());
     ui_->menuPanels->addSeparator();
     ui_->menuPanels->addAction(ui_->fileToolBar->toggleViewAction());
     ui_->menuPanels->addAction(ui_->geometryToolBar->toggleViewAction());
@@ -103,6 +108,7 @@ MainWindow::MainWindow(QWidget* parent)
     connectManipulators();
     connectFullWave();
     connectMechanics();
+    connectElectromagnetics();
 
     unsavedChangesPrompt = [this] {
         return QMessageBox::warning(this, QStringLiteral("Unsaved changes"),
@@ -122,6 +128,7 @@ MainWindow::MainWindow(QWidget* parent)
     tabifyDockWidget(ui_->propertiesDock, ui_->acousticsDock);
     tabifyDockWidget(ui_->acousticsDock, ui_->solverDock);
     tabifyDockWidget(ui_->solverDock, ui_->mechanicsDock);
+    tabifyDockWidget(ui_->mechanicsDock, ui_->emDock);
     ui_->propertiesDock->raise();
     resizeDocks({ui_->sceneDock, ui_->propertiesDock}, {280, 380}, Qt::Horizontal);
     resizeDocks({ui_->analysisDock}, {220}, Qt::Vertical);
@@ -475,6 +482,88 @@ void MainWindow::connectMechanics()
         ui_->viewport->setScalarMesh(mechanics_->displayMesh(), mechanics_->displayLines());
     });
     connect(mechanics_, &MechanicsController::message, this, &MainWindow::showFailure);
+}
+
+EmPanel& MainWindow::emPanel()
+{
+    return *ui_->emPanel;
+}
+
+void MainWindow::connectElectromagnetics()
+{
+    using resonant::em::EmArrayLayout;
+    using resonant::em::SourceKind;
+    em_ = new EmController(controller_, this);
+    ui_->emPanel->setController(em_);
+    ui_->viewport->bridge().addDecorator(makeEmDecorator());
+    ui_->propertiesPanel->addComponentEditorFactory(makeEmEditorFactory(*acoustics_, *em_));
+
+    const auto showPanel = [this] {
+        ui_->emDock->show();
+        ui_->emDock->raise();
+    };
+    // New objects are selected and shown in the panel.
+    const auto created = [this, showPanel](const resonant::Result<resonant::Id>& result) {
+        if (!result) {
+            showFailure(QString::fromStdString(result.message()));
+            return;
+        }
+        controller_->select(result.value());
+        showPanel();
+        ui_->emPanel->selectObject(result.value());
+    };
+    const std::pair<QAction*, const char*> antennas[] = {{ui_->actionAddDipoleAntenna, "antenna.dipole"},   {ui_->actionAddMonopoleAntenna, "antenna.monopole"},
+                                                         {ui_->actionAddLoopAntenna, "antenna.loop"},       {ui_->actionAddPatchAntenna, "antenna.patch"},
+                                                         {ui_->actionAddHornAntenna, "antenna.horn"},       {ui_->actionAddHelixAntenna, "antenna.helix"}};
+    for (const auto& [action, kind] : antennas)
+        connect(action, &QAction::triggered, this, [this, created, kind = QString::fromLatin1(kind)] { created(em_->addAntenna(kind)); });
+    const std::pair<QAction*, SourceKind> sources[] = {{ui_->actionAddElectricDipoleSource, SourceKind::ElectricDipole},
+                                                       {ui_->actionAddMagneticDipoleSource, SourceKind::MagneticDipole},
+                                                       {ui_->actionAddPlaneWaveSource, SourceKind::PlaneWave}};
+    for (const auto& [action, kind] : sources)
+        connect(action, &QAction::triggered, this, [this, created, kind] { created(em_->addSource(kind)); });
+    const std::pair<QAction*, EmArrayLayout> arrays[] = {{ui_->actionAddLinearRfArray, EmArrayLayout::Linear},
+                                                         {ui_->actionAddPlanarRfArray, EmArrayLayout::Planar},
+                                                         {ui_->actionAddCircularRfArray, EmArrayLayout::Circular}};
+    for (const auto& [action, layout] : arrays)
+        connect(action, &QAction::triggered, this, [this, created, layout] { created(em_->addArray(layout)); });
+    const std::pair<QAction*, const char*> guides[] = {{ui_->actionAddEmRectangularGuide, "guide.rectangular"},
+                                                       {ui_->actionAddEmCircularGuide, "guide.circular"},
+                                                       {ui_->actionAddCoaxialLine, "guide.coaxial"},
+                                                       {ui_->actionAddEmCavity, "cavity.rectangular.em"}};
+    for (const auto& [action, kind] : guides)
+        connect(action, &QAction::triggered, this, [this, created, kind = QString::fromLatin1(kind)] { created(em_->addGuide(kind)); });
+    connect(ui_->actionAnalyseEm, &QAction::triggered, this, [this, showPanel] {
+        showPanel();
+        ui_->emPanel->selectObject(controller_->primarySelection());
+    });
+    connect(ui_->actionEvaluateEmField, &QAction::triggered, this, [this, showPanel] {
+        showPanel();
+        ui_->emPanel->showTab(QStringLiteral("fieldsTab"));
+        ui_->emPanel->evaluateRegion();
+    });
+    connect(ui_->actionRunEmFullWave, &QAction::triggered, this, [this, showPanel] {
+        showPanel();
+        ui_->emPanel->showTab(QStringLiteral("fieldsTab"));
+        if (ui_->emPanel->runFullWave()) {
+            ui_->analysisDock->show();
+            ui_->analysisPanel->showSimulationStatus();
+        }
+    });
+    // The panel follows the selection when an electromagnetic object is selected.
+    connect(controller_, &DocumentController::selectionChanged, this, [this] {
+        const resonant::Id id = controller_->primarySelection();
+        if (em_->kindOf(id) != EmController::Kind::None && id != ui_->emPanel->selectedObject())
+            ui_->emPanel->selectObject(id);
+    });
+    connect(controller_, &DocumentController::sceneChanged, this, [this](const resonant::SceneEvent& event) {
+        if (event.id == ui_->emPanel->selectedObject() && em_->kindOf(event.id) != EmController::Kind::None)
+            ui_->emPanel->analyse();
+    });
+    // One field at a time in the viewport: the one chosen last (acoustic or electromagnetic).
+    connect(em_, &EmController::displayChanged, this, [this] { ui_->viewport->setField(em_->displayGrid(), em_->fieldDisplay()); });
+    connect(em_, &EmController::patternChanged, this, [this] { ui_->viewport->setScalarMesh(em_->patternMesh(), em_->patternLines()); });
+    connect(em_, &EmController::message, this, &MainWindow::showFailure);
 }
 
 void MainWindow::updateDocumentState()

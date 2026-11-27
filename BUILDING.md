@@ -88,7 +88,7 @@ suites a change affects, records the run):
 ```bash
 python3 scripts/run_tests.py --tier t2 --build      # everything a work item must pass
 python3 scripts/run_tests.py --list                 # suites, groups and tiers
-bash tools/verify_cmake_build.sh                    # CMake build + CTest (suite "cmake")
+bash tools/verify_cmake_build.sh                    # CMake build + CTest (suite "cmake"; tree build/cmake-verify, Debug at -O1)
 python3 tools/check_layering.py                     # layering rules (suite "layering")
 ```
 

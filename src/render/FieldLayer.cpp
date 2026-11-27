@@ -35,7 +35,8 @@ void main()
 const char* const kFragment = R"(#version 450 core
 in vec3 vCoordinate;
 uniform sampler3D uField;      // RG = real, imaginary
-uniform int uQuantity;         // 0 magnitude, 1 phase, 2 instantaneous, 3 relative intensity
+uniform int uQuantity;         // 0 magnitude, 1 phase, 2 instantaneous, 3 relative intensity, 4 decibels
+uniform float uDecibelRange;
 uniform float uScale;
 uniform float uPhase;
 uniform vec3 uSequential[11];
@@ -75,8 +76,11 @@ void main()
     } else if (uQuantity == 2) {
         float value = p.x * cos(uPhase) - p.y * sin(uPhase);
         color = diverging(0.5 + 0.5 * value / uScale);
-    } else {
+    } else if (uQuantity == 3) {
         color = sequential((magnitude * magnitude) / (uScale * uScale));
+    } else {
+        float level = 20.0 * log(max(magnitude / uScale, 1e-12)) / log(10.0);
+        color = sequential(1.0 + level / uDecibelRange);
     }
     outColor = vec4(color, 1.0);
 }
@@ -218,6 +222,7 @@ void FieldLayer::draw(const RenderContext& context)
     program->setUniformValue("uQuantity", static_cast<int>(display_.quantity));
     program->setUniformValue("uScale", static_cast<float>(display_.scale > 0.0 ? display_.scale : 1.0));
     program->setUniformValue("uPhase", static_cast<float>(display_.animationPhase));
+    program->setUniformValue("uDecibelRange", static_cast<float>(display_.decibelRange > 0.0 ? display_.decibelRange : 40.0));
     QVector3D colors[11];
     for (size_t i = 0; i < 11; ++i)
         colors[i] = QVector3D(kSequential[i][0], kSequential[i][1], kSequential[i][2]);
