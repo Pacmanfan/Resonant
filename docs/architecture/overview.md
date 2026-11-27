@@ -1,7 +1,7 @@
 # Resonant — Architecture Overview
 
 **Status:** current. Decisions: ADR-000204 (stack, build systems),
-ADR-000205 (layers, domains), ADR-000207 (acoustics), ADR-000208 (manipulators), ADR-000209 (full-wave solver), ADR-000210 (mechanics), ADR-000211 (electromagnetics), ADR-000212 (compute backends), ADR-000213 (experiments), ADR-000214 (optimization). Requirements: `docs/requirements/product.md`.
+ADR-000205 (layers, domains), ADR-000207 (acoustics), ADR-000208 (manipulators), ADR-000209 (full-wave solver), ADR-000210 (mechanics), ADR-000211 (electromagnetics), ADR-000212 (compute backends), ADR-000213 (experiments), ADR-000214 (optimization), ADR-000219 (Shape–Function–Energy direction). Requirements: `docs/requirements/product.md`.
 
 This document describes the architecture every milestone builds on. Each
 subsystem gets its own document in this directory when it is implemented;
@@ -101,8 +101,21 @@ changes a historical result.
 * World axes: X horizontal, Y depth, Z vertical; right-handed.
 * Angles in radians internally; rotation as intrinsic Z-Y-X Euler angles.
 * Ids are stable, unique and persisted; names are for people.
-* Harmonic time convention and other physics conventions are owned by each
-  domain's document.
+* Harmonic time dependence `e^{+jωt}` with peak amplitudes in every domain
+  and every coupling (RES-SFE-012); other physics conventions are owned by
+  each domain's document.
+
+## Direction: Shape–Function–Energy
+
+An object's function is computed from its geometry, materials, excitation
+and environment by a physical model, never attached to its type
+(RES-SFE-001, `docs/vision/SHAPE_FUNCTION_ENERGY.md`). Interactions between
+domains will go through a Coupled Energy–Matter Engine in `src/core/coupling`
+that coordinates the existing solvers with explicit exchanged quantities,
+transfer operators and energy accounting, without replacing them
+(ADR-000219, `COUPLED_MULTIPHYSICS_ARCHITECTURE.md`). The audit of the
+current architecture against this direction is
+`SHAPE_FUNCTION_ENERGY_AUDIT.md`; the plan is `ENERGY_MATTER_RESEARCH_ROADMAP.md`.
 
 ## Build
 

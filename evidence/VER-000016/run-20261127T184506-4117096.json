@@ -1,0 +1,213 @@
+{
+ "run_id": "20261127T184506-4117096",
+ "runner_version": 2,
+ "started_at": "2026-11-27T23:45:07.138048+00:00",
+ "wall_seconds": 0.3,
+ "tier": "t2",
+ "scope": "affected",
+ "changes_from": "request 2026-11-26-prompt-17-resonant-shape-funct-req-chat-20261126-015.md",
+ "changed": [
+  "DECISIONS.md",
+  "IMPLEMENTATION_STATUS.md",
+  "README.md",
+  "docs/README.md",
+  "docs/architecture/COUPLED_MULTIPHYSICS_ARCHITECTURE.md",
+  "docs/architecture/ENERGY_MATTER_RESEARCH_ROADMAP.md",
+  "docs/architecture/README.md",
+  "docs/architecture/SHAPE_FUNCTION_ENERGY_AUDIT.md",
+  "docs/architecture/overview.md",
+  "docs/architecture/roadmap.md",
+  "docs/decisions/ADR-000219-shape-function-energy-architecture.md",
+  "docs/decisions/decisions.txt",
+  "docs/geometry/FUNCTIONAL_GEOMETRY.md",
+  "docs/materials/MATERIAL_STATE_ARCHITECTURE.md",
+  "docs/materials/METAMATERIALS_AND_ENGINEERED_STRUCTURES.md",
+  "docs/physics/COUPLED_ENERGY_MATTER.md",
+  "docs/physics/ENERGY_AND_MOMENTUM_ACCOUNTING.md",
+  "docs/physics/MULTISCALE_MODELING.md",
+  "docs/physics/RESONANT_STRUCTURES.md",
+  "docs/requirements/product.md",
+  "docs/requirements/requirements.txt",
+  "docs/requirements/shape_function_energy.md",
+  "docs/vision/SHAPE_FUNCTION_ENERGY.md",
+  "evidence/evidence.txt",
+  "requests/inbox/2026-11-26-prompt-17-resonant-shape-funct-req-chat-20261126-015.json",
+  "requests/inbox/2026-11-26-prompt-17-resonant-shape-funct-req-chat-20261126-015.md",
+  "requests/processing/2026-11-26-prompt-17-resonant-shape-funct-req-chat-20261126-015.json",
+  "requests/processing/2026-11-26-prompt-17-resonant-shape-funct-req-chat-20261126-015.md",
+  "work/active/WORK-000016-shape-function-energy-architecture-visio.md",
+  "work/work.txt"
+ ],
+ "unmapped": [],
+ "head": "63fc5c2689d1311d1ce45fffc8bcfb08e3b25cef",
+ "describe": "63fc5c2",
+ "provenance": {
+  "dirty": true,
+  "dirty_paths": 11,
+  "diff_sha256": "1f135526346459615dbd6866066854bd709dbb13cec12785c8b39124c4ac3a51",
+  "python": "3.12.3",
+  "platform": "Linux-7.0.0-43-generic-x86_64-with-glibc2.39",
+  "git": "git version 2.43.0",
+  "manifest_sha256": "2bd43349d1cdc60feef56deaeb6d84af4d591415cc072184e52518dea3674eb2",
+  "config_sha256": "373797242bd5edccb39ec6184d416ba85a780c7f323ef80920326b005964964a",
+  "build_system": "qmake"
+ },
+ "build_dir": "/home/dev/Resonant/build/debug",
+ "jobs": 4,
+ "host": "dev",
+ "request": "2026-11-26-prompt-17-resonant-shape-funct-req-chat-20261126-015.md",
+ "request_fingerprint": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "request_code_paths": [],
+ "allow_stale": false,
+ "classification": "PASS",
+ "warnings": [],
+ "groups": [
+  {
+   "suite": "devsys",
+   "group": "structure",
+   "shards": 1,
+   "statuses": [
+    "PASS"
+   ],
+   "seconds": 0.06583654996939003,
+   "wall": 0.06583654996939003,
+   "cases": 0,
+   "failed": [],
+   "flaky": [],
+   "expected": [],
+   "detail": [],
+   "reasons": [
+    "t0 (always)"
+   ],
+   "command": "python3 scripts/devsys.py verify-structure",
+   "status": "PASS"
+  },
+  {
+   "suite": "audits",
+   "group": "drift",
+   "shards": 1,
+   "statuses": [
+    "PASS"
+   ],
+   "seconds": 0.26487320801243186,
+   "wall": 0.26487320801243186,
+   "cases": 0,
+   "failed": [],
+   "flaky": [],
+   "expected": [],
+   "detail": [],
+   "reasons": [
+    "requested by WORK-000016"
+   ],
+   "command": "python3 scripts/drift_detect.py",
+   "status": "PASS"
+  },
+  {
+   "suite": "audits",
+   "group": "doc_integrity",
+   "shards": 1,
+   "statuses": [
+    "PASS"
+   ],
+   "seconds": 0.16444708406925201,
+   "wall": 0.16444708406925201,
+   "cases": 0,
+   "failed": [],
+   "flaky": [],
+   "expected": [],
+   "detail": [],
+   "reasons": [
+    "requested by WORK-000016"
+   ],
+   "command": "python3 scripts/doc_integrity.py",
+   "status": "PASS"
+  },
+  {
+   "suite": "audits",
+   "group": "invariants",
+   "shards": 1,
+   "statuses": [
+    "PASS"
+   ],
+   "seconds": 0.06520883785560727,
+   "wall": 0.06520883785560727,
+   "cases": 0,
+   "failed": [],
+   "flaky": [],
+   "expected": [],
+   "detail": [],
+   "reasons": [
+    "requested by WORK-000016"
+   ],
+   "command": "python3 scripts/invariant_check.py",
+   "status": "PASS"
+  },
+  {
+   "suite": "layering",
+   "group": "rules",
+   "shards": 1,
+   "statuses": [
+    "PASS"
+   ],
+   "seconds": 0.11479895794764161,
+   "wall": 0.11479895794764161,
+   "cases": 0,
+   "failed": [],
+   "flaky": [],
+   "expected": [],
+   "detail": [],
+   "reasons": [
+    "t0 (always)"
+   ],
+   "command": "python3 tools/check_layering.py",
+   "status": "PASS"
+  }
+ ],
+ "jobs_detail": [
+  {
+   "label": "devsys/structure",
+   "status": "PASS",
+   "seconds": 0.07,
+   "rc": 0,
+   "detail": "",
+   "log": "/home/dev/Resonant/tmp/tr/06-4117096/001/output.log",
+   "cases": []
+  },
+  {
+   "label": "audits/drift",
+   "status": "PASS",
+   "seconds": 0.26,
+   "rc": 0,
+   "detail": "",
+   "log": "/home/dev/Resonant/tmp/tr/06-4117096/003/output.log",
+   "cases": []
+  },
+  {
+   "label": "audits/doc_integrity",
+   "status": "PASS",
+   "seconds": 0.16,
+   "rc": 0,
+   "detail": "",
+   "log": "/home/dev/Resonant/tmp/tr/06-4117096/004/output.log",
+   "cases": []
+  },
+  {
+   "label": "audits/invariants",
+   "status": "PASS",
+   "seconds": 0.07,
+   "rc": 0,
+   "detail": "",
+   "log": "/home/dev/Resonant/tmp/tr/06-4117096/002/output.log",
+   "cases": []
+  },
+  {
+   "label": "layering/rules",
+   "status": "PASS",
+   "seconds": 0.11,
+   "rc": 0,
+   "detail": "",
+   "log": "/home/dev/Resonant/tmp/tr/06-4117096/005/output.log",
+   "cases": []
+  }
+ ]
+}

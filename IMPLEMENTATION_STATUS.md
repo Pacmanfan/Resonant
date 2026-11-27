@@ -350,3 +350,20 @@ milestones below.)
 | Validation of the final ZIP (41 checks) and clean-container tests (Ubuntu 24.04, Fedora 41, Fedora 42 offline; Ubuntu 22.04 and Debian 12 refused) | Tested | `docs/release/RELEASE_REPORT.md` |
 | A real desktop session on another machine; native Wayland; AMD GPUs | Missing | not available here |
 | Builds for older distributions (glibc < 2.38), other architectures | Missing | needs a build on an older baseline |
+
+## Shape–Function–Energy direction — `docs/requirements/shape_function_energy.md`, `docs/vision/`, `docs/physics/`, `docs/materials/`, `docs/geometry/`
+
+| Capability | State | Notes |
+|---|---|---|
+| The direction, its requirements (RES-SFE-001..012), the audit, the coupled multiphysics architecture and the twelve-stage research roadmap | Documented | ADR-000219; no code changed |
+| Conventions shared by every domain (SI, `e^{+jωt}` peak phasors, provenance) | Tested | checked consistent by the audit |
+| Single-domain energy records (acoustic FDTD, Yee, mechanical transient balance) | Tested | the first entries of the planned ledger |
+| Single-domain resonances (acoustic cavity estimates, modal analysis, EM cavity modes, 1D Bloch band structure) | Tested | no shared resonance description, no Q from losses |
+| One-way structure-to-sound coupling | Tested | the only coupling |
+| Coupled Energy–Matter Engine (participants, exchanged quantities, transfer operators, scheduler, energy ledger) | Missing | planned: roadmap stages 3–5 |
+| Thermal domain; material state (properties of temperature, stress, fields; anisotropic tensors) | Missing | planned: stages 2, 5 |
+| Shared resonance description, Q, mode extraction, coupled resonators | Missing | planned: stage 6 |
+| Unit cells, lattices, 2D/3D Bloch analysis, effective properties | Missing | planned: stages 7–8 |
+| Multiscale adapters to external tools | Missing | planned: stage 9 |
+| Nonlinear, viscoelastic, plastic, damaging, phase-changing materials | Missing | planned: stage 10 |
+| Optical resonators and photonics | Missing | theoretical future (the electromagnetic domain is RF) |

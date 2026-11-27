@@ -1,0 +1,418 @@
+{
+  "request_id": "REQ-CHAT-20261126-015",
+  "source": "chat",
+  "type": "FEATURE",
+  "priority": "NORMAL",
+  "created": "2026-11-26T23:22:11-05:00",
+  "created_utc": "2026-11-27T04:22:11+00:00",
+  "id_date": "2026-11-26",
+  "timezone": "EST (UTC-05:00)",
+  "status": "completed",
+  "original_text": "# PROMPT 17 \u2014 RESONANT: Shape\u2013Function\u2013Energy Architecture\n## Foundational Scientific Vision, Geometry-Driven Physical Function, Energy\u2013Matter Interaction, and Long-Term Platform Architecture\n\nYou are working on **RESONANT \u2014 Wave Field Engineering Studio**.\n\nThis is a major expansion and clarification of the scientific vision of RESONANT.\n\nThe goal is to evolve RESONANT beyond a collection of wave simulation tools into a comprehensive scientific and engineering platform for understanding, modeling, and designing the interactions between:\n\n- Geometry\n- Matter\n- Material structure\n- Energy\n- Waves and fields\n- Resonance\n- Force and momentum\n- Energy transfer and conversion\n- Physical transformation\n\nThis prompt establishes a foundational principle that must influence future application architecture, scientific models, user workflows, documentation, and development priorities.\n\nIt does not authorize a wholesale rewrite of the application.\n\nPreserve the existing architecture, domain solvers, optimization framework, Python integration, automation API, geometry systems, and application functionality. Extend them coherently.\n\n---\n\n# 1. Foundational design philosophy: Shape\u2013Function\u2013Energy\n\nEstablish the following as a central RESONANT design principle:\n\n**The geometry and internal structure of an object can be the mechanism through which it performs its physical function.**\n\nAn engineered object is not merely a container for energy or a passive object exposed to external forces.\n\nIts shape, dimensions, topology, boundaries, material composition, internal structure, and arrangement of components can determine how it interacts with energy and transforms physical behavior.\n\nExamples:\n\n- A microwave cavity confines electromagnetic energy and supports particular resonant modes.\n- An optical resonator uses mirrors and optical path geometry to establish stable electromagnetic modes.\n- An acoustic horn transforms acoustic impedance and controls wave propagation through its geometry.\n- A parabolic reflector redirects incoming wave energy toward a focal region.\n- A mechanical resonator stores and exchanges energy through its mass distribution, stiffness, and geometry.\n- A phononic crystal controls elastic wave propagation through periodic material structure.\n- A metamaterial uses deliberately engineered internal geometry to exhibit effective properties not ordinarily found in its constituent materials.\n- A waveguide constrains propagation and supports particular modes according to its geometry and boundary conditions.\n\nThese are not simply shapes with labels attached.\n\nTheir functions arise from physical interactions involving geometry, materials, excitation, frequency, boundary conditions, and the surrounding environment.\n\nRESONANT must model those interactions.\n\nDo not implement shape-function relationships as superficial object categories or hardcoded behavior.\n\nA geometry must acquire its physical behavior through an appropriate physical model.\n\n# 2. Establish the Shape\u2013Function\u2013Energy model\n\nFormalize the following relationship:\n\n**Geometry + Material Properties + Excitation + Environment \u2192 Physical Interaction \u2192 Energy and Matter Response \u2192 Functional Behavior**\n\nThe model must account for:\n\n### Geometry\n\n- Shape.\n- Dimensions.\n- Topology.\n- Surface curvature.\n- Surface orientation.\n- Internal cavities.\n- Channels and passages.\n- Layers.\n- Interfaces.\n- Periodic structures.\n- Spatial distributions.\n- Boundary conditions.\n- Connections between components.\n- Geometric tolerances.\n\n### Material properties\n\n- Mass density.\n- Number density where relevant.\n- Elasticity.\n- Plasticity.\n- Viscosity.\n- Damping.\n- Acoustic impedance.\n- Electrical conductivity.\n- Permittivity.\n- Permeability.\n- Thermal conductivity.\n- Heat capacity.\n- Optical properties.\n- Magnetic properties.\n- Anisotropy.\n- Frequency dependence.\n- Temperature dependence.\n- Nonlinear response.\n\n### Excitation and environment\n\n- Frequency.\n- Wavelength.\n- Amplitude.\n- Phase.\n- Waveform.\n- Direction.\n- Polarization.\n- Time dependence.\n- Source geometry.\n- Source impedance.\n- Boundary conditions.\n- Environmental pressure.\n- Temperature.\n- Surrounding medium.\n\n### Physical interaction\n\n- Reflection.\n- Transmission.\n- Refraction.\n- Diffraction.\n- Scattering.\n- Absorption.\n- Resonance.\n- Interference.\n- Coupling.\n- Dissipation.\n- Energy storage.\n- Momentum transfer.\n- Field concentration.\n- Wave confinement.\n- Material deformation.\n- Heat generation.\n\n### Functional behavior\n\nThe application must be capable of analyzing and designing structures that:\n\n- Concentrate energy.\n- Distribute energy.\n- Redirect energy.\n- Confine energy.\n- Store energy.\n- Convert energy.\n- Transfer energy.\n- Filter frequencies.\n- Suppress unwanted modes.\n- Amplify selected responses through resonance.\n- Attenuate unwanted vibrations or waves.\n- Produce controlled mechanical forces.\n- Modify stress and strain distributions.\n- Control thermal transfer.\n- Influence effective material properties.\n- Produce desired wave propagation characteristics.\n\nThese are engineering objectives, not guaranteed outcomes. Every result must be supported by the applicable physical model.\n\n# 3. Object-centric and function-centric engineering\n\nRESONANT must support two complementary design workflows.\n\n## Object-centric workflow\n\nThe user creates or imports an object.\n\nThey specify:\n\n- Geometry.\n- Materials.\n- Internal structures.\n- Excitation sources.\n- Environment.\n- Physical domain.\n- Desired measurements.\n\nRESONANT calculates the object's behavior.\n\n## Function-centric workflow\n\nThe user begins with a desired physical outcome.\n\nExamples:\n\n- Create a cavity that supports a selected resonant frequency.\n- Design a structure that concentrates acoustic energy at a particular location.\n- Design an optical resonator with specified mode characteristics.\n- Create a mechanical structure that suppresses vibration in a selected frequency band.\n- Design a periodic structure that produces an elastic band gap.\n- Create a material structure with a specified effective acoustic response.\n- Design a geometry that distributes thermal energy uniformly.\n- Produce a specified electromagnetic field distribution within a bounded region.\n\nRESONANT searches the available design space for suitable:\n\n- Geometry.\n- Dimensions.\n- Materials.\n- Internal structure.\n- Component arrangement.\n- Excitation conditions.\n- Operating parameters.\n\nThe optimization framework must be reusable across physical domains.\n\nDo not duplicate optimization algorithms for each new domain when shared abstractions are appropriate.\n\nHowever, domain-specific physical models and objective functions must remain mathematically correct.\n\n# 4. Geometry becomes a physical engineering object\n\nAudit the existing geometry and scene architecture.\n\nDetermine how geometry can represent more than visual surfaces.\n\nIntroduce the concept of **functional geometry**.\n\nA functional geometry is an object whose shape and internal structure are deliberately designed to produce a physical response.\n\nExamples include:\n\n- Resonant cavities.\n- Reflectors.\n- Lenses.\n- Waveguides.\n- Horns.\n- Channels.\n- Acoustic impedance transformers.\n- Optical resonators.\n- Mechanical resonators.\n- Phononic crystals.\n- Electromagnetic periodic structures.\n- Layered composites.\n- Porous structures.\n- Metamaterial unit cells.\n- Coupled resonator networks.\n- Engineered interfaces.\n\nThe system must distinguish:\n\n1. Visual geometry.\n2. Engineering geometry.\n3. Physical boundary geometry.\n4. Material regions.\n5. Simulation mesh.\n6. Functional or periodic internal structures.\n\nA visual object must not automatically be assumed to have sufficient geometric fidelity for physical simulation.\n\nIntroduce a path for geometry to be analyzed and converted into the appropriate simulation representation.\n\nPreserve the existing CAD import and geometry architecture.\n\n# 5. Resonance as a cross-domain physical phenomenon\n\nEstablish resonance as a first-class cross-domain engineering concept.\n\nResonance must not be limited to acoustic frequency calculations.\n\nSupport the conceptual and architectural requirements for:\n\n- Acoustic resonances.\n- Electromagnetic cavity modes.\n- Optical resonators.\n- Mechanical structural modes.\n- Elastic wave resonances.\n- Electrical resonant circuits where appropriate.\n- Coupled resonators.\n- Distributed resonant structures.\n- Local resonances in metamaterials.\n\nRepresent and analyze:\n\n- Natural frequencies.\n- Mode shapes.\n- Modal energy.\n- Damping.\n- Quality factor.\n- Bandwidth.\n- Coupling.\n- Mode splitting.\n- Frequency response.\n- Resonance localization.\n- Spatial field distributions.\n- Energy storage and dissipation.\n\nDo not force these domains into an identical mathematical formulation.\n\nProvide common application concepts where useful, while retaining the appropriate domain-specific equations and solvers.\n\n# 6. Metamaterials and engineered structures\n\nEstablish metamaterial research as a major long-term capability.\n\nThe architecture must support structures whose effective physical properties emerge from deliberately engineered geometry and internal organization.\n\nInvestigate:\n\n- Acoustic metamaterials.\n- Electromagnetic metamaterials.\n- Mechanical metamaterials.\n- Phononic crystals.\n- Photonic crystals.\n- Periodic structures.\n- Locally resonant structures.\n- Subwavelength resonators.\n- Layered composites.\n- Anisotropic structures.\n- Spatially graded structures.\n- Architected lattices.\n- Elastic and acoustic band gaps.\n- Frequency-selective transmission.\n- Effective constitutive parameters.\n- Effective density.\n- Effective stiffness.\n- Effective impedance.\n- Effective permittivity and permeability where applicable.\n- Negative effective parameters where physically justified.\n\nThe application must distinguish between:\n\n- Actual constituent material properties.\n- Effective homogenized properties.\n- Frequency-dependent effective behavior.\n- Localized resonant effects.\n- Full structural response.\n\nDo not assign unusual effective properties merely because a structure is called a metamaterial.\n\nThey must be derived or validated using an appropriate model.\n\n# 7. Coupled Energy\u2013Matter Engine\n\nFormalize the Coupled Energy\u2013Matter Engine as a major central platform subsystem.\n\nIts purpose is to connect the existing physics domains and enable physical interactions between them.\n\nThe architecture must support exchanges of:\n\n- Energy.\n- Momentum.\n- Force.\n- Heat.\n- Charge.\n- Material state.\n- Geometry.\n- Stress.\n- Strain.\n- Fluid state.\n- Relevant domain-specific physical quantities.\n\nExample interaction:\n\n1. An electromagnetic field propagates through a material.\n2. The material absorbs part of the incident energy.\n3. Absorbed energy produces local heating.\n4. Temperature changes material properties.\n5. Thermal expansion produces mechanical stress.\n6. Deformation changes geometry.\n7. Changed geometry alters the electromagnetic field.\n8. The next simulation step accounts for the updated state.\n\nThis is a coupled feedback system.\n\nThe architecture must eventually support:\n\n- One-way coupling.\n- Two-way coupling.\n- Multi-domain coupling.\n- Sequential coupling.\n- Iterative coupling.\n- Fully time-dependent coupling where appropriate.\n\nDefine a consistent interface for coupling solvers without requiring them to share identical numerical methods.\n\nSupport different spatial and temporal resolutions.\n\nDefine interpolation, projection, transfer, synchronization, and conservation requirements.\n\nEnergy and momentum accounting must be explicit.\n\nDo not claim conservation merely because quantities have been transferred between solvers.\n\n# 8. Material state as an evolving physical entity\n\nIntroduce the architectural concept of a dynamic material state.\n\nA material is not necessarily represented by one fixed set of properties.\n\nIts physical response may depend on:\n\n- Position.\n- Time.\n- Temperature.\n- Pressure.\n- Stress.\n- Strain.\n- Frequency.\n- Electric field.\n- Magnetic field.\n- Composition.\n- Phase.\n- Microstructure.\n- Damage.\n- Deformation history.\n\nDefine how the application represents material properties that vary across space and time.\n\nPreserve domain-specific constitutive models.\n\nThe architecture must accommodate:\n\n- Linear materials.\n- Nonlinear materials.\n- Anisotropic materials.\n- Dispersive materials.\n- Temperature-dependent materials.\n- Viscoelastic materials.\n- Plastic materials.\n- Porous materials.\n- Composite materials.\n- Phase-changing materials.\n- Materials with evolving internal structure.\n\n# 9. Multiscale scientific modeling\n\nEstablish a future path connecting macroscopic engineering simulation to material microstructure and microscopic physics.\n\nDefine the following modeling scales:\n\n### Macroscopic\n\n- Entire objects.\n- Engineering components.\n- Cavities.\n- Waveguides.\n- Structures.\n- Large-scale field distributions.\n\n### Mesoscopic\n\n- Grain structures.\n- Pores.\n- Fibers.\n- Inclusions.\n- Layered composites.\n- Periodic unit cells.\n- Internal interfaces.\n\n### Molecular\n\n- Molecular arrangements.\n- Bonding interactions.\n- Molecular dynamics.\n- Local material response.\n\n### Atomic\n\n- Crystal structures.\n- Lattice vibrations.\n- Defects.\n- Dislocations.\n- Phonons.\n- Electronic behavior.\n\n### Quantum\n\n- Electronic states.\n- Quantum transitions.\n- Quantum interactions.\n- Material properties derived from electronic structure.\n\nDo not implement every scale in this milestone.\n\nDefine a modular integration architecture that can use established external scientific packages where appropriate.\n\nInvestigate appropriate interfaces for molecular dynamics and electronic-structure tools.\n\nDetermine how microscopic results could inform macroscopic material models.\n\nFor example, microscopic calculations may help estimate:\n\n- Elastic constants.\n- Thermal conductivity.\n- Dielectric properties.\n- Magnetic properties.\n- Phonon behavior.\n- Material response under different conditions.\n\nClearly distinguish measured properties, theoretical predictions, computed properties, and homogenized approximations.\n\n# 10. Visualization requirements\n\nExtend the long-term visualization vision.\n\nRESONANT must ultimately make it possible to see how energy interacts with an object's geometry and internal structure.\n\nPlan for visualization of:\n\n- Field distributions.\n- Energy density.\n- Energy flux.\n- Momentum density and flux where defined.\n- Wave propagation.\n- Standing waves.\n- Resonant modes.\n- Mode shapes.\n- Stress and strain.\n- Temperature.\n- Material phase.\n- Charge and current distributions.\n- Acoustic pressure.\n- Electromagnetic fields.\n- Mechanical displacement.\n- Material deformation.\n- Microstructure.\n- Periodic unit cells.\n- Band structures.\n- Spatially varying effective properties.\n\nSupport synchronized visualization of multiple physical quantities.\n\nThe user should be able to inspect the same location in the object across different physical domains.\n\nDo not create visualizations that imply unsupported physical accuracy.\n\n# 11. Documentation updates\n\nAudit all existing project documentation before making changes.\n\nThe project already has foundational documents covering:\n\n- Project vision.\n- Architecture.\n- Geometry and materials.\n- Physics architecture.\n- Acoustic simulation.\n- Mechanical simulation.\n- Electromagnetic simulation.\n- Optimization.\n- Python and automation.\n- Linux packaging.\n\nPreserve existing documentation and update it where appropriate.\n\nCreate or update the following:\n\n1. `docs/vision/SHAPE_FUNCTION_ENERGY.md`\n2. `docs/physics/COUPLED_ENERGY_MATTER.md`\n3. `docs/physics/ENERGY_AND_MOMENTUM_ACCOUNTING.md`\n4. `docs/materials/MATERIAL_STATE_ARCHITECTURE.md`\n5. `docs/geometry/FUNCTIONAL_GEOMETRY.md`\n6. `docs/physics/RESONANT_STRUCTURES.md`\n7. `docs/materials/METAMATERIALS_AND_ENGINEERED_STRUCTURES.md`\n8. `docs/physics/MULTISCALE_MODELING.md`\n9. `docs/architecture/COUPLED_MULTIPHYSICS_ARCHITECTURE.md`\n10. `docs/roadmap/ENERGY_MATTER_RESEARCH_ROADMAP.md`\n\nIf the repository uses a different documentation organization, follow its established conventions and update these paths accordingly.\n\nUpdate the primary project vision and architecture documents to reference the new direction.\n\nAdd a clear conceptual explanation of the Shape\u2013Function\u2013Energy principle.\n\nInclude examples and diagrams.\n\nDistinguish current capabilities, planned capabilities, research prototypes, and theoretical future directions.\n\nDo not document planned functionality as implemented.\n\n# 12. Relationship with existing architecture\n\nAudit how the new vision maps to existing systems.\n\nExplicitly map it to:\n\n- Scene management.\n- Geometry.\n- Materials.\n- Acoustic physics.\n- Mechanical physics.\n- Electromagnetic physics.\n- Simulation framework.\n- Optimization.\n- Python API.\n- Automation framework.\n- Visualization.\n- Project storage.\n- Measurement and experiments.\n- Help and documentation.\n\nIdentify missing abstractions and architectural gaps.\n\nDo not introduce duplicate systems.\n\nDo not create a separate application or parallel simulation framework.\n\nThe existing domain-specific solvers must remain independent where their physical equations and numerical methods require it.\n\nThe Coupled Energy\u2013Matter Engine should coordinate these systems, not replace them.\n\n# 13. Development roadmap\n\nCreate a staged roadmap for implementing the new direction.\n\nRecommended sequence:\n\n1. Shape\u2013Function\u2013Energy architecture and documentation.\n2. Unified material state and physical quantity conventions.\n3. Energy and momentum accounting.\n4. Coupled solver interfaces.\n5. One-way and two-way multiphysics coupling.\n6. Geometry-driven resonant systems.\n7. Metamaterial and periodic structure modeling.\n8. Microstructure and homogenization.\n9. Multiscale external solver integration.\n10. Dynamic material response.\n11. Function-driven inverse design.\n12. Experimental validation.\n\nFor each stage, define:\n\n- Goals.\n- Required architectural work.\n- Dependencies.\n- Expected capabilities.\n- Scientific risks.\n- Validation requirements.\n- Acceptance criteria.\n\nIdentify which existing components can be reused and which need extension.\n\n# 14. Engineering constraints\n\n- C++20 and existing Qt 6 architecture remain authoritative.\n- Preserve CMake and the current build system.\n- Preserve the Protobuf/gRPC automation contract.\n- Preserve Python integration.\n- Preserve the existing domain-specific solver architecture.\n- Keep scientific computation independent of visualization.\n- Keep optional scientific dependencies modular.\n- Do not introduce unnecessary mandatory dependencies.\n- Evaluate licenses and redistribution implications.\n- Use SI units internally.\n- Preserve coordinate, phase, frequency, and field conventions.\n- Maintain reproducible simulation provenance.\n- Require scientific validation.\n- Avoid arbitrary hardcoded physical behavior.\n- Avoid placeholder implementations that claim to perform real physics.\n\nDo not start a wholesale implementation of the Coupled Energy\u2013Matter Engine in this milestone.\n\nThis prompt establishes and documents the scientific architecture and development direction.\n\nIf a small architectural correction is essential to prevent an inconsistency, make the minimal justified change and document it.\n\n# 15. Required final report\n\nAt completion, report:\n\n1. Documentation created.\n2. Existing documentation updated.\n3. Architecture gaps identified.\n4. Existing systems that can be reused.\n5. Proposed new abstractions.\n6. Recommended implementation sequence.\n7. Scientific modeling risks.\n8. External scientific packages worth evaluating.\n9. Tests performed.\n10. Any implementation changes made.\n\nThe result must be a coherent scientific vision that can guide the next several years of RESONANT development.\n\n**The ultimate goal is to make RESONANT a platform where we can design an object's physical function through its geometry, material structure, and interaction with energy\u2014and predict, understand, and engineer the resulting behavior.**",
+  "file": "requests/inbox/2026-11-26-prompt-17-resonant-shape-funct-req-chat-20261126-015.md",
+  "attachments": [],
+  "context": "User: 'add this as a ticket. Process in order' (queued after REQ-CHAT-20261126-013; REQ-CHAT-20261126-014 is in processing)",
+  "text_sha256": "4e26b46192afceb9ed92942d17f749a047cc4b4af754e32a3426fe5056fc4826",
+  "classification": {
+    "proposed_type": null,
+    "proposed_source": "heuristic",
+    "normalized_type": null,
+    "heuristic_type": "FEATURE",
+    "final_type": "FEATURE",
+    "confidence": "low",
+    "validation": "PASS",
+    "classifier_reason": "no framing in the request statement; body suggests feature: Acceptance criteria, Add, Create, Extend",
+    "correction_reason": null,
+    "normalization_note": null,
+    "evidence": [
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "evolve",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The goal is to evolve RESONANT beyond a collection of wave simulation tools into a comprehensive scientific and engineering platform for understanding, modeling, and designing the interactions between"
+      },
+      {
+        "category": "PERFORMANCE",
+        "where": "body",
+        "phrase": "optimization",
+        "strength": "weak",
+        "note": "enumeration",
+        "sentence": "Preserve the existing architecture, domain solvers, optimization framework, Python integration, automation API, geometry systems, and application functionality."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "framework",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Preserve the existing architecture, domain solvers, optimization framework, Python integration, automation API, geometry systems, and application functionality."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "integration",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Preserve the existing architecture, domain solvers, optimization framework, Python integration, automation API, geometry systems, and application functionality."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Extend",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Extend them coherently."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not implement shape-function relationships as superficial object categories or hardcoded behavior."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Produce",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Produce controlled mechanical forces."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Produce",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Produce desired wave propagation characteristics."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "objectives",
+        "strength": "strong",
+        "note": "",
+        "sentence": "These are engineering objectives, not guaranteed outcomes."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "must support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "RESONANT must support two complementary design workflows."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "creates",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The user creates or imports an object."
+      },
+      {
+        "category": "PERFORMANCE",
+        "where": "body",
+        "phrase": "optimization",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The optimization framework must be reusable across physical domains."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "framework",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The optimization framework must be reusable across physical domains."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "reusable",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The optimization framework must be reusable across physical domains."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "objective",
+        "strength": "strong",
+        "note": "",
+        "sentence": "However, domain-specific physical models and objective functions must remain mathematically correct."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Introduce",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Introduce the concept of **functional geometry**."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Introduce",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Introduce a path for geometry to be analyzed and converted into the appropriate simulation representation."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "first-class",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Establish resonance as a first-class cross-domain engineering concept."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support the conceptual and architectural requirements for:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Provide",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Provide common application concepts where useful, while retaining the appropriate domain-specific equations and solvers."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capability",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Establish metamaterial research as a major long-term capability."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "must support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The architecture must support structures whose effective physical properties emerge from deliberately engineered geometry and internal organization."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "enable",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Its purpose is to connect the existing physics domains and enable physical interactions between them."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "must support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The architecture must support exchanges of:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support different spatial and temporal resolutions."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Introduce",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Introduce the architectural concept of a dynamic material state."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "evolving",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Materials with evolving internal structure."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not implement every scale in this milestone."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "milestone",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not implement every scale in this milestone."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "integration",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Define a modular integration architecture that can use established external scientific packages where appropriate."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Extend",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Extend the long-term visualization vision."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "make it possible",
+        "strength": "strong",
+        "note": "",
+        "sentence": "RESONANT must ultimately make it possible to see how energy interacts with an object's geometry and internal structure."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support synchronized visualization of multiple physical quantities."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "should be able to",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The user should be able to inspect the same location in the object across different physical domains."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not create visualizations that imply unsupported physical accuracy."
+      },
+      {
+        "category": "PERFORMANCE",
+        "where": "body",
+        "phrase": "Optimization",
+        "strength": "weak",
+        "note": "bullet",
+        "sentence": "Optimization."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Create or update the following:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Add",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Add a clear conceptual explanation of the Shape\u2013Function\u2013Energy principle."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capabilities",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Distinguish current capabilities, planned capabilities, research prototypes, and theoretical future directions."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capabilities",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Distinguish current capabilities, planned capabilities, research prototypes, and theoretical future directions."
+      }
+    ],
+    "scores": {
+      "FEATURE": {
+        "head": 0,
+        "body": 52
+      },
+      "BUG": {
+        "head": 0,
+        "body": 8
+      },
+      "CRASH": {
+        "head": 0,
+        "body": 0
+      },
+      "REGRESSION": {
+        "head": 0,
+        "body": 0
+      },
+      "PERFORMANCE": {
+        "head": 0,
+        "body": 4
+      },
+      "REFACTOR": {
+        "head": 0,
+        "body": 5
+      },
+      "BUILD": {
+        "head": 0,
+        "body": 0
+      },
+      "DOCUMENTATION": {
+        "head": 0,
+        "body": 15
+      },
+      "INVESTIGATION": {
+        "head": 0,
+        "body": 17
+      },
+      "PROCESS-CHANGE": {
+        "head": 0,
+        "body": 0
+      }
+    },
+    "evidence_total": 101,
+    "validator": "scripts/request_classification.py"
+  },
+  "links": {
+    "work": [
+      "WORK-000016"
+    ]
+  },
+  "commits": [],
+  "resolution": {
+    "from": "processing",
+    "to": "completed",
+    "at": "2026-11-27T23:48:50.538536+00:00",
+    "by": "agent-dev-20261126151713-76f632",
+    "gates": [
+      {
+        "work": "WORK-000016",
+        "at": "2026-11-27T23:48:42.253408+00:00",
+        "verdict": "PASS",
+        "request_fingerprint": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "test_runs": [
+          "20261127T184506-4117096",
+          "20261127T184507-4117284"
+        ]
+      }
+    ]
+  }
+}

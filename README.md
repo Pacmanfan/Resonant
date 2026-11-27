@@ -47,7 +47,7 @@ discover is something you can trust.
 
 ## Get started
 
-On Linux, extract the release ZIP and run `./resonant` — nothing to install.
+On Linux, extract the release ZIP and start `resonant` in it — nothing to install.
 To build it yourself (C++20, Qt 6, Eigen 3.4, OpenGL 4.5; see `BUILDING.md`):
 
 ```sh
@@ -75,6 +75,6 @@ python3 scripts/msg.py panels         # where the panels are right now
 
 ## Documents
 
-* `docs/README.md` — the map; `docs/architecture/overview.md`, `DECISIONS.md`.
+* `docs/README.md` — the map; `docs/vision/SHAPE_FUNCTION_ENERGY.md` (where it is heading), `DECISIONS.md`.
 * `AGENTS.md` — the rules every agent follows;
   `docs/process/agent-coordination.md` — roster, messages and panels.

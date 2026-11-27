@@ -14,6 +14,13 @@ propagation and wave interactions in physical environments. It is intended
 to become a serious engineering and scientific experimentation platform, not
 a phased-array calculator or an audio visualization tool.
 
+**Direction (REQ-CHAT-20261126-015):** the geometry and internal structure
+of an object can be the mechanism of its physical function. Resonant aims to
+let users design what an object does through its shape, material structure
+and interaction with energy, and to predict that behavior from physical
+models (`docs/vision/SHAPE_FUNCTION_ENERGY.md`,
+`shape_function_energy.md` RES-SFE-001..012).
+
 Each requirement below names the release in which it must first hold:
 **V1** (the initial release, a complete acoustic workflow), or **LATER**
 (long-term vision the architecture must anticipate). Domain documents
@@ -78,7 +85,9 @@ manipulation are all supported. **LATER** (after the V1 acoustic workflow).
 
 The resulting field is calculated from the actual geometry and material
 properties under the applicable physical model. A geometric shape is never
-assumed to produce a particular focusing result.
+assumed to produce a particular focusing result. RES-SFE-001 extends this
+to every physical function (confining, storing, filtering, converting
+energy, and the others).
 
 ### RES-PRODUCT-007 — Materials library
 

@@ -1,0 +1,29 @@
+{
+ "work": "WORK-000016",
+ "runs": [
+  {
+   "at": "2026-11-27T23:48:42.253408+00:00",
+   "verdict": "PASS",
+   "gate_version": 3,
+   "work": "WORK-000016",
+   "request": "2026-11-26-prompt-17-resonant-shape-funct-req-chat-20261126-015.md",
+   "request_id": "REQ-CHAT-20261126-015",
+   "request_fingerprint": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "request_code_paths": [],
+   "test_runs": [
+    "20261127T184506-4117096",
+    "20261127T184507-4117284"
+   ],
+   "evidence": [
+    "VER-000016"
+   ],
+   "head": "63fc5c2689d1311d1ce45fffc8bcfb08e3b25cef",
+   "agent_id": "agent-dev-20261126151713-76f632",
+   "fails": [],
+   "warns": [
+    "18 unowned change(s) in the tree (not this request's; never committed by it)"
+   ],
+   "passes": 16
+  }
+ ]
+}
