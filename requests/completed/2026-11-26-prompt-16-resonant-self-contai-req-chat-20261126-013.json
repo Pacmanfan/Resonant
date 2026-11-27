@@ -1,0 +1,419 @@
+{
+  "request_id": "REQ-CHAT-20261126-013",
+  "source": "chat",
+  "type": "FEATURE",
+  "priority": "NORMAL",
+  "created": "2026-11-26T21:47:07-05:00",
+  "created_utc": "2026-11-27T02:47:07+00:00",
+  "id_date": "2026-11-26",
+  "timezone": "EST (UTC-05:00)",
+  "status": "completed",
+  "original_text": "# PROMPT 16 \u2014 RESONANT Self-Contained Linux ZIP Distribution\n## Complete Runtime Packaging, Dependency Bundling, Offline Help, Resources, Launchers, and Clean-System Release Validation\n\nYou are working on **RESONANT \u2014 Wave Field Engineering Studio**, a scientific and engineering application for modeling, simulating, visualizing, optimizing, and manipulating acoustic, mechanical, and electromagnetic wave phenomena.\n\nYour task is to audit, implement, and validate a complete **self-contained Linux ZIP distribution**.\n\nThis is a release-engineering milestone. The objective is to produce a downloadable ZIP archive that contains everything necessary to run RESONANT on a supported Linux system, without requiring the user to install Qt, application libraries, Python packages, or other development dependencies.\n\nThe user should be able to:\n\n1. Download the ZIP.\n2. Extract it into a directory of their choice.\n3. Run the included launcher.\n4. Use the application with its bundled resources, offline documentation, examples, and demo projects.\n\nNo conventional installation process should be necessary.\n\nDo not merely create a ZIP of the existing build directory. Implement a proper, reproducible, relocatable application distribution.\n\n---\n\n# 1. Primary deliverable\n\nProduce a ZIP archive with a structure conceptually similar to:\n\n```text\nRESONANT-Linux-x86_64-VERSION/\n\u251c\u2500\u2500 resonant\n\u251c\u2500\u2500 resonant.sh\n\u251c\u2500\u2500 README.txt\n\u251c\u2500\u2500 LICENSE\n\u251c\u2500\u2500 THIRD_PARTY_NOTICES.txt\n\u251c\u2500\u2500 VERSION\n\u251c\u2500\u2500 CHANGELOG.txt\n\u2502\n\u251c\u2500\u2500 bin/\n\u2502   \u2514\u2500\u2500 resonant\n\u2502\n\u251c\u2500\u2500 lib/\n\u2502   \u251c\u2500\u2500 application shared libraries\n\u2502   \u251c\u2500\u2500 bundled third-party shared libraries\n\u2502   \u2514\u2500\u2500 Qt shared libraries\n\u2502\n\u251c\u2500\u2500 plugins/\n\u2502   \u2514\u2500\u2500 Qt platform, image, and other required plugins\n\u2502\n\u251c\u2500\u2500 resources/\n\u2502   \u251c\u2500\u2500 icons/\n\u2502   \u251c\u2500\u2500 fonts/\n\u2502   \u251c\u2500\u2500 shaders/\n\u2502   \u251c\u2500\u2500 themes/\n\u2502   \u251c\u2500\u2500 application data/\n\u2502   \u2514\u2500\u2500 other runtime assets/\n\u2502\n\u251c\u2500\u2500 help/\n\u2502   \u251c\u2500\u2500 index.html\n\u2502   \u251c\u2500\u2500 pages/\n\u2502   \u251c\u2500\u2500 css/\n\u2502   \u251c\u2500\u2500 js/\n\u2502   \u251c\u2500\u2500 images/\n\u2502   \u2514\u2500\u2500 search/\n\u2502\n\u251c\u2500\u2500 examples/\n\u2502   \u251c\u2500\u2500 projects/\n\u2502   \u251c\u2500\u2500 geometry/\n\u2502   \u251c\u2500\u2500 materials/\n\u2502   \u2514\u2500\u2500 simulation/\n\u2502\n\u251c\u2500\u2500 demos/\n\u2502   \u251c\u2500\u2500 profiles/\n\u2502   \u251c\u2500\u2500 projects/\n\u2502   \u251c\u2500\u2500 sequences/\n\u2502   \u251c\u2500\u2500 screenshots/\n\u2502   \u2514\u2500\u2500 manifests/\n\u2502\n\u251c\u2500\u2500 python/\n\u2502   \u2514\u2500\u2500 bundled Python components, if required\n\u2502\n\u251c\u2500\u2500 config/\n\u2502   \u2514\u2500\u2500 default application configuration\n\u2502\n\u251c\u2500\u2500 diagnostics/\n\u2502   \u2514\u2500\u2500 packaging and runtime diagnostic utilities\n\u2502\n\u2514\u2500\u2500 licenses/\n    \u251c\u2500\u2500 application/\n    \u2514\u2500\u2500 third_party/\n```\n\nThis is a proposed layout, not an instruction to create empty directories. Include only components that actually exist or are required.\n\nThe final ZIP must contain the complete runnable distribution, not just the executable and a collection of development artifacts.\n\nThe directory must remain relocatable. The user must be able to extract it to different locations without editing configuration files.\n\n---\n\n# 2. Begin with a comprehensive packaging audit\n\nBefore changing anything, inspect the actual repository and existing build system.\n\nIdentify:\n\n- Project root and current source layout.\n- CMake configuration and build targets.\n- Release and Debug build configurations.\n- Executable names and locations.\n- All shared libraries built by the project.\n- Static libraries and dynamically loaded modules.\n- Qt version and components in use.\n- Qt platform plugins.\n- Qt image format plugins.\n- Qt SQL, network, multimedia, or other plugins if used.\n- OpenGL requirements.\n- Third-party dependencies.\n- Python runtime and extension modules, if required.\n- Pybind11 integration.\n- Python scripts and runtime packages.\n- Solver plugins and dynamically loaded solver libraries.\n- Geometry and CAD libraries.\n- HDF5 and related dependencies.\n- FFTW, Eigen, OpenMP, and other numerical dependencies.\n- Gmsh and OpenCASCADE dependencies, if used.\n- External executables invoked by the application.\n- Shader files and GPU-related assets.\n- Fonts, icons, themes, and images.\n- HTML help system and its complete dependency tree.\n- Example projects and demo assets.\n- Configuration files.\n- Files currently loaded through hardcoded development paths.\n- Runtime dependencies discovered only when a particular feature is activated.\n\nCreate:\n\n`docs/release/PACKAGING_AUDIT.md`\n\nThe audit must contain:\n\n1. Current build configuration.\n2. Executable and shared-library inventory.\n3. Runtime dependency inventory.\n4. Qt component and plugin inventory.\n5. Dynamic loading mechanisms.\n6. Runtime resource inventory.\n7. Python dependency inventory.\n8. Help and demo asset inventory.\n9. External system dependencies.\n10. Licensing and redistribution concerns.\n11. Known packaging risks.\n12. Recommended packaging architecture.\n\nDo not assume that an executable's `ldd` output captures every dependency. Inspect dynamically loaded libraries, Qt plugins, optional modules, external executables, and feature-specific runtime paths.\n\nUse tools such as:\n\n- `ldd`\n- `readelf`\n- `objdump`\n- `patchelf`\n- `lddtree` where available\n- `qtpaths` or `qmake` for Qt installation information\n- CMake dependency inspection\n- Runtime loader diagnostics\n- Qt plugin diagnostics\n- `strace` where useful\n\nDocument the actual dependency graph.\n\n---\n\n# 3. Select and implement the packaging toolchain\n\nEvaluate current Linux packaging tools and select the most appropriate solution.\n\nCandidates include:\n\n- `linuxdeploy`\n- `linuxdeploy-plugin-qt`\n- `linuxdeployqt`\n- `appimagetool` and related tooling where useful for dependency collection or validation\n- CMake install and runtime dependency collection mechanisms\n- `patchelf`\n- Custom packaging scripts where required\n\nDo not select a tool simply because it is familiar.\n\nEvaluate:\n\n- Maintenance status.\n- Compatibility with the project's Qt version.\n- Compatibility with the target Linux distribution baseline.\n- Ability to collect Qt plugins.\n- Ability to bundle non-Qt shared libraries.\n- RPATH and relocation handling.\n- Python extension compatibility.\n- OpenGL requirements.\n- Reproducibility.\n- Licensing.\n- Suitability for producing an ordinary ZIP distribution.\n\n**Important:** The deliverable is a ZIP archive, not an AppImage.\n\nAppImage tooling may be used as a dependency-collection or diagnostic component if appropriate, but do not substitute an AppImage for the requested ZIP.\n\nRecord the selected toolchain and reasoning in:\n\n`docs/release/PACKAGING_DECISIONS.md`\n\nThe packaging process must be automated and repeatable.\n\n---\n\n# 4. Build a genuine relocatable runtime\n\nThe packaged application must not depend on the development environment.\n\nImplement a proper runtime directory structure using CMake install rules and packaging scripts.\n\nRequirements:\n\n- Release executable.\n- Required application shared libraries.\n- Required third-party shared libraries.\n- Required Qt runtime libraries.\n- Required Qt plugins.\n- Runtime resources.\n- Solver and extension modules.\n- Required Python runtime components.\n- Offline help and demo resources.\n\nUse relative runtime paths wherever possible.\n\nFor example, configure ELF RPATH/RUNPATH so that the executable can locate its bundled libraries relative to its own location.\n\nThe exact layout may differ from the example above, but the result must be relocatable.\n\nDo not rely on:\n\n- The developer's `LD_LIBRARY_PATH`.\n- The developer's `PATH`.\n- A globally installed Qt SDK.\n- The original build directory.\n- Absolute paths into the source repository.\n- Environment variables configured specifically on the development machine.\n- Symlinks pointing outside the distribution directory.\n\nInspect the final ELF files and verify their runtime paths.\n\nEnsure that bundled libraries do not accidentally override essential system libraries in unsafe ways.\n\n---\n\n# 5. Qt runtime and plugin packaging\n\nQt packaging must be complete.\n\nDetermine the exact Qt components used by the application and include all required runtime components.\n\nAt minimum, investigate:\n\n- Qt Core.\n- Qt GUI.\n- Qt Widgets.\n- Qt Network.\n- Qt OpenGL.\n- Qt OpenGL Widgets.\n- Qt Concurrent.\n- Qt XML.\n- Qt Print Support.\n- Other components actually used by the application.\n\nInclude required plugins, such as:\n\n- `platforms/libqxcb.so`\n- `platforms/libqwayland*.so`, if supported and required.\n- Image format plugins.\n- Icon engine plugins.\n- TLS plugins, if required.\n- SQL drivers, if required.\n- Other plugins discovered through runtime auditing.\n\nDo not copy every Qt plugin indiscriminately.\n\nInclude only appropriate plugins and their dependencies.\n\nEnsure Qt plugin discovery works from the extracted distribution.\n\nUse a packaged Qt configuration file or appropriate launcher configuration where necessary.\n\nThe application must work without a globally installed Qt development environment.\n\nTest the actual platform plugin and its shared-library dependencies.\n\n---\n\n# 6. OpenGL and graphics compatibility\n\nRESONANT uses an OpenGL-based scientific visualization viewport.\n\nThe package must include the application-side graphics components but must not blindly bundle proprietary GPU drivers or replace system graphics interfaces.\n\nInvestigate:\n\n- OpenGL runtime requirements.\n- Minimum OpenGL version.\n- Required OpenGL extensions.\n- Mesa compatibility.\n- NVIDIA proprietary driver compatibility.\n- AMD driver compatibility.\n- Intel graphics compatibility.\n- X11 and Wayland behavior.\n- Qt platform plugin requirements.\n\nDo not bundle kernel-specific graphics drivers.\n\nDo not package a random `libGL.so` or graphics-driver stack without understanding the consequences.\n\nThe launcher must perform a basic graphics environment check and provide a useful diagnostic if the system cannot satisfy the application's OpenGL requirements.\n\nIf software rendering is supported, make it an explicit fallback option rather than silently degrading performance.\n\nDocument:\n\n- Minimum supported OpenGL version.\n- Recommended graphics hardware.\n- Known driver limitations.\n- Any unavoidable system-level requirements.\n\nTest the application on more than one graphics configuration where available.\n\n---\n\n# 7. Python runtime packaging\n\nAudit the actual Python integration.\n\nDetermine whether Python is:\n\n- Required for application startup.\n- Required only for scripting.\n- Required only for optional plugins.\n- Used in-process through pybind11.\n- Used through a separate worker process.\n\nThe distribution must behave correctly in the absence of a system Python installation if Python functionality is intended to be bundled.\n\nIf Python is required:\n\n- Include a compatible runtime.\n- Include required standard-library components.\n- Include required extension modules.\n- Include required Python packages.\n- Include the `resonant` Python package.\n- Include scripts and default Python resources.\n- Ensure Python module discovery works from the extracted directory.\n- Ensure native extension modules locate their bundled shared libraries.\n- Ensure Python cannot accidentally import incompatible modules from the developer's environment.\n\nIf Python is optional, the core application must still start and clearly report that optional scripting functionality is unavailable when the runtime is absent.\n\nDo not silently depend on whichever Python installation happens to exist on the user's machine.\n\nDocument the chosen strategy.\n\n---\n\n# 8. Offline HTML help system\n\nThe entire offline help system must be included.\n\nThis is not optional.\n\nAudit the application's help implementation and collect every required file.\n\nInclude:\n\n- Main help entry point.\n- HTML pages.\n- Navigation.\n- Search index.\n- CSS.\n- JavaScript.\n- Fonts.\n- Images.\n- Diagrams.\n- Screenshots.\n- Context-sensitive help references.\n- Any generated documentation assets.\n\nThe help system must work without an internet connection.\n\nVerify:\n\n- Help opens from the packaged application.\n- Navigation works.\n- Search works.\n- Internal links work.\n- Images load.\n- CSS and JavaScript load.\n- Context-sensitive help works.\n- No links accidentally point into the developer's source tree.\n- No mandatory remote resources are required.\n\nThe application must locate help relative to its packaged installation, not a hardcoded development path.\n\nInclude a standalone `help/index.html` entry point that users can also open in a browser.\n\nIf help generation is part of the build process, integrate it into the release packaging pipeline.\n\nDo not package stale generated documentation.\n\nAdd an automated help validation step that checks internal links and required assets.\n\n---\n\n# 9. Resources, examples, and demo content\n\nInclude all resources required to make the distributed application useful immediately.\n\nAudit and package:\n\n- Application icons.\n- Fonts.\n- Themes.\n- OpenGL shaders.\n- Material libraries.\n- Geometry libraries.\n- Solver data.\n- Default configuration.\n- Example projects.\n- Example simulation files.\n- Example imported geometry.\n- Demo projects.\n- Demo profiles.\n- Demo sequences.\n- Demo screenshots.\n- Demo manifests.\n- Any required lookup tables or reference data.\n\nDo not include developer-only assets, temporary files, build caches, local datasets, private test data, or large unrelated artifacts.\n\nThe package should include a small but meaningful collection of verified example projects.\n\nEach included project must actually open in the packaged application.\n\nRun the demos from the packaged application, not from the development build.\n\nIf a demo references external data, either include that data or correct the demo so that it is self-contained.\n\nDo not ship screenshots or demo results that misrepresent the current application.\n\n---\n\n# 10. Resource discovery and application path handling\n\nThis is a critical part of the work.\n\nAudit all resource-loading code for absolute paths and development-machine assumptions.\n\nCreate a unified resource discovery mechanism.\n\nThe application must distinguish:\n\n1. Executable location.\n2. Application installation/resource root.\n3. Bundled read-only resources.\n4. User configuration directory.\n5. User data directory.\n6. User cache directory.\n7. User-generated projects and exports.\n\nUse appropriate Linux conventions for user-writable data, such as:\n\n- `~/.config/RESONANT/`\n- `~/.local/share/RESONANT/`\n- `~/.cache/RESONANT/`\n\nThe exact naming can follow existing project conventions.\n\nBundled resources must remain read-only from the application's perspective.\n\nNever write user preferences, projects, caches, logs, or temporary data into the extracted application directory unless the user explicitly requests it.\n\nThe application must work when extracted to:\n\n- A directory in the user's home folder.\n- A directory on a secondary drive.\n- A directory with spaces in its path.\n- A removable drive, subject to filesystem and runtime limitations.\n\nEnsure all resource discovery is consistent across:\n\n- Main application.\n- Help system.\n- Python.\n- Solver modules.\n- Plugins.\n- Demo system.\n- File import/export.\n- Shader loading.\n\nAdd tests for relocatable resource discovery.\n\n---\n\n# 11. Launcher and user experience\n\nProvide a top-level launcher:\n\n`RESONANT-Linux-x86_64-VERSION/resonant`\n\nThis should be the simplest way to start the application.\n\nAlso provide:\n\n`resonant.sh`\n\nThe launcher must:\n\n1. Determine its own location.\n2. Resolve the application directory.\n3. Configure required bundled-library paths using safe relative paths.\n4. Configure Qt plugin discovery.\n5. Configure resource paths.\n6. Configure bundled Python paths if applicable.\n7. Perform basic system compatibility checks.\n8. Launch the application.\n9. Preserve the application's exit code.\n\nThe launcher must not require the user to edit environment variables.\n\nDo not rely on the current working directory.\n\nThe user should be able to launch the application from a terminal, file manager, or another working directory.\n\nSupport command-line argument forwarding.\n\nSupport a useful diagnostic mode, for example:\n\n```bash\n./resonant --diagnostics\n```\n\nThis should report:\n\n- Application version.\n- Build identifier.\n- Linux architecture.\n- Qt runtime version.\n- Bundled library locations.\n- OpenGL environment.\n- Python availability.\n- Help resource availability.\n- Solver/plugin discovery.\n- Important runtime dependency status.\n\nAlso provide:\n\n```bash\n./resonant --check-runtime\n```\n\nThis should perform compatibility checks without starting the full GUI where possible.\n\nProvide a useful error message if required dependencies are missing.\n\nDo not display a misleading success message if startup validation fails.\n\n---\n\n# 12. System compatibility and distribution baseline\n\nA self-contained ZIP cannot eliminate all Linux ABI and kernel dependencies.\n\nDefine a deliberate compatibility baseline.\n\nInvestigate:\n\n- Target CPU architecture.\n- Minimum glibc version.\n- Required system libraries.\n- X11 dependencies.\n- Wayland dependencies.\n- OpenGL dependencies.\n- Audio or device dependencies if actually required.\n- Kernel interfaces.\n- Filesystem assumptions.\n\nFor the initial release, prioritize x86_64 Linux unless the existing project explicitly supports another architecture.\n\nDo not build against an unnecessarily recent distribution if doing so prevents the package from running on older supported systems.\n\nPrefer building on the oldest practical supported baseline.\n\nDo not bundle glibc or other fundamental system runtime components as a casual workaround.\n\nProduce a compatibility document:\n\n`docs/release/LINUX_COMPATIBILITY.md`\n\nIt must clearly distinguish:\n\n- Bundled dependencies.\n- Required system dependencies.\n- Optional system integrations.\n- Unsupported environments.\n- Recommended environments.\n\nThe README must communicate this accurately.\n\n---\n\n# 13. Dependency licensing and redistribution\n\nAudit the licenses of all bundled components.\n\nInclude:\n\n- Qt license information.\n- Third-party library licenses.\n- Python and package licenses, if bundled.\n- Numerical library licenses.\n- CAD/geometry library licenses.\n- Solver licenses.\n- Plugin licenses.\n- Font licenses.\n- Image and documentation asset licenses.\n\nPay particular attention to LGPL/GPL obligations and any commercial or restricted redistribution conditions.\n\nDo not include a dependency if its redistribution rights are unclear.\n\nCreate:\n\n- `THIRD_PARTY_NOTICES.txt`\n- `licenses/`\n- `docs/release/LICENSE_AUDIT.md`\n\nRecord:\n\n- Component name.\n- Version.\n- License.\n- Source.\n- Whether it is statically or dynamically linked.\n- Whether it is bundled.\n- Required attribution or redistribution notices.\n\nDo not assume that because a library is installed on the development machine it can be redistributed.\n\n---\n\n# 14. CMake and release build integration\n\nIntegrate packaging into the existing CMake build system.\n\nProvide a clear release workflow, such as:\n\n```bash\ncmake -S . -B build-release \\\n    -DCMAKE_BUILD_TYPE=Release\n\ncmake --build build-release --parallel\n\ncmake --install build-release \\\n    --prefix /some/staging/location\n```\n\nThe actual commands should match the implemented project configuration.\n\nAdd dedicated packaging scripts or CMake targets.\n\nFor example:\n\n```bash\ncmake --build build-release --target package_linux_zip\n```\n\nThe final command should produce a ZIP archive in a predictable release directory.\n\nSuggested output:\n\n```text\ndist/\n    RESONANT-Linux-x86_64-VERSION.zip\n    RESONANT-Linux-x86_64-VERSION.sha256\n```\n\nThe build process must:\n\n1. Build the Release application.\n2. Install into a clean staging directory.\n3. Collect required shared libraries.\n4. Collect Qt runtime and plugins.\n5. Collect Python runtime components if needed.\n6. Collect resources.\n7. Collect help and demo content.\n8. Configure relative runtime paths.\n9. Generate version information.\n10. Generate notices and license files.\n11. Run package validation.\n12. Create the ZIP.\n13. Generate a SHA-256 checksum.\n\nDo not package Debug libraries or development-only files.\n\nDo not include source code, object files, CMake caches, test binaries, temporary files, or compiler artifacts unless explicitly needed by the runtime.\n\nMake the process repeatable.\n\n---\n\n# 15. ZIP archive quality\n\nThe ZIP itself is part of the product.\n\nRequirements:\n\n- Preserve executable permission bits.\n- Preserve directory structure.\n- Avoid absolute paths.\n- Avoid unnecessary symlinks.\n- Avoid symlinks that escape the package.\n- Avoid duplicate library versions.\n- Avoid redundant build artifacts.\n- Include a top-level directory.\n- Use a predictable archive filename.\n- Include version and architecture in the filename.\n- Generate a SHA-256 checksum.\n- Ensure the archive can be extracted by common Linux archive utilities.\n\nTest extraction using at least one standard ZIP utility.\n\nVerify that the extracted executable remains executable.\n\nVerify that the application runs from the extracted location.\n\nTest relocation by extracting the same ZIP into a different directory and launching it again.\n\nThe package must not contain references to the original staging directory.\n\n---\n\n# 16. Automated packaging validation\n\nA packaging pipeline is not complete until it validates the actual final ZIP.\n\nCreate automated validation scripts.\n\nSuggested locations:\n\n```text\nscripts/release/\n    build_linux_zip.sh\n    validate_linux_bundle.sh\n    validate_help.sh\n    validate_licenses.sh\n    inspect_dependencies.sh\n    generate_checksum.sh\n```\n\nAdapt names to the existing project conventions.\n\nThe validation must include:\n\n### Executable and dependency checks\n\n- Executable exists.\n- Executable is executable.\n- ELF architecture is correct.\n- All required shared libraries resolve.\n- No unexpected dependencies resolve from the development environment.\n- RPATH/RUNPATH is correct.\n- Qt plugins resolve.\n- No development-directory paths remain.\n- Required resources exist.\n\n### Runtime checks\n\n- Launcher executes.\n- Application starts.\n- Qt platform plugin loads.\n- Main window opens.\n- OpenGL viewport initializes.\n- Core UI resources load.\n- Solver discovery works.\n- Material libraries load.\n- Python integration behaves as documented.\n- Help opens.\n- Example projects open.\n- Demo system works.\n\n### Relocation checks\n\n- Extract to a temporary directory.\n- Run from a different current working directory.\n- Extract to a path containing spaces.\n- Rename the extracted directory.\n- Run again.\n\n### Clean environment checks\n\nTest with a sanitized environment that removes developer-specific variables such as:\n\n- `LD_LIBRARY_PATH`\n- `LD_PRELOAD`\n- `PYTHONPATH`\n- `PYTHONHOME`\n- Qt development environment variables.\n\nDo not remove environment variables that are genuinely required by the operating system or display session.\n\nThe goal is to prove that the bundle does not accidentally depend on the development environment.\n\n### Help checks\n\n- Main index exists.\n- All required pages exist.\n- Internal links resolve.\n- Images load.\n- Search index exists.\n- No required internet connection.\n\n### Package integrity checks\n\n- ZIP extracts successfully.\n- Checksum matches.\n- No missing required files.\n- No unexpected build artifacts.\n- No broken external symlinks.\n- No accidental private or local data.\n\n---\n\n# 17. Clean-machine testing\n\nThis is one of the most important acceptance requirements.\n\nA package that runs on the developer's machine is not sufficient evidence.\n\nTest the final ZIP in a clean Linux environment.\n\nPreferred approaches:\n\n- A clean virtual machine.\n- A fresh Linux installation.\n- A container where appropriate for non-GUI dependency checks.\n- A separate machine with no Qt development environment.\n\nTest the package without installing the application's development dependencies.\n\nAt minimum, test:\n\n1. Extraction.\n2. Launch.\n3. Main window.\n4. OpenGL viewport.\n5. Help.\n6. Example project loading.\n7. Basic simulation workflow.\n8. Python functionality if bundled.\n9. Exit and restart.\n10. Relocation.\n\nContainers may be useful for dependency checks, but they do not fully substitute for testing a real desktop graphics session.\n\nRecord the actual Linux distribution, version, architecture, graphics environment, and results.\n\nIf a clean-machine test cannot be performed, report that limitation explicitly. Do not claim it passed.\n\n---\n\n# 18. Runtime diagnostics and failure reporting\n\nThe application should fail informatively.\n\nExamples:\n\n- Missing Qt platform plugin.\n- Unsupported OpenGL version.\n- Missing shared library.\n- Incompatible Python runtime.\n- Missing solver module.\n- Missing resource directory.\n- Corrupted or incomplete package.\n- Insufficient memory or storage where detectable.\n\nProvide actionable error messages.\n\nWhere possible, offer a diagnostic report that the user can save.\n\nDo not include credentials, private project contents, or sensitive user data in diagnostic reports.\n\nDo not implement telemetry or automatic uploads.\n\nThe user must control whether diagnostic information is shared.\n\n---\n\n# 19. Release documentation\n\nCreate:\n\n`docs/release/LINUX_ZIP_DISTRIBUTION.md`\n\nThis must explain:\n\n- What the ZIP contains.\n- Supported Linux architecture.\n- Minimum compatibility baseline.\n- How to download and verify the archive.\n- How to extract it.\n- How to launch RESONANT.\n- How to launch from a terminal.\n- How to run diagnostics.\n- How to access offline help.\n- Where user configuration is stored.\n- Where user data is stored.\n- How to update to a newer version.\n- How to remove the application.\n- Known limitations.\n- Graphics requirements.\n- Troubleshooting.\n\nAlso provide a concise root-level `README.txt` specifically for ZIP users.\n\nA new user should not need to read developer documentation to run the application.\n\n---\n\n# 20. Release build reproducibility\n\nThe package should be reproducible to the extent practical.\n\nRecord:\n\n- Git commit.\n- Application version.\n- Build configuration.\n- Compiler version.\n- CMake version.\n- Qt version.\n- Packaging tool versions.\n- Dependency versions.\n- Build timestamp.\n- Target architecture.\n\nUse a consistent staging directory and clean build process.\n\nAvoid including machine-specific timestamps or absolute build paths in runtime resources.\n\nDo not sacrifice runtime reliability for byte-identical ZIP output, but document any unavoidable nondeterminism.\n\n---\n\n# 21. Implementation phases\n\nExecute this work in the following order.\n\n## Phase A \u2014 Audit and decisions\n\n- Inspect the current repository.\n- Inventory runtime dependencies.\n- Audit resources and help.\n- Audit dynamic loading.\n- Audit licensing.\n- Select the packaging architecture.\n- Document decisions.\n\nDo not begin by blindly copying shared libraries.\n\n## Phase B \u2014 Runtime path consolidation\n\n- Fix hardcoded development paths.\n- Implement unified resource discovery.\n- Separate bundled resources from user-writable data.\n- Fix Python and plugin discovery.\n- Add path-related tests.\n\n## Phase C \u2014 CMake installation and staging\n\n- Add proper installation rules.\n- Create a clean staging tree.\n- Install executable and required libraries.\n- Install resources, help, demos, and examples.\n\n## Phase D \u2014 Dependency bundling\n\n- Collect Qt runtime.\n- Collect required plugins.\n- Collect third-party libraries.\n- Configure relative RPATH/RUNPATH.\n- Include Python runtime if required.\n- Verify dynamic loading.\n\n## Phase E \u2014 Launcher and diagnostics\n\n- Implement launcher.\n- Add runtime compatibility checks.\n- Add diagnostic mode.\n- Add actionable failure reporting.\n\n## Phase F \u2014 ZIP creation\n\n- Create release directory.\n- Include notices and documentation.\n- Generate checksum.\n- Preserve permissions.\n- Create final ZIP.\n\n## Phase G \u2014 Validation\n\n- Inspect ELF dependencies.\n- Validate help.\n- Validate resources.\n- Run automated checks.\n- Test relocation.\n- Test sanitized environment.\n- Test clean Linux environment.\n- Exercise real application workflows.\n\n## Phase H \u2014 Release handoff\n\nProduce final documentation and a concise release report.\n\n---\n\n# 22. Required acceptance criteria\n\nThe milestone is complete only when all applicable criteria below are satisfied.\n\n| ID | Acceptance criterion |\n|---|---|\n| PKG-001 | A versioned x86_64 Linux ZIP is generated |\n| PKG-002 | ZIP contains the runnable application executable |\n| PKG-003 | All required application shared libraries are bundled |\n| PKG-004 | Required Qt runtime libraries are bundled |\n| PKG-005 | Required Qt plugins are bundled |\n| PKG-006 | Third-party runtime dependencies are resolved |\n| PKG-007 | Runtime paths are relocatable |\n| PKG-008 | No development-directory paths are required |\n| PKG-009 | Launcher works without manual environment configuration |\n| PKG-010 | OpenGL viewport starts on a supported system |\n| PKG-011 | Offline HTML help is fully included and functional |\n| PKG-012 | Help navigation and search work offline |\n| PKG-013 | Required shaders, fonts, icons, and resources are included |\n| PKG-014 | Example projects open |\n| PKG-015 | Demo projects and sequences work |\n| PKG-016 | Python functionality works as documented |\n| PKG-017 | Solver and plugin discovery works |\n| PKG-018 | User data is stored outside the application bundle |\n| PKG-019 | ZIP can be extracted and run from a different directory |\n| PKG-020 | ZIP can be run from a path containing spaces |\n| PKG-021 | Sanitized environment test passes |\n| PKG-022 | Clean Linux environment test passes |\n| PKG-023 | Licensing and redistribution notices are included |\n| PKG-024 | SHA-256 checksum is generated and verified |\n| PKG-025 | Release documentation is complete |\n| PKG-026 | Packaging pipeline is automated |\n| PKG-027 | No private development data is included |\n| PKG-028 | Final package passes automated validation |\n\nMark each criterion as PASS, FAIL, BLOCKED, or NOT APPLICABLE.\n\nDo not mark an untested item as PASS.\n\n---\n\n# 23. Important engineering constraints\n\n1. Do not replace the application architecture to solve a packaging problem.\n2. Do not remove functionality simply because it is inconvenient to package.\n3. Do not silently disable Python, solvers, help, or demos to make the ZIP smaller.\n4. Do not assume that `ldd` alone proves dependency completeness.\n5. Do not bundle incompatible graphics drivers.\n6. Do not bundle glibc as an improvised compatibility solution.\n7. Do not rely on absolute development paths.\n8. Do not package Debug builds.\n9. Do not include local test datasets or private files.\n10. Do not claim clean-system compatibility without testing.\n11. Do not create a ZIP that merely works on the developer's computer.\n12. Preserve the existing application architecture and functionality.\n13. Keep the packaging pipeline maintainable and suitable for future releases.\n14. Prefer CMake installation rules and standard packaging tools over a collection of fragile manual copy commands.\n\nIf a dependency cannot legally or technically be bundled, document the exact reason and provide a clear system prerequisite.\n\nIf a packaging issue exposes an architectural problem, fix the underlying problem rather than adding a fragile workaround.\n\n---\n\n# 24. Final deliverables\n\nAt completion, provide:\n\n1. Working CMake release packaging integration.\n2. Automated Linux ZIP packaging script.\n3. Runtime launcher.\n4. Runtime diagnostic utility or mode.\n5. Complete relocatable distribution directory.\n6. Versioned ZIP archive.\n7. SHA-256 checksum.\n8. Offline HTML help included in the ZIP.\n9. Example and demo content included in the ZIP.\n10. Third-party notices and license directory.\n11. `PACKAGING_AUDIT.md`.\n12. `PACKAGING_DECISIONS.md`.\n13. `LINUX_COMPATIBILITY.md`.\n14. `LICENSE_AUDIT.md`.\n15. `LINUX_ZIP_DISTRIBUTION.md`.\n16. Automated packaging validation scripts.\n17. Test results and clean-environment validation report.\n18. Final list of known limitations and unresolved issues.\n\nThe final report must include:\n\n- Exact ZIP output path.\n- ZIP file size.\n- SHA-256 checksum.\n- Application version and Git commit.\n- Linux build environment.\n- Packaging toolchain.\n- Bundled dependency summary.\n- Required system dependency summary.\n- Validation results.\n- Clean-machine test results.\n- Any blocked acceptance criteria.\n\n**The final objective is simple: a user should be able to download one ZIP, extract it, launch RESONANT, open the offline help, load an example project, and begin using the application without setting up a development environment.**\n\nTreat that experience as the definition of a successful release package.",
+  "file": "requests/inbox/2026-11-26-prompt-16-resonant-self-contai-req-chat-20261126-013.md",
+  "attachments": [],
+  "context": "User: 'add this as a ticket and process in order' (queued after Prompt 15, REQ-CHAT-20261126-012)",
+  "text_sha256": "23212d1d7e485e1b728bdc6ab7b349c0a89fe92f0deccf03d723d4a607de37bf",
+  "classification": {
+    "proposed_type": "FEATURE",
+    "proposed_source": "override",
+    "normalized_type": "FEATURE",
+    "heuristic_type": "PERFORMANCE",
+    "final_type": "FEATURE",
+    "confidence": "high",
+    "validation": "PASS",
+    "classifier_reason": "override FEATURE accepted (text alone suggests PERFORMANCE: performance/resource problem in the request statement: optimizing)",
+    "correction_reason": null,
+    "normalization_note": null,
+    "evidence": [
+      {
+        "category": "PERFORMANCE",
+        "where": "head",
+        "phrase": "optimizing",
+        "strength": "weak",
+        "note": "enumeration",
+        "sentence": "Wave Field Engineering Studio**, a scientific and engineering application for modeling, simulating, visualizing, optimizing, and manipulating acoustic, mechanical, and electromagnetic wave phenomena."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Your task is to audit, implement, and validate a complete **self-contained Linux ZIP distribution**."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "milestone",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This is a release-engineering milestone."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "objective",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The objective is to produce a downloadable ZIP archive that contains everything necessary to run RESONANT on a supported Linux system, without requiring the user to install Qt, application libraries, "
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "should be able to",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The user should be able to:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not merely create a ZIP of the existing build directory."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement a proper, reproducible, relocatable application distribution."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Produce",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Produce a ZIP archive with a structure conceptually similar to:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This is a proposed layout, not an instruction to create empty directories."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "must be able",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The user must be able to extract it to different locations without editing configuration files."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "integration",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Pybind11 integration."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Create:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "feature",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Inspect dynamically loaded libraries, Qt plugins, optional modules, external executables, and feature-specific runtime paths."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "tooling",
+        "strength": "strong",
+        "note": "",
+        "sentence": "`appimagetool` and related tooling where useful for dependency collection or validation"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Ability to",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Ability to collect Qt plugins."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Ability to",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Ability to bundle non-Qt shared libraries."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "deliverable",
+        "strength": "strong",
+        "note": "",
+        "sentence": "**Important:** The deliverable is a ZIP archive, not an AppImage."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "tooling",
+        "strength": "strong",
+        "note": "",
+        "sentence": "AppImage tooling may be used as a dependency-collection or diagnostic component if appropriate, but do not substitute an AppImage for the requested ZIP."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement a proper runtime directory structure using CMake install rules and packaging scripts."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "must include",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The package must include the application-side graphics components but must not blindly bundle proprietary GPU drivers or replace system graphics interfaces."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "provide",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The launcher must perform a basic graphics environment check and provide a useful diagnostic if the system cannot satisfy the application's OpenGL requirements."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "integration",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Audit the actual Python integration."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "users can",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Include a standalone `help/index.html` entry point that users can also open in a browser."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "integrate",
+        "strength": "strong",
+        "note": "",
+        "sentence": "If help generation is part of the build process, integrate it into the release packaging pipeline."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Add",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Add an automated help validation step that checks internal links and required assets."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "should include",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The package should include a small but meaningful collection of verified example projects."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Create a unified resource discovery mechanism."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Add",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Add tests for relocatable resource discovery."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Provide",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Provide a top-level launcher:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "provide",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Also provide:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "should be able to",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The user should be able to launch the application from a terminal, file manager, or another working directory."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support command-line argument forwarding."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support a useful diagnostic mode, for example:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Build",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Build identifier."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "provide",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Also provide:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Provide",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Provide a useful error message if required dependencies are missing."
+      },
+      {
+        "category": "BUILD",
+        "where": "body",
+        "phrase": "Do not build",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not build against an unnecessarily recent distribution if doing so prevents the package from running on older supported systems."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Produce",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Produce a compatibility document:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "integrations",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Optional system integrations."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Create:"
+      }
+    ],
+    "scores": {
+      "FEATURE": {
+        "head": 0,
+        "body": 82
+      },
+      "BUG": {
+        "head": 0,
+        "body": 19
+      },
+      "CRASH": {
+        "head": 0,
+        "body": 0
+      },
+      "REGRESSION": {
+        "head": 0,
+        "body": 0
+      },
+      "PERFORMANCE": {
+        "head": 1,
+        "body": 0
+      },
+      "REFACTOR": {
+        "head": 0,
+        "body": 1
+      },
+      "BUILD": {
+        "head": 0,
+        "body": 1
+      },
+      "DOCUMENTATION": {
+        "head": 0,
+        "body": 23
+      },
+      "INVESTIGATION": {
+        "head": 0,
+        "body": 28
+      },
+      "PROCESS-CHANGE": {
+        "head": 0,
+        "body": 0
+      }
+    },
+    "evidence_total": 155,
+    "validator": "scripts/request_classification.py"
+  },
+  "links": {
+    "work": [
+      "WORK-000015"
+    ]
+  },
+  "commits": [],
+  "resolution": {
+    "from": "processing",
+    "to": "completed",
+    "at": "2026-11-27T23:32:14.025333+00:00",
+    "by": "agent-dev-20261126151713-76f632",
+    "gates": [
+      {
+        "work": "WORK-000015",
+        "at": "2026-11-27T23:32:09.026280+00:00",
+        "verdict": "PASS",
+        "request_fingerprint": "160c3e23a9536451500bd442eb7a9eea56e45d09bf823e3a8e0f69b4d606609d",
+        "test_runs": [
+          "20261127T182315-4052689",
+          "20261127T182735-4069645",
+          "20261127T182924-4079637"
+        ]
+      }
+    ]
+  }
+}

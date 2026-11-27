@@ -1,0 +1,217 @@
+{
+ "format": "resonant.bundle-validation",
+ "version": 1,
+ "zip": "RESONANT-Linux-x86_64-0.1.0.zip",
+ "sha256": "0e057fea6fd219d3e880ac0b020f0b3aff354a0bc0b067fcb1fced8e192a8083",
+ "sizeBytes": 94873838,
+ "seconds": 40.2,
+ "passed": 41,
+ "failed": 0,
+ "checks": [
+  {
+   "check": "checksum",
+   "status": "PASS",
+   "detail": "SHA-256 0e057fea6fd219d3... (RESONANT-Linux-x86_64-0.1.0.sha256)"
+  },
+  {
+   "check": "sha256sum -c",
+   "status": "PASS",
+   "detail": "RESONANT-Linux-x86_64-0.1.0.zip: OK"
+  },
+  {
+   "check": "archive entries",
+   "status": "PASS",
+   "detail": "2454 entries in one folder RESONANT-Linux-x86_64-0.1.0"
+  },
+  {
+   "check": "no links in the archive",
+   "status": "PASS",
+   "detail": "none"
+  },
+  {
+   "check": "extract with unzip",
+   "status": "PASS",
+   "detail": "into a folder with spaces (extracted here)"
+  },
+  {
+   "check": "executable resonant",
+   "status": "PASS",
+   "detail": "executable after unzip"
+  },
+  {
+   "check": "executable resonant.sh",
+   "status": "PASS",
+   "detail": "executable after unzip"
+  },
+  {
+   "check": "executable bin/resonant",
+   "status": "PASS",
+   "detail": "executable after unzip"
+  },
+  {
+   "check": "executable bin/resonant-automation",
+   "status": "PASS",
+   "detail": "executable after unzip"
+  },
+  {
+   "check": "executable python/runtime/bin/python3",
+   "status": "PASS",
+   "detail": "executable after unzip"
+  },
+  {
+   "check": "no links or development files",
+   "status": "PASS",
+   "detail": "none"
+  },
+  {
+   "check": "no private data or machine paths",
+   "status": "PASS",
+   "detail": "no home, repository or staging path, key or token"
+  },
+  {
+   "check": "ELF architecture",
+   "status": "PASS",
+   "detail": "154 ELF files, all ELF64 x86-64"
+  },
+  {
+   "check": "relative search paths",
+   "status": "PASS",
+   "detail": "every DT_RPATH is $ORIGIN-relative, no DT_RUNPATH"
+  },
+  {
+   "check": "dependencies resolve",
+   "status": "PASS",
+   "detail": "every non-system library is found in the package"
+  },
+  {
+   "check": "nothing from the development environment",
+   "status": "PASS",
+   "detail": "libraries outside the package are all system libraries of the policy"
+  },
+  {
+   "check": "Qt plugins",
+   "status": "PASS",
+   "detail": "16 plugins"
+  },
+  {
+   "check": "resources",
+   "status": "PASS",
+   "detail": "20 required files, native module _resonant.cpython-312-x86_64-linux-gnu.so, 43 example projects"
+  },
+  {
+   "check": "package file list",
+   "status": "PASS",
+   "detail": "2159 files match diagnostics/FILES.sha256"
+  },
+  {
+   "check": "help",
+   "status": "PASS",
+   "detail": "help: PASS: 122 topics, 123 pages, 1661 internal links, 39 images, 0 links to web sites, no remote resources; browser search: 'phased array' finds 3 topics"
+  },
+  {
+   "check": "licenses",
+   "status": "PASS",
+   "detail": "licenses: PASS: 60 components, every bundled library, plugin and Python package accounted for"
+  },
+  {
+   "check": "launcher --check-runtime",
+   "status": "PASS",
+   "detail": "PASS  Launcher: x86_64, glibc 2.39 (needs 2.38), every system library found, platform xcb;wayland; PASS  OpenGL: 4.5 core (llvmpipe (LLVM 20.1.2, 256 bits); Mesa); PASS  Python: <repo>/tmp/rv/extracted here/RESONANT-Linux-x86_64-0.1.0/python/runtime/bin/python3 3.12.3 (bundled), resonant API 1.0, NumPy 2.2.6; Result: 0 failed, 0 warning(s)"
+  },
+  {
+   "check": "--diagnostics report",
+   "status": "PASS",
+   "detail": "saved (134 lines); home shown as ~, environment values not shown"
+  },
+  {
+   "check": "help from the package (--check-help)",
+   "status": "PASS",
+   "detail": "4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.5 / llvmpipe (LLVM 20.1.2, 256 bits) / Mesa\n2026-11-27 18:18:28.432 [info] render: graphics shut down\nhelp: PASS; 122 topics from <repo>/tmp/rv/extracted here/RESONANT-Linux-x86_64-0.1.0/help; search 'array': 30 topics, first acoustics.arrays"
+  },
+  {
+   "check": "main window and viewport",
+   "status": "PASS",
+   "detail": "screenshot 253 KiB of examples/acoustics/a-two-source-interference.resonant"
+  },
+  {
+   "check": "every example project opens",
+   "status": "PASS",
+   "detail": "43 of 43 opened"
+  },
+  {
+   "check": "demonstration demo-a-overview",
+   "status": "PASS",
+   "detail": "demo: completed; manifest <work>/demo output/demo-a-overview/demo-a-overview-20261127T231833Z/run-manifest.json"
+  },
+  {
+   "check": "demonstration demo-b-acoustic-focusing",
+   "status": "PASS",
+   "detail": "demo: completed; manifest <work>/demo output/demo-b-acoustic-focusing/demo-b-acoustic-focusing-20261127T231835Z/run-manifest.json"
+  },
+  {
+   "check": "demonstration demo-c-passive-focusing",
+   "status": "PASS",
+   "detail": "demo: completed; manifest <work>/demo output/demo-c-passive-focusing/demo-c-passive-focusing-20261127T231836Z/run-manifest.json"
+  },
+  {
+   "check": "demonstration demo-d-mechanical-resonance",
+   "status": "PASS",
+   "detail": "demo: completed; manifest <work>/demo output/demo-d-mechanical-resonance/demo-d-mechanical-resonance-20261127T231838Z/run-manifest.json"
+  },
+  {
+   "check": "demonstration demo-e-rf-antennas",
+   "status": "PASS",
+   "detail": "demo: completed; manifest <work>/demo output/demo-e-rf-antennas/demo-e-rf-antennas-20261127T231839Z/run-manifest.json"
+  },
+  {
+   "check": "demonstration demo-f-inverse-design",
+   "status": "PASS",
+   "detail": "demo: completed; manifest <work>/demo output/demo-f-inverse-design/demo-f-inverse-design-20261127T231840Z/run-manifest.json"
+  },
+  {
+   "check": "demonstration demo-g-experimental-correlation",
+   "status": "PASS",
+   "detail": "demo: completed; manifest <work>/demo output/demo-g-experimental-correlation/demo-g-experimental-correlation-20261127T231851Z/run-manifest.json"
+  },
+  {
+   "check": "demonstration demo-h-python-automation",
+   "status": "PASS",
+   "detail": "demo: completed; manifest <work>/demo output/demo-h-python-automation/demo-h-python-automation-20261127T231852Z/run-manifest.json"
+  },
+  {
+   "check": "Python, automation host and gRPC bridge",
+   "status": "PASS",
+   "detail": "bundled Python with NumPy 2.2.6; local socket and gRPC answer resonant.v1; sys.path inside the package"
+  },
+  {
+   "check": "relocated, renamed, through a link",
+   "status": "PASS",
+   "detail": "renamed to 'Resonant renamed' in another folder, started through a symbolic link from another current directory"
+  },
+  {
+   "check": "resonant.sh",
+   "status": "PASS",
+   "detail": "the same checks through resonant.sh"
+  },
+  {
+   "check": "read-only package",
+   "status": "PASS",
+   "detail": "the checks and the main window work with every file and folder of the package read-only"
+  },
+  {
+   "check": "nothing written into the package",
+   "status": "PASS",
+   "detail": "no file added or changed by any run"
+  },
+  {
+   "check": "user data outside the package",
+   "status": "PASS",
+   "detail": "31 files written under the scratch HOME (.config/Resonant, .local/share/Resonant)"
+  },
+  {
+   "check": "extracted without permissions",
+   "status": "PASS",
+   "detail": "resonant: bin/resonant is not executable: extract the ZIP with a tool that keeps permissions (unzip, file-roller, ark)."
+  }
+ ]
+}

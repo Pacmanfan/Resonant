@@ -9,3 +9,4 @@ __pycache__/
 
 # framework source checkout (separate repository)
 /auto_ci_cd/
+/dist/

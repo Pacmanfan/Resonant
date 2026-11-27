@@ -7,8 +7,11 @@ file(GLOB RESONANT_APP_FORMS CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/forms
 add_library(resonant_app STATIC ${RESONANT_APP_SOURCES} ${RESONANT_APP_HEADERS} ${RESONANT_APP_FORMS})
 set_target_properties(resonant_app PROPERTIES AUTOUIC_SEARCH_PATHS ${CMAKE_CURRENT_SOURCE_DIR}/forms)
 target_include_directories(resonant_app PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-# Development builds find demos, examples, plugins and the Python package in the source tree (ResourcePaths).
-target_compile_definitions(resonant_app PRIVATE RESONANT_SOURCE_DIR="${CMAKE_SOURCE_DIR}")
+# Development builds find demos, examples, plugins and the Python package in the source tree (ResourcePaths);
+# a bundle never names the source tree (RES-DIST-003).
+if(NOT RESONANT_BUNDLE_LAYOUT)
+    target_compile_definitions(resonant_app PRIVATE RESONANT_SOURCE_DIR="${CMAKE_SOURCE_DIR}")
+endif()
 target_link_libraries(resonant_app
     PUBLIC resonant_render resonant_hardware resonant_core Qt6::Widgets Qt6::OpenGLWidgets
     PRIVATE resonant_warnings)

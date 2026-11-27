@@ -26,6 +26,21 @@ option(RESONANT_WITH_ALSA "Build the ALSA audio-interface driver when ALSA is in
 option(RESONANT_WITH_SOAPYSDR "Build the SoapySDR driver (discovery only) when SoapySDR is installed" ON)
 option(RESONANT_WITH_PYTHON "Build the Python API module when Python and pybind11 are installed" ON)
 option(RESONANT_WITH_AUTOMATION_API "Build the automation API (Protocol Buffers) when protoc and libprotobuf are installed" ON)
+# The Linux ZIP (ADR-000218, tools/release/build_linux_zip.sh): data at the
+# top of the package instead of share/resonant, the release help, no source or
+# build paths compiled in, and the package_linux_zip target.
+option(RESONANT_BUNDLE_LAYOUT "Install as the self-contained Linux bundle (a Release build only)" OFF)
+option(RESONANT_HELP_DRAFT "Build the help in draft mode: a missing screenshot is a warning (never in a bundle)" ON)
+if(RESONANT_BUNDLE_LAYOUT)
+    if(NOT CMAKE_BUILD_TYPE STREQUAL "Release")
+        message(FATAL_ERROR "RESONANT_BUNDLE_LAYOUT packages a Release build: configure with -DCMAKE_BUILD_TYPE=Release")
+    endif()
+    set(RESONANT_INSTALL_DATADIR ".")
+    add_compile_options("$<$<COMPILE_LANGUAGE:CXX>:-ffile-prefix-map=${CMAKE_SOURCE_DIR}/=>"
+                        "$<$<COMPILE_LANGUAGE:CXX>:-ffile-prefix-map=${CMAKE_BINARY_DIR}/=>")
+else()
+    set(RESONANT_INSTALL_DATADIR "share/resonant")
+endif()
 set(RESONANT_CUDA_ARCHITECTURES "75-real;86-real;89-real;120" CACHE STRING
     "GPU architectures compiled in (Turing, Ampere, Ada, Blackwell; the last also as PTX)")
 
@@ -144,6 +159,30 @@ if(RESONANT_BUILD_APP)
     set(CMAKE_AUTORCC ON)
     add_subdirectory(src/render)
     add_subdirectory(src/app)
+endif()
+
+# What the bundler records about this build (tools/release/package.py, RES-DIST-014).
+if(RESONANT_BUNDLE_LAYOUT)
+    if(RESONANT_HAVE_CUDA)
+        string(APPEND CMAKE_CUDA_FLAGS " -Xcompiler=-ffile-prefix-map=${CMAKE_SOURCE_DIR}/= -Xcompiler=-ffile-prefix-map=${CMAKE_BINARY_DIR}/=")
+    endif()
+    set(RESONANT_BUILD_INFO "{\n  \"format\": \"resonant.build-info\", \"version\": 1,\n  \"applicationVersion\": \"${PROJECT_VERSION}\",\n  \"buildType\": \"${CMAKE_BUILD_TYPE}\",\n")
+    string(APPEND RESONANT_BUILD_INFO "  \"compiler\": \"${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}\",\n  \"cmake\": \"${CMAKE_VERSION}\",\n  \"generator\": \"${CMAKE_GENERATOR}\",\n")
+    string(APPEND RESONANT_BUILD_INFO "  \"qt\": \"${Qt6_VERSION}\",\n  \"python\": \"${Python3_VERSION}\",\n  \"pythonExecutable\": \"${Python3_EXECUTABLE}\",\n")
+    string(APPEND RESONANT_BUILD_INFO "  \"protobuf\": \"${Protobuf_VERSION}\",\n  \"cuda\": \"${CMAKE_CUDA_COMPILER_VERSION}\",\n")
+    string(APPEND RESONANT_BUILD_INFO "  \"features\": {\"volk\": \"${RESONANT_HAVE_VOLK}\", \"cuda\": \"${RESONANT_HAVE_CUDA}\", \"hdf5\": \"${RESONANT_HAVE_HDF5}\", \"alsa\": \"${RESONANT_HAVE_ALSA}\", \"soapysdr\": \"${RESONANT_HAVE_SOAPYSDR}\", \"python\": \"${RESONANT_HAVE_PYTHON}\", \"automationApi\": \"${RESONANT_HAVE_AUTOMATION_API}\"}\n}\n")
+    file(WRITE ${CMAKE_BINARY_DIR}/resonant-build.json "${RESONANT_BUILD_INFO}")
+    # cmake --build <tree> --target package_linux_zip: install, bundle, validate, zip (dist/).
+    add_custom_target(package_linux_zip
+        COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/release/package.py bundle --build-dir ${CMAKE_BINARY_DIR} --out ${CMAKE_SOURCE_DIR}/dist
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        COMMENT "Packaging the Linux ZIP"
+        USES_TERMINAL VERBATIM)
+    foreach(target resonant resonant-automation _resonant resonant_help)
+        if(TARGET ${target})
+            add_dependencies(package_linux_zip ${target})
+        endif()
+    endforeach()
 endif()
 
 if(RESONANT_BUILD_TESTS)

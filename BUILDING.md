@@ -88,6 +88,26 @@ demonstrations, examples, example plugins, Python packages (`resonant`,
 
 Nothing in the build refers to a path on a particular machine.
 
+## The Linux ZIP
+
+```bash
+tools/release/build_linux_zip.sh                  # Release tree build/release, then dist/RESONANT-Linux-x86_64-<version>.zip
+cmake --build build/release --target package_linux_zip   # the same packaging step in a configured bundle tree
+tools/release/clean_machine_test.sh dist/RESONANT-Linux-x86_64-<version>.zip   # clean containers (docker)
+```
+
+The script configures a Release CMake tree with `-DRESONANT_BUNDLE_LAYOUT=ON`
+(data at the top of the package, the release help, no source paths compiled
+in), installs it into `tmp/release/`, bundles Qt, its selected plugins, the
+other libraries and Python 3.12 with NumPy, protobuf and grpcio, gives every
+ELF file a relative search path, writes the licenses and manifests, checks
+the tree, writes the ZIP and its `.sha256` into `dist/` and validates the
+final ZIP (`tools/release/validate_bundle.py`, under `xvfb-run`). It needs
+`patchelf`, `readelf`, `dpkg-query`, `unzip`, `sha256sum` and `qtpaths6`
+besides the build dependencies; a Debug tree is refused. What is bundled and
+why: `docs/release/PACKAGING_DECISIONS.md`; users' guide:
+`docs/release/LINUX_ZIP_DISTRIBUTION.md`.
+
 ## CMake
 
 ```bash

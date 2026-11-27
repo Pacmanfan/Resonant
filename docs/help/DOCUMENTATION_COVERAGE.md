@@ -6,7 +6,7 @@ fails when this report is out of date. A major user-facing feature is not comple
 without a help topic (RES-HELP-012).
 
 **30 features.** Help topic: 30/30. Illustrated with a screenshot: 19/30. Example project: 22/30. Demonstration: 17/30. Python API: 21/30.
-Help: 121 topics in 12 categories.
+Help: 122 topics in 12 categories.
 
 | Feature | Help topic | Status | Screenshots | Example projects | Demos | Python API |
 |---|---|---|---|---|---|---|

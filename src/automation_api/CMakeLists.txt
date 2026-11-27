@@ -29,4 +29,4 @@ target_include_directories(resonant_automation_api PUBLIC ${CMAKE_CURRENT_SOURCE
 target_include_directories(resonant_automation_api SYSTEM PUBLIC ${RESONANT_GENERATED})
 target_link_libraries(resonant_automation_api PUBLIC resonant_core protobuf::libprotobuf PRIVATE resonant_warnings)
 target_compile_definitions(resonant_automation_api PUBLIC RESONANT_HAVE_AUTOMATION_API)
-install(FILES ${RESONANT_API_DESCRIPTORS} DESTINATION share/resonant/automation)
+install(FILES ${RESONANT_API_DESCRIPTORS} DESTINATION ${RESONANT_INSTALL_DATADIR}/automation)

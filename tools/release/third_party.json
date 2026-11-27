@@ -1,0 +1,787 @@
+{
+ "_comment": "Every component the Linux ZIP contains, with the license it is distributed under, its source and how it is linked (RES-DIST-011, ADR-000218). tools/release/package.py maps every bundled file to an entry (Debian source package, Python distribution, or file name), copies the license files and fails on a component that is missing or whose license is not in 'accepted'. Versions of distribution packages are read from dpkg at packaging time.",
+ "format": "resonant.third-party",
+ "version": 1,
+ "accepted": [
+  "0BSD",
+  "AFL-2.1",
+  "Apache-2.0",
+  "BSD-2-Clause",
+  "BSD-3-Clause",
+  "BSD-3-Clause AND GPL-3.0-or-later WITH GCC-exception-3.1 AND LGPL-2.1-or-later",
+  "BSD-Attribution-HPND-disclaimer",
+  "BSL-1.0",
+  "CC0-1.0",
+  "GPL-3.0-or-later WITH GCC-exception-3.1",
+  "IJG AND BSD-3-Clause AND Zlib",
+  "LGPL-2.1-only",
+  "LGPL-2.1-or-later",
+  "LGPL-3.0-only",
+  "LGPL-3.0-or-later",
+  "Libpng",
+  "LicenseRef-NVIDIA-CUDA-EULA",
+  "MIT",
+  "MPL-2.0",
+  "OLDAP-2.8",
+  "PSF-2.0",
+  "Unicode-3.0",
+  "X11",
+  "blessing",
+  "bzip2-1.0.6",
+  "curl"
+ ],
+ "commonLicenses": [
+  "LGPL-2.1",
+  "LGPL-3",
+  "GPL-2",
+  "GPL-3",
+  "Apache-2.0",
+  "MPL-2.0"
+ ],
+ "components": {
+  "qt6": {
+   "name": "Qt 6 (qtbase, qtsvg, qtwayland)",
+   "license": "LGPL-3.0-only",
+   "source": "https://www.qt.io/ (source: https://download.qt.io/archive/qt/6.4/)",
+   "linking": "shared library in lib/ (dynamically linked, unmodified); plugins in lib/qt6/plugins",
+   "match": {
+    "debSource": [
+     "qt6-base",
+     "qt6-svg",
+     "qt6-wayland"
+    ]
+   },
+   "notes": "Used under the GNU LGPL version 3 (Qt is also available under the GPL and commercial licenses). Ubuntu 24.04 build 6.4.2."
+  },
+  "python3.12": {
+   "name": "Python 3.12 (interpreter and standard library)",
+   "license": "PSF-2.0",
+   "source": "https://www.python.org/",
+   "linking": "the interpreter in python/runtime, run as a separate process",
+   "match": {
+    "debSource": [
+     "python3.12"
+    ]
+   },
+   "notes": "The readline and gdbm modules (GPL) and the test suite are not included."
+  },
+  "icu": {
+   "name": "ICU",
+   "license": "Unicode-3.0",
+   "source": "https://icu.unicode.org/",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "icu"
+    ]
+   }
+  },
+  "glib": {
+   "name": "GLib",
+   "license": "LGPL-2.1-or-later",
+   "source": "https://gitlab.gnome.org/GNOME/glib",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "glib2.0"
+    ]
+   }
+  },
+  "double-conversion": {
+   "name": "double-conversion",
+   "license": "BSD-3-Clause",
+   "source": "https://github.com/google/double-conversion",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "double-conversion"
+    ]
+   }
+  },
+  "pcre2": {
+   "name": "PCRE2",
+   "license": "BSD-3-Clause",
+   "source": "https://github.com/PCRE2Project/pcre2",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "pcre2"
+    ]
+   },
+   "notes": "The PCRE2 library is under the BSD licence with the PCRE2 exception for binary distribution."
+  },
+  "harfbuzz": {
+   "name": "HarfBuzz",
+   "license": "MIT",
+   "source": "https://harfbuzz.github.io/",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "harfbuzz"
+    ]
+   }
+  },
+  "graphite2": {
+   "name": "Graphite2",
+   "license": "LGPL-2.1-or-later",
+   "source": "https://github.com/silnrsi/graphite",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "graphite2"
+    ]
+   },
+   "notes": "Dual licensed (LGPL-2.1-or-later, MPL-2.0 or GPL-2.0-or-later); used under the LGPL."
+  },
+  "libpng": {
+   "name": "libpng",
+   "license": "Libpng",
+   "source": "http://www.libpng.org/pub/png/libpng.html",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "libpng1.6"
+    ]
+   }
+  },
+  "libjpeg-turbo": {
+   "name": "libjpeg-turbo",
+   "license": "IJG AND BSD-3-Clause AND Zlib",
+   "source": "https://libjpeg-turbo.org/",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "libjpeg-turbo"
+    ]
+   }
+  },
+  "md4c": {
+   "name": "MD4C",
+   "license": "MIT",
+   "source": "https://github.com/mity/md4c",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "md4c"
+    ]
+   }
+  },
+  "libb2": {
+   "name": "libb2 (BLAKE2)",
+   "license": "CC0-1.0",
+   "source": "https://github.com/BLAKE2/libb2",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "libb2"
+    ]
+   }
+  },
+  "brotli": {
+   "name": "Brotli",
+   "license": "MIT",
+   "source": "https://github.com/google/brotli",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "brotli"
+    ]
+   }
+  },
+  "bzip2": {
+   "name": "bzip2",
+   "license": "bzip2-1.0.6",
+   "source": "https://sourceware.org/bzip2/",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "bzip2"
+    ]
+   }
+  },
+  "xz": {
+   "name": "XZ Utils (liblzma)",
+   "license": "0BSD",
+   "source": "https://tukaani.org/xz/",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "xz-utils"
+    ]
+   },
+   "notes": "liblzma is under the BSD Zero Clause License (public domain in older releases)."
+  },
+  "zstd": {
+   "name": "Zstandard",
+   "license": "BSD-3-Clause",
+   "source": "https://facebook.github.io/zstd/",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "libzstd"
+    ]
+   },
+   "notes": "Dual licensed (BSD-3-Clause or GPL-2.0-only); used under BSD-3-Clause."
+  },
+  "lz4": {
+   "name": "LZ4",
+   "license": "BSD-2-Clause",
+   "source": "https://lz4.org/",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "lz4"
+    ]
+   },
+   "notes": "The LZ4 library is under BSD-2-Clause (the command-line tools, not included, are GPL)."
+  },
+  "dbus": {
+   "name": "D-Bus library",
+   "license": "AFL-2.1",
+   "source": "https://www.freedesktop.org/wiki/Software/dbus/",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "dbus"
+    ]
+   },
+   "notes": "Dual licensed (AFL-2.1 or GPL-2.0-or-later); used under the Academic Free License 2.1."
+  },
+  "systemd": {
+   "name": "libsystemd",
+   "license": "LGPL-2.1-or-later",
+   "source": "https://systemd.io/",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "systemd"
+    ]
+   }
+  },
+  "libcap": {
+   "name": "libcap",
+   "license": "BSD-3-Clause",
+   "source": "https://sites.google.com/site/fullycapable/",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "libcap2"
+    ]
+   },
+   "notes": "Dual licensed (BSD-3-Clause or GPL-2.0-only); used under BSD-3-Clause."
+  },
+  "libgcrypt": {
+   "name": "Libgcrypt",
+   "license": "LGPL-2.1-or-later",
+   "source": "https://gnupg.org/software/libgcrypt/",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "libgcrypt20"
+    ]
+   }
+  },
+  "libgpg-error": {
+   "name": "libgpg-error",
+   "license": "LGPL-2.1-or-later",
+   "source": "https://gnupg.org/software/libgpg-error/",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "libgpg-error"
+    ]
+   }
+  },
+  "xkbcommon": {
+   "name": "libxkbcommon",
+   "license": "MIT",
+   "source": "https://xkbcommon.org/",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "libxkbcommon"
+    ]
+   }
+  },
+  "xcb-util": {
+   "name": "xcb-util libraries (util, icccm, image, keysyms, render-util)",
+   "license": "MIT",
+   "source": "https://xcb.freedesktop.org/",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "xcb-util",
+     "xcb-util-wm",
+     "xcb-util-image",
+     "xcb-util-keysyms",
+     "xcb-util-renderutil"
+    ]
+   }
+  },
+  "hdf5": {
+   "name": "HDF5",
+   "license": "BSD-3-Clause",
+   "source": "https://www.hdfgroup.org/solutions/hdf5/",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "hdf5"
+    ]
+   },
+   "notes": "The HDF5 library is under the HDF5 (BSD-style) license."
+  },
+  "libaec": {
+   "name": "libaec (szip compatible)",
+   "license": "BSD-2-Clause",
+   "source": "https://gitlab.dkrz.de/k202009/libaec",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "libaec"
+    ]
+   }
+  },
+  "curl": {
+   "name": "libcurl",
+   "license": "curl",
+   "source": "https://curl.se/",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "curl"
+    ]
+   },
+   "notes": "Needed by HDF5 (its read-only S3 driver)."
+  },
+  "openssl": {
+   "name": "OpenSSL",
+   "license": "Apache-2.0",
+   "source": "https://www.openssl.org/",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "openssl"
+    ]
+   }
+  },
+  "nghttp2": {
+   "name": "nghttp2",
+   "license": "MIT",
+   "source": "https://nghttp2.org/",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "nghttp2"
+    ]
+   }
+  },
+  "libpsl": {
+   "name": "libpsl",
+   "license": "MIT",
+   "source": "https://rockdaboot.github.io/libpsl/",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "libpsl"
+    ]
+   }
+  },
+  "libidn2": {
+   "name": "Libidn2",
+   "license": "LGPL-3.0-or-later",
+   "source": "https://www.gnu.org/software/libidn/",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "libidn2"
+    ]
+   },
+   "notes": "Dual licensed (LGPL-3.0-or-later or GPL-2.0-or-later); used under the LGPL."
+  },
+  "libunistring": {
+   "name": "libunistring",
+   "license": "LGPL-3.0-or-later",
+   "source": "https://www.gnu.org/software/libunistring/",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "libunistring"
+    ]
+   },
+   "notes": "Dual licensed (LGPL-3.0-or-later or GPL-2.0-or-later); used under the LGPL."
+  },
+  "rtmpdump": {
+   "name": "librtmp",
+   "license": "LGPL-2.1-or-later",
+   "source": "https://rtmpdump.mplayerhq.hu/",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "rtmpdump"
+    ]
+   },
+   "notes": "Only the library; the rtmpdump programs (GPL) are not included."
+  },
+  "gnutls": {
+   "name": "GnuTLS",
+   "license": "LGPL-2.1-or-later",
+   "source": "https://www.gnutls.org/",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "gnutls28"
+    ]
+   }
+  },
+  "nettle": {
+   "name": "Nettle",
+   "license": "LGPL-3.0-or-later",
+   "source": "https://www.lysator.liu.se/~nisse/nettle/",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "nettle"
+    ]
+   },
+   "notes": "Dual licensed (LGPL-3.0-or-later or GPL-2.0-or-later); used under the LGPL."
+  },
+  "gmp": {
+   "name": "GMP",
+   "license": "LGPL-3.0-or-later",
+   "source": "https://gmplib.org/",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "gmp"
+    ]
+   },
+   "notes": "Dual licensed (LGPL-3.0-or-later or GPL-2.0-or-later); used under the LGPL."
+  },
+  "libtasn1": {
+   "name": "Libtasn1",
+   "license": "LGPL-2.1-or-later",
+   "source": "https://www.gnu.org/software/libtasn1/",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "libtasn1-6"
+    ]
+   }
+  },
+  "p11-kit": {
+   "name": "p11-kit",
+   "license": "BSD-3-Clause",
+   "source": "https://p11-glue.github.io/p11-glue/p11-kit.html",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "p11-kit"
+    ]
+   }
+  },
+  "libssh": {
+   "name": "libssh",
+   "license": "LGPL-2.1-only",
+   "source": "https://www.libssh.org/",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "libssh"
+    ]
+   }
+  },
+  "krb5": {
+   "name": "MIT Kerberos",
+   "license": "MIT",
+   "source": "https://web.mit.edu/kerberos/",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "krb5"
+    ]
+   },
+   "notes": "Under the MIT Kerberos license (MIT style)."
+  },
+  "e2fsprogs": {
+   "name": "com_err (e2fsprogs)",
+   "license": "MIT",
+   "source": "https://e2fsprogs.sourceforge.net/",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "e2fsprogs"
+    ]
+   },
+   "notes": "Only libcom_err (MIT style); no e2fsprogs program is included."
+  },
+  "keyutils": {
+   "name": "keyutils library",
+   "license": "LGPL-2.1-or-later",
+   "source": "https://people.redhat.com/~dhowells/keyutils/",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "keyutils"
+    ]
+   }
+  },
+  "openldap": {
+   "name": "OpenLDAP libraries",
+   "license": "OLDAP-2.8",
+   "source": "https://www.openldap.org/",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "openldap"
+    ]
+   }
+  },
+  "cyrus-sasl": {
+   "name": "Cyrus SASL",
+   "license": "BSD-Attribution-HPND-disclaimer",
+   "source": "https://www.cyrusimap.org/sasl/",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "cyrus-sasl2"
+    ]
+   },
+   "notes": "This product includes software developed by Computing Services at Carnegie Mellon University (http://www.cmu.edu/computing/)."
+  },
+  "libffi": {
+   "name": "libffi",
+   "license": "MIT",
+   "source": "https://sourceware.org/libffi/",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "libffi"
+    ]
+   }
+  },
+  "sqlite": {
+   "name": "SQLite",
+   "license": "blessing",
+   "source": "https://www.sqlite.org/",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "sqlite3"
+    ]
+   },
+   "notes": "Public domain."
+  },
+  "ncurses": {
+   "name": "ncurses",
+   "license": "X11",
+   "source": "https://invisible-island.net/ncurses/",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "ncurses"
+    ]
+   },
+   "notes": "Used by Python's curses module."
+  },
+  "libgomp": {
+   "name": "GNU OpenMP runtime (libgomp)",
+   "license": "GPL-3.0-or-later WITH GCC-exception-3.1",
+   "source": "https://gcc.gnu.org/",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "gcc-14"
+    ]
+   },
+   "notes": "The GCC Runtime Library Exception permits distributing it with programs compiled by GCC."
+  },
+  "protobuf": {
+   "name": "Protocol Buffers (C++ library)",
+   "license": "BSD-3-Clause",
+   "source": "https://protobuf.dev/",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "protobuf"
+    ]
+   }
+  },
+  "volk": {
+   "name": "VOLK",
+   "license": "LGPL-3.0-or-later",
+   "source": "https://www.libvolk.org/",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "volk"
+    ]
+   }
+  },
+  "orc": {
+   "name": "Orc",
+   "license": "BSD-2-Clause",
+   "source": "https://gitlab.freedesktop.org/gstreamer/orc",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "debSource": [
+     "orc"
+    ]
+   }
+  },
+  "soapysdr": {
+   "name": "SoapySDR",
+   "license": "BSL-1.0",
+   "source": "https://github.com/pothosware/SoapySDR",
+   "version": "0.8.1",
+   "linking": "shared library in lib/ (dynamically linked, unmodified)",
+   "match": {
+    "files": [
+     "libSoapySDR.so*"
+    ]
+   },
+   "licenseFiles": [
+    "tools/release/licenses/SoapySDR-BSL-1.0.txt"
+   ],
+   "notes": "Built from source on the build machine. Device modules are not bundled: SoapySDR looks for them in the system (discovery only; Resonant never starts a physical output from it)."
+  },
+  "numpy": {
+   "name": "NumPy (with OpenBLAS, libgfortran, libquadmath in numpy.libs)",
+   "license": "BSD-3-Clause AND GPL-3.0-or-later WITH GCC-exception-3.1 AND LGPL-2.1-or-later",
+   "source": "https://numpy.org/ (the PyPI wheel)",
+   "linking": "Python package in python/site-packages, unmodified",
+   "match": {
+    "python": [
+     "numpy"
+    ]
+   },
+   "licenseFiles": [
+    {
+     "distInfo": "numpy-*.dist-info",
+     "patterns": [
+      "LICENSE*"
+     ]
+    }
+   ],
+   "notes": "NumPy is BSD-3-Clause; its wheel bundles OpenBLAS (BSD-3-Clause), libgfortran (GPL-3.0-or-later with the GCC Runtime Library Exception) and libquadmath (LGPL-2.1-or-later), whose texts are in its LICENSE.txt."
+  },
+  "protobuf-python": {
+   "name": "protobuf (Python)",
+   "license": "BSD-3-Clause",
+   "source": "https://protobuf.dev/ (the PyPI wheel)",
+   "linking": "Python package in python/site-packages, unmodified",
+   "match": {
+    "python": [
+     "protobuf"
+    ]
+   },
+   "licenseFiles": [
+    {
+     "distInfo": "protobuf-*.dist-info",
+     "patterns": [
+      "LICENSE*"
+     ]
+    }
+   ]
+  },
+  "grpcio": {
+   "name": "gRPC for Python (grpcio)",
+   "license": "Apache-2.0",
+   "source": "https://grpc.io/ (the PyPI wheel)",
+   "linking": "Python package in python/site-packages, unmodified",
+   "match": {
+    "python": [
+     "grpcio"
+    ]
+   },
+   "licenseFiles": [
+    {
+     "distInfo": "grpcio-*.dist-info",
+     "patterns": [
+      "LICENSE*"
+     ]
+    }
+   ],
+   "notes": "The wheel's extension module contains BoringSSL, Abseil, c-ares, RE2, upb and zlib under the licenses in its LICENSE file."
+  },
+  "eigen": {
+   "name": "Eigen",
+   "license": "MPL-2.0",
+   "source": "https://eigen.tuxfamily.org/",
+   "version": "3.4.0",
+   "linking": "header-only, compiled in",
+   "match": {
+    "compiledIn": true
+   },
+   "licenseFiles": [
+    "/usr/share/doc/libeigen3-dev/copyright"
+   ],
+   "notes": "Unmodified Eigen 3.4.0; its source is at https://gitlab.com/libeigen/eigen/-/tree/3.4.0 (MPL-2.0 section 3.2).",
+   "compiledInto": "bin/resonant, bin/resonant-automation, python/resonant/_resonant*.so"
+  },
+  "nlohmann-json": {
+   "name": "JSON for Modern C++ (nlohmann/json)",
+   "license": "MIT",
+   "source": "https://github.com/nlohmann/json",
+   "version": "3.11.3",
+   "linking": "header-only, compiled in",
+   "match": {
+    "compiledIn": true
+   },
+   "licenseFiles": [
+    "third_party/nlohmann/LICENSE"
+   ],
+   "compiledInto": "bin/resonant, bin/resonant-automation, python/resonant/_resonant*.so"
+  },
+  "pybind11": {
+   "name": "pybind11",
+   "license": "BSD-3-Clause",
+   "source": "https://github.com/pybind/pybind11",
+   "version": "2.11.1",
+   "linking": "header-only, compiled into the native module python/resonant/_resonant*.so",
+   "match": {
+    "compiledIn": true
+   },
+   "licenseFiles": [
+    "/usr/share/doc/pybind11-dev/copyright"
+   ],
+   "compiledInto": "python/resonant/_resonant*.so"
+  },
+  "cuda-runtime": {
+   "name": "NVIDIA CUDA Runtime (static)",
+   "license": "LicenseRef-NVIDIA-CUDA-EULA",
+   "source": "https://developer.nvidia.com/cuda-toolkit",
+   "version": "13.5",
+   "linking": "statically linked (libcudart_static) into the programs and the native module; the NVIDIA driver (libcuda.so.1) is the system's",
+   "match": {
+    "compiledIn": true
+   },
+   "licenseFiles": [
+    {
+     "glob": "/usr/local/cuda*/EULA.txt"
+    }
+   ],
+   "notes": "The CUDA Runtime static library is listed as redistributable in Attachment A of the CUDA Toolkit EULA. Without an NVIDIA driver, Resonant uses its CPU backends.",
+   "compiledInto": "bin/resonant, bin/resonant-automation, python/resonant/_resonant*.so"
+  },
+  "typing-extensions": {
+   "name": "typing_extensions",
+   "license": "PSF-2.0",
+   "source": "https://github.com/python/typing_extensions (the PyPI wheel)",
+   "linking": "Python package in python/site-packages, unmodified",
+   "match": {
+    "python": [
+     "typing_extensions"
+    ]
+   },
+   "licenseFiles": [
+    {
+     "distInfo": "typing_extensions-*.dist-info",
+     "patterns": [
+      "LICENSE*"
+     ]
+    }
+   ],
+   "notes": "Needed by grpcio."
+  }
+ }
+}

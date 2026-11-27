@@ -1,0 +1,68 @@
+{
+ "work": "WORK-000015",
+ "runs": [
+  {
+   "at": "2026-11-27T23:32:09.026280+00:00",
+   "verdict": "PASS",
+   "gate_version": 3,
+   "work": "WORK-000015",
+   "request": "2026-11-26-prompt-16-resonant-self-contai-req-chat-20261126-013.md",
+   "request_id": "REQ-CHAT-20261126-013",
+   "request_fingerprint": "160c3e23a9536451500bd442eb7a9eea56e45d09bf823e3a8e0f69b4d606609d",
+   "request_code_paths": [
+    "CMakeLists.txt",
+    "help/CMakeLists.txt",
+    "python/tests/test_release_tools.py",
+    "src/app/AutomationServer.cpp",
+    "src/app/CMakeLists.txt",
+    "src/app/HelpWindow.cpp",
+    "src/app/HelpWindow.h",
+    "src/app/PythonEnvironment.cpp",
+    "src/app/PythonEnvironment.h",
+    "src/app/PythonSession.cpp",
+    "src/app/PythonSession.h",
+    "src/app/ResourcePaths.cpp",
+    "src/app/ResourcePaths.h",
+    "src/app/RuntimeDiagnostics.cpp",
+    "src/app/RuntimeDiagnostics.h",
+    "src/app/app.pro",
+    "src/automation_api/CMakeLists.txt",
+    "src/automation_host/CMakeLists.txt",
+    "src/main/main.cpp",
+    "src/python/CMakeLists.txt",
+    "tests/app/test_runtime_paths.cpp",
+    "tools/help/build_help.py",
+    "tools/release/LICENSE.txt",
+    "tools/release/README.txt",
+    "tools/release/build_linux_zip.sh",
+    "tools/release/bundle_policy.json",
+    "tools/release/clean_machine_test.sh",
+    "tools/release/generate_checksum.sh",
+    "tools/release/inspect_dependencies.sh",
+    "tools/release/launcher/resonant",
+    "tools/release/launcher/resonant.sh",
+    "tools/release/licenses/SoapySDR-BSL-1.0.txt",
+    "tools/release/package.py",
+    "tools/release/third_party.json",
+    "tools/release/validate_bundle.py",
+    "tools/release/validate_help.py",
+    "tools/release/validate_licenses.py"
+   ],
+   "test_runs": [
+    "20261127T182315-4052689",
+    "20261127T182735-4069645",
+    "20261127T182924-4079637"
+   ],
+   "evidence": [
+    "VER-000015"
+   ],
+   "head": "4bc416837450bbb83825474ce7f0435f4db7cdb7",
+   "agent_id": "agent-dev-20261126151713-76f632",
+   "fails": [],
+   "warns": [
+    "20 unowned change(s) in the tree (not this request's; never committed by it)"
+   ],
+   "passes": 16
+  }
+ ]
+}

@@ -1,0 +1,283 @@
+{
+  "_comment": "What the Linux ZIP bundles and what it leaves to the system (RES-DIST-002, ADR-000218). tools/release/package.py reads it. A dependency that matches a 'system' family is never copied into the package; every other dependency is bundled. Patterns are shell globs on the library's file name (its DT_NEEDED entry).",
+  "format": "resonant.bundle-policy",
+  "version": 1,
+  "loader": "/lib64/ld-linux-x86-64.so.2",
+  "system": [
+    {
+      "family": "C library",
+      "reason": "glibc and its dynamic loader belong to the system: a bundled copy cannot be combined with the system's loader, NSS modules or locale data. The package states the minimum glibc version instead.",
+      "patterns": [
+        "ld-linux-x86-64.so.2",
+        "libc.so.6",
+        "libm.so.6",
+        "libmvec.so.1",
+        "libdl.so.2",
+        "libpthread.so.0",
+        "librt.so.1",
+        "libresolv.so.2",
+        "libutil.so.1",
+        "libanl.so.1",
+        "libnsl.so.1",
+        "libBrokenLocale.so.1",
+        "libthread_db.so.1",
+        "libnss_*.so.2",
+        "libcrypt.so.1"
+      ],
+      "packages": {
+        "debian": "libc6 libcrypt1",
+        "fedora": "glibc libxcrypt",
+        "arch": "glibc libxcrypt"
+      }
+    },
+    {
+      "family": "C++ and GCC runtime",
+      "reason": "Mesa's and other drivers load the system's libstdc++ into the same process; an older bundled copy would be used instead and break them. Every distribution that has the required glibc has a new enough libstdc++.",
+      "patterns": [
+        "libstdc++.so.6",
+        "libgcc_s.so.1"
+      ],
+      "packages": {
+        "debian": "libstdc++6 libgcc-s1",
+        "fedora": "libstdc++ libgcc",
+        "arch": "gcc-libs"
+      }
+    },
+    {
+      "family": "OpenGL, EGL and GPU drivers",
+      "reason": "The OpenGL dispatch libraries (libglvnd) and the GPU driver stack are the system's: they must match the kernel driver and the hardware (Mesa, NVIDIA, AMD, Intel).",
+      "patterns": [
+        "libGL.so.1",
+        "libGLX.so.0",
+        "libOpenGL.so.0",
+        "libGLdispatch.so.0",
+        "libEGL.so.1",
+        "libGLESv2.so.2",
+        "libGLESv1_CM.so.1",
+        "libgbm.so.1",
+        "libdrm.so.2",
+        "libglapi.so.0",
+        "libvulkan.so.1",
+        "libcuda.so.1"
+      ],
+      "packages": {
+        "debian": "libgl1 libopengl0 libegl1",
+        "fedora": "libglvnd-glx libglvnd-opengl libglvnd-egl mesa-dri-drivers",
+        "arch": "libglvnd mesa"
+      }
+    },
+    {
+      "family": "X11 and xcb",
+      "reason": "The X client libraries are shared with the OpenGL driver (GLX) in the same process and follow the X server's protocol extensions; the xcb utility libraries Qt needs (icccm, image, keysyms, render-util, cursor) are bundled.",
+      "patterns": [
+        "libX11.so.6",
+        "libX11-xcb.so.1",
+        "libXau.so.6",
+        "libXdmcp.so.6",
+        "libXext.so.6",
+        "libXrender.so.1",
+        "libXi.so.6",
+        "libXfixes.so.3",
+        "libXrandr.so.2",
+        "libXcursor.so.1",
+        "libXxf86vm.so.1",
+        "libSM.so.6",
+        "libICE.so.6",
+        "libxcb.so.1",
+        "libxcb-composite.so.0",
+        "libxcb-damage.so.0",
+        "libxcb-dpms.so.0",
+        "libxcb-dri2.so.0",
+        "libxcb-dri3.so.0",
+        "libxcb-glx.so.0",
+        "libxcb-present.so.0",
+        "libxcb-randr.so.0",
+        "libxcb-record.so.0",
+        "libxcb-render.so.0",
+        "libxcb-res.so.0",
+        "libxcb-screensaver.so.0",
+        "libxcb-shape.so.0",
+        "libxcb-shm.so.0",
+        "libxcb-sync.so.1",
+        "libxcb-xf86dri.so.0",
+        "libxcb-xfixes.so.0",
+        "libxcb-xinerama.so.0",
+        "libxcb-xinput.so.0",
+        "libxcb-xkb.so.1",
+        "libxcb-xtest.so.0",
+        "libxcb-xv.so.0",
+        "libxcb-xvmc.so.0"
+      ],
+      "packages": {
+        "debian": "libx11-6 libx11-xcb1 libxcb1 libxcb-glx0 libxcb-randr0 libxcb-render0 libxcb-shape0 libxcb-shm0 libxcb-sync1 libxcb-xfixes0 libxcb-xinput0 libxcb-xkb1 libxext6 libxrender1 libsm6 libice6",
+        "fedora": "libX11 libX11-xcb libxcb libXext libXrender libSM libICE",
+        "arch": "libx11 libxcb libxext libxrender libsm libice"
+      }
+    },
+    {
+      "family": "Wayland",
+      "reason": "The Wayland client libraries are shared with the compositor protocol and the GPU driver's EGL platform; they exist on every Wayland session. Without them Resonant uses X11 (XWayland).",
+      "patterns": [
+        "libwayland-client.so.0",
+        "libwayland-cursor.so.0",
+        "libwayland-egl.so.1",
+        "libwayland-server.so.0"
+      ],
+      "packages": {
+        "debian": "libwayland-client0 libwayland-cursor0 libwayland-egl1",
+        "fedora": "libwayland-client libwayland-cursor libwayland-egl",
+        "arch": "wayland"
+      }
+    },
+    {
+      "family": "Fonts",
+      "reason": "fontconfig reads the system's configuration and caches, whose format follows the system's fontconfig, and FreeType is shared with it; the system's fonts are used.",
+      "patterns": [
+        "libfontconfig.so.1",
+        "libfreetype.so.6"
+      ],
+      "packages": {
+        "debian": "libfontconfig1 libfreetype6 fonts-dejavu-core",
+        "fedora": "fontconfig freetype dejavu-sans-fonts",
+        "arch": "fontconfig freetype2 ttf-dejavu"
+      }
+    },
+    {
+      "family": "Sound",
+      "reason": "ALSA's library loads its plugins (PulseAudio, PipeWire) and configuration from system paths that differ between distributions.",
+      "patterns": [
+        "libasound.so.2"
+      ],
+      "packages": {
+        "debian": "libasound2t64 (libasound2 before Ubuntu 24.04 / Debian 13)",
+        "fedora": "alsa-lib",
+        "arch": "alsa-lib"
+      }
+    },
+    {
+      "family": "Base libraries",
+      "reason": "zlib and expat are part of every distribution's base system with a stable interface, and the system's fontconfig uses its own expat.",
+      "patterns": [
+        "libz.so.1",
+        "libexpat.so.1"
+      ],
+      "packages": {
+        "debian": "zlib1g libexpat1",
+        "fedora": "zlib (zlib-ng-compat) expat",
+        "arch": "zlib expat"
+      }
+    }
+  ],
+  "qtPlugins": {
+    "_comment": "Chosen by name (not every plugin): the X11 and Wayland platforms with their OpenGL integrations, offscreen for the runtime check without a display, image formats used by the help and screenshots, SVG icons, and input methods. Not bundled: platform themes (GTK 3 would load the system's GTK and GLib), print support, SQL, TLS, network information, EGLFS, VNC, QML tooling.",
+    "platforms": [
+      "libqxcb.so",
+      "libqwayland-egl.so",
+      "libqwayland-generic.so",
+      "libqoffscreen.so"
+    ],
+    "xcbglintegrations": [
+      "libqxcb-glx-integration.so",
+      "libqxcb-egl-integration.so"
+    ],
+    "imageformats": [
+      "libqjpeg.so",
+      "libqgif.so",
+      "libqico.so",
+      "libqsvg.so"
+    ],
+    "iconengines": [
+      "libqsvgicon.so"
+    ],
+    "platforminputcontexts": [
+      "libcomposeplatforminputcontextplugin.so",
+      "libibusplatforminputcontextplugin.so"
+    ],
+    "wayland-shell-integration": [
+      "libxdg-shell.so"
+    ],
+    "wayland-decoration-client": [
+      "libbradient.so"
+    ],
+    "wayland-graphics-integration-client": [
+      "libqt-plugin-wayland-egl.so"
+    ]
+  },
+  "python": {
+    "_comment": "The interpreter the native module was built for, its standard library and the third-party packages Resonant uses (RES-DIST-008). Excluded: the test suite and test modules, Tk, the GPL-licensed readline and gdbm modules (and dbm's gdbm binding), pip's bundled wheels, the static library for embedding, Debian's site customization (a link to /etc) and its pip marker.",
+    "stdlibExclude": [
+      "test",
+      "tkinter",
+      "idlelib",
+      "turtledemo",
+      "ensurepip",
+      "lib2to3",
+      "config-*",
+      "__pycache__",
+      "site-packages",
+      "dist-packages",
+      "EXTERNALLY-MANAGED",
+      "sitecustomize.py",
+      "lib-dynload/readline.*",
+      "lib-dynload/_gdbm.*",
+      "lib-dynload/_dbm.*",
+      "lib-dynload/_tkinter.*",
+      "lib-dynload/_test*",
+      "lib-dynload/_ctypes_test.*",
+      "lib-dynload/xxlimited*",
+      "lib-dynload/_xxtestfuzz.*",
+      "lib-dynload/xxsubtype.*"
+    ],
+    "packages": [
+      {
+        "distribution": "numpy",
+        "purpose": "field data as arrays (resonant results, resonant_api.read_field_slice)"
+      },
+      {
+        "distribution": "protobuf",
+        "purpose": "the automation API's Python client and bridge (resonant_api)"
+      },
+      {
+        "distribution": "grpcio",
+        "purpose": "the gRPC bridge (python3 -m resonant_api.bridge)"
+      },
+      {
+        "distribution": "typing_extensions",
+        "purpose": "needed by grpcio"
+      }
+    ],
+    "packageExclude": [
+      "*/tests/*",
+      "*/__pycache__/*",
+      "*.pyc",
+      "*.pyi",
+      "*.a",
+      "*/include/*",
+      "*/lib/pkgconfig/*",
+      "numpy/f2py/*",
+      "numpy/_pyinstaller/*"
+    ]
+  },
+  "forbidden": {
+    "_comment": "Files that must never be in the package (development artifacts).",
+    "patterns": [
+      "*.o",
+      "*.a",
+      "*.la",
+      "*.obj",
+      "CMakeCache.txt",
+      "cmake_install.cmake",
+      "CMakeFiles",
+      "*.cmake",
+      "Makefile",
+      "*.ninja",
+      "*.pdb",
+      "*.orig",
+      "*.rej",
+      "*~",
+      "resonant_*_tests",
+      ".git",
+      ".gitignore"
+    ]
+  }
+}

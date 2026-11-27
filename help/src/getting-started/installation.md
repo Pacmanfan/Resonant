@@ -6,14 +6,17 @@ order: 20
 status: available
 summary: Build Resonant from source with CMake or qmake, choose the optional components (CUDA, VOLK, HDF5, Python module), and start it for the first time.
 keywords: [install, build, cmake, qmake, dependencies, cuda, first launch, command line]
-related: [trouble.installation, trouble.dependencies, trouble.build-runtime, py.installation, gs.new-project]
+related: [gs.linux-zip, trouble.installation, trouble.dependencies, trouble.build-runtime, py.installation, gs.new-project]
 ---
 
-Resonant is built from its source tree; `make install` (qmake) or `cmake --install`
-puts the application, its help, demonstrations, examples, example plugins and
-Python package under an installation prefix. There is no binary installer or
-distribution package yet. Two build systems, **CMake** and **qmake**, build the same
-application from the same sources; use whichever you prefer.
+The quickest way to run Resonant on Linux is the self-contained ZIP: extract
+it and start `./resonant` ([Installing the Linux ZIP](linux-zip.md)). This
+page is about building Resonant from its source tree; `make install` (qmake) or
+`cmake --install` puts the application, its help, demonstrations, examples,
+example plugins and Python package under an installation prefix, and
+`tools/release/build_linux_zip.sh` makes the ZIP. Two build systems, **CMake**
+and **qmake**, build the same application from the same sources; use whichever
+you prefer.
 
 ## What you need
 
@@ -124,6 +127,10 @@ is no silent fallback.
 | `--run-experiment <id>` | run an experiment (`first` for the first one) of a saved project |
 | `--authorize-output <operator>` | authorize that experiment's physical outputs, as this operator |
 | `--run-optimization <id>` | run an optimization problem (`first` for the first one) |
+| `--check-runtime` | check the runtime (package files, C library, Qt, OpenGL 4.5, Python, help, examples, plugins) without the main window |
+| `--diagnostics` (`--report <file>`) | print (and save) a diagnostic report without private data |
+| `--check-projects <folder>` | open every project under the folder in turn and report each |
+| `--check-help` | load the help, search it and exit |
 
 ## Common mistakes
 
@@ -135,8 +142,8 @@ is no silent fallback.
 ## Limitations
 
 - Only Linux has been built and run. Nothing platform-specific is used on purpose, but Windows and macOS builds are untested.
-- The viewport has been tested with Mesa's software renderer (llvmpipe), not yet with a hardware GPU driver.
-- There is no binary installer or distribution package: run the application from its build directory, or install it under a prefix with `make install` / `cmake --install` (the help then works from `<prefix>/share/resonant/help`).
+- The viewport is rendered in the tests with Mesa's software renderer (llvmpipe); `--check-runtime` has created its OpenGL 4.5 core context with Intel (Mesa) and NVIDIA drivers.
+- Besides the Linux ZIP there is no installer or distribution package: run the application from its build directory, or install it under a prefix with `make install` / `cmake --install` (the help then works from `<prefix>/share/resonant/help`).
 
 See [Installation problems](../troubleshooting/installation.md) and
 [Missing dependencies](../troubleshooting/dependencies.md) when a step fails.

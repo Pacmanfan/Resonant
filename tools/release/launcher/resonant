@@ -1,0 +1,158 @@
+#!/bin/sh
+# Resonant launcher for the Linux ZIP (RES-DIST-005, ADR-000218).
+#
+#   ./resonant [project.resonant] [application options]
+#   ./resonant --check-runtime       check the system and the package, no main window
+#   ./resonant --diagnostics         a full report (--report FILE saves it)
+#   ./resonant --software-gl         use Mesa's software OpenGL renderer (slower; explicit only)
+#
+# It finds the package from its own location (also through a symbolic link
+# to it), clears the variables that would make Resonant load another Qt or
+# Python, checks what must hold before the program can load (architecture,
+# C library, graphical session, system libraries), then runs bin/resonant
+# with the arguments unchanged and returns its exit status. It never
+# changes the user's files and needs no environment variables.
+set -u
+
+# --- where the package is -------------------------------------------------
+self=$0
+case $self in
+    */*) ;;
+    *) self=$(command -v -- "$self" 2>/dev/null || printf '%s' "$self") ;;
+esac
+while [ -L "$self" ]; do
+    link=$(readlink -- "$self")
+    case $link in
+        /*) self=$link ;;
+        *) self=$(dirname -- "$self")/$link ;;
+    esac
+done
+here=$(cd -P -- "$(dirname -- "$self")" 2>/dev/null && pwd -P) || {
+    echo "resonant: cannot determine the package folder" >&2
+    exit 1
+}
+app=$here/bin/resonant
+loader=/lib64/ld-linux-x86-64.so.2
+
+fail() {
+    echo "resonant: $*" >&2
+    exit 1
+}
+
+# --- options the launcher itself handles -----------------------------------
+software_gl=0
+headless_ok=0
+report_launcher=0
+for arg in "$@"; do
+    case $arg in
+        --software-gl) software_gl=1 ;;
+        --check-runtime|--diagnostics) headless_ok=1; report_launcher=1 ;;
+        --version|-v|--help|-h|--help-all) headless_ok=1 ;;
+    esac
+done
+if [ "$software_gl" = 1 ]; then
+    # Drop --software-gl from the arguments, keep every other one as given.
+    count=$#
+    while [ "$count" -gt 0 ]; do
+        arg=$1
+        shift
+        [ "$arg" = "--software-gl" ] || set -- "$@" "$arg"
+        count=$((count - 1))
+    done
+fi
+
+# --- checks before the program can load -------------------------------------
+[ "$(uname -s)" = Linux ] || fail "this package is for Linux; this system is $(uname -s)."
+machine=$(uname -m)
+[ "$machine" = x86_64 ] || fail "this package is for x86_64 (64-bit Intel/AMD); this system is $machine."
+[ -x "$loader" ] || fail "$loader is missing: this package needs a glibc-based distribution (not musl, e.g. Alpine)."
+for required in bin/resonant bin/qt.conf resonant-runtime.json lib/qt6/plugins/platforms/libqxcb.so help/index.json; do
+    [ -e "$here/$required" ] || fail "the package is incomplete ($required is missing): extract the ZIP again."
+done
+[ -x "$app" ] || fail "bin/resonant is not executable: extract the ZIP with a tool that keeps permissions (unzip, file-roller, ark)."
+
+minimum=$(sed -n 's/.*"minimumGlibc": *"\([0-9.]*\)".*/\1/p' "$here/resonant-runtime.json" | head -n 1)
+glibc=$(getconf GNU_LIBC_VERSION 2>/dev/null | sed -n 's/^glibc *//p')
+version_ge() {  # version_ge A B: A >= B (dotted numbers)
+    a1=${1%%.*}; a2=${1#*.}; a2=${a2%%.*}
+    b1=${2%%.*}; b2=${2#*.}; b2=${b2%%.*}
+    [ "$a1" -gt "$b1" ] || { [ "$a1" -eq "$b1" ] && [ "$a2" -ge "$b2" ]; }
+}
+if [ -n "$glibc" ] && [ -n "$minimum" ] && ! version_ge "$glibc" "$minimum"; then
+    fail "this system has glibc $glibc; this package needs glibc $minimum or newer (for example Ubuntu 24.04, Debian 13, Fedora 40 or newer). See README.txt."
+fi
+
+# Every library of the program and of the X11 platform plugin must resolve.
+# The loader's trace mode (what ldd uses) lists every missing library and
+# too old symbol version without running anything.
+missing=
+for object in "$app" "$here/lib/qt6/plugins/platforms/libqxcb.so" "$here/lib/qt6/plugins/xcbglintegrations/libqxcb-glx-integration.so"; do
+    out=$(LD_TRACE_LOADED_OBJECTS=1 LD_WARN=yes "$loader" "$object" 2>&1) || true
+    for lib in $(printf '%s\n' "$out" | sed -n 's/^[[:space:]]*\([^[:space:]]*\) => not found.*/\1/p'); do
+        case " $missing " in *" $lib "*) ;; *) missing="$missing $lib" ;; esac
+    done
+    if printf '%s\n' "$out" | grep -q "version .* not found"; then
+        detail=$(printf '%s\n' "$out" | grep "version .* not found" | head -n 1 | sed 's/^[[:space:]]*//')
+        fail "a system library is too old for this package: $detail. Use a newer distribution (see README.txt)."
+    fi
+done
+if [ -n "$missing" ]; then
+    echo "resonant: the system lacks libraries the package does not contain:" >&2
+    hints=$here/diagnostics/system-libraries.txt
+    report=
+    for lib in $missing; do
+        family="Not a system library"
+        hint="the package is incomplete: extract the ZIP again"
+        if [ -f "$hints" ]; then
+            while IFS='	' read -r pattern name debian fedora arch; do
+                case $pattern in \#*) continue ;; esac
+                # shellcheck disable=SC2254
+                case $lib in $pattern) family=$name; hint="Debian/Ubuntu: $debian; Fedora: $fedora; Arch: $arch"; break ;; esac
+            done < "$hints"
+        fi
+        report="$report$family|$hint|$lib
+"
+    done
+    # One entry per family: its missing libraries and the packages that provide them.
+    printf '%s' "$report" | cut -d'|' -f1,2 | sort -u | while IFS='|' read -r family hint; do
+        libs=$(printf '%s' "$report" | grep -F "$family|" | cut -d'|' -f3 | tr '\n' ' ')
+        echo "  $family: $libs" >&2
+        echo "      $hint" >&2
+    done
+    echo "Install the packages named above with your distribution's package manager, then start Resonant again." >&2
+    exit 1
+fi
+
+# A graphical session, unless only a check, a report, the version or the help is asked for.
+if [ -z "${DISPLAY:-}" ] && [ -z "${WAYLAND_DISPLAY:-}" ] && [ -z "${QT_QPA_PLATFORM:-}" ]; then
+    if [ "$headless_ok" = 1 ]; then
+        export QT_QPA_PLATFORM=offscreen
+        [ "$report_launcher" = 1 ] && echo "resonant: no graphical session (DISPLAY and WAYLAND_DISPLAY are unset): OpenGL is not checked." >&2
+    else
+        fail "no graphical session: DISPLAY and WAYLAND_DISPLAY are unset. Start Resonant from a desktop session (or try ./resonant --check-runtime)."
+    fi
+fi
+
+# --- the environment ----------------------------------------------------------
+# The package's own Qt and Python only: bin/qt.conf and DT_RPATH find them.
+unset QT_PLUGIN_PATH QT_QPA_PLATFORM_PLUGIN_PATH PYTHONHOME PYTHONPATH
+# X11 (also XWayland) is the most dependable OpenGL path; native Wayland when there is no X server.
+if [ -z "${QT_QPA_PLATFORM:-}" ]; then
+    if [ -n "${DISPLAY:-}" ]; then
+        export QT_QPA_PLATFORM="xcb;wayland"
+    else
+        export QT_QPA_PLATFORM="wayland;xcb"
+    fi
+fi
+if [ "$software_gl" = 1 ]; then
+    export LIBGL_ALWAYS_SOFTWARE=1 GALLIUM_DRIVER=llvmpipe __GLX_VENDOR_LIBRARY_NAME=mesa
+    echo "resonant: software OpenGL rendering (Mesa llvmpipe) as requested: the viewport is slower." >&2
+fi
+if [ -n "${LD_PRELOAD:-}" ]; then
+    echo "resonant: note: LD_PRELOAD is set; preloaded libraries can conflict with the package's." >&2
+fi
+if [ "$report_launcher" = 1 ]; then
+    echo "PASS  Launcher: $machine, glibc ${glibc:-?} (needs ${minimum:-?}), every system library found, platform ${QT_QPA_PLATFORM}"
+fi
+
+exec "$app" "$@"

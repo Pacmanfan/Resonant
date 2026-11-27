@@ -1,6 +1,7 @@
 #include "AutomationServer.h"
 
 #include "DocumentController.h"
+#include "PythonEnvironment.h"
 #include "ResourcePaths.h"
 #include "services/Services.h"
 
@@ -152,14 +153,16 @@ QString AutomationServer::startBridge(int port)
     const ResourcePaths paths = ResourcePaths::locate();
     if (paths.pythonPackage.isEmpty())
         return tr("The Python package (resonant_api) was not found.");
+    const PythonLaunch launch = pythonLaunch(paths);
+    if (!launch.usable())
+        return launch.error;
     bridge_ = new QProcess(this);
-    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-    env.insert(QStringLiteral("PYTHONPATH"), paths.pythonPackage + (env.contains(QStringLiteral("PYTHONPATH")) ? QLatin1Char(':') + env.value(QStringLiteral("PYTHONPATH")) : QString()));
+    QProcessEnvironment env = launch.environment;
     if (!paths.apiDescriptors.isEmpty())
         env.insert(QStringLiteral("RESONANT_API_DESCRIPTORS"), paths.apiDescriptors);
     env.insert(QStringLiteral("RESONANT_AUTOMATION_TOKEN"), token_);
     bridge_->setProcessEnvironment(env);
-    bridge_->setProgram(QStringLiteral("python3"));
+    bridge_->setProgram(launch.program);
     bridge_->setArguments({QStringLiteral("-m"), QStringLiteral("resonant_api.bridge"), QStringLiteral("--socket"), socketPath(), QStringLiteral("--port"),
                            QString::number(port)});
     bridge_->start();

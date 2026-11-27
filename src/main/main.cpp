@@ -17,14 +17,17 @@
 #include "DemoController.h"
 #include "HelpWindow.h"
 #include "ResourcePaths.h"
+#include "RuntimeDiagnostics.h"
 #include "demo/Demo.h"
 #include "foundation/Log.h"
+#include "foundation/Version.h"
 
 #include <QApplication>
 #include <QCommandLineParser>
 #include <QDockWidget>
 #include <QMessageBox>
 #include <QDir>
+#include <QDirIterator>
 #include <QFile>
 #include <QFileInfo>
 #include <QJsonArray>
@@ -129,7 +132,46 @@ int main(int argc, char** argv)
         QStringLiteral("check-help"),
         QStringLiteral("Load the installed help, open its home page, search it, and exit (status 0 when the help works)."));
     parser.addOption(checkHelpOption);
+    const QCommandLineOption checkRuntimeOption(
+        QStringLiteral("check-runtime"),
+        QStringLiteral("Check the runtime (package files, C library, Qt, OpenGL 4.5 core, Python, help, examples, plugins) without opening the "
+                       "main window, print the results and exit (status 0 when nothing failed)."));
+    parser.addOption(checkRuntimeOption);
+    const QCommandLineOption diagnosticsOption(
+        QStringLiteral("diagnostics"),
+        QStringLiteral("Print a diagnostic report (the runtime checks and every loaded library; no private data) and exit."));
+    parser.addOption(diagnosticsOption);
+    const QCommandLineOption reportOption(QStringLiteral("report"), QStringLiteral("With --diagnostics or --check-runtime: also save the report to <file>."),
+                                          QStringLiteral("file"));
+    parser.addOption(reportOption);
+    const QCommandLineOption checkProjectsOption(
+        QStringLiteral("check-projects"),
+        QStringLiteral("Open every project (*.resonant) under <folder> in turn in the main window, report each one, and exit (status 0 when all "
+                       "opened)."),
+        QStringLiteral("folder"));
+    parser.addOption(checkProjectsOption);
     parser.process(application);
+
+    // --check-runtime / --diagnostics: no main window (RES-DIST-006).
+    if (parser.isSet(checkRuntimeOption) || parser.isSet(diagnosticsOption)) {
+        const bool details = parser.isSet(diagnosticsOption);
+        runtime_diagnostics::Options options;
+        options.libraries = details;
+        const runtime_diagnostics::Report report = runtime_diagnostics::run(ResourcePaths::locate(), options);
+        const QString text = QStringLiteral("Resonant %1 %2\n\n").arg(QString::fromLatin1(resonant::kApplicationVersion),
+                                                                      details ? QStringLiteral("diagnostic report") : QStringLiteral("runtime check"))
+                             + runtime_diagnostics::format(report, details);
+        std::fputs(text.toUtf8().constData(), stdout);
+        if (parser.isSet(reportOption)) {
+            QFile out(parser.value(reportOption));
+            if (!out.open(QIODevice::WriteOnly | QIODevice::Text) || out.write(text.toUtf8()) < 0) {
+                std::fprintf(stderr, "could not write the report to %s\n", qPrintable(parser.value(reportOption)));
+                return 2;
+            }
+            std::printf("report saved to %s\n", qPrintable(parser.value(reportOption)));
+        }
+        return report.failures() == 0 ? 0 : 1;
+    }
 
     int result = 0;
     // --capture-screenshots: the manifest's environment (for example the plugin
@@ -159,6 +201,26 @@ int main(int argc, char** argv)
         } else if (automated)
             window.resize(1600, 1000);
         window.show();
+        // --check-projects: every example project opens in this application (RES-DIST-010).
+        if (parser.isSet(checkProjectsOption)) {
+            window.unsavedChangesPrompt = [] { return QMessageBox::Discard; };
+            const QDir folder(parser.value(checkProjectsOption));
+            QStringList files;
+            for (QDirIterator it(folder.absolutePath(), {QStringLiteral("*.resonant")}, QDir::Files, QDirIterator::Subdirectories); it.hasNext();)
+                files << it.next();
+            files.sort();
+            int failed = 0;
+            for (const QString& file : files) {
+                const resonant::Status status = window.openProjectFile(file);
+                QCoreApplication::processEvents();  // the window and the viewport show it
+                std::printf("project: %s %s%s\n", status ? "PASS" : "FAIL", qPrintable(folder.relativeFilePath(file)),
+                            status ? "" : qPrintable(QStringLiteral(": ") + QString::fromStdString(status.message())));
+                if (!status)
+                    ++failed;
+            }
+            std::printf("projects: %d opened, %d failed\n", static_cast<int>(files.size()) - failed, failed);
+            return files.isEmpty() || failed > 0 ? 1 : 0;
+        }
         if (parser.isSet(presenterOption))
             window.setPresenterMode(true);
         if (!parser.positionalArguments().isEmpty()) {

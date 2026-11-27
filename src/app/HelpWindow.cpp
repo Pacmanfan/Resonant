@@ -1,5 +1,7 @@
 #include "HelpWindow.h"
 
+#include <algorithm>
+
 #include "ui_HelpImageViewer.h"
 #include "ui_HelpWindow.h"
 
@@ -222,7 +224,12 @@ void HelpWindow::showMissing(const QString& id)
 
 void HelpWindow::linkActivated(const QUrl& url)
 {
-    if (url.scheme() == QLatin1String("zoom")) {
+    // A screenshot's link (images/..., or the older zoom: form) opens it full size.
+    static const QStringList images = {QStringLiteral(".png"), QStringLiteral(".jpg"), QStringLiteral(".jpeg"), QStringLiteral(".svg"), QStringLiteral(".gif")};
+    const bool image = url.scheme().isEmpty() && std::any_of(images.begin(), images.end(), [&url](const QString& e) {
+        return url.path().endsWith(e, Qt::CaseInsensitive);
+    });
+    if (url.scheme() == QLatin1String("zoom") || image) {
         showImage(url.path());
         return;
     }

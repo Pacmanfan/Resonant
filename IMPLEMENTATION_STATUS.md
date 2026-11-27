@@ -333,3 +333,20 @@ milestones below.)
 | Latency: GetProject median 0.12 ms over the local socket, 0.45 ms over gRPC through the bridge (this machine) | Measured | `AutomationApiTests.test_call_latency` |
 | Authentication beyond the local token (TLS, users) | Missing | the bridge is unencrypted and loopback by default |
 
+
+## Linux ZIP distribution — `docs/requirements/distribution.md`, `docs/release/`
+
+| Capability | State | Notes |
+|---|---|---|
+| One command makes `dist/RESONANT-Linux-x86_64-<version>.zip` and `.sha256` from a Release CMake tree (`tools/release/build_linux_zip.sh`, target `package_linux_zip`) | Tested | a Debug tree is refused; the qmake build is not packaged |
+| Bundled runtime by an explicit policy: Qt 6.4 with selected plugins, 78 libraries, Python 3.12 with NumPy, protobuf, grpcio; system libraries (C library, C++ runtime, OpenGL/EGL, X11/xcb, fonts, ALSA, zlib, expat) never bundled | Tested | an unclassified dependency fails the build |
+| Relocatable: relative DT_RPATH on every ELF file, `bin/qt.conf`, no source, build or staging path in any file, no links | Tested | renamed, moved, path with spaces, through a link, read-only |
+| Unified runtime paths (bundle, installation, build tree; user directories outside the installation) | Tested | `RuntimePathsTest.*` |
+| Launcher `resonant` / `resonant.sh`: architecture, glibc, display and system-library checks with the packages to install, argument and exit-status pass-through, `--software-gl` | Tested | POSIX sh (dash and bash) |
+| `--check-runtime`, `--diagnostics [--report]` (OpenGL 4.5 core context, Python, help, plugins, compute, package integrity; no private data, no telemetry) | Tested | OpenGL checked with Intel Mesa, NVIDIA and llvmpipe |
+| Offline help in the ZIP, `help/index.html` with search for browsers, release build (no draft), link and asset validation | Tested | browser search checked with Node.js |
+| Every example project opens from the package; every demonstration runs from it | Tested | 43 projects, 8 demonstrations, also in clean containers |
+| Licenses: every bundled component in `tools/release/third_party.json`, `THIRD_PARTY_NOTICES.txt`, `licenses/` | Tested | the application's own license is not chosen yet (owner decision) |
+| Validation of the final ZIP (41 checks) and clean-container tests (Ubuntu 24.04, Fedora 41, Fedora 42 offline; Ubuntu 22.04 and Debian 12 refused) | Tested | `docs/release/RELEASE_REPORT.md` |
+| A real desktop session on another machine; native Wayland; AMD GPUs | Missing | not available here |
+| Builds for older distributions (glibc < 2.38), other architectures | Missing | needs a build on an older baseline |

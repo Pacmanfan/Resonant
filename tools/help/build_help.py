@@ -10,7 +10,9 @@ Steps (each one reported; any error fails the build with exit status 1):
      images, screenshot references, links from available pages to topics
      that are planned or not implemented;
   3. generate the HTML pages (one per topic id), the navigation (index.json)
-     and the search index (search.json);
+     and the search index (search.json), and the browser entry point
+     index.html (contents and an offline search over html/search.js) for
+     reading the help outside the application (RES-DIST-009);
   4. copy the static assets (images, style sheet);
   5. write build-report.json (and print it).
 
@@ -211,7 +213,8 @@ class PageContext:
         src = os.path.normpath(os.path.join(self.page["folder"], src)).replace(os.sep, "/")
         self.images.append(src)
         width = 620 if not inline else 300
-        tag = f'<a href="zoom:{html.escape(src)}"><img src="{html.escape(src)}" width="{width}" alt="{html.escape(alt)}"/></a>'
+        # A plain link to the image: a browser shows it full size, the in-app viewer opens its zoom dialog.
+        tag = f'<a href="{html.escape(src)}"><img src="{html.escape(src)}" width="{width}" alt="{html.escape(alt)}"/></a>'
         if inline:
             return tag
         cap = f'<p class="caption">{html.escape(caption or alt)} (click to enlarge)</p>' if (caption or alt) else ""
@@ -436,7 +439,7 @@ class Build:
         position = {p["id"]: k for k, p in enumerate(sequence)}
         for p in pages:
             self.write_page(p, html_dir, by_id, sequence, position, cat_by_title, built, version)
-        self.report.step("html", f"{len(pages)} pages written to {html_dir}")
+        self.report.step("html", f"{len(pages)} pages written to html/")
         copied = 0
         images_src = os.path.join(self.source, "images")
         if os.path.isdir(images_src):
@@ -488,8 +491,74 @@ class Build:
                 postings[w][p["id"]] = round(weight, 2)
         with open(os.path.join(self.out, "search.json"), "w", encoding="utf-8") as f:
             json.dump({"format": "resonant.help-search", "version": 1, "documents": len(pages), "terms": postings}, f, separators=(",", ":"))
-        self.report.step("index", f"navigation of {len(topics)} topics, search index of {len(postings)} terms")
+        self.write_browser_index(toc, topics, postings, version, built, html_dir)
+        self.report.step("index", f"navigation of {len(topics)} topics, search index of {len(postings)} terms, index.html for browsers")
         return True
+
+    def write_browser_index(self, toc, topics, postings, version, built, html_dir):
+        """index.html: the help in any browser, offline. The search runs the
+        in-app rule over the same index: every word must match, the last one
+        also as a prefix; a topic scores the sum of its weights."""
+        by_id = {t["id"]: t for t in topics}
+        data = {"topics": {t["id"]: [t["title"], t["summary"] or ""] for t in topics}, "terms": postings,
+                "stop": sorted(STOP)}
+        with open(os.path.join(html_dir, "search.js"), "w", encoding="utf-8") as f:
+            f.write("var RESONANT_HELP = " + json.dumps(data, separators=(",", ":")) + ";\n")
+        sections = []
+        for c in toc:
+            items = "".join(f'<li><a href="html/{html.escape(t)}.html">{html.escape(by_id[t]["title"] or t)}</a>'
+                            f' <span class="sum">{html.escape(by_id[t]["summary"] or "")}</span></li>'
+                            for t in c["topics"] if t in by_id)
+            sections.append(f'<h2>{html.escape(c["title"])}</h2><p class="summary">{html.escape(c.get("summary") or "")}</p><ul>{items}</ul>')
+        doc = f"""<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Resonant {html.escape(version)} help</title><link rel="stylesheet" href="html/style.css"/>
+<style>body {{ max-width: 60em; }} li {{ margin: 3px 0; }} span.sum {{ color: #5a6778; font-size: 9pt; }}
+input#q {{ font-size: 12pt; width: 24em; padding: 3px; }} ol#hits li {{ margin: 6px 0; }}</style></head>
+<body><h1>Resonant help</h1>
+<p class="summary">Resonant {html.escape(version)}. The same help as Help &gt; Contents in the application, for any browser, offline.
+Start with <a href="html/home.html">the home page</a>.</p>
+<p><label for="q">Search:</label> <input id="q" type="search" autocomplete="off" placeholder="for example: phased array"/></p>
+<ol id="hits"></ol>
+{"".join(sections)}
+<hr/><p class="nav">Built {built}.</p>
+<script src="html/search.js"></script>
+<script>
+(function () {{
+  var help = window.RESONANT_HELP, stop = {{}}, box = document.getElementById("q"), out = document.getElementById("hits");
+  if (!help) {{ out.innerHTML = "<li>The search index (html/search.js) is missing.</li>"; return; }}
+  help.stop.forEach(function (w) {{ stop[w] = true; }});
+  function words(text) {{
+    return (text.toLowerCase().match(/[a-z0-9][a-z0-9_\\-]*/g) || []).filter(function (w) {{ return !stop[w] && w.length > 1; }});
+  }}
+  function esc(s) {{ return s.replace(/[&<>"]/g, function (c) {{ return {{"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}}[c]; }}); }}
+  function search(query) {{
+    var q = words(query), score = null;
+    q.forEach(function (w, k) {{
+      var matched = {{}};
+      Object.keys(help.terms).forEach(function (term) {{
+        if (term === w || (k === q.length - 1 && term.indexOf(w) === 0)) {{
+          var postings = help.terms[term];
+          Object.keys(postings).forEach(function (t) {{ matched[t] = Math.max(matched[t] || 0, postings[t]); }});
+        }}
+      }});
+      if (score === null) score = matched;
+      else {{ var next = {{}}; Object.keys(score).forEach(function (t) {{ if (t in matched) next[t] = score[t] + matched[t]; }}); score = next; }}
+    }});
+    return score === null ? [] : Object.keys(score).sort(function (a, b) {{ return score[b] - score[a]; }}).slice(0, 30);
+  }}
+  box.addEventListener("input", function () {{
+    var hits = box.value.trim() ? search(box.value) : [];
+    out.innerHTML = hits.map(function (t) {{
+      var topic = help.topics[t];
+      return '<li><a href="html/' + esc(t) + '.html">' + esc(topic[0]) + '</a> <span class="sum">' + esc(topic[1]) + "</span></li>";
+    }}).join("") || (box.value.trim() ? "<li>No topic matches every word.</li>" : "");
+  }});
+}})();
+</script></body></html>
+"""
+        with open(os.path.join(self.out, "index.html"), "w", encoding="utf-8") as f:
+            f.write(doc)
 
     def load_screenshot_manifest(self):
         if not self.screenshot_manifest or not os.path.exists(self.screenshot_manifest):
@@ -554,7 +623,7 @@ def main(argv=None):
     os.makedirs(args.out, exist_ok=True)
     build = Build(os.path.abspath(args.source), os.path.abspath(args.out), args.draft, args.screenshots)
     ok = build.run()
-    report = {"format": "resonant.help-build-report", "version": 1, "ok": ok, "steps": build.report.steps,
+    report = {"format": "resonant.help-build-report", "version": 1, "ok": ok, "draft": bool(args.draft), "steps": build.report.steps,
               "errors": build.report.errors, "warnings": build.report.warnings}
     with open(os.path.join(args.out, "build-report.json"), "w", encoding="utf-8") as f:
         json.dump(report, f, indent=1)

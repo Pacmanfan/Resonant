@@ -17,6 +17,7 @@ The implementation status of each milestone is kept in
 | M8 Optimization | REQ-CHAT-20261126-009 | optimization framework, inverse design, geometry optimization across domains | RES-PRODUCT-004, -010 |
 | M9 Python, help, demonstrations | REQ-CHAT-20261126-010 | Python API and scripting, automation, plugins, HTML help, demonstration system | RES-PRODUCT-015 |
 | M10 Automation API | REQ-CHAT-20261126-012 | application services, protobuf contract, local endpoint and gRPC bridge, events, jobs, transactions, Python client, MCP adapter | RES-PRODUCT-015 |
+| M11 Linux ZIP distribution | REQ-CHAT-20261126-013 | a self-contained, relocatable x86_64 Linux ZIP with its own Qt and Python, launcher, diagnostics, offline help, licenses, and validation in clean containers | RES-PRODUCT-015 |
 | Later | — | geometry import from CAD formats, GPU backends | RES-PRODUCT-002, -014 |
 
 V1 (RES-PRODUCT-015) is reached when M1 and M2 are complete and the two

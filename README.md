@@ -47,14 +47,14 @@ discover is something you can trust.
 
 ## Get started
 
+On Linux, extract the release ZIP and run `./resonant` — nothing to install.
+To build it yourself (C++20, Qt 6, Eigen 3.4, OpenGL 4.5; see `BUILDING.md`):
+
 ```sh
 git clone https://github.com/Pacmanfan/Resonant.git && cd Resonant
 cmake -S . -B build/release -G Ninja -DCMAKE_BUILD_TYPE=Release && cmake --build build/release
 ./build/release/src/app/resonant examples/mechanics/b-vibrating-plate.resonant
 ```
-
-It needs C++20, Qt 6, Eigen 3.4 and OpenGL 4.5 (Python 3 and pybind11 for
-scripting); qmake builds the same targets, `BUILDING.md` covers both.
 
 ## How it grows
 

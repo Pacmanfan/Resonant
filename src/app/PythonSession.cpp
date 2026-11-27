@@ -1,12 +1,12 @@
 #include "PythonSession.h"
 
+#include "PythonEnvironment.h"
 #include "ResourcePaths.h"
 #include "foundation/Log.h"
 
 #include <QDir>
 #include <QJsonDocument>
 #include <QProcessEnvironment>
-#include <QStandardPaths>
 
 #include <csignal>
 
@@ -19,17 +19,15 @@ PythonSession::~PythonSession()
 
 QString PythonSession::interpreter() const
 {
-    const QByteArray configured = qgetenv("RESONANT_PYTHON");
-    if (!configured.isEmpty())
-        return QString::fromLocal8Bit(configured);
-    return QStandardPaths::findExecutable(QStringLiteral("python3"));
+    return pythonLaunch(ResourcePaths::locate()).program;
 }
 
 QString PythonSession::description() const
 {
     const ResourcePaths paths = ResourcePaths::locate();
-    return QStringLiteral("interpreter %1; package %2; native module %3")
-        .arg(interpreter().isEmpty() ? QStringLiteral("(python3 not found)") : interpreter(),
+    const PythonLaunch launch = pythonLaunch(paths);
+    return QStringLiteral("interpreter %1 (%2); package %3; native module %4")
+        .arg(launch.program.isEmpty() ? QStringLiteral("(python3 not found)") : launch.program, launch.origin,
              paths.pythonPackage.isEmpty() ? QStringLiteral("(not found)") : paths.pythonPackage,
              paths.pythonModule.isEmpty() ? QStringLiteral("(in the package)") : paths.pythonModule);
 }
@@ -39,26 +37,17 @@ bool PythonSession::start()
     if (isRunning())
         return true;
     startupError_.clear();
-    const QString python = interpreter();
-    const ResourcePaths paths = ResourcePaths::locate();
-    if (python.isEmpty()) {
-        startupError_ = QStringLiteral("Python 3 was not found (install python3, or set RESONANT_PYTHON to the interpreter).");
-        return false;
-    }
-    if (paths.pythonPackage.isEmpty()) {
-        startupError_ = QStringLiteral("The resonant Python package was not found (set RESONANT_PYTHON_PACKAGE_DIR to the directory that contains it).");
+    const PythonLaunch launch = pythonLaunch(ResourcePaths::locate());
+    if (!launch.usable() || !launch.error.isEmpty()) {
+        startupError_ = launch.error;
         return false;
     }
     process_ = new QProcess(this);
-    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-    const QString existing = env.value(QStringLiteral("PYTHONPATH"));
-    env.insert(QStringLiteral("PYTHONPATH"), existing.isEmpty() ? paths.pythonPackage : paths.pythonPackage + QDir::listSeparator() + existing);
-    if (!paths.pythonModule.isEmpty())
-        env.insert(QStringLiteral("RESONANT_PYTHON_MODULE_DIR"), paths.pythonModule);
+    QProcessEnvironment env = launch.environment;
     env.insert(QStringLiteral("PYTHONUNBUFFERED"), QStringLiteral("1"));
     env.insert(QStringLiteral("PYTHONIOENCODING"), QStringLiteral("utf-8"));
     process_->setProcessEnvironment(env);
-    process_->setProgram(python);
+    process_->setProgram(launch.program);
     process_->setArguments({QStringLiteral("-u"), QStringLiteral("-m"), QStringLiteral("resonant.worker")});
     connect(process_, &QProcess::readyReadStandardOutput, this, &PythonSession::readOutput);
     connect(process_, &QProcess::readyReadStandardError, this, &PythonSession::readErrors);

@@ -1,0 +1,12 @@
+Resonant - Wave Field Engineering Studio
+=======================================
+
+Copyright (c) 2026 the Resonant authors.
+
+A license for Resonant's own code has not been chosen yet. This file will
+name it once the project's owner has chosen one; until then this package
+grants no license to copy, modify or redistribute Resonant's own code
+beyond what applicable law allows.
+
+The third-party components in this package are distributed under their own
+licenses: see THIRD_PARTY_NOTICES.txt and the licenses/ folder.

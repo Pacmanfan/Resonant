@@ -3,6 +3,7 @@
 #include <QCoreApplication>
 #include <QDir>
 #include <QFileInfo>
+#include <QStandardPaths>
 
 namespace {
 QString env(const char* name)
@@ -20,7 +21,40 @@ bool hasNativeModule(const QDir& d)
 {
     return !d.entryList({QStringLiteral("_resonant*.so")}, QDir::Files).isEmpty();
 }
+
+// The resources of a data root: the bundle's root or an installation's share/resonant.
+void fillFromDataRoot(ResourcePaths& p, const QDir& data)
+{
+    if (p.help.isEmpty() && data.exists(QStringLiteral("help/index.json")))
+        p.help = data.absoluteFilePath(QStringLiteral("help"));
+    if (p.resourceRoot.isEmpty() && isResourceRoot(data))
+        p.resourceRoot = data.absolutePath();
+    if (p.pythonPackage.isEmpty() && data.exists(QStringLiteral("python/resonant/__init__.py")))
+        p.pythonPackage = data.absoluteFilePath(QStringLiteral("python"));
+    if (p.apiDescriptors.isEmpty() && data.exists(QStringLiteral("automation/resonant_api.desc")))
+        p.apiDescriptors = data.absoluteFilePath(QStringLiteral("automation/resonant_api.desc"));
+}
+
+QString writable(QStandardPaths::StandardLocation location)
+{
+    return QStandardPaths::writableLocation(location);
+}
 }  // namespace
+
+QString ResourcePaths::layoutName(Layout layout)
+{
+    switch (layout) {
+    case Layout::BuildTree:
+        return QStringLiteral("build tree");
+    case Layout::Installation:
+        return QStringLiteral("installation");
+    case Layout::Bundle:
+        return QStringLiteral("bundle");
+    case Layout::Unknown:
+        break;
+    }
+    return QStringLiteral("unknown");
+}
 
 ResourcePaths ResourcePaths::locate()
 {
@@ -38,25 +72,45 @@ ResourcePaths ResourcePaths::locateFrom(const QString& executableDirectory, bool
         p.apiDescriptors = env("RESONANT_API_DESCRIPTORS");
     }
     const QDir exe(executableDirectory);
+    p.executableDirectory = exe.absolutePath();
+    p.userConfig = writable(QStandardPaths::AppConfigLocation);
+    p.userData = writable(QStandardPaths::AppDataLocation);
+    p.userCache = writable(QStandardPaths::CacheLocation);
+    p.userDocuments = writable(QStandardPaths::DocumentsLocation);
+
+    // A bundle: <root>/bin beside <root>/resonant-runtime.json, the resources at the top of <root>.
+    const QDir root(QDir::cleanPath(exe.absoluteFilePath(QStringLiteral(".."))));
+    if (root.exists(QStringLiteral("resonant-runtime.json"))) {
+        p.layout = Layout::Bundle;
+        p.installRoot = root.absolutePath();
+        p.runtimeManifest = root.absoluteFilePath(QStringLiteral("resonant-runtime.json"));
+        fillFromDataRoot(p, root);
+        const QDir runtime(root.absoluteFilePath(QStringLiteral("python/runtime")));
+        if (runtime.exists(QStringLiteral("bin/python3"))) {
+            p.pythonHome = runtime.absolutePath();
+            p.pythonInterpreter = runtime.absoluteFilePath(QStringLiteral("bin/python3"));
+        }
+        if (root.exists(QStringLiteral("python/site-packages")))
+            p.pythonSitePackages = root.absoluteFilePath(QStringLiteral("python/site-packages"));
+        return p;  // a bundle never looks outside itself
+    }
 
     // An installation: <prefix>/bin -> <prefix>/share/resonant.
     const QDir share(exe.absoluteFilePath(QStringLiteral("../share/resonant")));
     if (share.exists()) {
-        if (p.help.isEmpty() && share.exists(QStringLiteral("help/index.json")))
-            p.help = share.absoluteFilePath(QStringLiteral("help"));
-        if (p.resourceRoot.isEmpty() && isResourceRoot(share))
-            p.resourceRoot = share.absolutePath();
-        if (p.pythonPackage.isEmpty() && share.exists(QStringLiteral("python/resonant/__init__.py")))
-            p.pythonPackage = share.absoluteFilePath(QStringLiteral("python"));
-        if (p.apiDescriptors.isEmpty() && share.exists(QStringLiteral("automation/resonant_api.desc")))
-            p.apiDescriptors = share.absoluteFilePath(QStringLiteral("automation/resonant_api.desc"));
+        p.layout = Layout::Installation;
+        p.installRoot = root.absolutePath();
+        fillFromDataRoot(p, share);
     }
 
     // A build tree: walk up from the executable (build/<tree>/src/main, tests/app, ...).
     QDir up = exe;
     for (int level = 0; level < 5; ++level) {
-        if (p.help.isEmpty() && up.exists(QStringLiteral("help/index.json")))
+        if (p.help.isEmpty() && up.exists(QStringLiteral("help/index.json"))) {
             p.help = up.absoluteFilePath(QStringLiteral("help"));
+            if (p.layout == Layout::Unknown)
+                p.layout = Layout::BuildTree;
+        }
         if (p.pythonModule.isEmpty() && hasNativeModule(QDir(up.absoluteFilePath(QStringLiteral("src/python")))))
             p.pythonModule = up.absoluteFilePath(QStringLiteral("src/python"));
         if (p.apiDescriptors.isEmpty() && up.exists(QStringLiteral("src/automation_api/resonant_api.desc")))
@@ -67,7 +121,7 @@ ResourcePaths ResourcePaths::locateFrom(const QString& executableDirectory, bool
             break;
     }
 #ifdef RESONANT_SOURCE_DIR
-    // The source tree this build was configured from (development builds).
+    // The source tree this build was configured from (development builds; never compiled into a bundle).
     const QDir source(QStringLiteral(RESONANT_SOURCE_DIR));
     if (p.resourceRoot.isEmpty() && isResourceRoot(source))
         p.resourceRoot = source.absolutePath();

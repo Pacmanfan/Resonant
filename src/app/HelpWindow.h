@@ -47,7 +47,7 @@ public:
     void next();
     void home();
     bool canGoBack() const { return position_ > 0; }
-    // Opens an image of the current page full size (zoom: links); returns the dialog (tests close it).
+    // Opens an image of the current page full size (its links); returns the dialog (tests close it).
     QDialog* showImage(const QString& source);
     int loadedImageCount() const;  // images of the current page that resolved to files
 
