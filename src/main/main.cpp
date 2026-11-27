@@ -2,6 +2,8 @@
 #include "Application.h"
 #include "AcousticController.h"
 #include "AcousticsPanel.h"
+#include "FdtdController.h"
+#include "FdtdPanel.h"
 #include "MainWindow.h"
 #include "ViewportWidget.h"
 #include "foundation/Log.h"
@@ -38,6 +40,10 @@ int main(int argc, char** argv)
         QStringLiteral("run-field"),
         QStringLiteral("Run the field simulation of the project's first field region after opening it."));
     parser.addOption(runFieldOption);
+    const QCommandLineOption runFullWaveOption(
+        QStringLiteral("run-full-wave"),
+        QStringLiteral("Run the full-wave (FDTD) solver on the project's first field region after opening it."));
+    parser.addOption(runFullWaveOption);
     parser.process(application);
 
     int result = 0;
@@ -70,8 +76,17 @@ int main(int argc, char** argv)
             if (!waitingForField)
                 resonant::logError("application", "--run-field: the project has no field region that can be simulated");
         }
+        bool waitingForFullWave = false;
+        if (parser.isSet(runFullWaveOption)) {
+            window.viewport().frameAll();
+            waitingForFullWave = window.fullWavePanel().run();
+            if (!waitingForFullWave)
+                resonant::logError("application", "--run-full-wave: " + window.fullWavePanel().statusText().toStdString());
+        }
         if (parser.isSet(screenshotOption)) {
-            if (waitingForField)
+            if (waitingForFullWave)
+                QObject::connect(&window.fullWave(), &FdtdController::resultsChanged, &window, capture);
+            else if (waitingForField)
                 QObject::connect(&window.acoustics(), &AcousticController::resultsChanged, &window, capture);
             else
                 capture();

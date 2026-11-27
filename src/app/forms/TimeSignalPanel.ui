@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>TimeSignalPanel</class>
+ <widget class="QWidget" name="TimeSignalPanel">
+  <property name="geometry"><rect><x>0</x><y>0</y><width>900</width><height>260</height></rect></property>
+  <layout class="QVBoxLayout" name="outerLayout"><property name="leftMargin"><number>2</number></property><property name="topMargin"><number>2</number></property><property name="rightMargin"><number>2</number></property><property name="bottomMargin"><number>2</number></property>
+   <item><layout class="QHBoxLayout" name="selectLayout">
+    <item><widget class="QLabel" name="resultLabel"><property name="text"><string>Run</string></property></widget></item><item><widget class="QComboBox" name="resultCombo"></widget></item>
+    <item><widget class="QLabel" name="probeLabel"><property name="text"><string>Probe</string></property></widget></item><item><widget class="QComboBox" name="probeCombo"></widget></item>
+    <item><widget class="QLabel" name="viewLabel"><property name="text"><string>Show</string></property></widget></item><item><widget class="QComboBox" name="viewCombo"><item><property name="text"><string>Pressure over time</string></property></item><item><property name="text"><string>Spectrum magnitude</string></property></item><item><property name="text"><string>Spectrum phase</string></property></item><item><property name="text"><string>Energy over time</string></property></item></widget></item>
+    <item><widget class="QLabel" name="windowLabel"><property name="text"><string>Window</string></property></widget></item><item><widget class="QComboBox" name="windowCombo"><item><property name="text"><string>Hann</string></property></item><item><property name="text"><string>Rectangular</string></property></item></widget></item>
+    <item><spacer name="selectSpacer"><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>10</height></size></property></spacer></item>
+    <item><widget class="QPushButton" name="exportButton"><property name="text"><string>Export Signals...</string></property></widget></item>
+   </layout></item>
+   <item><widget class="QSplitter" name="splitter"><property name="orientation"><enum>Qt::Horizontal</enum></property>
+    <widget class="PlotWidget" name="plot" native="true"/>
+    <widget class="QPlainTextEdit" name="infoText"><property name="readOnly"><bool>true</bool></property></widget>
+   </widget></item>
+   <item><layout class="QHBoxLayout" name="snapshotLayout">
+    <item><widget class="QLabel" name="snapshotTitle"><property name="text"><string>Recorded instant</string></property></widget></item>
+    <item><widget class="QSlider" name="snapshotSlider"><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="enabled"><bool>false</bool></property></widget></item>
+    <item><widget class="QLabel" name="snapshotLabel"><property name="text"><string>-</string></property></widget></item>
+    <item><widget class="QPushButton" name="steadyButton"><property name="text"><string>Show Steady State</string></property><property name="enabled"><bool>false</bool></property></widget></item>
+   </layout></item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget><class>PlotWidget</class><extends>QWidget</extends><header>PlotWidget.h</header><container>1</container></customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

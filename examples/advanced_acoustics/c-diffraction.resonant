@@ -1,0 +1,754 @@
+{
+  "application": {
+    "name": "Resonant",
+    "version": "0.1.0"
+  },
+  "extensions": {
+    "acoustics": {
+      "frequencyHz": 40000.0,
+      "medium": {
+        "attenuation": 0.0,
+        "basis": "Theoretical: dry air as an ideal gas at 101 325 Pa (gamma 1.4, R 287.05 J/(kg K)). Humidity and absorption are not modelled.",
+        "density": 1.2041183163746156,
+        "name": "Air",
+        "soundSpeed": 343.23197767690584,
+        "temperatureK": 293.15
+      },
+      "memoryLimitBytes": 1073741824,
+      "model": "acoustic.freefield.analytical",
+      "propagation": {
+        "includeAttenuation": true,
+        "includeDirectivity": true,
+        "minimumDistance": 0.0001
+      },
+      "reflectorElementsPerWavelength": 6.0
+    },
+    "fdtd": {
+      "absorbingCells": 12,
+      "boundary": [
+        "absorbing",
+        "absorbing",
+        "absorbing",
+        "absorbing",
+        "absorbing",
+        "absorbing"
+      ],
+      "boundaryImpedance": 415.0,
+      "courantFraction": 0.95,
+      "duration": 0.0,
+      "harmonicPeriods": 8.0,
+      "memoryLimitBytes": 1073741824,
+      "pointsPerWavelength": 12.0,
+      "snapshotCount": 40,
+      "waveform": {
+        "cycles": 5.0,
+        "duration": 0.001,
+        "endFrequencyHz": 80000.0,
+        "fractionalBandwidth": 0.5,
+        "frequencyHz": 40000.0,
+        "kind": "continuous",
+        "phase": 0.0,
+        "rampCycles": 4.0,
+        "repetitionPeriod": 0.0
+      }
+    }
+  },
+  "format": "resonant-project",
+  "materials": [
+    {
+      "description": "Dry air near 20 degrees C at sea-level pressure (example).",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Both depend on temperature, pressure and humidity.",
+            "value": 1.204
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Both depend on temperature, pressure and humidity.",
+            "value": 343.0
+          }
+        },
+        "electromagnetic": {
+          "conductivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 0.0
+          },
+          "relativePermeability": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 1.0
+          },
+          "relativePermittivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 1.0006
+          }
+        }
+      },
+      "id": "mat-air",
+      "name": "Air"
+    },
+    {
+      "description": "Fresh water near 20 degrees C (example).",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Sound speed depends on temperature, salinity and pressure.",
+            "value": 998.0
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Sound speed depends on temperature, salinity and pressure.",
+            "value": 1482.0
+          }
+        },
+        "electromagnetic": {
+          "conductivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Static permittivity; strongly frequency dependent. Conductivity varies by orders of magnitude with dissolved ions.",
+            "value": 0.005
+          },
+          "relativePermeability": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Static permittivity; strongly frequency dependent. Conductivity varies by orders of magnitude with dissolved ions.",
+            "value": 1.0
+          },
+          "relativePermittivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Static permittivity; strongly frequency dependent. Conductivity varies by orders of magnitude with dissolved ions.",
+            "value": 80.0
+          }
+        }
+      },
+      "id": "mat-water",
+      "name": "Water"
+    },
+    {
+      "description": "Generic aluminum (example); alloys differ.",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 2700.0
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 6320.0
+          }
+        },
+        "electromagnetic": {
+          "conductivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Relative permittivity is not a meaningful quantity for a good conductor; 1 is a placeholder.",
+            "value": 35000000.0
+          },
+          "relativePermeability": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Relative permittivity is not a meaningful quantity for a good conductor; 1 is a placeholder.",
+            "value": 1.0
+          },
+          "relativePermittivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Relative permittivity is not a meaningful quantity for a good conductor; 1 is a placeholder.",
+            "value": 1.0
+          }
+        },
+        "mechanical": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 2700.0
+          },
+          "poissonsRatio": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 0.33
+          },
+          "youngsModulus": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 69000000000.0
+          }
+        }
+      },
+      "id": "mat-aluminum",
+      "name": "Aluminum"
+    },
+    {
+      "description": "Generic carbon steel (example); grades differ widely.",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 7850.0
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 5900.0
+          }
+        },
+        "electromagnetic": {
+          "conductivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Permeability of steel varies from about 1 (austenitic stainless) to thousands and is nonlinear; 100 is only a placeholder. Relative permittivity is a placeholder.",
+            "value": 6000000.0
+          },
+          "relativePermeability": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Permeability of steel varies from about 1 (austenitic stainless) to thousands and is nonlinear; 100 is only a placeholder. Relative permittivity is a placeholder.",
+            "value": 100.0
+          },
+          "relativePermittivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Permeability of steel varies from about 1 (austenitic stainless) to thousands and is nonlinear; 100 is only a placeholder. Relative permittivity is a placeholder.",
+            "value": 1.0
+          }
+        },
+        "mechanical": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 7850.0
+          },
+          "poissonsRatio": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 0.29
+          },
+          "youngsModulus": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 200000000000.0
+          }
+        }
+      },
+      "id": "mat-steel",
+      "name": "Steel"
+    },
+    {
+      "description": "Generic copper (example).",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 8960.0
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 4760.0
+          }
+        },
+        "electromagnetic": {
+          "conductivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Relative permittivity is not a meaningful quantity for a good conductor; 1 is a placeholder.",
+            "value": 58000000.0
+          },
+          "relativePermeability": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Relative permittivity is not a meaningful quantity for a good conductor; 1 is a placeholder.",
+            "value": 1.0
+          },
+          "relativePermittivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Relative permittivity is not a meaningful quantity for a good conductor; 1 is a placeholder.",
+            "value": 1.0
+          }
+        },
+        "mechanical": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 8960.0
+          },
+          "poissonsRatio": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 0.34
+          },
+          "youngsModulus": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 117000000000.0
+          }
+        }
+      },
+      "id": "mat-copper",
+      "name": "Copper"
+    },
+    {
+      "description": "Generic soda-lime glass (example).",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 2500.0
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 5600.0
+          }
+        },
+        "electromagnetic": {
+          "conductivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Permittivity depends on composition and frequency.",
+            "value": 1e-12
+          },
+          "relativePermeability": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Permittivity depends on composition and frequency.",
+            "value": 1.0
+          },
+          "relativePermittivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Permittivity depends on composition and frequency.",
+            "value": 6.0
+          }
+        },
+        "mechanical": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 2500.0
+          },
+          "poissonsRatio": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 0.22
+          },
+          "youngsModulus": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 70000000000.0
+          }
+        }
+      },
+      "id": "mat-glass",
+      "name": "Glass"
+    },
+    {
+      "description": "Generic cast acrylic, PMMA (example).",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 1180.0
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 2730.0
+          }
+        },
+        "electromagnetic": {
+          "conductivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Permittivity depends on frequency.",
+            "value": 1e-14
+          },
+          "relativePermeability": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Permittivity depends on frequency.",
+            "value": 1.0
+          },
+          "relativePermittivity": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Permittivity depends on frequency.",
+            "value": 3.0
+          }
+        },
+        "mechanical": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Polymers are viscoelastic: stiffness depends on frequency and temperature.",
+            "value": 1180.0
+          },
+          "poissonsRatio": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Polymers are viscoelastic: stiffness depends on frequency and temperature.",
+            "value": 0.37
+          },
+          "youngsModulus": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Polymers are viscoelastic: stiffness depends on frequency and temperature.",
+            "value": 3200000000.0
+          }
+        }
+      },
+      "id": "mat-acrylic",
+      "name": "Acrylic"
+    },
+    {
+      "description": "Generic structural concrete (example); mixes differ widely.",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 2400.0
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Speed of sound is the longitudinal bulk-wave speed; shear and plate waves differ.",
+            "value": 3700.0
+          }
+        },
+        "mechanical": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 2400.0
+          },
+          "poissonsRatio": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 0.2
+          },
+          "youngsModulus": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 30000000000.0
+          }
+        }
+      },
+      "id": "mat-concrete",
+      "name": "Concrete"
+    },
+    {
+      "description": "Generic soft rubber (example); compounds differ by orders of magnitude.",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Longitudinal bulk-wave speed; rubber is strongly lossy and frequency dependent.",
+            "value": 1100.0
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Longitudinal bulk-wave speed; rubber is strongly lossy and frequency dependent.",
+            "value": 1600.0
+          }
+        },
+        "mechanical": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Stiffness varies by orders of magnitude between compounds and with frequency.",
+            "value": 1100.0
+          },
+          "poissonsRatio": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Stiffness varies by orders of magnitude between compounds and with frequency.",
+            "value": 0.49
+          },
+          "youngsModulus": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Stiffness varies by orders of magnitude between compounds and with frequency.",
+            "value": 5000000.0
+          }
+        }
+      },
+      "id": "mat-rubber",
+      "name": "Rubber"
+    },
+    {
+      "description": "Generic softwood along the grain (example); wood is anisotropic.",
+      "domains": {
+        "acoustic": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Along the grain; across the grain the speed is several times lower.",
+            "value": 500.0
+          },
+          "referenceTemperature": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use.",
+            "value": 293.15
+          },
+          "soundSpeed": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Along the grain; across the grain the speed is several times lower.",
+            "value": 3300.0
+          }
+        },
+        "mechanical": {
+          "density": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Along the grain; wood is orthotropic and a single modulus is a simplification.",
+            "value": 500.0
+          },
+          "poissonsRatio": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Along the grain; wood is orthotropic and a single modulus is a simplification.",
+            "value": 0.3
+          },
+          "youngsModulus": {
+            "provenance": "illustrative",
+            "source": "Illustrative nominal room-temperature value (about 293 K); not authoritative. Replace with a measured or cited value before engineering use. Along the grain; wood is orthotropic and a single modulus is a simplification.",
+            "value": 10000000000.0
+          }
+        }
+      },
+      "id": "mat-wood",
+      "name": "Wood"
+    }
+  ],
+  "project": {
+    "createdUtc": "2026-11-26T00:00:00Z",
+    "id": "ex-advanced-c",
+    "modifiedUtc": "2026-11-26T00:00:00Z",
+    "name": "diffraction"
+  },
+  "scene": {
+    "objects": [
+      {
+        "children": [],
+        "component": {
+          "data": {
+            "active": true,
+            "amplitudePa": 1.0,
+            "delaySec": 0.0,
+            "directivity": {
+              "model": "omnidirectional",
+              "order": 1.0,
+              "pistonRadius": 0.005
+            },
+            "frequencyHz": 40000.0,
+            "phaseRad": 0.0,
+            "physicalTransducer": false,
+            "radius": 0.002,
+            "transducerProfile": "",
+            "waveform": "sine"
+          },
+          "type": "acoustic.emitter"
+        },
+        "id": "ex-ca-emitter",
+        "name": "Emitter",
+        "transform": {
+          "position": [
+            0.0,
+            0.0,
+            -0.04
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "type": "acoustic.emitter",
+        "visible": true
+      },
+      {
+        "children": [],
+        "component": {
+          "data": {
+            "boundary": "rigid",
+            "category": "diffractionStructure",
+            "domain": "acoustic",
+            "notes": ""
+          },
+          "type": "wave.manipulator"
+        },
+        "geometry": {
+          "kind": "diffraction.slit",
+          "parameters": {
+            "height": 0.2,
+            "slitWidth": 0.005,
+            "thickness": 0.004,
+            "width": 0.3
+          }
+        },
+        "id": "ex-ca-plate",
+        "name": "Plate with a slit",
+        "transform": {
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "type": "wave.manipulator",
+        "visible": true
+      },
+      {
+        "children": [],
+        "component": {
+          "data": {
+            "countU": 121,
+            "countV": 121,
+            "countW": 41,
+            "kind": "planeXZ",
+            "size": [
+              0.12,
+              0.1,
+              0.12
+            ]
+          },
+          "type": "acoustic.region"
+        },
+        "id": "ex-ca-region",
+        "name": "Simulation plane",
+        "transform": {
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "type": "acoustic.region",
+        "visible": true
+      },
+      {
+        "children": [],
+        "component": {
+          "data": {},
+          "type": "acoustic.probe"
+        },
+        "id": "ex-ca-axis",
+        "name": "Probe behind the slit",
+        "transform": {
+          "position": [
+            0.0,
+            0.0,
+            0.04
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "type": "acoustic.probe",
+        "visible": true
+      },
+      {
+        "children": [],
+        "component": {
+          "data": {},
+          "type": "acoustic.probe"
+        },
+        "id": "ex-ca-shadow",
+        "name": "Probe in the geometric shadow",
+        "transform": {
+          "position": [
+            0.04,
+            0.0,
+            0.02
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "type": "acoustic.probe",
+        "visible": true
+      }
+    ]
+  },
+  "schemaVersion": 1,
+  "simulations": [],
+  "units": {
+    "angle": "rad",
+    "axes": "right-handed; X horizontal, Y depth, Z vertical (up)",
+    "frequency": "Hz",
+    "length": "m",
+    "mass": "kg",
+    "rotation": "intrinsic Z-Y-X Euler angles stored as [x, y, z]",
+    "time": "s"
+  }
+}

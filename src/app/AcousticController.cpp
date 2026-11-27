@@ -397,6 +397,28 @@ void AcousticController::onJobChanged(const JobInfo& info)
     emit message(QStringLiteral("Field simulation finished: %1").arg(QString::fromStdString(result->name)));
 }
 
+void AcousticController::addResult(std::shared_ptr<const FieldResult> result)
+{
+    if (!result)
+        return;
+    results_.push_back(result);
+    nlohmann::json& runs = document_->project().extensions["acousticRuns"];
+    if (!runs.is_array())
+        runs = nlohmann::json::array();
+    runs.push_back(runRecord(*result));
+    displayed_ = std::move(result);
+    updateScale();
+    emit resultsChanged();
+    emit displayChanged();
+}
+
+void AcousticController::displayTransient(std::shared_ptr<const FieldResult> field)
+{
+    displayed_ = std::move(field);
+    updateScale();
+    emit displayChanged();
+}
+
 void AcousticController::displayResult(const Id& resultId)
 {
     displayed_.reset();

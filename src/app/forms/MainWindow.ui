@@ -126,6 +126,8 @@
    </widget>
    <widget class="QMenu" name="menuSimulation">
     <property name="title"><string>S&amp;imulation</string></property>
+    <addaction name="actionRunFullWave"/>
+    <addaction name="separator"/>
     <addaction name="actionRunDemonstrator"/>
     <addaction name="actionCancelJobs"/>
    </widget>
@@ -228,6 +230,11 @@
    <property name="windowTitle"><string>Acoustics</string></property>
    <attribute name="dockWidgetArea"><number>2</number></attribute>
    <widget class="AcousticsPanel" name="acousticsPanel"/>
+  </widget>
+  <widget class="QDockWidget" name="solverDock">
+   <property name="windowTitle"><string>Full-Wave Solver</string></property>
+   <attribute name="dockWidgetArea"><number>2</number></attribute>
+   <widget class="FdtdPanel" name="fdtdPanel"/>
   </widget>
   <action name="actionNew">
    <property name="text"><string>&amp;New Project</string></property>
@@ -537,6 +544,12 @@
    <property name="statusTip"><string>Calculate the field over the chosen region</string></property>
    <property name="shortcut"><string>F5</string></property>
   </action>
+  <action name="actionRunFullWave">
+   <property name="text"><string>Run &amp;Full-Wave Simulation</string></property>
+   <property name="toolTip"><string>Run the time-domain full-wave solver on the chosen region</string></property>
+   <property name="statusTip"><string>Run the time-domain full-wave solver on the chosen region</string></property>
+   <property name="shortcut"><string>F6</string></property>
+  </action>
   <action name="actionAddParabolicReflector">
    <property name="text"><string>&amp;Parabolic Reflector</string></property>
    <property name="toolTip"><string>Add a wave manipulator: parabolic reflector</string></property>
@@ -609,6 +622,7 @@
   <customwidget><class>SceneTreePanel</class><extends>QWidget</extends><header>SceneTreePanel.h</header><container>1</container></customwidget>
   <customwidget><class>PropertiesPanel</class><extends>QWidget</extends><header>PropertiesPanel.h</header><container>1</container></customwidget>
   <customwidget><class>AnalysisPanel</class><extends>QWidget</extends><header>AnalysisPanel.h</header><container>1</container></customwidget>
+  <customwidget><class>FdtdPanel</class><extends>QWidget</extends><header>FdtdPanel.h</header><container>1</container></customwidget>
   <customwidget><class>AcousticsPanel</class><extends>QWidget</extends><header>AcousticsPanel.h</header><container>1</container></customwidget>
  </customwidgets>
  <resources/>

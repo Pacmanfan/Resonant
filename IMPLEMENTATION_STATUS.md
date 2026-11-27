@@ -10,7 +10,7 @@ states:
 * **Deferred** — deliberately left to a later milestone, with the reason.
 
 Milestones and the requests that deliver them are in
-`docs/architecture/roadmap.md`. Last updated for REQ-CHAT-20261126-004.
+`docs/architecture/roadmap.md`. Last updated for REQ-CHAT-20261126-005.
 
 ## Application foundation (V0.1) — `docs/requirements/application_foundation.md`
 
@@ -126,3 +126,43 @@ Milestones and the requests that deliver them are in
 | Geometry optimization interfaces; one-parameter reflector optimization in the editor | Tested | local search; general framework is request 009 |
 | Manufacturing constraint checks | Tested | wall thickness, largest dimension, curvature radius, feature size; in the core, used by the optimizer; no editor for them |
 | Example projects A to E in `examples/manipulators` | Tested | |
+
+## Full-wave acoustic simulation — `docs/requirements/full_wave_acoustics.md`, `docs/advanced_acoustics/`
+
+| Capability | State | Notes |
+|---|---|---|
+| Solver registry: declared capabilities and limitations of the three acoustic solvers | Tested | |
+| Assessment of what each solver would leave out; no automatic selection | Tested | shown in the Full-Wave Solver panel |
+| FDTD, 2D | Tested | staggered grid, second order; validated against closed forms |
+| FDTD, 3D | Partial | implemented; validated for a point source in open space (amplitude, spreading, phase) and by a 3D example. Boundaries, materials and objects are tested in 2D only |
+| Courant stability check before execution; failed run on a non-finite field | Tested | |
+| Cells per wavelength and time-step fraction as settings; never lowered automatically | Tested | |
+| Preflight: grid, time step, duration, resolution, dispersion error, memory, work, time estimate, objects, warnings | Tested | the time estimate is rough |
+| Domain faces: rigid, pressure release, impedance, absorbing | Tested | one kind for all faces in the panel; per face in the core |
+| Periodic and symmetry boundaries | Missing | a rigid wall is the symmetry plane of an even field |
+| Absorbing layers (split-field PML), configurable thickness | Tested | below 0.2 % reflection at normal incidence with 12 cells; long runs with layers not tested |
+| Per-cell density, speed of sound, attenuation; interfaces | Tested | reflection, transmission, speed, refraction, attenuation against closed forms |
+| Solids as elastic bodies (shear waves) | Missing | solids are fluids with their density and speed of sound |
+| Frequency-dependent attenuation, dispersion, anisotropy | Missing | |
+| Moving media, flow, continuous property gradients | Missing | layered media can be built from objects |
+| Simulation geometry from each geometry kind's definition | Tested | stepped at the cell size; thin shells thickened with a note |
+| Mesh generation, refinement, mesh-quality tools; Gmsh | Missing | the solver uses a uniform grid |
+| Signals: continuous, tone burst, Gaussian pulse, Ricker, sweep | Tested | one kind per run |
+| Sampled signal | Partial | core and project file; no editor in the panel |
+| True time delay of emitters | Tested | |
+| Emitter directivity in full-wave runs | Missing | every emitter is a monopole; stated in the result |
+| Recording: probe signals, snapshots, steady-state field, energy | Tested | |
+| Particle-velocity fields, intensity, region-of-interest storage, full field histories | Missing | velocity is solver state but is not recorded |
+| HDF5 or other binary result files; checkpointing and resumption | Missing | results live in memory for the session; probe signals export as CSV |
+| Spectra of probe signals with resolution, window, aliasing limit | Tested | own radix-2 FFT |
+| Resonance identification from response peaks | Tested | labelled as response peaks |
+| Eigenmode analysis, mode shapes | Missing | |
+| Steady-state field as an ordinary result: display, metrics, comparison, run record | Tested | |
+| Recorded instants shown in the viewport as instantaneous pressure | Tested | slider in the Time Signals tab |
+| Plots: pressure over time, spectrum magnitude and phase, energy over time | Tested | one curve at a time |
+| Isosurfaces, volume rendering, arbitrary cross-sections, probe-to-probe comparison plots | Missing | |
+| Background job with progress and cancellation; memory and work limits | Tested | |
+| Threads, SIMD, GPU backends; backend selection | Missing | one single-threaded double-precision reference: about 1e8 cell updates per second |
+| FEM, BEM, angular spectrum, pseudospectral solvers | Missing | |
+| Nonlinear, thermoviscous, streaming, cavitation effects | Missing | requirements for each are listed in `ADVANCED_ACOUSTICS.md` |
+| Example projects A (2D, 3D), B to G in `examples/advanced_acoustics` | Tested | |

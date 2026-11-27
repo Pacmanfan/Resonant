@@ -5,6 +5,9 @@
 an automated test in `tests/core/test_acoustics.cpp`,
 `tests/core/test_acoustic_examples.cpp` or `tests/app/test_acoustics_ui.cpp`.
 
+The full-wave (FDTD) solver's validation is recorded separately in
+`docs/advanced_acoustics/ACOUSTIC_VALIDATION.md`.
+
 ## Principle
 
 A calculation is compared with a closed-form expectation written out in

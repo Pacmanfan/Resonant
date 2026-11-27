@@ -72,6 +72,11 @@ public:
     const std::vector<std::shared_ptr<const resonant::acoustics::FieldResult>>& results() const { return results_; }
     std::shared_ptr<const resonant::acoustics::FieldResult> displayedResult() const { return displayed_; }
     void displayResult(const resonant::Id& resultId);  // a null id hides the field
+    // A field calculated by another solver joins the session's results and the
+    // project's run history, and is displayed.
+    void addResult(std::shared_ptr<const resonant::acoustics::FieldResult> result);
+    // Shows a field without keeping it in the result list (a transient snapshot).
+    void displayTransient(std::shared_ptr<const resonant::acoustics::FieldResult> field);
     void removeResult(const resonant::Id& resultId);
 
     // An evaluator for the scene as it is now, with the selected field model

@@ -1,0 +1,72 @@
+{
+ "work": "WORK-000005",
+ "runs": [
+  {
+   "at": "2026-11-27T01:16:50.525176+00:00",
+   "verdict": "PASS",
+   "gate_version": 3,
+   "work": "WORK-000005",
+   "request": "2026-11-26-prompt-9-resonant-advanced-aco-req-chat-20261126-005.md",
+   "request_id": "REQ-CHAT-20261126-005",
+   "request_fingerprint": "94fe6598e74f4f29af259e2b1e5a92ed8729ad532d54607347ac3909bd8e3d4b",
+   "request_code_paths": [
+    "examples/advanced_acoustics/a-free-field-pulse-2d.resonant",
+    "examples/advanced_acoustics/a-free-field-pulse-3d.resonant",
+    "examples/advanced_acoustics/b-reflection.resonant",
+    "examples/advanced_acoustics/c-diffraction.resonant",
+    "examples/advanced_acoustics/d-material-interface.resonant",
+    "examples/advanced_acoustics/e-resonant-cavity.resonant",
+    "examples/advanced_acoustics/f-passive-focusing.resonant",
+    "examples/advanced_acoustics/g-hybrid-focusing.resonant",
+    "src/app/AcousticController.cpp",
+    "src/app/AcousticController.h",
+    "src/app/FdtdController.cpp",
+    "src/app/FdtdController.h",
+    "src/app/FdtdPanel.cpp",
+    "src/app/FdtdPanel.h",
+    "src/app/MainWindow.cpp",
+    "src/app/MainWindow.h",
+    "src/app/PlotWidget.cpp",
+    "src/app/PlotWidget.h",
+    "src/app/TimeSignalPanel.cpp",
+    "src/app/TimeSignalPanel.h",
+    "src/app/forms/FdtdPanel.ui",
+    "src/app/forms/MainWindow.ui",
+    "src/app/forms/TimeSignalPanel.ui",
+    "src/core/acoustics/Propagation.cpp",
+    "src/core/acoustics/Propagation.h",
+    "src/core/fdtd/FdtdGrid.cpp",
+    "src/core/fdtd/FdtdGrid.h",
+    "src/core/fdtd/FdtdRun.cpp",
+    "src/core/fdtd/FdtdRun.h",
+    "src/core/fdtd/FdtdSetup.cpp",
+    "src/core/fdtd/FdtdSetup.h",
+    "src/core/fdtd/SolidModel.cpp",
+    "src/core/fdtd/SolidModel.h",
+    "src/core/fdtd/Spectrum.cpp",
+    "src/core/fdtd/Spectrum.h",
+    "src/core/fdtd/Waveform.cpp",
+    "src/core/fdtd/Waveform.h",
+    "src/core/solvers/SolverRegistry.cpp",
+    "src/core/solvers/SolverRegistry.h",
+    "src/main/main.cpp",
+    "tests/app/test_fullwave_ui.cpp",
+    "tests/core/test_fdtd.cpp",
+    "tests/core/test_fdtd_scene.cpp"
+   ],
+   "test_runs": [
+    "20261126T200829-3835036"
+   ],
+   "evidence": [
+    "VER-000005"
+   ],
+   "head": "75e02546eb73d5044b34da22ad9b34b53be99497",
+   "agent_id": "agent-dev-20261126151713-76f632",
+   "fails": [],
+   "warns": [
+    "10 unowned change(s) in the tree (not this request's; never committed by it)"
+   ],
+   "passes": 14
+  }
+ ]
+}

@@ -28,6 +28,11 @@ struct PointSource {
     // amplitude with its phase and time delay folded in,
     //   amplitude = A * exp(j * (phase - omega * delay)).
     Complex amplitude = Complex(1.0, 0.0);
+    // The same three settings separately, for time-domain solvers, where a
+    // delay is a shift of the signal and not a phase.
+    double amplitudePa = 1.0;
+    double phaseRad = 0.0;
+    double delaySec = 0.0;
     Directivity directivity;
     double radius = 0.005;  // m, physical size; sets the near-source limit
     bool physicalTransducer = false;

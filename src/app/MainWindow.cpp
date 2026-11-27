@@ -6,7 +6,10 @@
 #include "AcousticMarkers.h"
 #include "AcousticsPanel.h"
 #include "FieldAnalysisPanel.h"
+#include "FdtdController.h"
+#include "FdtdPanel.h"
 #include "ManipulatorController.h"
+#include "TimeSignalPanel.h"
 #include "ManipulatorEditor.h"
 #include "AnalysisPanel.h"
 #include "DisplayUnits.h"
@@ -54,6 +57,7 @@ MainWindow::MainWindow(QWidget* parent)
     ui_->menuPanels->addAction(ui_->propertiesDock->toggleViewAction());
     ui_->menuPanels->addAction(ui_->analysisDock->toggleViewAction());
     ui_->menuPanels->addAction(ui_->acousticsDock->toggleViewAction());
+    ui_->menuPanels->addAction(ui_->solverDock->toggleViewAction());
     ui_->menuPanels->addSeparator();
     ui_->menuPanels->addAction(ui_->fileToolBar->toggleViewAction());
     ui_->menuPanels->addAction(ui_->geometryToolBar->toggleViewAction());
@@ -92,6 +96,7 @@ MainWindow::MainWindow(QWidget* parent)
     connectActions();
     connectAcoustics();
     connectManipulators();
+    connectFullWave();
 
     unsavedChangesPrompt = [this] {
         return QMessageBox::warning(this, QStringLiteral("Unsaved changes"),
@@ -109,6 +114,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     // A workspace where the viewport dominates.
     tabifyDockWidget(ui_->propertiesDock, ui_->acousticsDock);
+    tabifyDockWidget(ui_->acousticsDock, ui_->solverDock);
     ui_->propertiesDock->raise();
     resizeDocks({ui_->sceneDock, ui_->propertiesDock}, {280, 380}, Qt::Horizontal);
     resizeDocks({ui_->analysisDock}, {220}, Qt::Vertical);
@@ -351,6 +357,34 @@ void MainWindow::connectManipulators()
     }
     connect(ui_->actionShowRays, &QAction::toggled, manipulators_, &ManipulatorController::setShowRays);
     connect(manipulators_, &ManipulatorController::displayChanged, ui_->viewport, &ViewportWidget::refresh);
+}
+
+FdtdPanel& MainWindow::fullWavePanel()
+{
+    return *ui_->fdtdPanel;
+}
+
+void MainWindow::connectFullWave()
+{
+    fdtd_ = new FdtdController(controller_, acoustics_, this);
+    ui_->fdtdPanel->setControllers(acoustics_, fdtd_);
+    timeSignals_ = new TimeSignalPanel(ui_->analysisPanel);
+    timeSignals_->setController(fdtd_);
+    ui_->analysisPanel->addTab(timeSignals_, QStringLiteral("Time Signals"));
+
+    connect(ui_->actionRunFullWave, &QAction::triggered, this, [this] {
+        ui_->solverDock->show();
+        ui_->solverDock->raise();
+        if (ui_->fdtdPanel->run()) {
+            ui_->analysisDock->show();
+            ui_->analysisPanel->showSimulationStatus();
+        }
+    });
+    connect(fdtd_, &FdtdController::message, this, &MainWindow::showFailure);
+    connect(fdtd_, &FdtdController::resultsChanged, this, [this] {
+        if (!fdtd_->results().empty())
+            ui_->analysisPanel->showTab(timeSignals_);
+    });
 }
 
 void MainWindow::updateDocumentState()

@@ -28,6 +28,9 @@ PointSource makeSource(const SceneObject& object, const Mat4& world, const Emitt
     source.forward = transformDirection(world, localForward).normalized();
     source.frequencyHz = settings.frequencyHz;
     source.amplitude = complexAmplitude(settings);
+    source.amplitudePa = settings.amplitudePa;
+    source.phaseRad = settings.phaseRad;
+    source.delaySec = settings.delaySec;
     source.directivity = settings.directivity;
     source.radius = settings.radius;
     source.physicalTransducer = settings.physicalTransducer;
