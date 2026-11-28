@@ -206,11 +206,23 @@ executed nothing is EMPTY and a stopped run INTERRUPTED; neither is a pass.
 
 ## Deployment
 
-PROJECT-SPECIFIC. Describe the one canonical packaging / deployment mechanism
-(command, output location, validation and smoke test run once per deployment)
-and what must not be done instead. Packaging does not re-run the development
-test suites (ADR-000186); it verifies the artifact once through the `package`
-lane of `scripts/test_manifest.json`.
+One mechanism (ADR-000230, `docs/release/DEPLOYMENT.md`): the self-contained
+Linux ZIP, built from a committed tree by `tools/release/build_linux_zip.sh`
+into `dist/RESONANT-Linux-x86_64-<version>.zip` (and `.sha256`). The bundle's
+runtime closure is discovered from the built ELF files under
+`tools/release/bundle_policy.json`; the ZIP carries the Qt libraries and
+plugins, the C++ and Python dependencies, the offline help, the examples, the
+demonstrations, the reference data and the licences.
+
+Packaging does not re-run the development test suites (ADR-000186). It verifies
+the artifact once through the `package` lane of `scripts/test_manifest.json`
+(`python3 scripts/run_tests.py --tier package`): `validate` (checksum, bundle,
+licences, help, start-up and every demonstration under a virtual display) and
+`clean-machine` (the `resonant-clean/*` containers). Both must pass on the exact
+ZIP before it is published. Publication also needs the owner's licensing
+decision (`docs/release/LICENSING_DECISION.md`) and the LGPL corresponding
+sources next to the ZIP. Never hand-copy libraries into a bundle, edit a written
+bundle, or publish a ZIP built from uncommitted changes (marked `-dirty`).
 
 ## Crash Diagnostics
 

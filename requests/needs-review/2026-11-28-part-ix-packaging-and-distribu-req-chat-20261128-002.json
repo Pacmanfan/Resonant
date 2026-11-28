@@ -1,0 +1,111 @@
+{
+  "request_id": "REQ-CHAT-20261128-002",
+  "source": "chat",
+  "type": "PROCESS-CHANGE",
+  "priority": "NORMAL",
+  "created": "2026-11-28T11:25:49-05:00",
+  "created_utc": "2026-11-28T16:25:49+00:00",
+  "id_date": "2026-11-28",
+  "timezone": "EST (UTC-05:00)",
+  "status": "needs-review",
+  "original_text": "# PART IX \u2014 PACKAGING AND DISTRIBUTION\n\nThis work requires a PROCESS-CHANGE request because the existing package test lane and Deployment section of AGENTS.md need modification.\n\n## 9.1 Process change\n\nCreate the required PROCESS-CHANGE request.\n\nReview and update the deployment process to accommodate:\n\n- Clean-machine testing.\n- Reproducible builds.\n- Runtime dependency discovery.\n- Qt libraries and plugins.\n- C++ dependencies.\n- Resources.\n- Offline documentation.\n- Example projects.\n- Demonstration assets.\n\nPreserve the project's existing engineering governance.",
+  "file": "requests/inbox/2026-11-28-part-ix-packaging-and-distribu-req-chat-20261128-002.md",
+  "attachments": [],
+  "context": "Phase 1b of REQ-CHAT-20261128-001 (Prompt 27): the process change for packaging - the package test lane and the Deployment section of AGENTS.md. Needs human review before completion.",
+  "text_sha256": "a75ccff68a984660d714826225d618597aea8cc5782baed048bf028a640aa683",
+  "classification": {
+    "proposed_type": "PROCESS-CHANGE",
+    "proposed_source": "override",
+    "normalized_type": "PROCESS-CHANGE",
+    "heuristic_type": "PROCESS-CHANGE",
+    "final_type": "PROCESS-CHANGE",
+    "confidence": "high",
+    "validation": "PASS",
+    "classifier_reason": "request statement is framed as process-change: AGENTS.md, PROCESS-CHANGE",
+    "correction_reason": null,
+    "normalization_note": null,
+    "evidence": [
+      {
+        "category": "PROCESS-CHANGE",
+        "where": "head",
+        "phrase": "PROCESS-CHANGE",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This work requires a PROCESS-CHANGE request because the existing package test lane and Deployment section of AGENTS.md need modification."
+      },
+      {
+        "category": "PROCESS-CHANGE",
+        "where": "head",
+        "phrase": "AGENTS.md",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This work requires a PROCESS-CHANGE request because the existing package test lane and Deployment section of AGENTS.md need modification."
+      },
+      {
+        "category": "PROCESS-CHANGE",
+        "where": "body",
+        "phrase": "PROCESS-CHANGE",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Create the required PROCESS-CHANGE request."
+      }
+    ],
+    "scores": {
+      "FEATURE": {
+        "head": 0,
+        "body": 1
+      },
+      "BUG": {
+        "head": 0,
+        "body": 1
+      },
+      "CRASH": {
+        "head": 0,
+        "body": 0
+      },
+      "REGRESSION": {
+        "head": 0,
+        "body": 0
+      },
+      "PERFORMANCE": {
+        "head": 0,
+        "body": 0
+      },
+      "REFACTOR": {
+        "head": 0,
+        "body": 0
+      },
+      "BUILD": {
+        "head": 0,
+        "body": 0
+      },
+      "DOCUMENTATION": {
+        "head": 0,
+        "body": 1
+      },
+      "INVESTIGATION": {
+        "head": 0,
+        "body": 1
+      },
+      "PROCESS-CHANGE": {
+        "head": 2,
+        "body": 1
+      }
+    },
+    "evidence_total": 7,
+    "validator": "scripts/request_classification.py"
+  },
+  "links": {
+    "work": [
+      "WORK-000027"
+    ]
+  },
+  "commits": [],
+  "resolution": {
+    "from": "processing",
+    "to": "needs-review",
+    "at": "2026-11-28T16:58:28.798564+00:00",
+    "by": "agent-dev-20261126151713-76f632",
+    "reason": "human review of the process change: AGENTS.md Deployment section and the concrete package lane (ADR-000230 PROPOSED); the gate passed on this code"
+  }
+}

@@ -1,0 +1,360 @@
+{
+ "run_id": "20261128T115100-2235108",
+ "runner_version": 2,
+ "started_at": "2026-11-28T16:57:59.307095+00:00",
+ "wall_seconds": 419.1,
+ "tier": "t2",
+ "scope": "all",
+ "changes_from": "request 2026-11-28-part-ix-packaging-and-distribu-req-chat-20261128-002.md",
+ "changed": [
+  "AGENTS.md",
+  "DECISIONS.md",
+  "IMPLEMENTATION_STATUS.md",
+  "docs/README.md",
+  "docs/decisions/ADR-000230-deployment-process-and-package-lane.md",
+  "docs/decisions/decisions.txt",
+  "docs/release/DEPLOYMENT.md",
+  "docs/release/LINUX_ZIP_DISTRIBUTION.md",
+  "docs/requirements/release_readiness.md",
+  "docs/requirements/requirements.txt",
+  "requests/inbox/2026-11-28-part-ix-packaging-and-distribu-req-chat-20261128-002.json",
+  "requests/inbox/2026-11-28-part-ix-packaging-and-distribu-req-chat-20261128-002.md",
+  "requests/processing/2026-11-28-part-ix-packaging-and-distribu-req-chat-20261128-002.json",
+  "requests/processing/2026-11-28-part-ix-packaging-and-distribu-req-chat-20261128-002.md",
+  "scripts/test_manifest.json",
+  "tools/release/package_lane.sh",
+  "work/active/WORK-000027-process-change-the-deployment-process-on.md",
+  "work/work.txt"
+ ],
+ "unmapped": [
+  "tools/release/package_lane.sh"
+ ],
+ "head": "0f00250c7f9e635321deb1a74b20d0b0a0cb7bb2",
+ "describe": "0f00250",
+ "provenance": {
+  "dirty": true,
+  "dirty_paths": 10,
+  "diff_sha256": "4de41dbfa89d21941827aaac47ef3e5bfbea2a06ab4c486715b6575e63a8ca30",
+  "python": "3.12.3",
+  "platform": "Linux-7.0.0-43-generic-x86_64-with-glibc2.39",
+  "git": "git version 2.43.0",
+  "manifest_sha256": "3e9782a716e07d5cfe9aab5bab9c80e70ee0322c0f96f3b8b2d34904b0fae55d",
+  "config_sha256": "373797242bd5edccb39ec6184d416ba85a780c7f323ef80920326b005964964a",
+  "build_system": "qmake"
+ },
+ "build_dir": "/home/dev/Resonant/build/debug",
+ "jobs": 4,
+ "host": "dev",
+ "request": "2026-11-28-part-ix-packaging-and-distribu-req-chat-20261128-002.md",
+ "request_fingerprint": "843f803211c92666bdbe9efe6ad67176c3e3a39dcf59b40484ba49915dc4a7ff",
+ "request_code_paths": [
+  "scripts/test_manifest.json",
+  "tools/release/package_lane.sh"
+ ],
+ "allow_stale": false,
+ "classification": "PASS",
+ "warnings": [],
+ "groups": [
+  {
+   "suite": "devsys",
+   "group": "structure",
+   "shards": 1,
+   "statuses": [
+    "PASS"
+   ],
+   "seconds": 0.11898229690268636,
+   "wall": 0.11898229690268636,
+   "cases": 0,
+   "failed": [],
+   "flaky": [],
+   "expected": [],
+   "detail": [],
+   "reasons": [
+    "t0 (always)"
+   ],
+   "command": "python3 scripts/devsys.py verify-structure",
+   "status": "PASS"
+  },
+  {
+   "suite": "audits",
+   "group": "drift",
+   "shards": 1,
+   "statuses": [
+    "PASS"
+   ],
+   "seconds": 0.4182070530951023,
+   "wall": 0.4182070530951023,
+   "cases": 0,
+   "failed": [],
+   "flaky": [],
+   "expected": [],
+   "detail": [],
+   "reasons": [
+    "requested by WORK-000027"
+   ],
+   "command": "python3 scripts/drift_detect.py",
+   "status": "PASS"
+  },
+  {
+   "suite": "audits",
+   "group": "doc_integrity",
+   "shards": 1,
+   "statuses": [
+    "PASS"
+   ],
+   "seconds": 0.2153111279476434,
+   "wall": 0.2153111279476434,
+   "cases": 0,
+   "failed": [],
+   "flaky": [],
+   "expected": [],
+   "detail": [],
+   "reasons": [
+    "requested by WORK-000027"
+   ],
+   "command": "python3 scripts/doc_integrity.py",
+   "status": "PASS"
+  },
+  {
+   "suite": "audits",
+   "group": "invariants",
+   "shards": 1,
+   "statuses": [
+    "PASS"
+   ],
+   "seconds": 0.06697150086984038,
+   "wall": 0.06697150086984038,
+   "cases": 0,
+   "failed": [],
+   "flaky": [],
+   "expected": [],
+   "detail": [],
+   "reasons": [
+    "requested by WORK-000027"
+   ],
+   "command": "python3 scripts/invariant_check.py",
+   "status": "PASS"
+  },
+  {
+   "suite": "scripts",
+   "group": "unit",
+   "shards": 1,
+   "statuses": [
+    "PASS"
+   ],
+   "seconds": 212.8542382051237,
+   "wall": 212.8542382051237,
+   "cases": 0,
+   "failed": [],
+   "flaky": [],
+   "expected": [],
+   "detail": [],
+   "reasons": [
+    "input scripts/test_manifest.json",
+    "requested by WORK-000027"
+   ],
+   "command": "python3 -m unittest discover -s scripts/tests",
+   "status": "PASS"
+  },
+  {
+   "suite": "audit_py",
+   "group": "unit",
+   "shards": 1,
+   "statuses": [
+    "CACHED"
+   ],
+   "seconds": 0.0,
+   "wall": 0.0,
+   "cases": 0,
+   "failed": [],
+   "flaky": [],
+   "expected": [],
+   "detail": [
+    "unchanged since run 20261127T140757-3199780 (2026-11-27T19:15:20)"
+   ],
+   "reasons": [
+    "all scope"
+   ],
+   "command": "python3 -m unittest discover -s tools/audit_system/tests",
+   "status": "CACHED"
+  },
+  {
+   "suite": "core",
+   "group": "unit",
+   "shards": 1,
+   "statuses": [
+    "CACHED"
+   ],
+   "seconds": 0.0,
+   "wall": 0.0,
+   "cases": 0,
+   "failed": [],
+   "flaky": [],
+   "expected": [],
+   "detail": [
+    "unchanged since run 20261128T114232-2158338 (2026-11-28T16:50:22)"
+   ],
+   "reasons": [
+    "all scope"
+   ],
+   "command": "resonant_core_tests",
+   "status": "CACHED"
+  },
+  {
+   "suite": "app",
+   "group": "gui",
+   "shards": 1,
+   "statuses": [
+    "CACHED"
+   ],
+   "seconds": 0.0,
+   "wall": 0.0,
+   "cases": 0,
+   "failed": [],
+   "flaky": [],
+   "expected": [],
+   "detail": [
+    "unchanged since run 20261128T034320-1408368 (2026-11-28T08:48:45)"
+   ],
+   "reasons": [
+    "all scope"
+   ],
+   "command": "xvfb-run -a -s -screen 0 1600x1000x24 /home/dev/Resonant/build/debug/tests/app/resonant_app_tests",
+   "status": "CACHED"
+  },
+  {
+   "suite": "cmake",
+   "group": "build_and_ctest",
+   "shards": 1,
+   "statuses": [
+    "PASS"
+   ],
+   "seconds": 206.28194367419928,
+   "wall": 206.28194367419928,
+   "cases": 0,
+   "failed": [],
+   "flaky": [],
+   "expected": [],
+   "detail": [],
+   "reasons": [
+    "all scope"
+   ],
+   "command": "bash tools/verify_cmake_build.sh",
+   "status": "PASS"
+  },
+  {
+   "suite": "layering",
+   "group": "rules",
+   "shards": 1,
+   "statuses": [
+    "CACHED"
+   ],
+   "seconds": 0.0,
+   "wall": 0.0,
+   "cases": 0,
+   "failed": [],
+   "flaky": [],
+   "expected": [],
+   "detail": [
+    "unchanged since run 20261128T113053-2103696 (2026-11-28T16:30:53)"
+   ],
+   "reasons": [
+    "t0 (always)"
+   ],
+   "command": "python3 tools/check_layering.py",
+   "status": "CACHED"
+  }
+ ],
+ "jobs_detail": [
+  {
+   "label": "devsys/structure",
+   "status": "PASS",
+   "seconds": 0.12,
+   "rc": 0,
+   "detail": "",
+   "log": "/home/dev/Resonant/tmp/tr/00-2235108/002/output.log",
+   "cases": []
+  },
+  {
+   "label": "audits/drift",
+   "status": "PASS",
+   "seconds": 0.42,
+   "rc": 0,
+   "detail": "",
+   "log": "/home/dev/Resonant/tmp/tr/00-2235108/004/output.log",
+   "cases": []
+  },
+  {
+   "label": "audits/doc_integrity",
+   "status": "PASS",
+   "seconds": 0.22,
+   "rc": 0,
+   "detail": "",
+   "log": "/home/dev/Resonant/tmp/tr/00-2235108/005/output.log",
+   "cases": []
+  },
+  {
+   "label": "audits/invariants",
+   "status": "PASS",
+   "seconds": 0.07,
+   "rc": 0,
+   "detail": "",
+   "log": "/home/dev/Resonant/tmp/tr/00-2235108/003/output.log",
+   "cases": []
+  },
+  {
+   "label": "scripts/unit",
+   "status": "PASS",
+   "seconds": 212.85,
+   "rc": 0,
+   "detail": "",
+   "log": "/home/dev/Resonant/tmp/tr/00-2235108/001/output.log",
+   "cases": []
+  },
+  {
+   "label": "audit_py/unit",
+   "status": "CACHED",
+   "seconds": 0.0,
+   "rc": null,
+   "detail": "unchanged since run 20261127T140757-3199780 (2026-11-27T19:15:20)",
+   "log": null,
+   "cases": []
+  },
+  {
+   "label": "core/unit",
+   "status": "CACHED",
+   "seconds": 0.0,
+   "rc": null,
+   "detail": "unchanged since run 20261128T114232-2158338 (2026-11-28T16:50:22)",
+   "log": null,
+   "cases": []
+  },
+  {
+   "label": "app/gui",
+   "status": "CACHED",
+   "seconds": 0.0,
+   "rc": null,
+   "detail": "unchanged since run 20261128T034320-1408368 (2026-11-28T08:48:45)",
+   "log": null,
+   "cases": []
+  },
+  {
+   "label": "cmake/build_and_ctest",
+   "status": "PASS",
+   "seconds": 206.28,
+   "rc": 0,
+   "detail": "",
+   "log": "/home/dev/Resonant/tmp/tr/00-2235108/006/output.log",
+   "cases": []
+  },
+  {
+   "label": "layering/rules",
+   "status": "CACHED",
+   "seconds": 0.0,
+   "rc": null,
+   "detail": "unchanged since run 20261128T113053-2103696 (2026-11-28T16:30:53)",
+   "log": null,
+   "cases": []
+  }
+ ]
+}

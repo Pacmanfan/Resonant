@@ -178,8 +178,10 @@
    "id": "package",
    "kind": "command",
    "results": "exit",
+   "description": "Verifies a built Linux ZIP once per deployment (ADR-000230, docs/release/DEPLOYMENT.md): the newest dist/RESONANT-Linux-x86_64-*.zip, or $RESONANT_PACKAGE_ZIP. Never builds; never re-runs the development suites.",
    "requires": [
-    "file:<PACKAGE_STAGING_DIR>/<APP_BINARY>"
+    "exe:unzip",
+    "exe:sha256sum"
    ],
    "groups": {
     "validate": {
@@ -187,26 +189,30 @@
       "package"
      ],
      "exclusive": true,
+     "requires": [
+      "exe:xvfb-run"
+     ],
      "command": [
       "bash",
-      "<PROJECT_PACKAGE_VALIDATE_SCRIPT>",
-      "--staging",
-      "<PACKAGE_STAGING_DIR>"
+      "tools/release/package_lane.sh",
+      "validate"
      ],
-     "expected_seconds": 60
+     "expected_seconds": 600
     },
-    "smoke": {
+    "clean-machine": {
      "tiers": [
       "package"
      ],
      "exclusive": true,
+     "requires": [
+      "exe:docker"
+     ],
      "command": [
       "bash",
-      "<PROJECT_PACKAGE_SMOKE_SCRIPT>",
-      "--staging",
-      "<PACKAGE_STAGING_DIR>"
+      "tools/release/package_lane.sh",
+      "clean-machine"
      ],
-     "expected_seconds": 60
+     "expected_seconds": 2400
     }
    }
   },

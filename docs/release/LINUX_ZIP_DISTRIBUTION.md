@@ -1,5 +1,7 @@
 # Resonant for Linux: the ZIP
 
+How the ZIP is built, verified and published is `DEPLOYMENT.md` (ADR-000230).
+
 Download one ZIP, extract it anywhere, run `./resonant`. Nothing is
 installed, and nothing needs to be (RES-DIST-001..015). This page is for
 users; how the ZIP is made is in [the packaging decisions](PACKAGING_DECISIONS.md).

@@ -56,3 +56,21 @@ Each planned scenario names the physics it depends on and the requests that
 provide it. A demonstration distinguishes application output from
 post-production graphics, and never presents synthetic data as measured.
 *Verification:* `docs/demos/DEMONSTRATION_READINESS.md`.
+
+### RES-REL-005 — The deployment process
+
+Resonant is deployed by one mechanism: the self-contained Linux ZIP built by
+`tools/release/build_linux_zip.sh` from a committed tree. Its runtime closure
+(Qt libraries and plugins, C++ and Python dependencies) is discovered from the
+built files under the bundle policy, and it carries:
+- the offline help, the examples and the demonstrations;
+- the reference data and the licences.
+
+The artifact is verified once per deployment by the `package` lane
+(`validate`, `clean-machine`), which never builds and never re-runs the
+development suites. A missing tool fails the lane instead of weakening it.
+Publication also requires the owner's licensing decision and the LGPL
+corresponding sources. The process is recorded in AGENTS.md (Deployment), a
+protected artifact changed only through a reviewed process change.
+*Verification:* `python3 scripts/run_tests.py --plan --tier package`; `docs/release/DEPLOYMENT.md`; the package lane's run on a built ZIP (REQ-CHAT-20261128-010).
+
