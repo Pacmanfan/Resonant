@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>LaboratoryPanel</class>
+ <widget class="QWidget" name="LaboratoryPanel">
+  <layout class="QVBoxLayout" name="mainLayout">
+   <item>
+    <layout class="QHBoxLayout" name="studyRow">
+     <item><widget class="QLabel" name="studyLabel"><property name="text"><string>Study</string></property></widget></item>
+     <item><widget class="QComboBox" name="studyCombo"><property name="sizePolicy"><sizepolicy hsizetype="Expanding" vsizetype="Fixed"/></property></widget></item>
+     <item>
+      <widget class="QPushButton" name="importStudyButton">
+       <property name="text"><string>Import study files</string></property>
+       <property name="toolTip"><string>Import the files the study lists, each with its role (calibration, validation ...). The project must be saved: the data go to the measurement store next to it.</string></property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QLabel" name="statusLabel">
+     <property name="wordWrap"><bool>true</bool></property>
+     <property name="text"><string/></property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTabWidget" name="tabs">
+     <widget class="QWidget" name="studyTab">
+      <attribute name="title"><string>Study</string></attribute>
+      <layout class="QVBoxLayout" name="studyLayout"><item><widget class="QPlainTextEdit" name="studyText"><property name="readOnly"><bool>true</bool></property></widget></item></layout>
+     </widget>
+     <widget class="QWidget" name="dataTab">
+      <attribute name="title"><string>Data</string></attribute>
+      <layout class="QVBoxLayout" name="dataLayout">
+       <item><widget class="QListWidget" name="datasetList"><property name="maximumSize"><size><width>16777215</width><height>110</height></size></property></widget></item>
+       <item><widget class="PlotWidget" name="dataPlot"><property name="minimumSize"><size><width>0</width><height>150</height></size></property></widget></item>
+       <item><widget class="QPlainTextEdit" name="datasetText"><property name="readOnly"><bool>true</bool></property><property name="maximumSize"><size><width>16777215</width><height>110</height></size></property></widget></item>
+       <item><widget class="QTableWidget" name="issuesTable"><property name="toolTip"><string>The latest import report: every issue with its row and column.</string></property></widget></item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="compareTab">
+      <attribute name="title"><string>Compare</string></attribute>
+      <layout class="QVBoxLayout" name="compareLayout">
+       <item>
+        <layout class="QHBoxLayout" name="compareRow">
+         <item><widget class="QComboBox" name="kindCombo"/></item>
+         <item><widget class="QComboBox" name="modelCombo"><property name="sizePolicy"><sizepolicy hsizetype="Expanding" vsizetype="Fixed"/></property></widget></item>
+         <item><widget class="QPushButton" name="compareButton"><property name="text"><string>Compare</string></property></widget></item>
+        </layout>
+       </item>
+       <item><widget class="QLabel" name="verdictLabel"><property name="wordWrap"><bool>true</bool></property><property name="text"><string/></property></widget></item>
+       <item><widget class="PlotWidget" name="comparePlot"><property name="minimumSize"><size><width>0</width><height>150</height></size></property></widget></item>
+       <item><widget class="PlotWidget" name="residualPlot"><property name="minimumSize"><size><width>0</width><height>90</height></size></property></widget></item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="calibrateTab">
+      <attribute name="title"><string>Calibrate</string></attribute>
+      <layout class="QVBoxLayout" name="calibrateLayout">
+       <item><widget class="QTableWidget" name="parameterTable"><property name="toolTip"><string>Tick the physical parameters to estimate; the bounds keep them physical.</string></property></widget></item>
+       <item>
+        <layout class="QHBoxLayout" name="calibrateRow">
+         <item><widget class="QComboBox" name="observableCombo"/></item>
+         <item><widget class="QPushButton" name="calibrateButton"><property name="text"><string>Calibrate</string></property></widget></item>
+         <item><widget class="QPushButton" name="keepButton"><property name="text"><string>Keep</string></property><property name="enabled"><bool>false</bool></property></widget></item>
+         <item><widget class="QPushButton" name="validateButton"><property name="text"><string>Validate</string></property><property name="enabled"><bool>false</bool></property>
+          <property name="toolTip"><string>Test the kept calibration on the study's validation datasets (never its calibration data).</string></property></widget></item>
+         <item><widget class="QPushButton" name="applyButton"><property name="text"><string>Apply…</string></property><property name="enabled"><bool>false</bool></property>
+          <property name="toolTip"><string>Create a new material (or material-state study) revision with the estimates; the original is never changed.</string></property></widget></item>
+        </layout>
+       </item>
+       <item><widget class="QTableWidget" name="estimateTable"/></item>
+       <item><widget class="QPlainTextEdit" name="calibrationText"><property name="readOnly"><bool>true</bool></property></widget></item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="reportTab">
+      <attribute name="title"><string>Report</string></attribute>
+      <layout class="QVBoxLayout" name="reportLayout">
+       <item>
+        <layout class="QHBoxLayout" name="reportRow">
+         <item><widget class="QPushButton" name="reportButton"><property name="text"><string>Generate report</string></property></widget></item>
+         <item><widget class="QPushButton" name="explainButton"><property name="text"><string>Explain the latest record</string></property></widget></item>
+         <item><spacer name="spacer"><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer></item>
+        </layout>
+       </item>
+       <item><widget class="QTextBrowser" name="reportView"/></item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget><class>PlotWidget</class><extends>QWidget</extends><header>PlotWidget.h</header><container>0</container></customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

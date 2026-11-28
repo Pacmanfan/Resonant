@@ -148,7 +148,7 @@ const CheckModel* findCheckModel(std::string_view id)
 
 json Tolerances::toJson() const
 {
-    return {{"relative", relative}, {"warning", warning}, {"absolute", absolute}};
+    return {{"relative", relative}, {"warning", warning}, {"absolute", absolute}, {"coverage", coverage}};
 }
 
 Tolerances Tolerances::fromJson(const json& j)
@@ -158,6 +158,7 @@ Tolerances Tolerances::fromJson(const json& j)
         t.relative = j.value("relative", t.relative);
         t.warning = std::max(t.relative, j.value("warning", t.warning));
         t.absolute = j.value("absolute", t.absolute);
+        t.coverage = j.value("coverage", t.coverage);
     }
     return t;
 }
@@ -196,6 +197,8 @@ Check balance(const Ledger& l, const AccountingSystem& s, Family family, const T
             c.initial = plus(c.initial, i);
             c.final = plus(c.final, f);
             c.delta = plus(c.delta, h.change());
+            if (h.uncertainty)
+                c.measurementUncertainty += *h.uncertainty * *h.uncertainty;
             scale = std::max({scale, norm(i), norm(f)});
         }
     // Exchanges, classified for this system.
@@ -209,6 +212,8 @@ Check balance(const Ledger& l, const AccountingSystem& s, Family family, const T
             continue;
         roles.push_back({&x, r});
         data = true;
+        if (x.uncertainty && r != Role::Internal)
+            c.measurementUncertainty += *x.uncertainty * *x.uncertainty;
         switch (r) {
         case Role::Internal:
             c.internal = plus(c.internal, x.value());
@@ -247,6 +252,7 @@ Check balance(const Ledger& l, const AccountingSystem& s, Family family, const T
         if (n.family == family)
             numerical += std::abs(n.amount);
     c.numericalError = numerical;
+    c.measurementUncertainty = std::sqrt(c.measurementUncertainty);
     if (mapping > 0.0)
         c.notes.push_back("transfer mapping (target minus source integrals of internal transfers): " + number(mapping) + " " + c.unit);
     // Declared missing contributions.
@@ -299,6 +305,16 @@ Check balance(const Ledger& l, const AccountingSystem& s, Family family, const T
     } else if (!c.missing.empty()) {
         c.status = CheckStatus::InsufficientData;
         c.notes.push_back("incomplete: the residual leaves out the missing contributions and proves nothing");
+    } else if (l.measured) {
+        // Measurements: the residual against its expanded uncertainty.
+        const double U = tol.coverage * c.measurementUncertainty;
+        c.status = r <= U ? CheckStatus::Verified : r <= 2.0 * U ? CheckStatus::Warning : CheckStatus::Exceeded;
+        if (c.measurementUncertainty <= 0.0) {
+            c.status = CheckStatus::NotEvaluated;
+            c.notes.push_back("the measurements state no uncertainty: the balance cannot be judged");
+        }
+        if (doubled && c.status == CheckStatus::Verified)
+            c.status = CheckStatus::Warning;
     } else {
         const double rel = c.relative.value_or(r <= tol.absolute ? 0.0 : INFINITY);
         c.status = rel <= tol.relative ? CheckStatus::Verified : rel <= tol.warning ? CheckStatus::Warning : CheckStatus::Exceeded;
@@ -315,7 +331,12 @@ Check balance(const Ledger& l, const AccountingSystem& s, Family family, const T
         }
     }
     // Attribution: numerical or unaccounted; never dissipation.
-    if (data && replaced.empty()) {
+    if (data && replaced.empty() && l.measured) {
+        const double U = tol.coverage * c.measurementUncertainty;
+        c.attribution = r <= U ? "consistent within the expanded measurement uncertainty (" + number(U) + " " + c.unit + ")"
+                               : "inconsistent: " + number(r) + " " + c.unit + " exceeds the expanded measurement uncertainty (" + number(U) + " " + c.unit +
+                                     ") - an unmeasured pathway, a calibration error, a synchronization error or a model disagreement";
+    } else if (data && replaced.empty()) {
         if (r <= numerical + tol.relative * scale + tol.absolute)
             c.attribution = numerical > 0.0 ? "within the stated numerical errors (" + number(numerical) + " " + c.unit + ")" : "at rounding level";
         else

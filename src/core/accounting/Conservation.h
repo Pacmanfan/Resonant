@@ -6,6 +6,10 @@
 //
 //     residual = delta stored - (input + external impulse - output + generated - dissipated)
 //
+// A measured ledger (laboratory balances) is judged against the expanded uncertainty of its
+// residual (the terms' standard uncertainties, uncorrelated) instead of the tolerance:
+// consistent within k u, a warning within 2 k u, exceeded beyond.
+//
 // with a relative residual only when its scale is meaningful, a status (verified, warning,
 // exceeded, not evaluated, insufficient data, not applicable), and an attribution of the
 // residual to the numerical errors the sources state - never to dissipation. A check with
@@ -40,6 +44,7 @@ struct Tolerances {
     double relative = 1e-6;   // verified at or below
     double warning = 1e-3;    // a warning at or below, exceeded above
     double absolute = 1e-15;  // SI: below this scale no relative residual is meaningful
+    double coverage = 2.0;    // measured ledgers: the coverage factor of the expanded measurement uncertainty
     nlohmann::json toJson() const;
     static Tolerances fromJson(const nlohmann::json& j);
 };

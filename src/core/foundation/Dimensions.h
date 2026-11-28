@@ -39,7 +39,7 @@ struct UnitValue {
 // The expression grammar: factors separated by spaces, '*' or a middle dot, '/' dividing
 // the next factor, parentheses, integer exponents (^2, ^-1). Units: the SI base and derived
 // units with prefixes (P T G M k c m u n p f; "u" or the micro sign), plus g, Hz, min, h,
-// Wh, eV, L, bar, atm, rad and sr (dimensionless), percent.
+// Wh, eV, L, bar, atm, rad, deg and sr (dimensionless), percent.
 Result<UnitValue> parseUnit(std::string_view expression);
 
 // value in `from` expressed in `to`; fails when the dimensions differ.

@@ -19,6 +19,7 @@
 #include "resonant/v1/multiphysics/multiphysics_service.pb.h"
 #include "resonant/v1/functional/functional_service.pb.h"
 #include "resonant/v1/accounting/accounting_service.pb.h"
+#include "resonant/v1/laboratory/laboratory_service.pb.h"
 #include "resonant/v1/materialstate/material_state_service.pb.h"
 #include "resonant/v1/multiscale/multiscale_service.pb.h"
 #include "resonant/v1/resonance/resonance_service.pb.h"
@@ -1977,6 +1978,224 @@ void Dispatcher::registerAutomation()
             if (!job)
                 return job.error();
             toProto(job.value(), out.mutable_job());
+            return std::nullopt;
+        });
+    // --- LaboratoryService (REQ-CHAT-20261126-023, RES-LAB-017) -----------------------------------
+    const auto labStructs = [](const nlohmann::json& list, auto* field) -> Failure {
+        for (const auto& item : list)
+            if (Failure f = structOf(item, field->Add()))
+                return f;
+        return std::nullopt;
+    };
+    const auto labChanged = [](v1::ResponseHeader* header, v1::ChangeSummary* changes, const services::Mutation& m) {
+        detail::mutated(header, m);
+        toProto(m.changes, changes);
+    };
+    unary<v1::ListLaboratoryModelsRequest, v1::ListLaboratoryModelsResponse>(
+        "LaboratoryService", "ListLaboratoryModels", Permission::Read, false, true,
+        [this, labStructs](const v1::ListLaboratoryModelsRequest&, v1::ListLaboratoryModelsResponse& out, const CallContext& c) -> Failure {
+            auto r = session_.services().laboratory.models(c);
+            if (!r)
+                return r.error();
+            return labStructs(r.value(), out.mutable_models());
+        });
+    unary<v1::GetLaboratoryModelParametersRequest, v1::GetLaboratoryModelParametersResponse>(
+        "LaboratoryService", "GetLaboratoryModelParameters", Permission::Read, false, true,
+        [this, labStructs](const v1::GetLaboratoryModelParametersRequest& in, v1::GetLaboratoryModelParametersResponse& out, const CallContext& c) -> Failure {
+            auto r = session_.services().laboratory.modelParameters(c, in.model(), in.has_configuration() ? jsonOf(in.configuration()) : nlohmann::json::object());
+            if (!r)
+                return r.error();
+            return labStructs(r.value(), out.mutable_parameters());
+        });
+    unary<v1::ListLaboratoryStudiesRequest, v1::ListLaboratoryStudiesResponse>(
+        "LaboratoryService", "ListLaboratoryStudies", Permission::Read, false, true,
+        [this, labStructs](const v1::ListLaboratoryStudiesRequest&, v1::ListLaboratoryStudiesResponse& out, const CallContext& c) -> Failure {
+            auto r = session_.services().laboratory.studies(c);
+            if (!r)
+                return r.error();
+            return labStructs(r.value(), out.mutable_studies());
+        });
+    unary<v1::GetLaboratoryStudyRequest, v1::GetLaboratoryStudyResponse>(
+        "LaboratoryService", "GetLaboratoryStudy", Permission::Read, false, true,
+        [this](const v1::GetLaboratoryStudyRequest& in, v1::GetLaboratoryStudyResponse& out, const CallContext& c) -> Failure {
+            auto r = session_.services().laboratory.study(c, in.study_id());
+            if (!r)
+                return r.error();
+            return structOf(r.value(), out.mutable_study());
+        });
+    unary<v1::SetLaboratoryStudyRequest, v1::SetLaboratoryStudyResponse>(
+        "LaboratoryService", "SetLaboratoryStudy", Permission::Modify, true, false,
+        [this, labChanged](const v1::SetLaboratoryStudyRequest& in, v1::SetLaboratoryStudyResponse& out, const CallContext& c) -> Failure {
+            auto m = session_.services().laboratory.setStudy(c, jsonOf(in.study()));
+            if (!m)
+                return m.error();
+            labChanged(out.mutable_header(), out.mutable_changes(), m.value());
+            return std::nullopt;
+        });
+    unary<v1::DeleteLaboratoryStudyRequest, v1::DeleteLaboratoryStudyResponse>(
+        "LaboratoryService", "DeleteLaboratoryStudy", Permission::Modify, true, false,
+        [this, labChanged](const v1::DeleteLaboratoryStudyRequest& in, v1::DeleteLaboratoryStudyResponse& out, const CallContext& c) -> Failure {
+            auto m = session_.services().laboratory.deleteStudy(c, in.study_id());
+            if (!m)
+                return m.error();
+            labChanged(out.mutable_header(), out.mutable_changes(), m.value());
+            return std::nullopt;
+        });
+    unary<v1::ImportDatasetRequest, v1::ImportDatasetResponse>(
+        "LaboratoryService", "ImportDataset", Permission::Modify, true, false,
+        [this, labChanged](const v1::ImportDatasetRequest& in, v1::ImportDatasetResponse& out, const CallContext& c) -> Failure {
+            auto m = session_.services().laboratory.importDataset(c, jsonOf(in.spec()));
+            if (!m)
+                return m.error();
+            labChanged(out.mutable_header(), out.mutable_changes(), m.value().mutation);
+            out.set_accepted(m.value().result.value("accepted", false));
+            return structOf(m.value().result, out.mutable_report());
+        });
+    unary<v1::ListDatasetsRequest, v1::ListDatasetsResponse>(
+        "LaboratoryService", "ListDatasets", Permission::Read, false, true,
+        [this, labStructs](const v1::ListDatasetsRequest&, v1::ListDatasetsResponse& out, const CallContext& c) -> Failure {
+            auto r = session_.services().laboratory.datasets(c);
+            if (!r)
+                return r.error();
+            return labStructs(r.value(), out.mutable_datasets());
+        });
+    unary<v1::GetDatasetRequest, v1::GetDatasetResponse>(
+        "LaboratoryService", "GetDataset", Permission::Read, false, true,
+        [this](const v1::GetDatasetRequest& in, v1::GetDatasetResponse& out, const CallContext& c) -> Failure {
+            auto r = session_.services().laboratory.dataset(c, in.dataset_id(), in.max_points());
+            if (!r)
+                return r.error();
+            return structOf(r.value(), out.mutable_dataset());
+        });
+    unary<v1::ProcessDatasetRequest, v1::ProcessDatasetResponse>(
+        "LaboratoryService", "ProcessDataset", Permission::Modify, true, false,
+        [this, labChanged](const v1::ProcessDatasetRequest& in, v1::ProcessDatasetResponse& out, const CallContext& c) -> Failure {
+            auto m = session_.services().laboratory.process(c, in.dataset_id(), jsonOf(in.step()));
+            if (!m)
+                return m.error();
+            labChanged(out.mutable_header(), out.mutable_changes(), m.value().mutation);
+            return structOf(m.value().result, out.mutable_record());
+        });
+    unary<v1::ExtractResonancesRequest, v1::ExtractResonancesResponse>(
+        "LaboratoryService", "ExtractResonances", Permission::Read, false, true,
+        [this](const v1::ExtractResonancesRequest& in, v1::ExtractResonancesResponse& out, const CallContext& c) -> Failure {
+            auto r = session_.services().laboratory.resonances(c, jsonOf(in.spec()));
+            if (!r)
+                return r.error();
+            return structOf(r.value(), out.mutable_result());
+        });
+    unary<v1::CompareWithPredictionRequest, v1::CompareWithPredictionResponse>(
+        "LaboratoryService", "CompareWithPrediction", Permission::Modify, true, false,
+        [this, labChanged](const v1::CompareWithPredictionRequest& in, v1::CompareWithPredictionResponse& out, const CallContext& c) -> Failure {
+            auto m = session_.services().laboratory.compare(c, jsonOf(in.spec()));
+            if (!m)
+                return m.error();
+            labChanged(out.mutable_header(), out.mutable_changes(), m.value().mutation);
+            out.set_verdict(m.value().result.value("verdict", std::string()));
+            return structOf(m.value().result, out.mutable_record());
+        });
+    unary<v1::EvaluateErrorBudgetRequest, v1::EvaluateErrorBudgetResponse>(
+        "LaboratoryService", "EvaluateErrorBudget", Permission::Read, false, true,
+        [this](const v1::EvaluateErrorBudgetRequest& in, v1::EvaluateErrorBudgetResponse& out, const CallContext& c) -> Failure {
+            auto r = session_.services().laboratory.budget(c, jsonOf(in.budget()));
+            if (!r)
+                return r.error();
+            return structOf(r.value(), out.mutable_result());
+        });
+    unary<v1::PropagateUncertaintyRequest, v1::PropagateUncertaintyResponse>(
+        "LaboratoryService", "PropagateUncertainty", Permission::Read, false, true,
+        [this](const v1::PropagateUncertaintyRequest& in, v1::PropagateUncertaintyResponse& out, const CallContext& c) -> Failure {
+            auto r = session_.services().laboratory.propagate(c, jsonOf(in.spec()));
+            if (!r)
+                return r.error();
+            return structOf(r.value(), out.mutable_result());
+        });
+    unary<v1::EvaluateEnergyBalanceRequest, v1::EvaluateEnergyBalanceResponse>(
+        "LaboratoryService", "EvaluateEnergyBalance", Permission::Read, false, true,
+        [this](const v1::EvaluateEnergyBalanceRequest& in, v1::EvaluateEnergyBalanceResponse& out, const CallContext& c) -> Failure {
+            auto r = session_.services().laboratory.energyBalance(c, jsonOf(in.balance()));
+            if (!r)
+                return r.error();
+            return structOf(r.value(), out.mutable_result());
+        });
+    unary<v1::StartCalibrationRequest, v1::StartCalibrationResponse>(
+        "LaboratoryService", "StartCalibration", Permission::Execute, false, false,
+        [this](const v1::StartCalibrationRequest& in, v1::StartCalibrationResponse& out, const CallContext& c) -> Failure {
+            auto job = session_.services().laboratory.calibrate(c, jsonOf(in.spec()));
+            if (!job)
+                return job.error();
+            toProto(job.value(), out.mutable_job());
+            return std::nullopt;
+        });
+    unary<v1::GetCalibrationResultRequest, v1::GetCalibrationResultResponse>(
+        "LaboratoryService", "GetCalibrationResult", Permission::Read, false, true,
+        [this](const v1::GetCalibrationResultRequest& in, v1::GetCalibrationResultResponse& out, const CallContext& c) -> Failure {
+            auto r = session_.services().laboratory.calibrationResult(c, in.result_id());
+            if (!r)
+                return r.error();
+            out.set_status(r.value().value("status", std::string()));
+            return structOf(r.value(), out.mutable_calibration());
+        });
+    unary<v1::AcceptCalibrationRequest, v1::AcceptCalibrationResponse>(
+        "LaboratoryService", "AcceptCalibration", Permission::Modify, true, false,
+        [this, labChanged](const v1::AcceptCalibrationRequest& in, v1::AcceptCalibrationResponse& out, const CallContext& c) -> Failure {
+            auto m = session_.services().laboratory.acceptCalibration(c, in.result_id());
+            if (!m)
+                return m.error();
+            labChanged(out.mutable_header(), out.mutable_changes(), m.value().mutation);
+            return structOf(m.value().result, out.mutable_calibration());
+        });
+    unary<v1::ValidateCalibrationRequest, v1::ValidateCalibrationResponse>(
+        "LaboratoryService", "ValidateCalibration", Permission::Modify, true, false,
+        [this, labChanged](const v1::ValidateCalibrationRequest& in, v1::ValidateCalibrationResponse& out, const CallContext& c) -> Failure {
+            auto m = session_.services().laboratory.validate(c, in.calibration_id(), std::vector<std::string>(in.datasets().begin(), in.datasets().end()), in.validation_id(), std::vector<std::string>(in.axis_datasets().begin(), in.axis_datasets().end()));
+            if (!m)
+                return m.error();
+            labChanged(out.mutable_header(), out.mutable_changes(), m.value().mutation);
+            out.set_status(m.value().result.value("status", std::string()));
+            return structOf(m.value().result, out.mutable_validation());
+        });
+    unary<v1::ApplyCalibrationRequest, v1::ApplyCalibrationResponse>(
+        "LaboratoryService", "ApplyCalibration", Permission::Modify, true, false,
+        [this, labChanged](const v1::ApplyCalibrationRequest& in, v1::ApplyCalibrationResponse& out, const CallContext& c) -> Failure {
+            auto m = session_.services().laboratory.applyCalibration(c, in.calibration_id(), in.has_options() ? jsonOf(in.options()) : nlohmann::json::object());
+            if (!m)
+                return m.error();
+            labChanged(out.mutable_header(), out.mutable_changes(), m.value().mutation);
+            return structOf(m.value().result, out.mutable_applied());
+        });
+    unary<v1::ListLaboratoryRecordsRequest, v1::ListLaboratoryRecordsResponse>(
+        "LaboratoryService", "ListLaboratoryRecords", Permission::Read, false, true,
+        [this, labStructs](const v1::ListLaboratoryRecordsRequest& in, v1::ListLaboratoryRecordsResponse& out, const CallContext& c) -> Failure {
+            auto r = session_.services().laboratory.records(c, in.section());
+            if (!r)
+                return r.error();
+            return labStructs(r.value(), out.mutable_records());
+        });
+    unary<v1::ExplainRecordRequest, v1::ExplainRecordResponse>(
+        "LaboratoryService", "ExplainRecord", Permission::Read, false, true,
+        [this](const v1::ExplainRecordRequest& in, v1::ExplainRecordResponse& out, const CallContext& c) -> Failure {
+            auto r = session_.services().laboratory.explain(c, in.record_id());
+            if (!r)
+                return r.error();
+            return structOf(r.value(), out.mutable_explanation());
+        });
+    unary<v1::GenerateLaboratoryReportRequest, v1::GenerateLaboratoryReportResponse>(
+        "LaboratoryService", "GenerateLaboratoryReport", Permission::Read, false, true,
+        [this](const v1::GenerateLaboratoryReportRequest& in, v1::GenerateLaboratoryReportResponse& out, const CallContext& c) -> Failure {
+            auto r = session_.services().laboratory.report(c, in.study_id(), in.format().empty() ? std::string("markdown") : in.format());
+            if (!r)
+                return r.error();
+            out.set_text(r.value());
+            return std::nullopt;
+        });
+    unary<v1::ExportDatasetRequest, v1::ExportDatasetResponse>(
+        "LaboratoryService", "ExportDataset", Permission::Read, false, true,
+        [this](const v1::ExportDatasetRequest& in, v1::ExportDatasetResponse& out, const CallContext& c) -> Failure {
+            auto r = session_.services().laboratory.exportDataset(c, in.dataset_id(), in.format().empty() ? std::string("csv") : in.format());
+            if (!r)
+                return r.error();
+            out.set_text(r.value());
             return std::nullopt;
         });
     // --- AccountingService (REQ-CHAT-20261126-022, RES-ACC-016) -----------------------------------

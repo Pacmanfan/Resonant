@@ -1,0 +1,123 @@
+syntax = "proto3";
+package resonant.v1;
+
+import "google/protobuf/struct.proto";
+import "resonant/v1/common/jobs.proto";
+import "resonant/v1/common/metadata.proto";
+import "resonant/v1/common/validation.proto";
+
+// Requests and responses of the laboratory (REQ-CHAT-20261126-023, RES-LAB-017). The
+// documents are JSON (Struct) in the formats of the laboratory's records.
+message ListLaboratoryModelsRequest { RequestHeader header = 1; }
+message ListLaboratoryModelsResponse { ResponseHeader header = 1; repeated google.protobuf.Struct models = 2; }
+message GetLaboratoryModelParametersRequest { RequestHeader header = 1; string model = 2; google.protobuf.Struct configuration = 3; }
+message GetLaboratoryModelParametersResponse { ResponseHeader header = 1; repeated google.protobuf.Struct parameters = 2; }
+message ListLaboratoryStudiesRequest { RequestHeader header = 1; }
+message ListLaboratoryStudiesResponse { ResponseHeader header = 1; repeated google.protobuf.Struct studies = 2; }
+message GetLaboratoryStudyRequest { RequestHeader header = 1; string study_id = 2; }
+message GetLaboratoryStudyResponse { ResponseHeader header = 1; google.protobuf.Struct study = 2; }
+message SetLaboratoryStudyRequest { RequestHeader header = 1; google.protobuf.Struct study = 2; }
+message SetLaboratoryStudyResponse { ResponseHeader header = 1; ChangeSummary changes = 2; }
+message DeleteLaboratoryStudyRequest { RequestHeader header = 1; string study_id = 2; }
+message DeleteLaboratoryStudyResponse { ResponseHeader header = 1; ChangeSummary changes = 2; }
+message ImportDatasetRequest {
+  RequestHeader header = 1;
+  google.protobuf.Struct spec = 2;  // {"content" | "path", "fileName", "format", "provenance", "study", "role", "acceptPartial", ...}
+}
+message ImportDatasetResponse { ResponseHeader header = 1; ChangeSummary changes = 2; google.protobuf.Struct report = 3; bool accepted = 4; }
+message ListDatasetsRequest { RequestHeader header = 1; }
+message ListDatasetsResponse { ResponseHeader header = 1; repeated google.protobuf.Struct datasets = 2; }
+message GetDatasetRequest { RequestHeader header = 1; string dataset_id = 2; int32 max_points = 3; }
+message GetDatasetResponse { ResponseHeader header = 1; google.protobuf.Struct dataset = 2; }
+message ProcessDatasetRequest { RequestHeader header = 1; string dataset_id = 2; google.protobuf.Struct step = 3; }
+message ProcessDatasetResponse { ResponseHeader header = 1; ChangeSummary changes = 2; google.protobuf.Struct record = 3; }
+message ExtractResonancesRequest { RequestHeader header = 1; google.protobuf.Struct spec = 2; }
+message ExtractResonancesResponse { ResponseHeader header = 1; google.protobuf.Struct result = 2; }
+message CompareWithPredictionRequest { RequestHeader header = 1; google.protobuf.Struct spec = 2; }
+message CompareWithPredictionResponse { ResponseHeader header = 1; ChangeSummary changes = 2; google.protobuf.Struct record = 3; string verdict = 4; }
+message EvaluateErrorBudgetRequest { RequestHeader header = 1; google.protobuf.Struct budget = 2; }
+message EvaluateErrorBudgetResponse { ResponseHeader header = 1; google.protobuf.Struct result = 2; }
+message PropagateUncertaintyRequest { RequestHeader header = 1; google.protobuf.Struct spec = 2; }
+message PropagateUncertaintyResponse { ResponseHeader header = 1; google.protobuf.Struct result = 2; }
+message EvaluateEnergyBalanceRequest { RequestHeader header = 1; google.protobuf.Struct balance = 2; }
+message EvaluateEnergyBalanceResponse { ResponseHeader header = 1; google.protobuf.Struct result = 2; }
+message StartCalibrationRequest { RequestHeader header = 1; google.protobuf.Struct spec = 2; }
+message StartCalibrationResponse { ResponseHeader header = 1; Job job = 2; }
+message GetCalibrationResultRequest { RequestHeader header = 1; string result_id = 2; }
+message GetCalibrationResultResponse { ResponseHeader header = 1; google.protobuf.Struct calibration = 2; string status = 3; }
+message AcceptCalibrationRequest { RequestHeader header = 1; string result_id = 2; }
+message AcceptCalibrationResponse { ResponseHeader header = 1; ChangeSummary changes = 2; google.protobuf.Struct calibration = 3; }
+message ValidateCalibrationRequest {
+  RequestHeader header = 1;
+  string calibration_id = 2;
+  repeated string datasets = 3;       // never the calibration's own datasets
+  repeated string axis_datasets = 4;  // per dataset, the dataset giving its axis (or empty)
+  string validation_id = 5;
+}
+message ValidateCalibrationResponse { ResponseHeader header = 1; ChangeSummary changes = 2; google.protobuf.Struct validation = 3; string status = 4; }
+message ApplyCalibrationRequest { RequestHeader header = 1; string calibration_id = 2; google.protobuf.Struct options = 3; }
+message ApplyCalibrationResponse { ResponseHeader header = 1; ChangeSummary changes = 2; google.protobuf.Struct applied = 3; }
+message ListLaboratoryRecordsRequest { RequestHeader header = 1; string section = 2; }  // studies, imports, comparisons, calibrations, validations, sources
+message ListLaboratoryRecordsResponse { ResponseHeader header = 1; repeated google.protobuf.Struct records = 2; }
+message ExplainRecordRequest { RequestHeader header = 1; string record_id = 2; }
+message ExplainRecordResponse { ResponseHeader header = 1; google.protobuf.Struct explanation = 2; }
+message GenerateLaboratoryReportRequest { RequestHeader header = 1; string study_id = 2; string format = 3; }  // markdown or html
+message GenerateLaboratoryReportResponse { ResponseHeader header = 1; string text = 2; }
+message ExportDatasetRequest { RequestHeader header = 1; string dataset_id = 2; string format = 3; }  // csv or json
+message ExportDatasetResponse { ResponseHeader header = 1; string text = 2; }
+
+// The experimental laboratory: studies linking experiments to models, imported datasets in
+// the measurement store, processing, resonance extraction, uncertainty-aware comparison with
+// predictions, error budgets and propagation, experimental energy balances, calibration of a
+// model's physical parameters (a job, then an explicit acceptance), validation on independent
+// data, explicit application as a new material revision, evidence summaries and reports.
+service LaboratoryService {
+  // The physical models predictions come from, with their parameters and assumptions.
+  rpc ListLaboratoryModels(ListLaboratoryModelsRequest) returns (ListLaboratoryModelsResponse);
+  // The physical parameters a model exposes for a configuration (the only ones a calibration may vary).
+  rpc GetLaboratoryModelParameters(GetLaboratoryModelParametersRequest) returns (GetLaboratoryModelParametersResponse);
+  // The studies, each with its links that went stale.
+  rpc ListLaboratoryStudies(ListLaboratoryStudiesRequest) returns (ListLaboratoryStudiesResponse);
+  // One study.
+  rpc GetLaboratoryStudy(GetLaboratoryStudyRequest) returns (GetLaboratoryStudyResponse);
+  // Adds or replaces a study; new model links get the content's current revision; one undo step.
+  rpc SetLaboratoryStudy(SetLaboratoryStudyRequest) returns (SetLaboratoryStudyResponse);
+  // Removes a study; one undo step.
+  rpc DeleteLaboratoryStudy(DeleteLaboratoryStudyRequest) returns (DeleteLaboratoryStudyResponse);
+  // Imports a CSV, TSV, JSON or WAV file (content, or a path with file access) with an import report; one undo step.
+  rpc ImportDataset(ImportDatasetRequest) returns (ImportDatasetResponse);
+  // The project's datasets with their category, provenance, instrument and calibration.
+  rpc ListDatasets(ListDatasetsRequest) returns (ListDatasetsResponse);
+  // One dataset's record and data (thinned to max_points).
+  rpc GetDataset(GetDatasetRequest) returns (GetDatasetResponse);
+  // Applies a processing step of the experiment framework; the result is a new derived dataset; one undo step.
+  rpc ProcessDataset(ProcessDatasetRequest) returns (ProcessDatasetResponse);
+  // Resonances of a measured response (classified with their evidence) or a ring-down.
+  rpc ExtractResonances(ExtractResonancesRequest) returns (ExtractResonancesResponse);
+  // Compares a dataset with a prediction or another dataset and keeps the comparison record; one undo step.
+  rpc CompareWithPrediction(CompareWithPredictionRequest) returns (CompareWithPredictionResponse);
+  // Evaluates an error budget: combined, expanded and effective degrees of freedom.
+  rpc EvaluateErrorBudget(EvaluateErrorBudgetRequest) returns (EvaluateErrorBudgetResponse);
+  // Propagates uncertainty through an expression, first order or by Monte Carlo.
+  rpc PropagateUncertainty(PropagateUncertaintyRequest) returns (PropagateUncertaintyResponse);
+  // Evaluates an experimental energy balance against its measurement uncertainty.
+  rpc EvaluateEnergyBalance(EvaluateEnergyBalanceRequest) returns (EvaluateEnergyBalanceResponse);
+  // Calibrates a model's physical parameters against datasets, as a job.
+  rpc StartCalibration(StartCalibrationRequest) returns (StartCalibrationResponse);
+  // A calibration job's result: estimates, intervals, correlations, identifiability.
+  rpc GetCalibrationResult(GetCalibrationResultRequest) returns (GetCalibrationResultResponse);
+  // Keeps a calibration result in the project; one undo step.
+  rpc AcceptCalibration(AcceptCalibrationRequest) returns (AcceptCalibrationResponse);
+  // Validates a kept calibration on independent datasets; one undo step.
+  rpc ValidateCalibration(ValidateCalibrationRequest) returns (ValidateCalibrationResponse);
+  // Applies a kept calibration as a new material (or material-state study) revision, never over the original; one undo step.
+  rpc ApplyCalibration(ApplyCalibrationRequest) returns (ApplyCalibrationResponse);
+  // The laboratory's records of one section.
+  rpc ListLaboratoryRecords(ListLaboratoryRecordsRequest) returns (ListLaboratoryRecordsResponse);
+  // An evidence summary of a record: findings, hypotheses (marked), missing information, suggestions.
+  rpc ExplainRecord(ExplainRecordRequest) returns (ExplainRecordResponse);
+  // A study's report (Markdown or HTML).
+  rpc GenerateLaboratoryReport(GenerateLaboratoryReportRequest) returns (GenerateLaboratoryReportResponse);
+  // A dataset as CSV or JSON.
+  rpc ExportDataset(ExportDatasetRequest) returns (ExportDatasetResponse);
+}

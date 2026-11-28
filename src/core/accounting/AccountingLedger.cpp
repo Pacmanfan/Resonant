@@ -119,6 +119,7 @@ json Check::toJson() const
            {"impulse", v(impulse)}, {"internal", v(internal)}, {"generated", v(generated)}, {"dissipated", v(dissipated)},
            {"delta", v(delta)},     {"residual", v(residual)}, {"residualNorm", residualNorm()}, {"scale", scale},
            {"tolerance", tolerance}, {"warning", warning}, {"numericalError", numericalError}, {"attribution", attribution},
+           {"measurementUncertainty", measurementUncertainty},
            {"missing", missing},    {"notes", notes},     {"details", details},      {"vector", isVector}};
     j["relative"] = relative ? json(*relative) : json(nullptr);
     if (!times.empty()) {
@@ -167,6 +168,7 @@ Result<Check> Check::fromJson(const json& j)
     c.tolerance = j.value("tolerance", 0.0);
     c.warning = j.value("warning", 0.0);
     c.numericalError = j.value("numericalError", 0.0);
+    c.measurementUncertainty = j.value("measurementUncertainty", 0.0);
     c.unit = j.value("unit", std::string());
     c.attribution = j.value("attribution", std::string());
     c.missing = j.value("missing", std::vector<std::string>{});
@@ -236,7 +238,7 @@ json Ledger::toJson() const
 {
     json j{{"format", "resonant.accounting-ledger"}, {"version", 1}, {"id", id}, {"title", title}, {"sourceKind", sourceKind},
            {"solver", solver}, {"solverVersion", solverVersion}, {"basis", std::string(toString(basis))}, {"t0", t0}, {"t1", t1},
-           {"per", per}, {"times", times}, {"notes", notes}};
+           {"per", per}, {"measured", measured}, {"times", times}, {"notes", notes}};
     j["entities"] = json::array();
     for (const Entity& e : entities) {
         json x{{"id", e.id}, {"name", e.name}, {"kind", std::string(toString(e.kind))}, {"domain", e.domain}};
@@ -286,6 +288,8 @@ json Ledger::toJson() const
         }
         if (!h.note.empty())
             x["note"] = h.note;
+        if (h.uncertainty)
+            x["uncertainty"] = *h.uncertainty;
         j["holdings"].push_back(x);
     }
     j["generations"] = json::array();
@@ -343,6 +347,7 @@ Result<Ledger> Ledger::fromJson(const json& j)
     l.t0 = j.value("t0", 0.0);
     l.t1 = j.value("t1", 0.0);
     l.per = j.value("per", std::string());
+    l.measured = j.value("measured", false);
     l.times = j.value("times", std::vector<double>{});
     l.notes = j.value("notes", std::vector<std::string>{});
     for (const json& x : j.value("entities", json::array())) {
@@ -406,6 +411,8 @@ Result<Ledger> Ledger::fromJson(const json& j)
         h.method = x.value("method", std::string());
         h.provenance = x.value("provenance", std::string("computed"));
         h.note = x.value("note", std::string());
+        if (x.contains("uncertainty"))
+            h.uncertainty = x["uncertainty"].get<double>();
         if (x.contains("initial") && x["initial"].is_array()) {
             h.isVector = true;
             h.initialVector = vecOf(x["initial"]);

@@ -495,3 +495,22 @@ milestones below.)
 | Moving control volumes, mass and charge balances, open systems with mass flow | Missing | registered models without data |
 | 3D spatial accounting views | Missing | the layered profiles only |
 
+## Experimental laboratory — `docs/requirements/laboratory.md`, `docs/experiments/LABORATORY_ARCHITECTURE.md`
+
+| Capability | State | Notes |
+|---|---|---|
+| Studies: objective, hypothesis, specimen, model links with revisions and staleness, measured deviations, dataset roles | Tested | a dataset cannot be both calibration and validation |
+| Imports of CSV, TSV, JSON and WAV into raw records with an import report; the original kept under its SHA-256 | Tested | Touchstone through the Experiments workspace; needs a saved project |
+| Units converted to SI and recorded; degC to K; synthetic data labelled | Tested | `docs/experiments/DATA_IMPORT.md` |
+| Comparisons: scalars (E_n), frequency responses, transients, fields after a frame transform | Tested | both uncertainties combined; different frames refused |
+| Error budgets with distributions, stated correlations, Welch–Satterthwaite, Student t; linear and Monte Carlo propagation | Tested | |
+| Parameter estimation: weighted Levenberg–Marquardt, bounds, Gaussian priors, joint fits, covariance, intervals, identifiability | Tested | `docs/experiments/MODEL_CALIBRATION.md` |
+| Predictions from lumped resonators, layered electromagnetics, the coupled evolution, J2, functional metrics, library properties, design revisions | Tested | only physical parameters may be calibrated |
+| Calibration as a job, kept explicitly; validation on independent data; application as a new material or material-state revision | Tested | validation on calibration data refused; not-identifiable results not applied |
+| Measured resonances classified with evidence; ring-downs | Tested | nothing called a mode without phase |
+| Experimental energy balances as measured accounting ledgers | Tested | judged against the expanded measurement uncertainty |
+| Evidence summaries and reports (Markdown, HTML) | Tested | deterministic; change nothing |
+| LaboratoryService, Python, MCP, Laboratory panel, examples a–g | Tested | |
+| NetCDF, TDMS, external HDF5 and image imports | Missing | |
+| Bayesian sampling of posteriors | Missing | maximum a posteriori with Gaussian priors only |
+| New instrument protocol adapters (VISA, SCPI, serial); instrument control through the automation API | Missing | acquisition stays in the Experiments workspace |

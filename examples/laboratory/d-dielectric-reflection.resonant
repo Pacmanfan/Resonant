@@ -1,0 +1,122 @@
+{
+ "format": "resonant-project",
+ "schemaVersion": 1,
+ "application": {
+  "name": "Resonant",
+  "version": "0.1.0"
+ },
+ "project": {
+  "id": "ex-lab-dielectric",
+  "name": "d-dielectric-reflection",
+  "createdUtc": "2026-11-28T00:00:00Z",
+  "modifiedUtc": "2026-11-28T00:00:00Z"
+ },
+ "units": {
+  "angle": "rad",
+  "axes": "right-handed; X horizontal, Y depth, Z vertical (up)",
+  "frequency": "Hz",
+  "length": "m",
+  "mass": "kg",
+  "rotation": "intrinsic Z-Y-X Euler angles stored as [x, y, z]",
+  "time": "s"
+ },
+ "materials": [],
+ "scene": {
+  "objects": [
+   {
+    "id": "ex-lab-laminate",
+    "type": "geometry",
+    "name": "Laminate on a plate",
+    "visible": true,
+    "transform": {
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "children": [],
+    "geometry": {
+     "kind": "box",
+     "parameters": {
+      "width": 0.3,
+      "depth": 0.3,
+      "height": 0.005
+     }
+    }
+   }
+  ]
+ },
+ "simulations": [],
+ "extensions": {
+  "laboratory": {
+   "format": "resonant.laboratory",
+   "version": 1,
+   "studies": [
+    {
+     "id": "st-dielectric",
+     "name": "A dielectric sheet on a metal plate",
+     "objective": "Retrieve the sheet's permittivity and loss tangent from its reflection",
+     "hypothesis": "The data sheet's permittivity (4.0) and loss tangent (0.01) describe this sheet",
+     "domain": "electromagnetic",
+     "specimen": "a 5 mm laminate on an aluminium plate",
+     "operator": "",
+     "status": "planned",
+     "models": [
+      {
+       "kind": "scene-object",
+       "id": "ex-lab-laminate",
+       "revision": "",
+       "label": "the laminate",
+       "note": ""
+      }
+     ],
+     "deviations": [],
+     "conditions": {
+      "model": {
+       "id": "em.layered-reflection",
+       "configuration": {
+        "layers": [
+         {
+          "name": "sheet",
+          "thickness": 0.005,
+          "permittivity": 4.0,
+          "lossTangent": 0.01
+         }
+        ],
+        "backing": "metal"
+       }
+      },
+      "files": [
+       {
+        "path": "data/d-s11.csv",
+        "role": "calibration"
+       },
+       {
+        "path": "data/d-s11-repeat.csv",
+        "role": "validation"
+       }
+      ]
+     },
+     "datasets": [],
+     "notes": []
+    }
+   ],
+   "imports": [],
+   "comparisons": [],
+   "calibrations": [],
+   "validations": [],
+   "sources": []
+  }
+ }
+}

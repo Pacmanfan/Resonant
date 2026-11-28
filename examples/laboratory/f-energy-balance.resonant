@@ -1,0 +1,156 @@
+{
+ "format": "resonant-project",
+ "schemaVersion": 1,
+ "application": {
+  "name": "Resonant",
+  "version": "0.1.0"
+ },
+ "project": {
+  "id": "ex-lab-energy",
+  "name": "f-energy-balance",
+  "createdUtc": "2026-11-28T00:00:00Z",
+  "modifiedUtc": "2026-11-28T00:00:00Z"
+ },
+ "units": {
+  "angle": "rad",
+  "axes": "right-handed; X horizontal, Y depth, Z vertical (up)",
+  "frequency": "Hz",
+  "length": "m",
+  "mass": "kg",
+  "rotation": "intrinsic Z-Y-X Euler angles stored as [x, y, z]",
+  "time": "s"
+ },
+ "materials": [],
+ "scene": {
+  "objects": [
+   {
+    "id": "ex-lab-block",
+    "type": "geometry",
+    "name": "Aluminium block",
+    "visible": true,
+    "transform": {
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "children": [],
+    "geometry": {
+     "kind": "box",
+     "parameters": {
+      "width": 0.05,
+      "depth": 0.05,
+      "height": 0.04
+     }
+    }
+   }
+  ]
+ },
+ "simulations": [],
+ "extensions": {
+  "laboratory": {
+   "format": "resonant.laboratory",
+   "version": 1,
+   "studies": [
+    {
+     "id": "st-energy",
+     "name": "Where the heater's energy went",
+     "objective": "Check the energy balance of a heated block against its measurement uncertainty",
+     "hypothesis": "Convection and storage account for the electrical input",
+     "domain": "thermal",
+     "specimen": "an aluminium block with a cartridge heater",
+     "operator": "",
+     "status": "planned",
+     "models": [
+      {
+       "kind": "scene-object",
+       "id": "ex-lab-block",
+       "revision": "",
+       "label": "the block",
+       "note": ""
+      }
+     ],
+     "deviations": [],
+     "conditions": {
+      "balance": {
+       "title": "A heated aluminium block over 600 s",
+       "basis": "interval",
+       "members": [
+        "block"
+       ],
+       "coverage": 2.0,
+       "terms": [
+        {
+         "id": "electrical",
+         "role": "input",
+         "from": "supply",
+         "to": "block",
+         "mechanism": "Joule heating",
+         "value": 3600.0,
+         "standard": 18.0,
+         "direct": false,
+         "derivation": "P = V I from the power analyser's voltage and current, integrated over 600 s",
+         "datasets": []
+        },
+        {
+         "id": "stored",
+         "role": "stored",
+         "from": "",
+         "to": "block",
+         "mechanism": "thermal (m c dT)",
+         "value": 2700.0,
+         "standard": 40.0,
+         "direct": false,
+         "derivation": "m c dT: 0.25 kg x 900 J/(kg K) x 12.0 K",
+         "datasets": []
+        },
+        {
+         "id": "convection",
+         "role": "output",
+         "from": "block",
+         "to": "air",
+         "mechanism": "convection",
+         "value": 620.0,
+         "standard": 90.0,
+         "direct": false,
+         "derivation": "h A (T - T_air) dt with h from a natural-convection correlation",
+         "datasets": []
+        }
+       ],
+       "unmeasured": [
+        {
+         "what": "radiation from the block's surface",
+         "why": "no radiometer; estimated at 5 % of the input"
+        }
+       ]
+      },
+      "files": [
+       {
+        "path": "data/f-energy.json",
+        "role": "raw"
+       }
+      ]
+     },
+     "datasets": [],
+     "notes": []
+    }
+   ],
+   "imports": [],
+   "comparisons": [],
+   "calibrations": [],
+   "validations": [],
+   "sources": []
+  }
+ }
+}

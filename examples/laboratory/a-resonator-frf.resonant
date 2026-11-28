@@ -1,0 +1,157 @@
+{
+ "format": "resonant-project",
+ "schemaVersion": 1,
+ "application": {
+  "name": "Resonant",
+  "version": "0.1.0"
+ },
+ "project": {
+  "id": "ex-lab-resonator",
+  "name": "a-resonator-frf",
+  "createdUtc": "2026-11-28T00:00:00Z",
+  "modifiedUtc": "2026-11-28T00:00:00Z"
+ },
+ "units": {
+  "angle": "rad",
+  "axes": "right-handed; X horizontal, Y depth, Z vertical (up)",
+  "frequency": "Hz",
+  "length": "m",
+  "mass": "kg",
+  "rotation": "intrinsic Z-Y-X Euler angles stored as [x, y, z]",
+  "time": "s"
+ },
+ "materials": [
+  {
+   "id": "mat-ex-lab-steel",
+   "name": "Steel (example)",
+   "description": "Illustrative.",
+   "domains": {
+    "mechanical": {
+     "density": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the laboratory examples; not authoritative.",
+      "value": 7850.0
+     },
+     "youngsModulus": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the laboratory examples; not authoritative.",
+      "value": 200000000000.0
+     },
+     "poissonsRatio": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the laboratory examples; not authoritative.",
+      "value": 0.3
+     }
+    }
+   }
+  }
+ ],
+ "scene": {
+  "objects": [
+   {
+    "id": "ex-lab-tine",
+    "type": "geometry",
+    "name": "Steel tine",
+    "visible": true,
+    "transform": {
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "children": [],
+    "geometry": {
+     "kind": "box",
+     "parameters": {
+      "width": 0.12,
+      "depth": 0.01,
+      "height": 0.004
+     }
+    },
+    "material": "mat-ex-lab-steel"
+   }
+  ]
+ },
+ "simulations": [],
+ "extensions": {
+  "laboratory": {
+   "format": "resonant.laboratory",
+   "version": 1,
+   "studies": [
+    {
+     "id": "st-resonator",
+     "name": "A clamped resonator's frequency response",
+     "objective": "Identify the resonator's mass, stiffness and damping from its frequency response",
+     "hypothesis": "A single mass-spring-damper describes the response between 60 and 140 Hz",
+     "domain": "mechanical",
+     "specimen": "a clamped steel tine",
+     "operator": "",
+     "status": "planned",
+     "models": [
+      {
+       "kind": "scene-object",
+       "id": "ex-lab-tine",
+       "revision": "",
+       "label": "the tine",
+       "note": ""
+      }
+     ],
+     "deviations": [
+      {
+       "id": "dev-length",
+       "parameter": "free length",
+       "unit": "m",
+       "nominal": 0.12,
+       "measured": 0.118,
+       "uncertainty": 0.0005,
+       "method": "caliper",
+       "source": "the specimen as built (example)",
+       "note": ""
+      }
+     ],
+     "conditions": {
+      "model": {
+       "id": "resonator.lumped",
+       "configuration": {
+        "response": "receptance",
+        "mass": 0.45,
+        "stiffness": 220000.0,
+        "damping": 5.0
+       }
+      },
+      "excitation": "impact hammer at the tip",
+      "mounting": "clamped in a vice",
+      "files": [
+       {
+        "path": "data/a-frf-run1.csv",
+        "role": "calibration"
+       },
+       {
+        "path": "data/a-frf-run2.csv",
+        "role": "validation"
+       }
+      ]
+     },
+     "datasets": [],
+     "notes": []
+    }
+   ],
+   "imports": [],
+   "comparisons": [],
+   "calibrations": [],
+   "validations": [],
+   "sources": []
+  }
+ }
+}

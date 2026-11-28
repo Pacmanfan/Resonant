@@ -44,6 +44,7 @@ TEST(Dimensions, ConversionsCheckTheDimension)
     EXPECT_NEAR(conv(1.0, "g/cm^3", "kg/m^3"), 1000.0, 1e-9);
     EXPECT_NEAR(conv(3.0, "kN m", "J"), 3000.0, 1e-9);
     EXPECT_NEAR(conv(1.0, "min", "s"), 60.0, 1e-12);
+    EXPECT_NEAR(conv(180.0, "deg", "rad"), 3.14159265358979323846, 1e-12);
     auto bad = convertUnit(1.0, "J", "W");
     ASSERT_FALSE(bad);
     EXPECT_NE(bad.message().find("dimensions differ"), std::string::npos);

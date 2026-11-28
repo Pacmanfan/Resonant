@@ -79,6 +79,8 @@ const std::map<std::string, Named>& units()
         m["1"] = {Dimension::none(), 1.0, false};
         m["%"] = {Dimension::none(), 0.01, false};
         m["rad"] = {Dimension::none(), 1.0, true};
+        m["deg"] = {Dimension::none(), 3.14159265358979323846 / 180.0, false};
+        m["\xC2\xB0"] = m["deg"];  // the degree sign
         m["sr"] = {Dimension::none(), 1.0, false};
         m["g"] = {dim({{KG, 1}}), 1e-3, true};
         m["m"] = {dim({{M, 1}}), 1.0, true};

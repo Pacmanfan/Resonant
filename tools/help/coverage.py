@@ -49,6 +49,8 @@ FEATURES = [
      "resonant_api (MultiscaleService)"),
     ("Energy, momentum and force accounting", "concepts.accounting", ["accounting/d-coupled-resonators.resonant", "accounting/e-microwave-absorption.resonant"], [],
      "resonant_api (AccountingService)"),
+    ("Experimental laboratory", "exp.laboratory", ["laboratory/a-resonator-frf.resonant", "laboratory/c-thermal-slab.resonant"], [],
+     "resonant_api (LaboratoryService)"),
     ("Dynamic material state", "concepts.material-state", ["materialstate/c-plastic-bar.resonant", "materialstate/d-damage-resonance.resonant"], [],
      "resonant_api (MaterialStateService)"),
     ("Topology optimization", "opt.topology", [], [], "-"),

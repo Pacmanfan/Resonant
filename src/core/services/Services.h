@@ -487,6 +487,59 @@ private:
     Session& s_;
 };
 
+// The experimental laboratory (REQ-CHAT-20261126-023, RES-LAB-017, ADR-000227): studies that
+// link experiments to models, imports into the experiment framework's measurement store,
+// processing, resonance extraction, uncertainty-aware comparisons, error budgets and
+// propagation, experimental energy balances, model calibration (a job, then an explicit
+// acceptance), validation on independent data, the explicit application of a calibration as a
+// new material revision, evidence summaries, reports and exports. Records are in the project
+// extension "laboratory"; the data are in the measurement store next to the project file.
+struct LabChange {
+    Mutation mutation;
+    nlohmann::json result = nlohmann::json::object();
+};
+
+class LaboratoryService {
+public:
+    explicit LaboratoryService(Session& s) : s_(s) {}
+    Outcome<nlohmann::json> models(const CallContext& c);
+    Outcome<nlohmann::json> modelParameters(const CallContext& c, const std::string& model, const nlohmann::json& configuration);
+    Outcome<nlohmann::json> studies(const CallContext& c);
+    Outcome<nlohmann::json> study(const CallContext& c, const std::string& id);
+    Outcome<Mutation> setStudy(const CallContext& c, const nlohmann::json& study);
+    Outcome<Mutation> deleteStudy(const CallContext& c, const std::string& id);
+    // {"content" | "path", "fileName", "format", "provenance", "domain", "expectedColumns", "acceptPartial", "study", "role"}
+    Outcome<LabChange> importDataset(const CallContext& c, const nlohmann::json& spec);
+    Outcome<nlohmann::json> datasets(const CallContext& c);
+    Outcome<nlohmann::json> dataset(const CallContext& c, const std::string& id, int maxPoints);
+    Outcome<LabChange> process(const CallContext& c, const std::string& datasetId, const nlohmann::json& step);
+    Outcome<nlohmann::json> resonances(const CallContext& c, const nlohmann::json& spec);
+    Outcome<LabChange> compare(const CallContext& c, const nlohmann::json& spec);
+    Outcome<nlohmann::json> budget(const CallContext& c, const nlohmann::json& budget);
+    // {"expression", "inputs": [{"id", "mean", "standard", "distribution"}], "correlation": [[...]], "method": linear | monte-carlo, "samples", "seed"}
+    Outcome<nlohmann::json> propagate(const CallContext& c, const nlohmann::json& spec);
+    Outcome<nlohmann::json> energyBalance(const CallContext& c, const nlohmann::json& balance);
+    Outcome<JobView> calibrate(const CallContext& c, const nlohmann::json& spec);
+    Outcome<nlohmann::json> calibrationResult(const CallContext& c, const std::string& resultId);
+    Outcome<LabChange> acceptCalibration(const CallContext& c, const std::string& resultId);
+    Outcome<LabChange> validate(const CallContext& c, const std::string& calibrationId, const std::vector<std::string>& datasets, const std::string& id,
+                                const std::vector<std::string>& axisDatasets = {});
+    // Explicit: a new material (thermal models) or material-state study (J2) with the estimates; never the original.
+    Outcome<LabChange> applyCalibration(const CallContext& c, const std::string& calibrationId, const nlohmann::json& options);
+    // section: studies, imports, comparisons, calibrations, validations
+    Outcome<nlohmann::json> records(const CallContext& c, const std::string& section);
+    Outcome<nlohmann::json> explain(const CallContext& c, const std::string& recordId);
+    Outcome<std::string> report(const CallContext& c, const std::string& studyId, const std::string& format);
+    Outcome<std::string> exportDataset(const CallContext& c, const std::string& id, const std::string& format);
+
+    static constexpr const char* kCalibrationKind = "laboratory.calibration";
+
+private:
+    Outcome<Mutation> change(const CallContext& c, const std::string& operation, const std::string& description,
+                             const std::function<Outcome<bool>(Project&)>& apply);
+    Session& s_;
+};
+
 // Unified accounting (REQ-CHAT-20261126-022, RES-ACC-016, ADR-000226): quantity families and
 // unit conversion, the conservation and consistency models, accounting studies (stored in
 // the project extension "accounting") run as jobs, reports reclassified for any system,
@@ -612,6 +665,7 @@ public:
     MultiscaleService multiscale;
     MaterialStateService materialState;
     AccountingService accounting;
+    LaboratoryService laboratory;
     ApplicationService application;
 
 private:

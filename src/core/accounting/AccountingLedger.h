@@ -84,6 +84,7 @@ struct Holding {
     std::vector<double> history;  // at the ledger's times
     std::vector<Vec3> vectorHistory;
     std::string method, provenance = "computed", note;
+    std::optional<double> uncertainty;  // standard uncertainty of the change (measured ledgers)
     Vec3 change() const
     {
         return isVector ? Vec3{finalVector[0] - initialVector[0], finalVector[1] - initialVector[1], finalVector[2] - initialVector[2]}
@@ -146,6 +147,7 @@ struct Check {
     Vec3 initial{}, final{}, input{}, output{}, impulse{}, internal{}, generated{}, dissipated{}, delta{}, residual{};
     std::optional<double> relative;  // |residual| / scale, only when the scale is meaningful
     double scale = 0.0, tolerance = 0.0, warning = 0.0, numericalError = 0.0;
+    double measurementUncertainty = 0.0;  // combined standard uncertainty of the residual (measured ledgers)
     std::string unit, attribution;
     std::vector<std::string> missing, notes;
     nlohmann::json details = nlohmann::json::object();
@@ -159,6 +161,7 @@ struct Ledger {
     std::string id, title, sourceKind, solver, solverVersion;
     Basis basis = Basis::Interval;
     double t0 = 0.0, t1 = 0.0;
+    bool measured = false;  // the amounts are measurements with uncertainties: balances are judged against them
     std::string per;  // amounts per unit of this ("m^3": a material point's volume; "m^2": a layer's area); empty: totals
     std::vector<double> times;
     std::vector<Entity> entities;

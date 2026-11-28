@@ -1,0 +1,142 @@
+{
+ "format": "resonant-project",
+ "schemaVersion": 1,
+ "application": {
+  "name": "Resonant",
+  "version": "0.1.0"
+ },
+ "project": {
+  "id": "ex-lab-ringdown",
+  "name": "b-ring-down",
+  "createdUtc": "2026-11-28T00:00:00Z",
+  "modifiedUtc": "2026-11-28T00:00:00Z"
+ },
+ "units": {
+  "angle": "rad",
+  "axes": "right-handed; X horizontal, Y depth, Z vertical (up)",
+  "frequency": "Hz",
+  "length": "m",
+  "mass": "kg",
+  "rotation": "intrinsic Z-Y-X Euler angles stored as [x, y, z]",
+  "time": "s"
+ },
+ "materials": [
+  {
+   "id": "mat-ex-lab-steel",
+   "name": "Steel (example)",
+   "description": "Illustrative.",
+   "domains": {
+    "mechanical": {
+     "density": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the laboratory examples; not authoritative.",
+      "value": 7850.0
+     },
+     "youngsModulus": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the laboratory examples; not authoritative.",
+      "value": 200000000000.0
+     },
+     "poissonsRatio": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the laboratory examples; not authoritative.",
+      "value": 0.3
+     }
+    }
+   }
+  }
+ ],
+ "scene": {
+  "objects": [
+   {
+    "id": "ex-lab-fork",
+    "type": "geometry",
+    "name": "Tuning fork",
+    "visible": true,
+    "transform": {
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "children": [],
+    "geometry": {
+     "kind": "box",
+     "parameters": {
+      "width": 0.08,
+      "depth": 0.005,
+      "height": 0.005
+     }
+    },
+    "material": "mat-ex-lab-steel"
+   }
+  ]
+ },
+ "simulations": [],
+ "extensions": {
+  "laboratory": {
+   "format": "resonant.laboratory",
+   "version": 1,
+   "studies": [
+    {
+     "id": "st-ring-down",
+     "name": "A tuning fork ringing down",
+     "objective": "Measure the fork's frequency and Q from its free decay",
+     "hypothesis": "The decay is exponential (linear, light damping)",
+     "domain": "mechanical",
+     "specimen": "a 440 Hz tuning fork",
+     "operator": "",
+     "status": "planned",
+     "models": [
+      {
+       "kind": "scene-object",
+       "id": "ex-lab-fork",
+       "revision": "",
+       "label": "the fork",
+       "note": ""
+      }
+     ],
+     "deviations": [],
+     "conditions": {
+      "predicted": {
+       "frequency": {
+        "value": 440.0,
+        "standard": 0.5,
+        "unit": "Hz"
+       },
+       "quality": {
+        "value": 300.0,
+        "standard": 10.0,
+        "unit": "1"
+       }
+      },
+      "files": [
+       {
+        "path": "data/b-ring-down.csv",
+        "role": "raw"
+       }
+      ]
+     },
+     "datasets": [],
+     "notes": []
+    }
+   ],
+   "imports": [],
+   "comparisons": [],
+   "calibrations": [],
+   "validations": [],
+   "sources": []
+  }
+ }
+}

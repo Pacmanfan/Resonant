@@ -1,0 +1,230 @@
+{
+ "format": "resonant-project",
+ "schemaVersion": 1,
+ "application": {
+  "name": "Resonant",
+  "version": "0.1.0"
+ },
+ "project": {
+  "id": "ex-lab-thermal",
+  "name": "c-thermal-slab",
+  "createdUtc": "2026-11-28T00:00:00Z",
+  "modifiedUtc": "2026-11-28T00:00:00Z"
+ },
+ "units": {
+  "angle": "rad",
+  "axes": "right-handed; X horizontal, Y depth, Z vertical (up)",
+  "frequency": "Hz",
+  "length": "m",
+  "mass": "kg",
+  "rotation": "intrinsic Z-Y-X Euler angles stored as [x, y, z]",
+  "time": "s"
+ },
+ "materials": [
+  {
+   "id": "mat-ex-lab-polymer",
+   "name": "Polymer sheet (example)",
+   "description": "Nominal handbook values (illustrative).",
+   "domains": {
+    "thermal": {
+     "thermalConductivity": {
+      "provenance": "literature",
+      "source": "a handbook value for the polymer family (illustrative)",
+      "value": 0.4
+     },
+     "density": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the laboratory examples; not authoritative.",
+      "value": 1200.0
+     },
+     "specificHeat": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the laboratory examples; not authoritative.",
+      "value": 1500.0
+     }
+    },
+    "electromagnetic": {
+     "relativePermittivity": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the laboratory examples; not authoritative.",
+      "value": 3.0
+     },
+     "lossTangent": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the laboratory examples; not authoritative.",
+      "value": 0.0
+     },
+     "conductivity": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the laboratory examples; not authoritative.",
+      "value": 0.0
+     },
+     "relativePermeability": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the laboratory examples; not authoritative.",
+      "value": 1.0
+     }
+    }
+   }
+  }
+ ],
+ "scene": {
+  "objects": [
+   {
+    "id": "ex-lab-sheet",
+    "type": "geometry",
+    "name": "Polymer sheet",
+    "visible": true,
+    "transform": {
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "children": [],
+    "geometry": {
+     "kind": "box",
+     "parameters": {
+      "width": 0.1,
+      "depth": 0.1,
+      "height": 0.04
+     }
+    },
+    "material": "mat-ex-lab-polymer"
+   }
+  ]
+ },
+ "simulations": [],
+ "extensions": {
+  "laboratory": {
+   "format": "resonant.laboratory",
+   "version": 1,
+   "studies": [
+    {
+     "id": "st-thermal",
+     "name": "The sheet's conductivity from a heating run",
+     "objective": "Calibrate the sheet's thermal conductivity against its mid-plane temperature",
+     "hypothesis": "The handbook conductivity (0.40 W/(m K)) underestimates this batch",
+     "domain": "thermal",
+     "specimen": "a 40 mm polymer sheet with an embedded heater",
+     "operator": "",
+     "status": "planned",
+     "models": [
+      {
+       "kind": "physical-system",
+       "id": "sys-lab-slab",
+       "revision": "",
+       "label": "the heated sheet",
+       "note": ""
+      },
+      {
+       "kind": "material",
+       "id": "mat-ex-lab-polymer",
+       "revision": "",
+       "label": "the polymer",
+       "note": ""
+      }
+     ],
+     "deviations": [],
+     "conditions": {
+      "model": {
+       "id": "thermal.evolution-probe",
+       "configuration": {
+        "system": "sys-lab-slab",
+        "position": 0.02,
+        "duration": 1800.0,
+        "steps": 30,
+        "substeps": 4
+       }
+      },
+      "files": [
+       {
+        "path": "data/c-thermal-run1.csv",
+        "role": "calibration"
+       },
+       {
+        "path": "data/c-thermal-run2.csv",
+        "role": "validation"
+       }
+      ]
+     },
+     "datasets": [],
+     "notes": []
+    }
+   ],
+   "imports": [],
+   "comparisons": [],
+   "calibrations": [],
+   "validations": [],
+   "sources": []
+  },
+  "multiphysics": {
+   "format": "resonant.multiphysics",
+   "version": 1,
+   "systems": [
+    {
+     "format": "resonant.physical-system",
+     "version": 1,
+     "id": "sys-lab-slab",
+     "name": "Heated polymer sheet",
+     "description": "A 40 mm sheet with 20 kW/m^3 of internal heating, cooled by forced convection (50 W/(m^2 K)) on both faces: a Biot number near 2, so the mid-plane temperature depends on the conductivity.",
+     "geometry": {
+      "kind": "layered-slab",
+      "lateralArea": 0.01
+     },
+     "environment": {
+      "ambientTemperature": 293.15
+     },
+     "regions": [
+      {
+       "id": "sheet",
+       "name": "Sheet",
+       "materialId": "mat-ex-lab-polymer",
+       "thickness": 0.04,
+       "cells": 40,
+       "objectId": "ex-lab-sheet"
+      }
+     ],
+     "domains": [
+      {
+       "id": "heat",
+       "kind": "thermal",
+       "solver": "thermal.conduction.fv",
+       "settings": {
+        "volumetricSource": 20000.0,
+        "faces": {
+         "-z": {
+          "kind": "convective",
+          "h": 50.0
+         },
+         "+z": {
+          "kind": "convective",
+          "h": 50.0
+         }
+        }
+       }
+      }
+     ],
+     "couplings": [],
+     "materialLaws": [],
+     "scheme": {
+      "kind": "one-way",
+      "maxIterations": 10,
+      "temperatureTolerance": 1e-07
+     }
+    }
+   ]
+  }
+ }
+}

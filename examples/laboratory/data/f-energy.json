@@ -1,0 +1,25 @@
+{
+ "format": "resonant.dataset",
+ "metadata": {
+  "provenance": "synthetic",
+  "instrument": "synthetic power analyser and thermocouples (example)",
+  "note": "generated for the laboratory examples - not a physical measurement"
+ },
+ "scalars": [
+  {
+   "name": "electrical energy",
+   "quantity": "Dimensionless",
+   "unit": "1",
+   "value": 3600.0,
+   "uncertainty": 18.0,
+   "uncertaintyNote": "P = V I integrated over 600 s; 0.5 % (power analyser specification)"
+  },
+  {
+   "name": "temperature rise",
+   "quantity": "Temperature",
+   "unit": "K",
+   "value": 12.0,
+   "uncertainty": 0.1
+  }
+ ]
+}

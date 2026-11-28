@@ -1,5 +1,6 @@
 #include "accounting/Conservation.h"
 #include "coupling/CouplingModels.h"
+#include "coupling/LaboratoryModels.h"
 #include "coupling/MaterialStateModels.h"
 #include "coupling/MultiscaleDerivations.h"
 #include "multiscale/Couplings.h"
@@ -85,6 +86,11 @@ Outcome<std::vector<CapabilityView>> ApplicationService::capabilities(const Call
              m.status == "implemented", {}, {}, m.excluded, m.domain});
     add({"material-state.evolution", "Time-stepped evolution", "coupled runs step by step, each continuing from the previous temperature field", "material-state",
          "experimental", true, {}, {"1D"}, {"layered-slab systems with a thermal domain"}, "thermal"});
+    // The laboratory: the physical models predictions and calibrations come from.
+    for (const auto& m : coupling::laboratoryModels())
+        add({"laboratory." + m.id, m.title, m.observable, "laboratory", "experimental", true, {}, {}, {m.assumptions}, m.domain});
+    add({"laboratory.import", "Dataset import", "CSV, TSV, JSON and WAV with an import report", "laboratory", "experimental", true, {}, {},
+         {"NetCDF, TDMS, external HDF5 and images are not imported"}, "general"});
     // Accounting: every conservation law and consistency relation, and the sources it reads.
     for (const auto& m : accounting::checkModels())
         add({"accounting." + m.id, m.title, m.equation, "accounting", "experimental", true, {}, {}, {m.assumptions}, m.domain});

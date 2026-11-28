@@ -33,8 +33,8 @@ discover is something you can trust.
   impedance, gain and patterns; phased arrays you can steer and taper;
   waveguides; near fields; Maxwell's equations solved on a grid.
 * **Real measurements** — experiments with microphones, accelerometers and
-  radios (or simulated instruments), calibration, and measured fields set
-  beside the simulation; outputs only ever start when you authorize them.
+  radios (or simulated instruments), your own data files fitted to the models
+  and tested on fresh runs; outputs only ever start when you authorize them.
 * **Designing by goal** — say what you want (a focus, a resonance, a beam), compare
   designs and materials traced to the atom, and see where every joule goes.
 * **Script it, extend it, connect it** — Python, workflows, plugins, and an

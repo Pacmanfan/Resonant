@@ -1,0 +1,171 @@
+{
+ "format": "resonant-project",
+ "schemaVersion": 1,
+ "application": {
+  "name": "Resonant",
+  "version": "0.1.0"
+ },
+ "project": {
+  "id": "ex-lab-coupon",
+  "name": "e-stress-strain",
+  "createdUtc": "2026-11-28T00:00:00Z",
+  "modifiedUtc": "2026-11-28T00:00:00Z"
+ },
+ "units": {
+  "angle": "rad",
+  "axes": "right-handed; X horizontal, Y depth, Z vertical (up)",
+  "frequency": "Hz",
+  "length": "m",
+  "mass": "kg",
+  "rotation": "intrinsic Z-Y-X Euler angles stored as [x, y, z]",
+  "time": "s"
+ },
+ "materials": [
+  {
+   "id": "mat-ex-lab-steel",
+   "name": "Steel (example)",
+   "description": "Illustrative.",
+   "domains": {
+    "mechanical": {
+     "density": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the laboratory examples; not authoritative.",
+      "value": 7850.0
+     },
+     "youngsModulus": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the laboratory examples; not authoritative.",
+      "value": 200000000000.0
+     },
+     "poissonsRatio": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the laboratory examples; not authoritative.",
+      "value": 0.3
+     }
+    }
+   }
+  }
+ ],
+ "scene": {
+  "objects": [
+   {
+    "id": "ex-lab-coupon",
+    "type": "geometry",
+    "name": "Tensile coupon",
+    "visible": true,
+    "transform": {
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "children": [],
+    "geometry": {
+     "kind": "box",
+     "parameters": {
+      "width": 0.1,
+      "depth": 0.01,
+      "height": 0.003
+     }
+    },
+    "material": "mat-ex-lab-steel"
+   }
+  ]
+ },
+ "simulations": [],
+ "extensions": {
+  "laboratory": {
+   "format": "resonant.laboratory",
+   "version": 1,
+   "studies": [
+    {
+     "id": "st-coupon",
+     "name": "A tensile coupon's plasticity",
+     "objective": "Calibrate the yield stress and hardening of the J2 model from a tensile test",
+     "hypothesis": "The nominal yield stress (250 MPa) is low for this heat",
+     "domain": "mechanical",
+     "specimen": "a steel tensile coupon",
+     "operator": "",
+     "status": "planned",
+     "models": [
+      {
+       "kind": "material-state-study",
+       "id": "st-steel-nominal",
+       "revision": "",
+       "label": "the nominal J2 model",
+       "note": ""
+      }
+     ],
+     "deviations": [],
+     "conditions": {
+      "model": {
+       "id": "material-state.j2-uniaxial",
+       "configuration": {
+        "youngsModulus": 200000000000.0,
+        "poissonsRatio": 0.3,
+        "yieldStress": 250000000.0,
+        "isotropicHardening": 2000000000.0,
+        "kinematicHardening": 0.0
+       }
+      },
+      "valueColumn": "stress",
+      "axisColumn": "strain",
+      "files": [
+       {
+        "path": "data/e-stress-strain.csv",
+        "role": "calibration"
+       },
+       {
+        "path": "data/e-stress-strain-repeat.csv",
+        "role": "validation"
+       }
+      ]
+     },
+     "datasets": [],
+     "notes": []
+    }
+   ],
+   "imports": [],
+   "comparisons": [],
+   "calibrations": [],
+   "validations": [],
+   "sources": []
+  },
+  "material-state": {
+   "format": "resonant.material-state",
+   "version": 1,
+   "records": [],
+   "studies": [
+    {
+     "id": "st-steel-nominal",
+     "name": "Steel with nominal plasticity",
+     "model": "mechanics.j2.point",
+     "parameters": {
+      "youngsModulus": 200000000000.0,
+      "poissonsRatio": 0.3,
+      "yieldStress": 250000000.0,
+      "isotropicHardening": 2000000000.0,
+      "kinematicHardening": 0.0
+     },
+     "loading": {
+      "amplitudes": [
+       0.01
+      ],
+      "increments": 100
+     }
+    }
+   ]
+  }
+ }
+}

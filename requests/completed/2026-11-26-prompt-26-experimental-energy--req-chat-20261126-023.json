@@ -1,0 +1,417 @@
+{
+  "request_id": "REQ-CHAT-20261126-023",
+  "source": "chat",
+  "type": "FEATURE",
+  "priority": "NORMAL",
+  "created": "2026-11-26T23:57:49-05:00",
+  "created_utc": "2026-11-27T04:57:49+00:00",
+  "id_date": "2026-11-26",
+  "timezone": "EST (UTC-05:00)",
+  "status": "completed",
+  "original_text": "# PROMPT 26 \u2014 EXPERIMENTAL ENERGY\u2013MATTER LABORATORY AND PHYSICS-BASED VALIDATION\n\n## Project: RESONANT \u2014 Wave Field Engineering Studio\n\n## Mission\n\nImplement the next major scientific capability in RESONANT: **Experimental Energy\u2013Matter Laboratory and Physics-Based Validation**.\n\nRESONANT must evolve beyond computational physics and inverse design into a platform capable of connecting theoretical predictions, numerical simulations, physical measurements, and experimentally observed behavior.\n\nThe platform must establish a unified experimental framework in which physical systems can be characterized, measured, compared against simulations, and used to refine the models that describe them.\n\nThe governing concept becomes:\n\n**Physical Theory \u2192 Computational Model \u2192 Predicted Behavior \u2192 Physical Experiment \u2192 Measurement \u2192 Comparison \u2192 Model Refinement \u2192 Improved Prediction**\n\nThis capability establishes an important new relationship between computational and experimental physics.\n\nA simulation is a prediction based on a model.\n\nAn experiment is an observation of physical reality.\n\nNeither should be silently substituted for the other.\n\nRESONANT must preserve the distinction between:\n\n- Theoretical predictions.\n- Numerical simulation results.\n- Surrogate predictions.\n- Experimentally measured results.\n- Derived experimental quantities.\n- Calibrated model parameters.\n- Independently validated predictions.\n\nThe objective is to establish an experimental science framework that allows RESONANT to investigate how physical systems actually behave, quantify differences between prediction and observation, identify possible causes of disagreement, and improve the underlying models.\n\nThis must integrate with the scientific architecture established in Prompts 17\u201325.\n\nThe experimental laboratory must not become a disconnected data-acquisition application.\n\nIt must become a first-class part of RESONANT's physics architecture.\n\n---\n\n# 1. Audit the Existing Architecture\n\nBefore implementation, conduct a comprehensive repository audit.\n\nInspect:\n\n- Prompt 17 Shape\u2013Function\u2013Energy architecture.\n- Prompt 18 CEME architecture.\n- Prompt 19 geometry-driven energy transformation.\n- Prompt 20 resonant structures and energy storage.\n- Prompt 21 metamaterials and engineered effective properties.\n- Prompt 22 multiscale material modeling.\n- Prompt 23 dynamic material state and nonlinear matter.\n- Prompt 24 energy, momentum, force, and conservation.\n- Prompt 25 inverse design and optimization.\n- Physical domain solvers.\n- Simulation orchestration.\n- Material models and material state.\n- Geometry and CAD systems.\n- Mesh generation.\n- Solver convergence and numerical validation.\n- Measurement or data-import facilities.\n- Signal processing and numerical analysis.\n- Calibration infrastructure.\n- Parameter estimation.\n- Uncertainty analysis.\n- Project persistence.\n- Visualization.\n- Automation APIs.\n- Existing AI or natural-language integration.\n\nDetermine:\n\n1. Whether experimental datasets can already be imported.\n2. Whether measurement metadata is preserved.\n3. Whether measured data can be associated with a physical model.\n4. Whether simulation and measurement results share compatible representations.\n5. Whether calibration or parameter estimation already exists.\n6. Whether uncertainty can be propagated through existing models.\n7. Whether multiple experimental runs can be compared.\n8. Whether simulation configurations and experimental configurations can be linked.\n9. Whether physical quantities have consistent units and coordinate systems.\n10. Whether existing infrastructure can support live or streaming measurements.\n\nProduce an architecture map and an implementation plan.\n\nReuse existing systems wherever possible.\n\nDo not duplicate the geometry, material, solver, CEME, optimization, or conservation infrastructure.\n\n---\n\n# 2. Establish the Experimental Laboratory Architecture\n\nCreate a common experimental framework.\n\nThe laboratory must support the complete lifecycle of an experiment:\n\n1. Define an experimental objective.\n2. Identify the physical system being investigated.\n3. Define the experimental configuration.\n4. Define the quantities to measure.\n5. Associate the experiment with a physical model.\n6. Establish measurement conditions.\n7. Acquire or import measurements.\n8. Validate measurement integrity.\n9. Process the acquired data.\n10. Extract relevant physical quantities.\n11. Compare observations against predictions.\n12. Quantify uncertainty.\n13. Identify model discrepancies.\n14. Calibrate model parameters where justified.\n15. Re-evaluate the physical model.\n16. Preserve the complete experimental record.\n\nExperiments must be independently identifiable and reproducible.\n\nEvery experiment should contain:\n\n- Experiment ID.\n- Experiment name.\n- Description.\n- Physical domain.\n- Experimental objective.\n- Associated project.\n- Associated geometry revision.\n- Associated material revision.\n- Associated simulation configuration.\n- Instrument configuration.\n- Measurement configuration.\n- Environmental conditions.\n- Acquisition configuration.\n- Measurement datasets.\n- Processing history.\n- Calibration history.\n- Analysis results.\n- Uncertainty information.\n- Experimental provenance.\n- Date and time information.\n- Operator or source information where available.\n\nAn experiment must never silently modify the original physical model.\n\n---\n\n# 3. Experimental Data Architecture\n\nEstablish a unified representation for experimental data.\n\nSupport both imported datasets and measurements acquired through connected instrumentation.\n\nThe data architecture must accommodate:\n\n- Scalar measurements.\n- Vector measurements.\n- Tensor measurements.\n- Time-series data.\n- Frequency-domain data.\n- Spatial field measurements.\n- Spatially distributed sensor measurements.\n- Images and camera measurements.\n- Spectral measurements.\n- Transient measurements.\n- Environmental measurements.\n- Synchronized measurements from multiple instruments.\n\nEach measurement dataset must preserve:\n\n- Dataset identity.\n- Measurement identity.\n- Physical quantity.\n- Units.\n- Coordinate system.\n- Reference frame.\n- Spatial location where applicable.\n- Time reference.\n- Sampling rate.\n- Measurement bandwidth.\n- Instrument identity.\n- Instrument configuration.\n- Calibration state.\n- Resolution.\n- Measurement range.\n- Data format.\n- Acquisition conditions.\n- Processing history.\n- Uncertainty information.\n- Original source data.\n\nRaw measurements must be immutable.\n\nProcessed datasets must retain a direct relationship to their original measurements.\n\nNever overwrite raw experimental data with filtered, normalized, interpolated, or otherwise transformed data.\n\n## 3.1 Supported Data Formats\n\nAudit existing format support before introducing additional dependencies.\n\nWhere appropriate, support:\n\n- CSV.\n- TSV.\n- JSON.\n- HDF5.\n- NetCDF.\n- TDMS where supported.\n- Touchstone S-parameter files.\n- WAV.\n- Standard image formats.\n- Scientific image formats where supported.\n- Binary measurement formats through explicit import adapters.\n\nFor every import, validate:\n\n- File integrity.\n- Expected data structure.\n- Units.\n- Numeric validity.\n- Missing values.\n- Timestamp consistency.\n- Sampling metadata.\n- Coordinate metadata.\n\nProvide a clear import report.\n\nDo not silently discard malformed or incomplete measurements.\n\n## 3.2 Measurement Provenance\n\nEvery derived measurement must retain its ancestry.\n\nFor example:\n\nRaw voltage measurement \u2192 Filtering \u2192 Spectral analysis \u2192 Resonance extraction \u2192 Experimental Q estimate.\n\nThe user must be able to inspect how a derived quantity was calculated.\n\n---\n\n# 4. Instrument Integration Architecture\n\nCreate an extensible instrument integration layer.\n\nRESONANT should not be limited to a particular manufacturer or measurement device.\n\nDefine a common instrument interface supporting:\n\n- Instrument discovery.\n- Connection.\n- Configuration.\n- Measurement initiation.\n- Measurement acquisition.\n- Measurement termination.\n- Status monitoring.\n- Error reporting.\n- Instrument metadata.\n- Calibration metadata.\n- Data transfer.\n\nPotential instrument categories include:\n\n### Electrical and Electromagnetic\n\n- Oscilloscopes.\n- Signal generators.\n- Spectrum analyzers.\n- Vector network analyzers.\n- Impedance analyzers.\n- RF power meters.\n- Software-defined radios.\n- Frequency counters.\n- Lock-in amplifiers.\n\n### Mechanical\n\n- Load cells.\n- Force sensors.\n- Accelerometers.\n- Displacement sensors.\n- Strain gauges.\n- Vibration analyzers.\n- Laser vibrometers.\n\n### Thermal\n\n- Thermocouples.\n- RTDs.\n- Infrared cameras.\n- Thermal imaging sensors.\n- Heat-flux sensors.\n\n### Acoustic\n\n- Microphones.\n- Hydrophones.\n- Acoustic pressure sensors.\n- Ultrasonic measurement systems.\n\n### Optical\n\n- Photodetectors.\n- Optical power meters.\n- Spectrometers.\n- Interferometers.\n- Cameras.\n- Laser displacement systems.\n\n### Environmental\n\n- Temperature sensors.\n- Pressure sensors.\n- Humidity sensors.\n- Magnetic field sensors.\n- Environmental monitoring systems.\n\n## 4.1 Instrument Abstraction\n\nUse a common interface with device-specific adapters.\n\nSupport instrument communication through existing or appropriate protocols, including:\n\n- VISA.\n- SCPI.\n- USB.\n- Serial.\n- Ethernet.\n- TCP/IP.\n- UDP.\n- Vendor-supported APIs.\n- Supported DAQ interfaces.\n\nDo not implement every protocol merely to satisfy a checklist.\n\nPrioritize the interfaces that fit the existing architecture and can be tested.\n\n## 4.2 Instrument Capabilities\n\nEvery instrument adapter must declare its capabilities.\n\nExamples:\n\n- Measurement quantities.\n- Supported ranges.\n- Resolution.\n- Bandwidth.\n- Sampling rate.\n- Trigger capabilities.\n- Synchronization capabilities.\n- Available acquisition modes.\n- Configuration options.\n\nDo not assume two instruments have equivalent measurement capabilities merely because they measure the same physical quantity.\n\n## 4.3 Hardware Independence\n\nThe experimental framework must remain useful without connected instruments.\n\nUsers must be able to import datasets, perform analyses, compare simulations, and calibrate models using previously acquired measurements.\n\nInstrument integration should extend the laboratory, not define its existence.\n\n---\n\n# 5. Experimental Configuration and Reproducibility\n\nAn experiment must describe the actual conditions under which measurements were obtained.\n\nSupport recording:\n\n- Geometry.\n- Material.\n- Material state.\n- Excitation.\n- Frequency.\n- Amplitude.\n- Phase.\n- Boundary conditions.\n- Temperature.\n- Pressure.\n- Humidity.\n- Applied forces.\n- Mounting conditions.\n- Sensor locations.\n- Instrument settings.\n- Environmental conditions.\n- Time-dependent operating conditions.\n\nThe experimental configuration should be comparable to the corresponding simulation configuration.\n\nHowever, do not assume the experimental system is identical to its nominal CAD representation.\n\nAllow the user to record measured deviations such as:\n\n- Actual dimensions.\n- Manufacturing tolerances.\n- Material batch.\n- Measured material properties.\n- Surface roughness.\n- Assembly misalignment.\n- Contact conditions.\n- Sensor placement offsets.\n- Fixture characteristics.\n\nThese deviations may be important sources of simulation disagreement.\n\nPreserve both nominal and measured configurations.\n\n---\n\n# 6. Synchronization and Measurement Timing\n\nMany experiments involve multiple sensors or instruments.\n\nImplement a synchronization framework where supported.\n\nSupport:\n\n- Common clock references.\n- Trigger synchronization.\n- Timestamp alignment.\n- PPS synchronization where applicable.\n- Phase synchronization.\n- Multi-channel acquisition.\n- Relative timing correction.\n- Clock drift characterization.\n\nRecord the synchronization method and its uncertainty.\n\nDistinguish:\n\n- Simultaneous measurements.\n- Trigger-aligned measurements.\n- Timestamp-aligned measurements.\n- Measurements synchronized only approximately.\n\nDo not imply phase coherence or precise timing when the instruments do not support it.\n\nFor transient and resonant systems, synchronization accuracy may be critical to the validity of the resulting analysis.\n\n---\n\n# 7. Measurement Calibration and Traceability\n\nEstablish a measurement calibration architecture.\n\nInstrument calibration and physical model calibration are different operations and must remain distinct.\n\n## 7.1 Instrument Calibration\n\nSupport recording:\n\n- Instrument identity.\n- Calibration date.\n- Calibration reference.\n- Calibration certificate or documentation.\n- Calibration coefficients.\n- Calibration validity period.\n- Calibration uncertainty.\n- Calibration history.\n\nWhere supported, allow instrument correction factors to be applied during measurement processing.\n\nPreserve the original uncorrected readings.\n\n## 7.2 Sensor Calibration\n\nSupport sensor-specific calibration models.\n\nExamples:\n\n- Voltage-to-field conversion.\n- Strain-gauge conversion.\n- Thermocouple conversion.\n- Accelerometer sensitivity.\n- Microphone sensitivity.\n- Displacement sensor calibration.\n\nEach conversion must preserve:\n\n- Calibration equation.\n- Coefficients.\n- Units.\n- Valid range.\n- Uncertainty.\n- Calibration provenance.\n\n## 7.3 Calibration Traceability\n\nDistinguish between:\n\n- Factory calibration.\n- Laboratory calibration.\n- User calibration.\n- Reference-standard calibration.\n- Uncalibrated measurement.\n\nDo not describe a measurement as traceable to a standard unless the required evidence exists.\n\n---\n\n# 8. Experimental Signal and Field Processing\n\nIntegrate the laboratory with existing numerical and signal-processing systems.\n\nSupport processing appropriate to the physical domain.\n\nPotential capabilities include:\n\n### Time-Domain Analysis\n\n- Mean.\n- RMS.\n- Peak and peak-to-peak.\n- Transient detection.\n- Decay analysis.\n- Envelope extraction.\n- Cross-correlation.\n- Autocorrelation.\n- Time-delay estimation.\n\n### Frequency-Domain Analysis\n\n- FFT.\n- Power spectral density.\n- Cross-spectral density.\n- Transfer functions.\n- Frequency response.\n- Harmonic analysis.\n- Spectral peak detection.\n- Resonance extraction.\n- Bandwidth measurement.\n- Phase analysis.\n\n### Spatial Analysis\n\n- Field reconstruction.\n- Spatial interpolation.\n- Vector field visualization.\n- Gradient estimation.\n- Divergence.\n- Curl.\n- Spatial correlation.\n- Surface mapping.\n\n### Mechanical Analysis\n\n- Modal extraction.\n- Natural frequency estimation.\n- Damping estimation.\n- Frequency response.\n- Deflection measurement.\n- Strain and stress derivation where supported.\n\n### Thermal Analysis\n\n- Temperature distribution.\n- Thermal gradient.\n- Heat-flux estimation.\n- Transient heating and cooling.\n- Thermal response time.\n\n### Acoustic Analysis\n\n- Sound pressure.\n- Frequency response.\n- Acoustic intensity where measurable.\n- Resonance.\n- Decay time.\n- Spatial pressure distribution.\n\n### Electromagnetic Analysis\n\n- S-parameters.\n- Reflection coefficient.\n- Transmission coefficient.\n- Impedance.\n- Resonance.\n- Gain.\n- Field distribution.\n- Phase response.\n- Radiation characteristics where measurable.\n\nAll processing operations must be explicit and reproducible.\n\nRecord algorithm parameters and processing revisions.\n\nDo not confuse measured quantities with quantities inferred from a mathematical model.\n\n---\n\n# 9. Simulation-to-Experiment Comparison\n\nThis is the central scientific requirement of Prompt 26.\n\nCreate a unified comparison framework between predicted and measured behavior.\n\nThe comparison engine must be able to associate experimental observations with corresponding physical simulation outputs.\n\nSupport comparison of:\n\n- Resonant frequencies.\n- Modal frequencies.\n- Q factors.\n- Transfer functions.\n- Reflection and transmission.\n- Spatial field distributions.\n- Temperature distributions.\n- Force distributions.\n- Displacement.\n- Stress and strain where measurable or inferable.\n- Energy storage.\n- Energy transfer.\n- Dissipation.\n- Transient responses.\n- Material effective properties.\n\n## 9.1 Comparison Requirements\n\nBefore comparing two datasets, establish:\n\n- Compatible physical quantities.\n- Compatible units.\n- Compatible coordinate systems.\n- Compatible reference frames.\n- Compatible operating conditions.\n- Compatible frequency ranges.\n- Compatible time intervals.\n- Compatible spatial regions.\n\nWhere conversion or alignment is necessary, record the operation.\n\nNever compare incompatible datasets without warning.\n\n## 9.2 Comparison Metrics\n\nSupport appropriate metrics including:\n\n- Absolute error.\n- Relative error.\n- RMS error.\n- Normalized RMS error.\n- Mean absolute error.\n- Maximum deviation.\n- Correlation.\n- Phase error.\n- Frequency offset.\n- Amplitude offset.\n- Spectral similarity.\n- Spatial field error.\n- Temporal response error.\n\nMetric selection must depend on the physical quantity and engineering objective.\n\nDo not use a single generic error metric for every physical domain.\n\n## 9.3 Visual Comparison\n\nProvide overlays and comparative visualizations.\n\nExamples:\n\n- Simulated versus measured frequency response.\n- Predicted versus measured resonance.\n- Measured versus simulated field distribution.\n- Simulated versus measured temperature.\n- Predicted versus measured displacement.\n- Predicted versus measured transient response.\n\nAllow the user to inspect residuals and disagreement regions.\n\n---\n\n# 10. Experimental Uncertainty and Error Budgets\n\nExperimental validation is incomplete without uncertainty analysis.\n\nEstablish a unified uncertainty framework.\n\nDistinguish:\n\n- Instrument uncertainty.\n- Sensor uncertainty.\n- Calibration uncertainty.\n- Sampling uncertainty.\n- Timing uncertainty.\n- Spatial positioning uncertainty.\n- Environmental uncertainty.\n- Manufacturing variation.\n- Material variation.\n- Numerical simulation uncertainty.\n- Model-form uncertainty.\n\nSupport uncertainty propagation where justified.\n\nMethods may include:\n\n- Analytical propagation.\n- Monte Carlo simulation.\n- Sensitivity-based propagation.\n- Statistical estimation.\n- Covariance analysis.\n\n## 10.1 Error Budgets\n\nAllow users to construct an error budget for an experiment.\n\nFor each contribution, record:\n\n- Source.\n- Magnitude.\n- Distribution where known.\n- Units.\n- Correlation assumptions.\n- Measurement method.\n- Confidence or coverage information.\n- Contribution to total uncertainty.\n\nDo not assume independent uncertainty sources unless justified.\n\n## 10.2 Measurement Confidence\n\nReport uncertainty alongside experimental results.\n\nAvoid false precision.\n\nDistinguish between:\n\n- Measurement resolution.\n- Measurement accuracy.\n- Repeatability.\n- Reproducibility.\n- Statistical confidence.\n- Calibration uncertainty.\n\nThese concepts are related but not interchangeable.\n\n---\n\n# 11. Physical Model Calibration and Parameter Estimation\n\nEstablish a controlled pathway for using experiments to improve physical models.\n\nThe objective is to identify model parameters that better explain observed behavior.\n\nPotential calibration targets include:\n\n- Material parameters.\n- Damping coefficients.\n- Conductivity.\n- Permittivity.\n- Permeability.\n- Elastic constants.\n- Thermal properties.\n- Acoustic properties.\n- Boundary-condition parameters.\n- Contact parameters.\n- Resonator losses.\n- Coupling coefficients.\n- Effective metamaterial properties.\n\nCalibration must use parameters that have a legitimate physical interpretation in the underlying model.\n\nDo not permit arbitrary correction factors to conceal incorrect physical assumptions.\n\n## 11.1 Parameter Estimation\n\nSupport:\n\n- Least-squares estimation.\n- Weighted least squares.\n- Nonlinear parameter fitting.\n- Maximum-likelihood estimation where justified.\n- Bayesian parameter estimation where supported.\n- Regularized parameter estimation.\n\nAccount for measurement uncertainty when selecting the fitting method.\n\n## 11.2 Parameter Identifiability\n\nA central requirement is determining whether available measurements can actually identify the desired parameters.\n\nSupport:\n\n- Parameter correlation analysis.\n- Identifiability assessment.\n- Sensitivity analysis.\n- Confidence intervals.\n- Parameter covariance.\n- Multiple-experiment fitting.\n\nDo not claim that a parameter has been reliably determined if multiple parameter combinations explain the observations equally well.\n\n## 11.3 Calibration Provenance\n\nEvery calibrated model revision must retain:\n\n- Original model revision.\n- Calibrated parameters.\n- Original parameter values.\n- Experimental datasets used.\n- Fitting method.\n- Optimization configuration.\n- Residuals.\n- Uncertainty.\n- Identifiability information.\n- Calibration date.\n- Validation status.\n\nNever overwrite the original model.\n\n---\n\n# 12. Independent Validation and Avoiding Overfitting\n\nCalibration and validation must be distinct.\n\nA model fitted against an experimental dataset has not automatically been independently validated by that same dataset.\n\nSupport:\n\n- Calibration datasets.\n- Validation datasets.\n- Holdout measurements.\n- Repeated experimental runs.\n- Independent operating conditions.\n- Cross-validation where appropriate.\n\nAllow a model to be calibrated against one set of observations and tested against another.\n\nReport:\n\n- Calibration performance.\n- Validation performance.\n- Residual differences.\n- Parameter uncertainty.\n- Valid operating domain.\n\nA calibrated model must not be presented as universally accurate outside its validated conditions.\n\n---\n\n# 13. Experimental Modal and Resonance Validation\n\nIntegrate directly with Prompt 20.\n\nResonant structures offer an especially important experimental validation opportunity.\n\nSupport experimental identification of:\n\n- Natural frequencies.\n- Driven resonance peaks.\n- Mode shapes.\n- Modal damping.\n- Q factor.\n- Mode coupling.\n- Resonance bandwidth.\n- Frequency-dependent losses.\n- Transient buildup.\n- Ring-down behavior.\n\nWhere supported, allow comparison between experimental and simulated mode shapes.\n\nUse appropriate spatial and phase alignment.\n\n## 13.1 Mode Identification\n\nDistinguish between:\n\n- Natural modes.\n- Driven-response peaks.\n- Coupled modes.\n- Hybridized modes.\n- Measurement artifacts.\n- Instrument-induced resonances.\n\nDo not automatically identify every spectral peak as a physical resonance of the structure.\n\n## 13.2 Ring-Down Analysis\n\nSupport time-domain characterization of resonant decay.\n\nWhere the underlying assumptions are appropriate, estimate:\n\n- Decay constant.\n- Damping ratio.\n- Q factor.\n- Stored energy decay.\n- Frequency stability.\n\nIdentify the fitting method and its validity assumptions.\n\n## 13.3 Experimental Energy Storage\n\nWhere supported by actual measurements, estimate stored energy and dissipation.\n\nClearly distinguish directly measured quantities from model-derived estimates.\n\nDo not claim direct energy measurement when energy has been inferred from voltage, current, displacement, or field measurements.\n\n---\n\n# 14. Experimental Validation of Metamaterials\n\nIntegrate with Prompt 21.\n\nSupport experimental characterization of metamaterial structures and engineered effective properties.\n\nPotential measurements include:\n\n- Reflection.\n- Transmission.\n- Dispersion.\n- Band gaps.\n- Phase velocity.\n- Group velocity.\n- Effective impedance.\n- Effective density.\n- Effective stiffness.\n- Effective permittivity.\n- Effective permeability.\n- Anisotropy.\n- Resonance behavior.\n\nWhere appropriate, compare experimental results against:\n\n- Unit-cell simulations.\n- Periodic boundary-condition simulations.\n- Homogenized models.\n- Macroscopic effective-property predictions.\n\n## 14.1 Homogenization Validation\n\nEvaluate whether the effective-property approximation is appropriate for the experimental scale and wavelength.\n\nIdentify:\n\n- Unit-cell size.\n- Wavelength.\n- Operating frequency.\n- Periodicity assumptions.\n- Spatial dispersion concerns.\n- Measurement limitations.\n\nDo not assume that an effective-medium model remains valid outside its homogenization regime.\n\n## 14.2 Measured Versus Derived Properties\n\nDistinguish:\n\n- Directly measured S-parameters.\n- Retrieved effective properties.\n- Simulated effective properties.\n- Analytically derived effective properties.\n\nPreserve the retrieval method and assumptions.\n\n---\n\n# 15. Multiscale Experimental Validation\n\nIntegrate with Prompt 22.\n\nExperimental observations may be used to validate models at different physical scales.\n\nSupport relationships between:\n\n- Macroscopic measurements.\n- Mesoscopic measurements.\n- Microstructure imaging.\n- Microscopic material characterization.\n- Molecular or atomic measurements where supported.\n\nPotential data sources include:\n\n- Optical microscopy.\n- Electron microscopy.\n- X-ray imaging.\n- Tomography.\n- Material spectroscopy.\n- Diffraction measurements.\n- Mechanical characterization.\n- Thermal characterization.\n\nThe architecture should support measured microstructure data being associated with the corresponding multiscale material model.\n\nFor example:\n\n1. Measure a physical unit cell.\n2. Import its geometric characterization.\n3. Associate the geometry with a microstructure model.\n4. Extract material or structural parameters.\n5. Calculate effective properties.\n6. Compare those properties against macroscopic experimental measurements.\n7. Update the material model where justified.\n\nPreserve lineage across every scale.\n\nDo not claim atomistic or quantum experimental validation merely because microscopy data is available.\n\n---\n\n# 16. Dynamic Material State and Experimental Observation\n\nIntegrate with Prompt 23.\n\nSupport experiments involving materials whose properties evolve over time or under changing conditions.\n\nExamples:\n\n- Thermal expansion.\n- Phase transitions.\n- Plastic deformation.\n- Hysteresis.\n- Fatigue.\n- Damage.\n- Stress-dependent properties.\n- Temperature-dependent conductivity.\n- Field-dependent material behavior.\n- Nonlinear response.\n- Viscoelasticity.\n\nAllow measurements to be associated with material state.\n\nFor example:\n\n- Temperature at measurement time.\n- Applied stress.\n- Strain history.\n- Magnetic field.\n- Electric field.\n- Loading history.\n- Heating and cooling cycles.\n- Prior deformation.\n\nThe objective is to compare predicted material evolution against measured behavior.\n\nWhere supported, use experimental observations to refine dynamic constitutive models.\n\nPreserve the distinction between observed state variables and inferred internal material states.\n\n---\n\n# 17. Conservation and Experimental Energy Accounting\n\nIntegrate with Prompt 24.\n\nExperimental energy and momentum accounting introduces additional measurement considerations.\n\nSupport experimental accounting where sufficient measurements exist.\n\nExamples:\n\n- Electrical input and output power.\n- Mechanical work.\n- Heat transfer.\n- Acoustic power.\n- Electromagnetic power flow.\n- Momentum transfer.\n- Force and displacement relationships.\n- Mass flow.\n- Charge transfer.\n\nAccount for measurement uncertainty and unmeasured contributions.\n\n## 17.1 Experimental Energy Balance\n\nWhere applicable, compare:\n\n- Energy input.\n- Energy stored.\n- Energy transferred.\n- Energy dissipated.\n- Energy remaining in the system.\n\nThe experimental balance should include uncertainty bounds.\n\nDo not force an exact balance when measurement uncertainty or unmeasured energy pathways prevent it.\n\n## 17.2 Experimental Conservation Diagnostics\n\nIdentify possible discrepancies caused by:\n\n- Missing sensors.\n- Incorrect sensor calibration.\n- Unmeasured energy pathways.\n- Incomplete system boundaries.\n- Incorrect synchronization.\n- Sampling limitations.\n- Sensor loading.\n- Instrument bandwidth.\n- Incorrect physical assumptions.\n\nDistinguish measurement inconsistency from genuine model disagreement.\n\n---\n\n# 18. Experimental Support for Inverse Design\n\nIntegrate directly with Prompt 25.\n\nExperimental results should be able to improve the reliability of future inverse-design operations.\n\nSupport:\n\n- Calibration of models used by optimizers.\n- Experimental validation of selected candidates.\n- Comparison of candidate predictions against measured performance.\n- Manufacturing deviation characterization.\n- Experimental constraint refinement.\n- Robustness-model improvement.\n- Experimental response-surface generation.\n- Surrogate-model training using verified experimental data.\n\n## 18.1 Experimental Candidate Validation\n\nA candidate promoted through inverse design may subsequently be fabricated and measured.\n\nAllow the experiment to reference the exact candidate revision.\n\nCompare:\n\n- Predicted geometry.\n- Manufactured geometry.\n- Predicted material properties.\n- Measured material properties.\n- Predicted physical response.\n- Measured physical response.\n\nThe resulting experimental validation record must remain linked to the original candidate.\n\n## 18.2 Closed-Loop Design Refinement\n\nWhere appropriate, support:\n\n1. Generate candidate through inverse design.\n2. Validate candidate numerically.\n3. Fabricate or assemble candidate.\n4. Measure physical performance.\n5. Compare against prediction.\n6. Identify discrepancies.\n7. Update calibrated model parameters.\n8. Re-evaluate candidate.\n9. Generate improved candidates.\n\nThis establishes an experimental feedback loop between physical manufacturing, measurement, simulation, and design discovery.\n\nDo not automatically modify a validated design based on an unreviewed experimental result.\n\n---\n\n# 19. Experimental Visualization and Laboratory Workspace\n\nCreate a dedicated experimental laboratory workspace integrated into the existing application.\n\nThe workspace should provide:\n\n### Experiment Explorer\n\n- Experiment list.\n- Experiment status.\n- Associated physical system.\n- Measurement datasets.\n- Instrument information.\n- Calibration status.\n- Validation status.\n\n### Measurement Viewer\n\n- Raw measurement visualization.\n- Processed data visualization.\n- Time-domain plots.\n- Frequency-domain plots.\n- Spatial field maps.\n- Measurement metadata.\n- Uncertainty visualization.\n\n### Simulation Comparison\n\n- Predicted versus measured overlays.\n- Residual plots.\n- Spatial difference maps.\n- Frequency-response comparisons.\n- Modal comparisons.\n- Transient comparisons.\n\n### Calibration Workspace\n\n- Model parameter selection.\n- Parameter bounds.\n- Fitting method.\n- Calibration progress.\n- Parameter estimates.\n- Residual analysis.\n- Identifiability.\n- Confidence intervals.\n\n### Experimental Report\n\nGenerate a report containing:\n\n- Experimental objective.\n- Experimental configuration.\n- Instrument information.\n- Calibration status.\n- Measurement conditions.\n- Raw dataset references.\n- Processing history.\n- Simulation configuration.\n- Comparison results.\n- Error metrics.\n- Uncertainty analysis.\n- Calibration results.\n- Validation conclusions.\n- Known limitations.\n\nPreserve the existing application design language.\n\nDo not overwhelm the main engineering interface with experimental controls.\n\nUse dedicated workflows and contextual panels.\n\n---\n\n# 20. Live and Streaming Measurements\n\nWhere supported by the existing architecture, implement live measurement acquisition.\n\nSupport:\n\n- Live instrument data.\n- Streaming sensor data.\n- Multi-channel acquisition.\n- Real-time visualization.\n- Measurement status.\n- Buffer management.\n- Acquisition interruption.\n- Data integrity checks.\n- Timestamp preservation.\n\nThe live measurement architecture must not block the main GUI thread.\n\nUse existing asynchronous or job-management infrastructure where possible.\n\nSupport recording live measurements into persistent experimental datasets.\n\nDo not require live acquisition for basic experimental analysis.\n\nImported datasets must remain fully supported.\n\n---\n\n# 21. AI-Assisted Experimental Analysis\n\nIf RESONANT already has an AI or natural-language interface, integrate it with the laboratory.\n\nThe assistant should be able to help users:\n\n- Interpret experimental objectives.\n- Identify relevant measurement quantities.\n- Suggest suitable instruments based on declared capabilities.\n- Identify missing metadata.\n- Suggest measurement configurations.\n- Explain differences between predictions and observations.\n- Identify possible sources of discrepancy.\n- Recommend additional measurements.\n- Explain calibration results.\n- Suggest experiments that distinguish competing physical explanations.\n\nFor example:\n\n\"The measured resonant frequency is approximately 4% below the predicted value, and the measured Q factor is substantially lower. Investigate possible explanations involving material loss, dimensional tolerances, coupling, and boundary conditions.\"\n\nThe AI should be able to inspect the actual experimental and simulation records and identify relevant evidence.\n\nHowever:\n\n- It must not invent measurements.\n- It must not silently alter model parameters.\n- It must not declare a model validated without supporting evidence.\n- It must distinguish hypotheses from established findings.\n- It must identify missing information.\n- It must preserve the user's control over model changes.\n\nIf the repository does not contain a suitable AI integration, establish a clean API for future use without introducing an unnecessary external dependency.\n\n---\n\n# 22. Automation and Programmatic Access\n\nIntegrate the experimental laboratory with the existing automation architecture.\n\nExpose operations for:\n\n- Create experiment.\n- Retrieve experiment.\n- Update experimental configuration.\n- Import measurement dataset.\n- Discover instruments.\n- Connect instrument.\n- Configure instrument.\n- Start acquisition.\n- Stop acquisition.\n- Retrieve acquisition status.\n- Retrieve measurement data.\n- Process measurement data.\n- Extract physical quantities.\n- Compare simulation and experiment.\n- Calculate uncertainty.\n- Create calibration job.\n- Inspect calibration results.\n- Validate a model.\n- Generate experimental reports.\n- Export experimental datasets.\n\nLong-running acquisition, processing, and calibration jobs must use existing job-management infrastructure where available.\n\nAutomation must preserve the same provenance, uncertainty, and validation information as the GUI.\n\n---\n\n# 23. Persistence and Experimental Reproducibility\n\nExperimental data must be treated as a permanent scientific record.\n\nPersist:\n\n- Experiment definitions.\n- Experimental configurations.\n- Instrument configurations.\n- Calibration records.\n- Raw datasets.\n- Processed datasets.\n- Processing history.\n- Simulation references.\n- Comparison results.\n- Error metrics.\n- Uncertainty models.\n- Calibration results.\n- Validation datasets.\n- Reports.\n- Provenance.\n\nRaw measurement datasets must remain immutable.\n\nSupport recovery of interrupted acquisitions where the instrument and acquisition method permit it.\n\nSupport interrupted calibration recovery where feasible.\n\nPreserve compatibility with existing project persistence and versioning.\n\nAvoid storing unnecessarily large raw datasets inside ordinary project metadata when the existing architecture supports external or referenced data storage.\n\nEnsure that referenced datasets remain portable and recoverable.\n\n---\n\n# 24. Scientific Validation and Benchmark Experiments\n\nCreate a serious experimental validation test suite.\n\nUse both synthetic datasets with known ground truth and actual physical measurements where available.\n\nSynthetic datasets are appropriate for verifying algorithms and uncertainty calculations, but they must never be presented as actual experimental evidence.\n\n## 24.1 Resonator Validation\n\nCreate or import a known resonator measurement dataset.\n\nVerify:\n\n- Resonance extraction.\n- Q-factor estimation.\n- Bandwidth calculation.\n- Phase response.\n- Simulation comparison.\n- Measurement uncertainty.\n\n## 24.2 Frequency Response Validation\n\nUse a known frequency-response dataset.\n\nVerify:\n\n- Amplitude alignment.\n- Phase alignment.\n- Frequency-axis consistency.\n- Residual calculations.\n- Comparison metrics.\n\n## 24.3 Material Parameter Calibration\n\nUse a physical model with known parameters and synthetic observations.\n\nVerify that the calibration framework can recover the parameters within documented uncertainty.\n\nTest parameter identifiability.\n\n## 24.4 Spatial Field Comparison\n\nUse a known spatial field distribution.\n\nVerify:\n\n- Coordinate transformation.\n- Spatial alignment.\n- Interpolation.\n- Field comparison.\n- Spatial residual visualization.\n\n## 24.5 Thermal Validation\n\nWhere a thermal solver exists, compare a known thermal simulation against a corresponding measured or synthetic temperature dataset.\n\nVerify uncertainty-aware comparison.\n\n## 24.6 Conservation Validation\n\nConstruct an experimental energy balance with known measurement uncertainty.\n\nVerify:\n\n- Input and output accounting.\n- Uncertainty propagation.\n- Missing contribution detection.\n- Conservation discrepancy reporting.\n\n## 24.7 Invalid Dataset Handling\n\nTest:\n\n- Missing units.\n- Invalid timestamps.\n- Malformed files.\n- Inconsistent sampling rates.\n- Missing channels.\n- NaN and infinite values.\n- Incompatible coordinate systems.\n- Incomplete instrument metadata.\n\nVerify that errors are explicit and raw data is preserved.\n\n## 24.8 Calibration and Independent Validation\n\nUse separate calibration and validation datasets.\n\nVerify that a model can improve its fit to calibration observations without incorrectly claiming independent validation.\n\n---\n\n# 25. Implementation Strategy\n\nImplement this capability in deliberate phases.\n\n## Phase 1 \u2014 Architecture Audit and Experimental Data Model\n\n- Audit existing infrastructure.\n- Establish experiment identity and persistence.\n- Define measurement and dataset representations.\n- Establish immutable raw-data handling.\n- Define instrument abstraction.\n- Define experimental provenance.\n\n## Phase 2 \u2014 Data Import and Processing\n\n- Implement dataset import.\n- Validate metadata and units.\n- Implement processing provenance.\n- Integrate existing numerical and signal-processing systems.\n- Implement measurement visualization.\n\nThis is the first major functional milestone.\n\n## Phase 3 \u2014 Simulation-to-Experiment Comparison\n\n- Associate experiments with simulation revisions.\n- Implement physical quantity matching.\n- Implement coordinate and time alignment.\n- Implement comparison metrics.\n- Implement residual visualization.\n\nThis is the central scientific milestone.\n\n## Phase 4 \u2014 Calibration and Parameter Estimation\n\n- Implement parameter estimation.\n- Implement uncertainty-aware fitting.\n- Implement identifiability analysis.\n- Preserve calibrated model revisions.\n- Separate calibration from validation.\n\n## Phase 5 \u2014 Instrument Integration\n\n- Implement the common instrument interface.\n- Implement one or more practical adapters.\n- Add acquisition and status monitoring.\n- Add synchronization metadata.\n- Add live visualization where supported.\n\n## Phase 6 \u2014 Domain-Specific Experimental Integration\n\n- Integrate resonance measurements.\n- Integrate metamaterial characterization.\n- Integrate material characterization.\n- Integrate thermal and mechanical measurements where supported.\n- Integrate conservation accounting.\n\n## Phase 7 \u2014 Inverse Design Feedback\n\n- Link experiments to inverse-design candidates.\n- Support experimental candidate validation.\n- Integrate verified experimental data into model calibration.\n- Support controlled closed-loop design refinement.\n\n## Phase 8 \u2014 GUI, Automation, and Reporting\n\n- Implement laboratory workspace.\n- Implement experiment explorer.\n- Implement measurement viewer.\n- Implement calibration workspace.\n- Implement reports.\n- Integrate automation APIs.\n\n## Phase 9 \u2014 Scientific Validation and Documentation\n\n- Run synthetic benchmark experiments.\n- Run available physical measurement tests.\n- Verify data integrity.\n- Verify reproducibility.\n- Verify uncertainty handling.\n- Verify calibration and independent validation.\n- Document supported capabilities and limitations.\n\nPrioritize a complete, usable experimental data and simulation-comparison workflow before attempting extensive hardware integrations or autonomous experimental discovery.\n\n---\n\n# 26. Explicit Scientific and Engineering Guardrails\n\nThese requirements are mandatory.\n\n1. Do not confuse simulated data with experimental measurements.\n2. Do not present synthetic benchmark data as physical experimental evidence.\n3. Do not overwrite raw measurement data.\n4. Do not discard measurement provenance.\n5. Do not compare incompatible physical quantities without explicit conversion.\n6. Do not ignore coordinate-system differences.\n7. Do not imply phase synchronization without evidence.\n8. Do not confuse instrument calibration with physical model calibration.\n9. Do not claim measurement traceability without supporting documentation.\n10. Do not ignore measurement uncertainty.\n11. Do not assume uncertainty sources are independent without justification.\n12. Do not confuse measurement resolution with measurement accuracy.\n13. Do not calibrate against a dataset and call the same dataset independent validation.\n14. Do not claim parameter identifiability without examining it.\n15. Do not permit arbitrary correction factors to conceal incorrect physics.\n16. Do not automatically modify physical models based on unreviewed measurements.\n17. Do not treat every spectral peak as a structural resonance.\n18. Do not infer direct energy measurement from indirect sensor measurements without identifying the derivation.\n19. Do not claim physical validation outside the experimentally supported operating range.\n20. Do not assume nominal CAD geometry exactly represents a manufactured specimen.\n21. Do not claim experimental conservation when unmeasured pathways remain significant.\n22. Do not allow live acquisition to block the GUI.\n23. Do not make hardware integration mandatory for imported-data workflows.\n24. Do not create duplicate experiment, material, geometry, or solver infrastructure.\n25. Preserve the distinction between prediction, measurement, calibration, and independent validation.\n\n**Experimental evidence must be traceable, uncertainty-aware, and scientifically interpretable.**\n\n---\n\n# 27. Acceptance Criteria\n\nPrompt 26 is complete when the following conditions are met.\n\n### Experimental Architecture\n\n- [ ] A common experiment representation exists.\n- [ ] Measurement datasets have stable identities.\n- [ ] Raw data is immutable.\n- [ ] Processed datasets preserve provenance.\n- [ ] Experimental configurations are persistent.\n- [ ] Experiments can reference physical model revisions.\n\n### Data Acquisition and Import\n\n- [ ] At least one practical measurement import workflow works.\n- [ ] Dataset metadata is validated.\n- [ ] Units and coordinate systems are preserved.\n- [ ] Invalid datasets are reported clearly.\n- [ ] Imported data can be analyzed without connected hardware.\n\n### Instrument Integration\n\n- [ ] A reusable instrument abstraction exists.\n- [ ] Instrument capabilities are represented.\n- [ ] At least one practical instrument adapter works where hardware or a testable interface is available.\n- [ ] Acquisition does not block the GUI.\n- [ ] Instrument status and errors are visible.\n\n### Simulation Comparison\n\n- [ ] Simulation and experimental data can be associated.\n- [ ] Compatible quantities can be compared.\n- [ ] Unit and coordinate alignment is supported.\n- [ ] Comparison metrics are implemented.\n- [ ] Residuals can be visualized.\n- [ ] Comparison provenance is preserved.\n\n### Calibration and Validation\n\n- [ ] At least one physical model parameter can be calibrated using data.\n- [ ] Calibration uncertainty is represented.\n- [ ] Parameter identifiability is assessed where applicable.\n- [ ] Calibration and validation datasets remain distinct.\n- [ ] Calibrated model revisions preserve their ancestry.\n\n### Scientific Analysis\n\n- [ ] Experimental resonance analysis is available where supported.\n- [ ] Uncertainty analysis is implemented.\n- [ ] Experimental energy accounting is supported where sufficient data exists.\n- [ ] Synthetic benchmark tests have known ground truth.\n- [ ] No synthetic dataset is presented as physical evidence.\n\n### Integration\n\n- [ ] Experimental results integrate with CEME.\n- [ ] Geometry and material revisions can be referenced.\n- [ ] Resonance analysis integrates with Prompt 20.\n- [ ] Metamaterial characterization integrates with Prompt 21 where supported.\n- [ ] Multiscale experimental lineage integrates with Prompt 22 where supported.\n- [ ] Dynamic material-state observations integrate with Prompt 23 where supported.\n- [ ] Conservation analysis integrates with Prompt 24.\n- [ ] Inverse-design candidates can reference experimental validation from Prompt 25.\n\n### User Experience\n\n- [ ] A laboratory workspace exists.\n- [ ] Experiments can be created and inspected.\n- [ ] Measurement data can be imported and visualized.\n- [ ] Simulation comparisons can be inspected.\n- [ ] Calibration results can be reviewed.\n- [ ] Experimental reports can be generated.\n\n### Scientific Quality\n\n- [ ] Raw data integrity is preserved.\n- [ ] Measurement uncertainty is not silently discarded.\n- [ ] Calibration and independent validation are distinguished.\n- [ ] At least two meaningful validation benchmarks pass.\n- [ ] Known limitations are documented.\n- [ ] No unsupported claims of experimental validation are made.\n\nCompletion does not require universal instrument support, autonomous experimentation, or experimental characterization across every physical domain.\n\nIt requires a reusable experimental architecture, reliable data ingestion, meaningful simulation-to-experiment comparison, controlled model calibration, and a scientifically defensible validation workflow.\n\n---\n\n# 28. Final Engineering Report\n\nWhen implementation is complete, provide a detailed engineering report containing:\n\n1. Existing architecture audit.\n2. Experimental laboratory architecture.\n3. Experimental data model.\n4. Raw-data preservation and provenance.\n5. Supported data formats.\n6. Instrument abstraction.\n7. Implemented instrument adapters.\n8. Acquisition and synchronization.\n9. Measurement calibration.\n10. Signal and field processing.\n11. Simulation-to-experiment comparison.\n12. Uncertainty and error budgets.\n13. Parameter estimation.\n14. Identifiability analysis.\n15. Calibration and independent validation.\n16. Resonance validation.\n17. Metamaterial characterization.\n18. Multiscale experimental integration.\n19. Dynamic material-state integration.\n20. Experimental conservation accounting.\n21. Inverse-design feedback integration.\n22. GUI implementation.\n23. Automation integration.\n24. Persistence and reproducibility.\n25. Benchmark results.\n26. Test results.\n27. Performance observations.\n28. Known limitations.\n29. Deferred capabilities.\n30. Recommended next engineering steps.\n\nIdentify the relevant modules, interfaces, source files, and tests.\n\nClearly distinguish:\n\n- Fully implemented capabilities.\n- Partially implemented capabilities.\n- Interfaces established for future hardware.\n- Capabilities requiring additional physical instrumentation.\n- Capabilities requiring additional physical domain solvers.\n\nDo not report an instrument integration as operational unless it has been tested against a real instrument or a clearly identified hardware test environment.\n\n---\n\n# Final Directive\n\nRESONANT must become a platform in which computational predictions and experimental observations inform one another.\n\nThe platform should be able to describe a physical system, predict its behavior, investigate that behavior through physical measurement, compare the results, quantify uncertainty, and refine its understanding of the system.\n\nThe deeper objective is to create a continuous scientific relationship between theory, simulation, experiment, and engineering design.\n\nPrompt 25 gave RESONANT the ability to discover candidate physical structures from desired functions.\n\nPrompt 26 gives RESONANT the ability to determine whether those structures actually behave as predicted.\n\nTogether, these capabilities establish a powerful closed-loop scientific framework:\n\n**Model \u2192 Predict \u2192 Design \u2192 Fabricate \u2192 Measure \u2192 Compare \u2192 Learn \u2192 Refine \u2192 Discover Again.**\n\nThis is not simply a laboratory data viewer.\n\nIt is the experimental foundation of a physics-driven engineering discovery platform.\n\nImplement it as a cohesive extension of the existing architecture.\n\nPreserve scientific rigor, measurement traceability, uncertainty awareness, reproducibility, and the distinction between simulated predictions and experimentally demonstrated physical behavior.",
+  "file": "requests/inbox/2026-11-26-prompt-26-experimental-energy--req-chat-20261126-023.md",
+  "attachments": [],
+  "context": "User: 'add this prompt and process in order' (queued after REQ-CHAT-20261126-022, Prompt 24). Prompt 25 (inverse design and optimization), which this prompt builds on, has not been received; Prompt 12 (REQ-CHAT-20261126-008, being processed) builds the experiment and hardware framework this prompt extends.",
+  "text_sha256": "eb323eab1e9a636431e752a2d470c865881c0c3bdc5cda763cba04c64db420df",
+  "classification": {
+    "proposed_type": null,
+    "proposed_source": "heuristic",
+    "normalized_type": null,
+    "heuristic_type": "FEATURE",
+    "final_type": "FEATURE",
+    "confidence": "high",
+    "validation": "PASS",
+    "classifier_reason": "request statement is framed as feature: Implement, capability, evolve, framework",
+    "correction_reason": null,
+    "normalization_note": null,
+    "evidence": [
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement the next major scientific capability in RESONANT: **Experimental Energy\u2013Matter Laboratory and Physics-Based Validation**."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "capability",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement the next major scientific capability in RESONANT: **Experimental Energy\u2013Matter Laboratory and Physics-Based Validation**."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "evolve",
+        "strength": "strong",
+        "note": "",
+        "sentence": "RESONANT must evolve beyond computational physics and inverse design into a platform capable of connecting theoretical predictions, numerical simulations, physical measurements, and experimentally obs"
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "must establish",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The platform must establish a unified experimental framework in which physical systems can be characterized, measured, compared against simulations, and used to refine the models that describe them."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "framework",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The platform must establish a unified experimental framework in which physical systems can be characterized, measured, compared against simulations, and used to refine the models that describe them."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "capability",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This capability establishes an important new relationship between computational and experimental physics."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "objective",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The objective is to establish an experimental science framework that allows RESONANT to investigate how physical systems actually behave, quantify differences between prediction and observation, ident"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "framework",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The objective is to establish an experimental science framework that allows RESONANT to investigate how physical systems actually behave, quantify differences between prediction and observation, ident"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "allows",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The objective is to establish an experimental science framework that allows RESONANT to investigate how physical systems actually behave, quantify differences between prediction and observation, ident"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "integrate",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This must integrate with the scientific architecture established in Prompts 17\u201325."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "must become",
+        "strength": "strong",
+        "note": "",
+        "sentence": "It must become a first-class part of RESONANT's physics architecture."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "first-class",
+        "strength": "strong",
+        "note": "",
+        "sentence": "It must become a first-class part of RESONANT's physics architecture."
+      },
+      {
+        "category": "PERFORMANCE",
+        "where": "body",
+        "phrase": "optimization",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Prompt 25 inverse design and optimization."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "integration",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Existing AI or natural-language integration."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Produce",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Produce an architecture map and an implementation plan."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Reuse",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Reuse existing systems wherever possible."
+      },
+      {
+        "category": "PERFORMANCE",
+        "where": "body",
+        "phrase": "optimization",
+        "strength": "weak",
+        "note": "enumeration",
+        "sentence": "Do not duplicate the geometry, material, solver, CEME, optimization, or conservation infrastructure."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Create a common experimental framework."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "framework",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Create a common experimental framework."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "must support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The laboratory must support the complete lifecycle of an experiment:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "objective",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Define an experimental objective."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "objective",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Experimental objective."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support both",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support both imported datasets and measurements acquired through connected instrumentation."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "introducing",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Audit existing format support before introducing additional dependencies."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Provide",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Provide a clear import report."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "must be able",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The user must be able to inspect how a derived quantity was calculated."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Create an extensible instrument integration layer."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "integration",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Create an extensible instrument integration layer."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support instrument communication through existing or appropriate protocols, including:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not implement every protocol merely to satisfy a checklist."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capabilities",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Every instrument adapter must declare its capabilities."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capabilities",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not assume two instruments have equivalent measurement capabilities merely because they measure the same physical quantity."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "framework",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The experimental framework must remain useful without connected instruments."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "must be able",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Users must be able to import datasets, perform analyses, compare simulations, and calibrate models using previously acquired measurements."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "integration",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Instrument integration should extend the laboratory, not define its existence."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "extend",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Instrument integration should extend the laboratory, not define its existence."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support recording:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Allow",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Allow the user to record measured deviations such as:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement a synchronization framework where supported."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "framework",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement a synchronization framework where supported."
+      }
+    ],
+    "scores": {
+      "FEATURE": {
+        "head": 6,
+        "body": 173
+      },
+      "BUG": {
+        "head": 0,
+        "body": 17
+      },
+      "CRASH": {
+        "head": 0,
+        "body": 0
+      },
+      "REGRESSION": {
+        "head": 0,
+        "body": 0
+      },
+      "PERFORMANCE": {
+        "head": 0,
+        "body": 3
+      },
+      "REFACTOR": {
+        "head": 0,
+        "body": 5
+      },
+      "BUILD": {
+        "head": 0,
+        "body": 0
+      },
+      "DOCUMENTATION": {
+        "head": 0,
+        "body": 5
+      },
+      "INVESTIGATION": {
+        "head": 1,
+        "body": 52
+      },
+      "PROCESS-CHANGE": {
+        "head": 0,
+        "body": 0
+      }
+    },
+    "evidence_total": 262,
+    "validator": "scripts/request_classification.py"
+  },
+  "links": {
+    "work": [
+      "WORK-000024"
+    ]
+  },
+  "commits": [],
+  "resolution": {
+    "from": "processing",
+    "to": "completed",
+    "at": "2026-11-28T07:24:58.535942+00:00",
+    "by": "agent-dev-20261126151713-76f632",
+    "gates": [
+      {
+        "work": "WORK-000024",
+        "at": "2026-11-28T07:24:48.624465+00:00",
+        "verdict": "PASS",
+        "request_fingerprint": "0eb2657ec67ecd2e2830b19ccf2573bbe63dded3c46308a00b621648f172feab",
+        "test_runs": [
+          "20261128T021903-1231985"
+        ]
+      }
+    ]
+  }
+}

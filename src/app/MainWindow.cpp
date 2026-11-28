@@ -23,6 +23,8 @@
 #include "MaterialScalesPanel.h"
 #include "AccountingController.h"
 #include "AccountingPanel.h"
+#include "LaboratoryController.h"
+#include "LaboratoryPanel.h"
 #include "MaterialStateController.h"
 #include "MaterialStatePanel.h"
 #include "MultiscaleController.h"
@@ -111,6 +113,7 @@ MainWindow::MainWindow(QWidget* parent)
     ui_->menuPanels->addAction(ui_->materialScalesDock->toggleViewAction());
     ui_->menuPanels->addAction(ui_->materialStateDock->toggleViewAction());
     ui_->menuPanels->addAction(ui_->accountingDock->toggleViewAction());
+    ui_->menuPanels->addAction(ui_->laboratoryDock->toggleViewAction());
     ui_->menuPanels->addAction(ui_->pythonConsoleDock->toggleViewAction());
     ui_->menuPanels->addAction(ui_->demoStudioDock->toggleViewAction());
     ui_->menuPanels->addSeparator();
@@ -160,6 +163,7 @@ MainWindow::MainWindow(QWidget* parent)
     connectMultiscale();
     connectMaterialState();
     connectAccounting();
+    connectLaboratory();
     connectAutomation();
     connectHelp();
     connectDemos();
@@ -189,7 +193,8 @@ MainWindow::MainWindow(QWidget* parent)
     tabifyDockWidget(ui_->functionalDock, ui_->materialScalesDock);
     tabifyDockWidget(ui_->materialScalesDock, ui_->materialStateDock);
     tabifyDockWidget(ui_->materialStateDock, ui_->accountingDock);
-    tabifyDockWidget(ui_->accountingDock, ui_->demoStudioDock);
+    tabifyDockWidget(ui_->accountingDock, ui_->laboratoryDock);
+    tabifyDockWidget(ui_->laboratoryDock, ui_->demoStudioDock);
     tabifyDockWidget(ui_->analysisDock, ui_->pythonConsoleDock);
     ui_->demoStudioDock->hide();
     ui_->presenterDock->hide();
@@ -594,6 +599,19 @@ void MainWindow::connectExperiments()
 OptimizationPanel& MainWindow::optimizationPanel()
 {
     return *ui_->optimizationPanel;
+}
+
+LaboratoryPanel& MainWindow::laboratoryPanel()
+{
+    return *ui_->laboratoryPanel;
+}
+
+void MainWindow::connectLaboratory()
+{
+    laboratory_ = new LaboratoryController(controller_, this);
+    ui_->laboratoryPanel->setController(laboratory_);
+    connect(laboratory_, &LaboratoryController::calibrationFailed, this,
+            [this](const QString& message) { statusBar()->showMessage(tr("Laboratory: %1").arg(message), 8000); });
 }
 
 AccountingPanel& MainWindow::accountingPanel()

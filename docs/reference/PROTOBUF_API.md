@@ -21,6 +21,7 @@ carries a `resonant.v1.Error` (see [errors](#errors)).
 - [FunctionalStructureService](#functionalstructureservice) (15 methods)
 - [GeometryService](#geometryservice) (4 methods)
 - [JobService](#jobservice) (4 methods)
+- [LaboratoryService](#laboratoryservice) (24 methods)
 - [MaterialService](#materialservice) (6 methods)
 - [MaterialStateService](#materialstateservice) (12 methods)
 - [MultiphysicsService](#multiphysicsservice) (8 methods)
@@ -151,6 +152,37 @@ The unified background jobs (simulations, optimizations, workflows; also those t
 | `GetJob` | `GetJobRequest` | `GetJobResponse` | A job's state, progress, phase, error and results. |
 | `ListJobs` | `ListJobsRequest` | `ListJobsResponse` | The jobs of this application (all, or only those still running). |
 | `WaitForJob` | `WaitForJobRequest` | `WaitForJobResponse` | Waits for a job to end, for at most the timeout (600 s at most), and returns its state. |
+
+## LaboratoryService
+
+The experimental laboratory: studies linking experiments to models, imported datasets in the measurement store, processing, resonance extraction, uncertainty-aware comparison with predictions, error budgets and propagation, experimental energy balances, calibration of a model's physical parameters (a job, then an explicit acceptance), validation on independent data, explicit application as a new material revision, evidence summaries and reports.
+
+| Method | Request | Response | Description |
+|---|---|---|---|
+| `AcceptCalibration` | `AcceptCalibrationRequest` | `AcceptCalibrationResponse` | Keeps a calibration result in the project; one undo step. |
+| `ApplyCalibration` | `ApplyCalibrationRequest` | `ApplyCalibrationResponse` | Applies a kept calibration as a new material (or material-state study) revision, never over the original; one undo step. |
+| `CompareWithPrediction` | `CompareWithPredictionRequest` | `CompareWithPredictionResponse` | Compares a dataset with a prediction or another dataset and keeps the comparison record; one undo step. |
+| `DeleteLaboratoryStudy` | `DeleteLaboratoryStudyRequest` | `DeleteLaboratoryStudyResponse` | Removes a study; one undo step. |
+| `EvaluateEnergyBalance` | `EvaluateEnergyBalanceRequest` | `EvaluateEnergyBalanceResponse` | Evaluates an experimental energy balance against its measurement uncertainty. |
+| `EvaluateErrorBudget` | `EvaluateErrorBudgetRequest` | `EvaluateErrorBudgetResponse` | Evaluates an error budget: combined, expanded and effective degrees of freedom. |
+| `ExplainRecord` | `ExplainRecordRequest` | `ExplainRecordResponse` | An evidence summary of a record: findings, hypotheses (marked), missing information, suggestions. |
+| `ExportDataset` | `ExportDatasetRequest` | `ExportDatasetResponse` | A dataset as CSV or JSON. |
+| `ExtractResonances` | `ExtractResonancesRequest` | `ExtractResonancesResponse` | Resonances of a measured response (classified with their evidence) or a ring-down. |
+| `GenerateLaboratoryReport` | `GenerateLaboratoryReportRequest` | `GenerateLaboratoryReportResponse` | A study's report (Markdown or HTML). |
+| `GetCalibrationResult` | `GetCalibrationResultRequest` | `GetCalibrationResultResponse` | A calibration job's result: estimates, intervals, correlations, identifiability. |
+| `GetDataset` | `GetDatasetRequest` | `GetDatasetResponse` | One dataset's record and data (thinned to max_points). |
+| `GetLaboratoryModelParameters` | `GetLaboratoryModelParametersRequest` | `GetLaboratoryModelParametersResponse` | The physical parameters a model exposes for a configuration (the only ones a calibration may vary). |
+| `GetLaboratoryStudy` | `GetLaboratoryStudyRequest` | `GetLaboratoryStudyResponse` | One study. |
+| `ImportDataset` | `ImportDatasetRequest` | `ImportDatasetResponse` | Imports a CSV, TSV, JSON or WAV file (content, or a path with file access) with an import report; one undo step. |
+| `ListDatasets` | `ListDatasetsRequest` | `ListDatasetsResponse` | The project's datasets with their category, provenance, instrument and calibration. |
+| `ListLaboratoryModels` | `ListLaboratoryModelsRequest` | `ListLaboratoryModelsResponse` | The physical models predictions come from, with their parameters and assumptions. |
+| `ListLaboratoryRecords` | `ListLaboratoryRecordsRequest` | `ListLaboratoryRecordsResponse` | The laboratory's records of one section. |
+| `ListLaboratoryStudies` | `ListLaboratoryStudiesRequest` | `ListLaboratoryStudiesResponse` | The studies, each with its links that went stale. |
+| `ProcessDataset` | `ProcessDatasetRequest` | `ProcessDatasetResponse` | Applies a processing step of the experiment framework; the result is a new derived dataset; one undo step. |
+| `PropagateUncertainty` | `PropagateUncertaintyRequest` | `PropagateUncertaintyResponse` | Propagates uncertainty through an expression, first order or by Monte Carlo. |
+| `SetLaboratoryStudy` | `SetLaboratoryStudyRequest` | `SetLaboratoryStudyResponse` | Adds or replaces a study; new model links get the content's current revision; one undo step. |
+| `StartCalibration` | `StartCalibrationRequest` | `StartCalibrationResponse` | Calibrates a model's physical parameters against datasets, as a job. |
+| `ValidateCalibration` | `ValidateCalibrationRequest` | `ValidateCalibrationResponse` | Validates a kept calibration on independent datasets; one undo step. |
 
 ## MaterialService
 
@@ -343,6 +375,21 @@ resonant.workflow templates run as jobs.
 | `header` | `ResponseHeader` |  |
 | `transaction` | `Transaction` |  |
 
+### AcceptCalibrationRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `result_id` | `string` |  |
+
+### AcceptCalibrationResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `changes` | `ChangeSummary` |  |
+| `calibration` | `google.protobuf.Struct` |  |
+
 ### AccountingRecordSummary
 
 A stored accounting record (REQ-CHAT-20261126-022, RES-ACC-016): the study, the ledger with its histories thinned, the systems and tolerances. The full record, with its reports evaluated again from the ledger, is the JSON document of GetAccountingRecord.
@@ -452,6 +499,22 @@ A model of an analysis kind.
 | `api_version` | `string` | "resonant.v1" |
 | `api_revision` | `string` | schema revision within v1 (additions only) |
 | `host` | `string` | "gui" or "headless" |
+
+### ApplyCalibrationRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `calibration_id` | `string` |  |
+| `options` | `google.protobuf.Struct` |  |
+
+### ApplyCalibrationResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `changes` | `ChangeSummary` |  |
+| `applied` | `google.protobuf.Struct` |  |
 
 ### ArrayElement
 
@@ -664,6 +727,22 @@ What a mutation changed, or would change in a dry run.
 |---|---|---|
 | `header` | `ResponseHeader` |  |
 | `comparison` | `google.protobuf.Struct` |  |
+
+### CompareWithPredictionRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `spec` | `google.protobuf.Struct` |  |
+
+### CompareWithPredictionResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `changes` | `ChangeSummary` |  |
+| `record` | `google.protobuf.Struct` |  |
+| `verdict` | `string` |  |
 
 ### Complex
 
@@ -1002,6 +1081,20 @@ Replaces the open project with a new, empty one. Refused (FAILED_PRECONDITION) w
 | `header` | `ResponseHeader` |  |
 | `changes` | `ChangeSummary` |  |
 
+### DeleteLaboratoryStudyRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `study_id` | `string` |  |
+
+### DeleteLaboratoryStudyResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `changes` | `ChangeSummary` |  |
+
 ### DeleteMaterialRequest
 
 Deletes a material; assignments to it are removed in the same undoable step.
@@ -1232,6 +1325,34 @@ Rotation as Z-Y-X Euler angles in radians (about X, Y, Z of the parent frame).
 | `y_radians` | `double` |  |
 | `z_radians` | `double` |  |
 
+### EvaluateEnergyBalanceRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `balance` | `google.protobuf.Struct` |  |
+
+### EvaluateEnergyBalanceResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `result` | `google.protobuf.Struct` |  |
+
+### EvaluateErrorBudgetRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `budget` | `google.protobuf.Struct` |  |
+
+### EvaluateErrorBudgetResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `result` | `google.protobuf.Struct` |  |
+
 ### Event
 
 | Field | Type | Description |
@@ -1339,6 +1460,20 @@ Runs a template (or a definition) on a copy of the project as a job; when it com
 | `structure_id` | `string` |  |
 | `candidates` | repeated `CandidateExplanation` |  |
 
+### ExplainRecordRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `record_id` | `string` |  |
+
+### ExplainRecordResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `explanation` | `google.protobuf.Struct` |  |
+
 ### ExportAccountingRequest
 
 | Field | Type | Description |
@@ -1354,6 +1489,21 @@ Runs a template (or a definition) on a copy of the project as a job; when it com
 | `header` | `ResponseHeader` |  |
 | `text` | `string` |  |
 | `format` | `string` |  |
+
+### ExportDatasetRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `dataset_id` | `string` |  |
+| `format` | `string` |  |
+
+### ExportDatasetResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `text` | `string` |  |
 
 ### ExportProjectJsonRequest
 
@@ -1384,6 +1534,20 @@ An external atomistic, molecular or electronic-structure engine (RES-MSC-010). N
 | `found` | `bool` |  |
 | `install` | `string` |  |
 | `provides` | repeated `string` |  |
+
+### ExtractResonancesRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `spec` | `google.protobuf.Struct` |  |
+
+### ExtractResonancesResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `result` | `google.protobuf.Struct` |  |
 
 ### FieldDataChunk
 
@@ -1492,6 +1656,21 @@ Sent instead of events a client asked for but that are no longer retained: the c
 | `first_missed_sequence` | `uint64` |  |
 | `last_missed_sequence` | `uint64` |  |
 | `oldest_retained_sequence` | `uint64` |  |
+
+### GenerateLaboratoryReportRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `study_id` | `string` |  |
+| `format` | `string` |  |
+
+### GenerateLaboratoryReportResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `text` | `string` |  |
 
 ### GenerateMicrostructureRequest
 
@@ -1609,6 +1788,21 @@ Geometry of an object: a kind of the geometry registry with its parameters (SI u
 | `header` | `ResponseHeader` |  |
 | `array` | `AcousticArray` |  |
 
+### GetCalibrationResultRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `result_id` | `string` |  |
+
+### GetCalibrationResultResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `calibration` | `google.protobuf.Struct` |  |
+| `status` | `string` |  |
+
 ### GetCapabilitiesRequest
 
 | Field | Type | Description |
@@ -1638,6 +1832,21 @@ Geometry of an object: a kind of the geometry registry with its parameters (SI u
 |---|---|---|
 | `header` | `ResponseHeader` |  |
 | `result` | `CoupledResult` |  |
+
+### GetDatasetRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `dataset_id` | `string` |  |
+| `max_points` | `int32` |  |
+
+### GetDatasetResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `dataset` | `google.protobuf.Struct` |  |
 
 ### GetDiagnosticsRequest
 
@@ -1708,6 +1917,35 @@ Geometry of an object: a kind of the geometry registry with its parameters (SI u
 |---|---|---|
 | `header` | `ResponseHeader` |  |
 | `job` | `Job` |  |
+
+### GetLaboratoryModelParametersRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `model` | `string` |  |
+| `configuration` | `google.protobuf.Struct` |  |
+
+### GetLaboratoryModelParametersResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `parameters` | repeated `google.protobuf.Struct` |  |
+
+### GetLaboratoryStudyRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `study_id` | `string` |  |
+
+### GetLaboratoryStudyResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `study` | `google.protobuf.Struct` |  |
 
 ### GetLocalStateRequest
 
@@ -1981,6 +2219,22 @@ A resonance identified from a signal (complex poles) or a spectrum (a Lorentzian
 | `relative_residual` | `double` | signals |
 | `warnings` | repeated `string` |  |
 
+### ImportDatasetRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `spec` | `google.protobuf.Struct` | {"content" / "path", "fileName", "format", "provenance", "study", "role", "acceptPartial", ...} |
+
+### ImportDatasetResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `changes` | `ChangeSummary` |  |
+| `report` | `google.protobuf.Struct` |  |
+| `accepted` | `bool` |  |
+
 ### IterateRegionCouplingRequest
 
 | Field | Type | Description |
@@ -2104,6 +2358,19 @@ job.updated (state or progress; progress events are throttled)
 | `header` | `ResponseHeader` |  |
 | `models` | repeated `CouplingModel` |  |
 
+### ListDatasetsRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+
+### ListDatasetsResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `datasets` | repeated `google.protobuf.Struct` |  |
+
 ### ListDerivationMethodsRequest
 
 | Field | Type | Description |
@@ -2201,6 +2468,48 @@ job.updated (state or progress; progress events are throttled)
 |---|---|---|
 | `header` | `ResponseHeader` |  |
 | `jobs` | repeated `Job` |  |
+
+### ListLaboratoryModelsRequest
+
+Requests and responses of the laboratory (REQ-CHAT-20261126-023, RES-LAB-017). The documents are JSON (Struct) in the formats of the laboratory's records.
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+
+### ListLaboratoryModelsResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `models` | repeated `google.protobuf.Struct` |  |
+
+### ListLaboratoryRecordsRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `section` | `string` |  |
+
+### ListLaboratoryRecordsResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `records` | repeated `google.protobuf.Struct` |  |
+
+### ListLaboratoryStudiesRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+
+### ListLaboratoryStudiesResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `studies` | repeated `google.protobuf.Struct` |  |
 
 ### ListMaterialStateModelsRequest
 
@@ -2637,6 +2946,22 @@ A physical system stored in the project; `definition` is its resonant.physical-s
 | `name` | `string` |  |
 | `definition` | `google.protobuf.Struct` |  |
 
+### ProcessDatasetRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `dataset_id` | `string` |  |
+| `step` | `google.protobuf.Struct` |  |
+
+### ProcessDatasetResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `changes` | `ChangeSummary` |  |
+| `record` | `google.protobuf.Struct` |  |
+
 ### Project
 
 | Field | Type | Description |
@@ -2664,6 +2989,20 @@ project.opened, project.saved, project.replaced, project.changed (any committed 
 | `project_id` | `string` |  |
 | `project_name` | `string` |  |
 | `description` | `string` |  |
+
+### PropagateUncertaintyRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `spec` | `google.protobuf.Struct` |  |
+
+### PropagateUncertaintyResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `result` | `google.protobuf.Struct` |  |
 
 ### QueryAccountingRequest
 
@@ -3041,6 +3380,20 @@ session.opened / closed
 | `structure` | `FunctionalStructure` |  |
 | `changes` | `ChangeSummary` |  |
 
+### SetLaboratoryStudyRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `study` | `google.protobuf.Struct` |  |
+
+### SetLaboratoryStudyResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `changes` | `ChangeSummary` |  |
+
 ### SetMaterialStateStudyRequest
 
 | Field | Type | Description |
@@ -3186,6 +3539,20 @@ Starts the field calculation as a job (returns at once with the job; the result 
 | `header` | `ResponseHeader` |  |
 | `job` | `Job` |  |
 | `plan` | `AcousticFieldPlan` |  |
+
+### StartCalibrationRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `spec` | `google.protobuf.Struct` |  |
+
+### StartCalibrationResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `job` | `Job` |  |
 
 ### StartCoupledSimulationRequest
 
@@ -3371,6 +3738,25 @@ Changes the fields that are set. Refused with CONFLICT when expected_revision is
 | `header` | `ResponseHeader` |  |
 | `object` | `SceneObject` |  |
 | `changes` | `ChangeSummary` |  |
+
+### ValidateCalibrationRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `calibration_id` | `string` |  |
+| `datasets` | repeated `string` | never the calibration's own datasets |
+| `axis_datasets` | repeated `string` | per dataset, the dataset giving its axis (or empty) |
+| `validation_id` | `string` |  |
+
+### ValidateCalibrationResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `changes` | `ChangeSummary` |  |
+| `validation` | `google.protobuf.Struct` |  |
+| `status` | `string` |  |
 
 ### ValidateFunctionalStructureRequest
 
