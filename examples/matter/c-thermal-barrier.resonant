@@ -1,0 +1,478 @@
+{
+  "format": "resonant-project",
+  "schemaVersion": 1,
+  "application": {
+    "name": "Resonant",
+    "version": "0.1.0"
+  },
+  "project": {
+    "id": "ex-fam-c",
+    "name": "c-thermal-barrier",
+    "createdUtc": "2026-11-28T00:00:00Z",
+    "modifiedUtc": "2026-11-28T00:00:00Z"
+  },
+  "units": {
+    "angle": "rad",
+    "axes": "right-handed; X horizontal, Y depth, Z vertical (up)",
+    "frequency": "Hz",
+    "length": "m",
+    "mass": "kg",
+    "rotation": "intrinsic Z-Y-X Euler angles stored as [x, y, z]",
+    "time": "s"
+  },
+  "materials": [
+    {
+      "id": "mat-fam-in718",
+      "name": "Nickel superalloy 718",
+      "description": "Representative handbook values for the architected-matter examples.",
+      "domains": {
+        "mechanical": {
+          "youngsModulus": {
+            "value": 200000000000.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "poissonsRatio": {
+            "value": 0.29,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "density": {
+            "value": 8190,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        },
+        "thermal": {
+          "density": {
+            "value": 8190,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "thermalConductivity": {
+            "value": 11.4,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "specificHeat": {
+            "value": 435,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "thermalExpansion": {
+            "value": 1.3e-05,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        },
+        "electromagnetic": {
+          "relativePermittivity": {
+            "value": 1.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "relativePermeability": {
+            "value": 1.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "conductivity": {
+            "value": 770000.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "lossTangent": {
+            "value": 0.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        }
+      }
+    },
+    {
+      "id": "mat-fam-nicraly",
+      "name": "NiCrAlY bond coat",
+      "description": "Representative handbook values for the architected-matter examples.",
+      "domains": {
+        "mechanical": {
+          "youngsModulus": {
+            "value": 150000000000.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "poissonsRatio": {
+            "value": 0.3,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "density": {
+            "value": 7320,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        },
+        "thermal": {
+          "density": {
+            "value": 7320,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "thermalConductivity": {
+            "value": 4.3,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "specificHeat": {
+            "value": 500,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "thermalExpansion": {
+            "value": 1.4e-05,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        }
+      }
+    },
+    {
+      "id": "mat-fam-ysz-aps",
+      "name": "Yttria-stabilized zirconia (plasma sprayed)",
+      "description": "Representative handbook values for the architected-matter examples.",
+      "domains": {
+        "mechanical": {
+          "youngsModulus": {
+            "value": 50000000000.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "poissonsRatio": {
+            "value": 0.2,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "density": {
+            "value": 5600,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        },
+        "thermal": {
+          "density": {
+            "value": 5600,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "thermalConductivity": {
+            "value": 1.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "specificHeat": {
+            "value": 500,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "thermalExpansion": {
+            "value": 1.05e-05,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        },
+        "electromagnetic": {
+          "relativePermittivity": {
+            "value": 25.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "relativePermeability": {
+            "value": 1.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "conductivity": {
+            "value": 1e-08,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "lossTangent": {
+            "value": 0.01,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        }
+      }
+    }
+  ],
+  "scene": {
+    "objects": [
+      {
+        "id": "ex-fam-tbc",
+        "type": "geometry",
+        "name": "Coated wall",
+        "visible": true,
+        "transform": {
+          "position": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "children": [],
+        "geometry": {
+          "kind": "box",
+          "parameters": {
+            "width": 0.05,
+            "depth": 0.05,
+            "height": 0.0034
+          }
+        },
+        "material": "mat-fam-in718"
+      }
+    ]
+  },
+  "simulations": [],
+  "extensions": {
+    "matter": {
+      "format": "resonant.matter",
+      "version": 1,
+      "architectures": [
+        {
+          "id": "arch-tbc",
+          "name": "Thermal barrier coating",
+          "representation": "as-designed",
+          "description": "A superalloy wall with a NiCrAlY bond coat and a plasma-sprayed zirconia top coat; the bond coat - top coat interface has a contact resistance.",
+          "objects": [
+            "ex-fam-tbc"
+          ],
+          "regions": [
+            {
+              "id": "wall",
+              "name": "Superalloy wall",
+              "object": "ex-fam-tbc",
+              "extent": "layer",
+              "role": "substrate",
+              "materialId": "mat-fam-in718",
+              "materialClass": "metal",
+              "process": "",
+              "operating": {
+                "temperature": [
+                  293.15,
+                  1100.0
+                ]
+              },
+              "limits": {
+                "maxTemperature": 1250.0,
+                "source": "illustrative"
+              }
+            },
+            {
+              "id": "bondcoat",
+              "name": "NiCrAlY bond coat",
+              "object": "ex-fam-tbc",
+              "extent": "layer",
+              "role": "adhesion",
+              "materialId": "mat-fam-nicraly",
+              "materialClass": "metal",
+              "process": "proc-hvof"
+            },
+            {
+              "id": "topcoat",
+              "name": "Zirconia top coat",
+              "object": "ex-fam-tbc",
+              "extent": "layer",
+              "role": "thermal-barrier",
+              "materialId": "mat-fam-ysz-aps",
+              "materialClass": "ceramic",
+              "process": "proc-aps",
+              "operating": {
+                "temperature": [
+                  293.15,
+                  1400.0
+                ]
+              },
+              "microstructure": {
+                "crystalStructure": "tetragonal (t')",
+                "porosity": {
+                  "value": 0.12,
+                  "provenance": "literature",
+                  "source": "a typical plasma-sprayed porosity"
+                },
+                "grainSize": {
+                  "value": 1e-06,
+                  "provenance": "literature",
+                  "source": "columnar grains within the splats",
+                  "unit": "m"
+                },
+                "texture": "splats parallel to the surface",
+                "defects": [
+                  "inter-splat cracks",
+                  "pores"
+                ],
+                "provenance": "literature",
+                "note": "the porosity lowers the conductivity below the dense value"
+              }
+            }
+          ],
+          "stacks": [
+            {
+              "id": "st-wall",
+              "name": "Coated wall",
+              "object": "ex-fam-tbc",
+              "axis": "+z",
+              "length": 0.05,
+              "width": 0.05,
+              "layers": [
+                {
+                  "id": "wall.0",
+                  "region": "wall",
+                  "thickness": 0.003,
+                  "angle": 0.0
+                },
+                {
+                  "id": "bondcoat.0",
+                  "region": "bondcoat",
+                  "thickness": 0.0001,
+                  "angle": 0.0
+                },
+                {
+                  "id": "topcoat.0",
+                  "region": "topcoat",
+                  "thickness": 0.0003,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ],
+          "interfaces": [
+            {
+              "id": "i-wall-bond",
+              "name": "i-wall-bond",
+              "regions": [
+                "wall",
+                "bondcoat"
+              ],
+              "models": [
+                {
+                  "kind": "perfect",
+                  "parameters": {}
+                }
+              ]
+            },
+            {
+              "id": "i-bond-top",
+              "name": "i-bond-top",
+              "regions": [
+                "bondcoat",
+                "topcoat"
+              ],
+              "models": [
+                {
+                  "kind": "thermal-contact-resistance",
+                  "parameters": {
+                    "resistance": {
+                      "value": 2e-05,
+                      "provenance": "illustrative",
+                      "source": "illustrative: the oxide scale and splat contact at the bond coat",
+                      "unit": "m^2 K/W"
+                    }
+                  }
+                },
+                {
+                  "kind": "cohesive-zone",
+                  "parameters": {
+                    "strength": {
+                      "value": 30000000.0,
+                      "provenance": "illustrative",
+                      "source": "illustrative",
+                      "unit": "Pa"
+                    },
+                    "fractureEnergy": {
+                      "value": 50.0,
+                      "provenance": "illustrative",
+                      "source": "illustrative",
+                      "unit": "J/m^2"
+                    }
+                  }
+                }
+              ],
+              "note": "the thermally grown oxide forms here"
+            }
+          ],
+          "fields": [],
+          "functions": [
+            {
+              "id": "f-insulate",
+              "name": "Insulate the wall",
+              "kind": "thermal-management",
+              "regions": [
+                "topcoat"
+              ],
+              "stages": [
+                {
+                  "id": "s-conduct",
+                  "from": "thermal",
+                  "to": "thermal",
+                  "mechanism": "thermal-conduction",
+                  "regions": [
+                    "topcoat"
+                  ],
+                  "settings": {
+                    "stack": "st-wall",
+                    "temperatures": [
+                      1400.0,
+                      900.0
+                    ]
+                  }
+                }
+              ]
+            }
+          ],
+          "processes": [
+            {
+              "id": "proc-hvof",
+              "name": "HVOF bond coat",
+              "kind": "thermal-spray",
+              "parameters": {},
+              "constraints": {
+                "minLayerThickness": 5e-05,
+                "maxLayerThickness": 0.0005,
+                "materialClasses": [
+                  "metal"
+                ],
+                "source": "illustrative process limits for the example; not a machine's specification"
+              },
+              "note": ""
+            },
+            {
+              "id": "proc-aps",
+              "name": "Plasma-sprayed top coat",
+              "kind": "thermal-spray",
+              "parameters": {},
+              "constraints": {
+                "minLayerThickness": 0.0001,
+                "maxLayerThickness": 0.002,
+                "materialClasses": [
+                  "ceramic"
+                ],
+                "source": "illustrative process limits for the example; not a machine's specification"
+              },
+              "note": ""
+            }
+          ]
+        }
+      ],
+      "comparisons": []
+    }
+  }
+}

@@ -86,8 +86,9 @@ TEST_F(AccountingPanelTest, RunsAStudyAndShowsFlowsChecksForcesAndHistory)
     const double w1 = width(first), w2 = width(second);
     ASSERT_GT(w1, 0.0);
     ASSERT_GT(w2, 0.0);
-    if (w1 > 1.0 && w2 > 1.0)  // above the one-pixel floor the widths are proportional
+    if (w1 > 1.0 && w2 > 1.0) {  // above the one-pixel floor the widths are proportional
         EXPECT_NEAR(w1 / w2, first["magnitude"].get<double>() / second["magnitude"].get<double>(), 1e-9);
+    }
     EXPECT_TRUE(panel().flowView().edgeLabel(QString::fromStdString(first["from"].get<std::string>()), QString::fromStdString(first["to"].get<std::string>()))
                     .contains("J"));
     EXPECT_GT(panel().forceRows(), 0);

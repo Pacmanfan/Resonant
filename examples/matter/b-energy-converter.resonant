@@ -1,0 +1,1299 @@
+{
+  "format": "resonant-project",
+  "schemaVersion": 1,
+  "application": {
+    "name": "Resonant",
+    "version": "0.1.0"
+  },
+  "project": {
+    "id": "ex-fam-b",
+    "name": "b-energy-converter",
+    "createdUtc": "2026-11-28T00:00:00Z",
+    "modifiedUtc": "2026-11-28T00:00:00Z"
+  },
+  "units": {
+    "angle": "rad",
+    "axes": "right-handed; X horizontal, Y depth, Z vertical (up)",
+    "frequency": "Hz",
+    "length": "m",
+    "mass": "kg",
+    "rotation": "intrinsic Z-Y-X Euler angles stored as [x, y, z]",
+    "time": "s"
+  },
+  "materials": [
+    {
+      "id": "mat-fam-steel316",
+      "name": "Stainless steel 316L",
+      "description": "Representative handbook values for the architected-matter examples.",
+      "domains": {
+        "mechanical": {
+          "youngsModulus": {
+            "value": 193000000000.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "poissonsRatio": {
+            "value": 0.27,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "density": {
+            "value": 7990,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "lossFactor": {
+            "value": 0.002,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        },
+        "thermal": {
+          "density": {
+            "value": 7990,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "thermalConductivity": {
+            "value": 16.3,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "specificHeat": {
+            "value": 500,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "thermalExpansion": {
+            "value": 1.6e-05,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        },
+        "electromagnetic": {
+          "relativePermittivity": {
+            "value": 1.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "relativePermeability": {
+            "value": 1.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "conductivity": {
+            "value": 1350000.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "lossTangent": {
+            "value": 0.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        },
+        "acoustic": {
+          "density": {
+            "value": 7990,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "soundSpeed": {
+            "value": 5720,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        }
+      }
+    },
+    {
+      "id": "mat-fam-pzt5a",
+      "name": "PZT-5A (bulk ceramic)",
+      "description": "Representative handbook values for the architected-matter examples.",
+      "domains": {
+        "mechanical": {
+          "youngsModulus": {
+            "value": 61000000000.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "poissonsRatio": {
+            "value": 0.35,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "density": {
+            "value": 7750,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "lossFactor": {
+            "value": 0.012,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        },
+        "thermal": {
+          "density": {
+            "value": 7750,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "thermalConductivity": {
+            "value": 1.1,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "specificHeat": {
+            "value": 420,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "thermalExpansion": {
+            "value": 4e-06,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        },
+        "electromagnetic": {
+          "relativePermittivity": {
+            "value": 1700.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "relativePermeability": {
+            "value": 1.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "conductivity": {
+            "value": 1e-10,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "lossTangent": {
+            "value": 0.02,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        },
+        "acoustic": {
+          "density": {
+            "value": 7750,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "soundSpeed": {
+            "value": 4350,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        }
+      }
+    },
+    {
+      "id": "mat-fam-gold",
+      "name": "Gold",
+      "description": "Representative handbook values for the architected-matter examples.",
+      "domains": {
+        "mechanical": {
+          "youngsModulus": {
+            "value": 79000000000.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "poissonsRatio": {
+            "value": 0.42,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "density": {
+            "value": 19300,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        },
+        "thermal": {
+          "density": {
+            "value": 19300,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "thermalConductivity": {
+            "value": 318,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "specificHeat": {
+            "value": 129,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "thermalExpansion": {
+            "value": 1.42e-05,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        },
+        "electromagnetic": {
+          "relativePermittivity": {
+            "value": 1.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "relativePermeability": {
+            "value": 1.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "conductivity": {
+            "value": 41000000.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "lossTangent": {
+            "value": 0.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        }
+      }
+    },
+    {
+      "id": "mat-fam-platinum",
+      "name": "Platinum",
+      "description": "Representative handbook values for the architected-matter examples.",
+      "domains": {
+        "mechanical": {
+          "youngsModulus": {
+            "value": 168000000000.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "poissonsRatio": {
+            "value": 0.38,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "density": {
+            "value": 21450,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        },
+        "thermal": {
+          "density": {
+            "value": 21450,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "thermalConductivity": {
+            "value": 71.6,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "specificHeat": {
+            "value": 133,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "thermalExpansion": {
+            "value": 8.8e-06,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        },
+        "electromagnetic": {
+          "relativePermittivity": {
+            "value": 1.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "relativePermeability": {
+            "value": 1.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "conductivity": {
+            "value": 9400000.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "lossTangent": {
+            "value": 0.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        }
+      }
+    },
+    {
+      "id": "mat-fam-epoxy",
+      "name": "Structural epoxy",
+      "description": "Representative handbook values for the architected-matter examples.",
+      "domains": {
+        "mechanical": {
+          "youngsModulus": {
+            "value": 3000000000.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "poissonsRatio": {
+            "value": 0.35,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "density": {
+            "value": 1200,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "lossFactor": {
+            "value": 0.02,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        },
+        "thermal": {
+          "density": {
+            "value": 1200,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "thermalConductivity": {
+            "value": 0.2,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "specificHeat": {
+            "value": 1100,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "thermalExpansion": {
+            "value": 5.5e-05,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        },
+        "electromagnetic": {
+          "relativePermittivity": {
+            "value": 3.6,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "relativePermeability": {
+            "value": 1.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "conductivity": {
+            "value": 1e-13,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "lossTangent": {
+            "value": 0.02,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        }
+      }
+    },
+    {
+      "id": "mat-fam-parylene",
+      "name": "Parylene C",
+      "description": "Representative handbook values for the architected-matter examples.",
+      "domains": {
+        "mechanical": {
+          "youngsModulus": {
+            "value": 2800000000.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "poissonsRatio": {
+            "value": 0.4,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "density": {
+            "value": 1289,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "lossFactor": {
+            "value": 0.01,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        },
+        "thermal": {
+          "density": {
+            "value": 1289,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "thermalConductivity": {
+            "value": 0.084,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "specificHeat": {
+            "value": 712,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "thermalExpansion": {
+            "value": 3.5e-05,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        },
+        "electromagnetic": {
+          "relativePermittivity": {
+            "value": 3.15,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "relativePermeability": {
+            "value": 1.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "conductivity": {
+            "value": 1e-14,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "lossTangent": {
+            "value": 0.02,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        }
+      }
+    }
+  ],
+  "scene": {
+    "objects": [
+      {
+        "id": "ex-fam-beam",
+        "type": "geometry",
+        "name": "Steel cantilever",
+        "visible": true,
+        "transform": {
+          "position": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "children": [],
+        "geometry": {
+          "kind": "box",
+          "parameters": {
+            "width": 0.04,
+            "depth": 0.01,
+            "height": 0.0005
+          }
+        },
+        "material": "mat-fam-steel316"
+      }
+    ]
+  },
+  "simulations": [],
+  "extensions": {
+    "matter": {
+      "format": "resonant.matter",
+      "version": 1,
+      "architectures": [
+        {
+          "id": "arch-bonded",
+          "name": "Bonded PZT plate on a printed steel beam",
+          "representation": "as-designed",
+          "description": "A 3D-printed 316L cantilever with a bonded PZT-5A plate, fired electrodes, a patterned top electrode and parylene: function from organization.",
+          "objects": [
+            "ex-fam-beam"
+          ],
+          "regions": [
+            {
+              "id": "substrate",
+              "name": "Printed steel substrate",
+              "object": "ex-fam-beam",
+              "extent": "layer",
+              "role": "substrate",
+              "materialId": "mat-fam-steel316",
+              "materialClass": "metal",
+              "process": "proc-pbf",
+              "operating": {
+                "temperature": [
+                  253.15,
+                  333.15
+                ],
+                "baseAcceleration": 1.0
+              },
+              "limits": {
+                "maxTemperature": 1100.0,
+                "source": "illustrative: below the range where 316L oxidizes and changes"
+              }
+            },
+            {
+              "id": "bond",
+              "name": "Epoxy bond line",
+              "object": "ex-fam-beam",
+              "extent": "layer",
+              "role": "adhesion",
+              "materialId": "mat-fam-epoxy",
+              "materialClass": "polymer",
+              "process": "proc-lam",
+              "limits": {
+                "maxTemperature": 423.0,
+                "source": "illustrative: about the glass transition of a structural epoxy"
+              }
+            },
+            {
+              "id": "electrode-bottom",
+              "name": "Bottom electrode (fired)",
+              "object": "ex-fam-beam",
+              "extent": "layer",
+              "role": "electrode",
+              "materialId": "mat-fam-gold",
+              "materialClass": "metal",
+              "process": "proc-lam"
+            },
+            {
+              "id": "pzt",
+              "name": "PZT-5A plate",
+              "object": "ex-fam-beam",
+              "extent": "layer",
+              "role": "transduction",
+              "materialId": "mat-fam-pzt5a",
+              "materialClass": "piezoelectric",
+              "process": "proc-lam",
+              "anisotropic": {
+                "piezoelectric": {
+                  "values": {
+                    "d31": {
+                      "value": -1.71e-10,
+                      "provenance": "literature",
+                      "source": "PZT-5A (Navy type II) handbook coefficients; a bulk ceramic, not a measured batch",
+                      "unit": "C/N"
+                    },
+                    "d32": {
+                      "value": -1.71e-10,
+                      "provenance": "literature",
+                      "source": "PZT-5A (Navy type II) handbook coefficients; a bulk ceramic, not a measured batch",
+                      "unit": "C/N"
+                    },
+                    "d33": {
+                      "value": 3.74e-10,
+                      "provenance": "literature",
+                      "source": "PZT-5A (Navy type II) handbook coefficients; a bulk ceramic, not a measured batch",
+                      "unit": "C/N"
+                    },
+                    "eps33T": {
+                      "value": 1700.0,
+                      "provenance": "literature",
+                      "source": "PZT-5A (Navy type II) handbook coefficients; a bulk ceramic, not a measured batch"
+                    }
+                  },
+                  "poling": "+3"
+                }
+              },
+              "limits": {
+                "maxTemperature": 473.0,
+                "source": "illustrative: well below the Curie temperature (about 620 K) to keep the poling"
+              },
+              "functions": [
+                "f-harvest"
+              ]
+            },
+            {
+              "id": "electrode-top",
+              "name": "Top electrode (patterned)",
+              "object": "ex-fam-beam",
+              "extent": "layer",
+              "role": "electrode",
+              "materialId": "mat-fam-gold",
+              "materialClass": "metal",
+              "process": "proc-patterned"
+            },
+            {
+              "id": "encapsulation",
+              "name": "Parylene encapsulation",
+              "object": "ex-fam-beam",
+              "extent": "layer",
+              "role": "encapsulation",
+              "materialId": "mat-fam-parylene",
+              "materialClass": "polymer",
+              "process": "proc-cvd"
+            }
+          ],
+          "stacks": [
+            {
+              "id": "st-beam",
+              "name": "Cantilever",
+              "object": "ex-fam-beam",
+              "axis": "+z",
+              "length": 0.04,
+              "width": 0.01,
+              "layers": [
+                {
+                  "id": "substrate.0",
+                  "region": "substrate",
+                  "thickness": 0.0005,
+                  "angle": 0.0
+                },
+                {
+                  "id": "bond.0",
+                  "region": "bond",
+                  "thickness": 2e-05,
+                  "angle": 0.0
+                },
+                {
+                  "id": "electrode-bottom.0",
+                  "region": "electrode-bottom",
+                  "thickness": 5e-06,
+                  "angle": 0.0
+                },
+                {
+                  "id": "pzt.0",
+                  "region": "pzt",
+                  "thickness": 0.0002,
+                  "angle": 0.0
+                },
+                {
+                  "id": "electrode-top.0",
+                  "region": "electrode-top",
+                  "thickness": 1e-06,
+                  "angle": 0.0,
+                  "pattern": {
+                    "kind": "segmented",
+                    "start": 0.0,
+                    "end": 0.8,
+                    "featureSize": 0.008
+                  }
+                },
+                {
+                  "id": "encapsulation.0",
+                  "region": "encapsulation",
+                  "thickness": 1e-05,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ],
+          "interfaces": [
+            {
+              "id": "i-substrate-bond",
+              "name": "i-substrate-bond",
+              "regions": [
+                "substrate",
+                "bond"
+              ],
+              "models": [
+                {
+                  "kind": "cohesive-zone",
+                  "parameters": {
+                    "strength": {
+                      "value": 20000000.0,
+                      "provenance": "illustrative",
+                      "source": "illustrative lap-shear strength of a structural epoxy on grit-blasted steel",
+                      "unit": "Pa"
+                    },
+                    "fractureEnergy": {
+                      "value": 300.0,
+                      "provenance": "illustrative",
+                      "source": "illustrative lap-shear strength of a structural epoxy on grit-blasted steel",
+                      "unit": "J/m^2"
+                    }
+                  }
+                },
+                {
+                  "kind": "perfect",
+                  "parameters": {}
+                }
+              ],
+              "preparation": "grit blast, solvent clean, primer"
+            },
+            {
+              "id": "i-bond-electrode",
+              "name": "i-bond-electrode",
+              "regions": [
+                "bond",
+                "electrode-bottom"
+              ],
+              "models": [
+                {
+                  "kind": "cohesive-zone",
+                  "parameters": {
+                    "strength": {
+                      "value": 20000000.0,
+                      "provenance": "illustrative",
+                      "source": "illustrative lap-shear strength of a structural epoxy",
+                      "unit": "Pa"
+                    },
+                    "fractureEnergy": {
+                      "value": 300.0,
+                      "provenance": "illustrative",
+                      "source": "illustrative lap-shear strength of a structural epoxy",
+                      "unit": "J/m^2"
+                    }
+                  }
+                },
+                {
+                  "kind": "perfect",
+                  "parameters": {}
+                }
+              ]
+            },
+            {
+              "id": "i-electrode-pzt",
+              "name": "i-electrode-pzt",
+              "regions": [
+                "electrode-bottom",
+                "pzt"
+              ],
+              "models": [
+                {
+                  "kind": "perfect",
+                  "parameters": {}
+                }
+              ],
+              "note": "fired-on electrode"
+            },
+            {
+              "id": "i-pzt-electrode",
+              "name": "i-pzt-electrode",
+              "regions": [
+                "pzt",
+                "electrode-top"
+              ],
+              "models": [
+                {
+                  "kind": "perfect",
+                  "parameters": {}
+                }
+              ]
+            },
+            {
+              "id": "i-electrode-encapsulation",
+              "name": "i-electrode-encapsulation",
+              "regions": [
+                "electrode-top",
+                "encapsulation"
+              ],
+              "models": [
+                {
+                  "kind": "perfect",
+                  "parameters": {}
+                }
+              ]
+            }
+          ],
+          "fields": [],
+          "functions": [
+            {
+              "id": "f-harvest",
+              "name": "Harvest vibration",
+              "kind": "transformation",
+              "regions": [
+                "pzt",
+                "substrate"
+              ],
+              "stages": [
+                {
+                  "id": "s-convert",
+                  "from": "mechanical",
+                  "to": "electrical",
+                  "mechanism": "piezoelectric-direct",
+                  "regions": [
+                    "pzt"
+                  ],
+                  "settings": {
+                    "stack": "st-beam",
+                    "tipMass": 0.002,
+                    "baseAcceleration": 1.0
+                  }
+                }
+              ],
+              "targets": {
+                "frequency": 120.0
+              },
+              "note": "the target vibration of the host structure"
+            },
+            {
+              "id": "f-carry",
+              "name": "Carry its own load",
+              "kind": "load-bearing",
+              "regions": [
+                "substrate"
+              ]
+            }
+          ],
+          "processes": [
+            {
+              "id": "proc-pbf",
+              "name": "Laser powder-bed fusion of the substrate",
+              "kind": "powder-bed-fusion",
+              "parameters": {},
+              "constraints": {
+                "minLayerThickness": 0.0003,
+                "minFeatureSize": 0.0002,
+                "maxDimension": 0.25,
+                "roughness": 1e-05,
+                "materialClasses": [
+                  "metal"
+                ],
+                "repeatability": 0.05,
+                "source": "illustrative process limits for the example; not a machine's specification"
+              },
+              "note": ""
+            },
+            {
+              "id": "proc-patterned",
+              "name": "Patterned electrode through a shadow mask",
+              "kind": "patterned-electrode-fabrication",
+              "parameters": {},
+              "constraints": {
+                "minFeatureSize": 0.0001,
+                "materialClasses": [
+                  "metal"
+                ],
+                "repeatability": 0.1,
+                "source": "illustrative process limits for the example; not a machine's specification"
+              },
+              "note": ""
+            },
+            {
+              "id": "proc-cvd",
+              "name": "Parylene encapsulation",
+              "kind": "chemical-vapor-deposition",
+              "parameters": {},
+              "constraints": {
+                "minLayerThickness": 1e-07,
+                "maxLayerThickness": 0.0001,
+                "temperature": 300.0,
+                "materialClasses": [
+                  "polymer"
+                ],
+                "source": "illustrative process limits for the example; not a machine's specification"
+              },
+              "note": ""
+            },
+            {
+              "id": "proc-lam",
+              "name": "Bonding the PZT plate (room-temperature cure)",
+              "kind": "lamination",
+              "parameters": {},
+              "constraints": {
+                "minLayerThickness": 5e-06,
+                "maxLayerThickness": 0.001,
+                "temperature": 298.15,
+                "materialClasses": [
+                  "polymer",
+                  "piezoelectric",
+                  "metal"
+                ],
+                "maxResidualStress": 60000000.0,
+                "source": "illustrative process limits for the example; not a machine's specification"
+              },
+              "note": "cured at room temperature: a hot cure would build the steel-PZT mismatch into the plate"
+            }
+          ],
+          "records": [
+            {
+              "id": "rec-b-001",
+              "date": "2026-11-28",
+              "batch": "EXAMPLE-B1",
+              "process": "proc-lam",
+              "parameters": {
+                "cure": "298 K for 24 h under 0.2 MPa"
+              },
+              "layerSequence": [
+                "substrate.0",
+                "bond.0",
+                "electrode-bottom.0",
+                "pzt.0",
+                "electrode-top.0",
+                "encapsulation.0"
+              ],
+              "interfacePreparation": "grit blast and solvent clean",
+              "postProcessing": [
+                "poling check"
+              ],
+              "inspections": [
+                {
+                  "kind": "visual",
+                  "result": "no voids seen at the edges",
+                  "note": "an example record, not a real inspection"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "arch-film",
+          "name": "Sol-gel PZT film on the printed steel beam",
+          "representation": "idealized",
+          "description": "The same function with a deposited film: thinner and lighter, but crystallized at 923 K on steel.",
+          "objects": [
+            "ex-fam-beam"
+          ],
+          "regions": [
+            {
+              "id": "substrate",
+              "name": "Printed steel substrate",
+              "object": "ex-fam-beam",
+              "extent": "layer",
+              "role": "substrate",
+              "materialId": "mat-fam-steel316",
+              "materialClass": "metal",
+              "process": "proc-pbf",
+              "operating": {
+                "temperature": [
+                  253.15,
+                  333.15
+                ],
+                "baseAcceleration": 1.0
+              },
+              "limits": {
+                "maxTemperature": 1100.0,
+                "source": "illustrative"
+              }
+            },
+            {
+              "id": "electrode-bottom",
+              "name": "Platinum bottom electrode",
+              "object": "ex-fam-beam",
+              "extent": "layer",
+              "role": "electrode",
+              "materialId": "mat-fam-platinum",
+              "materialClass": "metal",
+              "process": "proc-sputter"
+            },
+            {
+              "id": "pzt",
+              "name": "Sol-gel PZT film",
+              "object": "ex-fam-beam",
+              "extent": "layer",
+              "role": "transduction",
+              "materialId": "mat-fam-pzt5a",
+              "materialClass": "piezoelectric",
+              "process": "proc-solgel",
+              "anisotropic": {
+                "piezoelectric": {
+                  "values": {
+                    "d31": {
+                      "value": -6e-11,
+                      "provenance": "literature",
+                      "source": "a typical sol-gel PZT thin-film value (literature range); thin films differ from bulk",
+                      "unit": "C/N"
+                    },
+                    "eps33T": {
+                      "value": 900.0,
+                      "provenance": "literature",
+                      "source": "a typical sol-gel PZT thin-film value (literature range); thin films differ from bulk"
+                    }
+                  },
+                  "poling": "+3"
+                }
+              },
+              "properties": {
+                "mechanical.youngsModulus": {
+                  "value": 80000000000.0,
+                  "provenance": "literature",
+                  "source": "a typical sol-gel PZT thin-film value (literature range); thin films differ from bulk",
+                  "unit": "Pa"
+                }
+              },
+              "functions": [
+                "f-harvest"
+              ]
+            },
+            {
+              "id": "electrode-top",
+              "name": "Top electrode (patterned)",
+              "object": "ex-fam-beam",
+              "extent": "layer",
+              "role": "electrode",
+              "materialId": "mat-fam-gold",
+              "materialClass": "metal",
+              "process": "proc-patterned"
+            },
+            {
+              "id": "encapsulation",
+              "name": "Parylene encapsulation",
+              "object": "ex-fam-beam",
+              "extent": "layer",
+              "role": "encapsulation",
+              "materialId": "mat-fam-parylene",
+              "materialClass": "polymer",
+              "process": "proc-cvd"
+            }
+          ],
+          "stacks": [
+            {
+              "id": "st-beam",
+              "name": "Cantilever",
+              "object": "ex-fam-beam",
+              "axis": "+z",
+              "length": 0.04,
+              "width": 0.01,
+              "layers": [
+                {
+                  "id": "substrate.0",
+                  "region": "substrate",
+                  "thickness": 0.0005,
+                  "angle": 0.0
+                },
+                {
+                  "id": "electrode-bottom.0",
+                  "region": "electrode-bottom",
+                  "thickness": 1e-07,
+                  "angle": 0.0
+                },
+                {
+                  "id": "pzt.0",
+                  "region": "pzt",
+                  "thickness": 3e-06,
+                  "angle": 0.0
+                },
+                {
+                  "id": "electrode-top.0",
+                  "region": "electrode-top",
+                  "thickness": 1e-07,
+                  "angle": 0.0,
+                  "pattern": {
+                    "kind": "segmented",
+                    "start": 0.0,
+                    "end": 0.8,
+                    "featureSize": 0.008
+                  }
+                },
+                {
+                  "id": "encapsulation.0",
+                  "region": "encapsulation",
+                  "thickness": 1e-05,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ],
+          "interfaces": [
+            {
+              "id": "i-substrate-electrode",
+              "name": "i-substrate-electrode",
+              "regions": [
+                "substrate",
+                "electrode-bottom"
+              ],
+              "models": [
+                {
+                  "kind": "perfect",
+                  "parameters": {}
+                }
+              ]
+            },
+            {
+              "id": "i-electrode-pzt",
+              "name": "i-electrode-pzt",
+              "regions": [
+                "electrode-bottom",
+                "pzt"
+              ],
+              "models": [
+                {
+                  "kind": "cohesive-zone",
+                  "parameters": {
+                    "strength": {
+                      "value": 150000000.0,
+                      "provenance": "illustrative",
+                      "source": "illustrative adhesion of a sol-gel film on platinum",
+                      "unit": "Pa"
+                    },
+                    "fractureEnergy": {
+                      "value": 5.0,
+                      "provenance": "illustrative",
+                      "source": "illustrative adhesion of a sol-gel film on platinum",
+                      "unit": "J/m^2"
+                    }
+                  }
+                },
+                {
+                  "kind": "perfect",
+                  "parameters": {}
+                }
+              ]
+            },
+            {
+              "id": "i-pzt-electrode",
+              "name": "i-pzt-electrode",
+              "regions": [
+                "pzt",
+                "electrode-top"
+              ],
+              "models": [
+                {
+                  "kind": "perfect",
+                  "parameters": {}
+                }
+              ]
+            },
+            {
+              "id": "i-electrode-encapsulation",
+              "name": "i-electrode-encapsulation",
+              "regions": [
+                "electrode-top",
+                "encapsulation"
+              ],
+              "models": [
+                {
+                  "kind": "perfect",
+                  "parameters": {}
+                }
+              ]
+            }
+          ],
+          "fields": [],
+          "functions": [
+            {
+              "id": "f-harvest",
+              "name": "Harvest vibration",
+              "kind": "transformation",
+              "regions": [
+                "pzt",
+                "substrate"
+              ],
+              "stages": [
+                {
+                  "id": "s-convert",
+                  "from": "mechanical",
+                  "to": "electrical",
+                  "mechanism": "piezoelectric-direct",
+                  "regions": [
+                    "pzt"
+                  ],
+                  "settings": {
+                    "stack": "st-beam",
+                    "tipMass": 0.002,
+                    "baseAcceleration": 1.0
+                  }
+                }
+              ],
+              "targets": {
+                "frequency": 120.0
+              },
+              "note": "the target vibration of the host structure"
+            },
+            {
+              "id": "f-carry",
+              "name": "Carry its own load",
+              "kind": "load-bearing",
+              "regions": [
+                "substrate"
+              ]
+            }
+          ],
+          "processes": [
+            {
+              "id": "proc-pbf",
+              "name": "Laser powder-bed fusion of the substrate",
+              "kind": "powder-bed-fusion",
+              "parameters": {},
+              "constraints": {
+                "minLayerThickness": 0.0003,
+                "minFeatureSize": 0.0002,
+                "maxDimension": 0.25,
+                "roughness": 1e-05,
+                "materialClasses": [
+                  "metal"
+                ],
+                "repeatability": 0.05,
+                "source": "illustrative process limits for the example; not a machine's specification"
+              },
+              "note": ""
+            },
+            {
+              "id": "proc-patterned",
+              "name": "Patterned electrode through a shadow mask",
+              "kind": "patterned-electrode-fabrication",
+              "parameters": {},
+              "constraints": {
+                "minFeatureSize": 0.0001,
+                "materialClasses": [
+                  "metal"
+                ],
+                "repeatability": 0.1,
+                "source": "illustrative process limits for the example; not a machine's specification"
+              },
+              "note": ""
+            },
+            {
+              "id": "proc-cvd",
+              "name": "Parylene encapsulation",
+              "kind": "chemical-vapor-deposition",
+              "parameters": {},
+              "constraints": {
+                "minLayerThickness": 1e-07,
+                "maxLayerThickness": 0.0001,
+                "temperature": 300.0,
+                "materialClasses": [
+                  "polymer"
+                ],
+                "source": "illustrative process limits for the example; not a machine's specification"
+              },
+              "note": ""
+            },
+            {
+              "id": "proc-sputter",
+              "name": "Sputtered platinum",
+              "kind": "sputter-deposition",
+              "parameters": {},
+              "constraints": {
+                "minLayerThickness": 1e-08,
+                "maxLayerThickness": 5e-06,
+                "temperature": 573.0,
+                "materialClasses": [
+                  "metal"
+                ],
+                "source": "illustrative process limits for the example; not a machine's specification"
+              },
+              "note": ""
+            },
+            {
+              "id": "proc-solgel",
+              "name": "Sol-gel PZT, crystallized",
+              "kind": "thin-film-processing",
+              "parameters": {},
+              "constraints": {
+                "minLayerThickness": 1e-07,
+                "maxLayerThickness": 5e-06,
+                "temperature": 923.0,
+                "materialClasses": [
+                  "piezoelectric"
+                ],
+                "maxResidualStress": 200000000.0,
+                "source": "illustrative process limits for the example; not a machine's specification"
+              },
+              "note": ""
+            }
+          ],
+          "records": [],
+          "parent": "arch-bonded"
+        }
+      ],
+      "comparisons": []
+    }
+  }
+}

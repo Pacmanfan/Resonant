@@ -1,6 +1,7 @@
 #include "accounting/Conservation.h"
 #include "coupling/CouplingModels.h"
 #include "coupling/LaboratoryModels.h"
+#include "coupling/MatterAnalyses.h"
 #include "coupling/MaterialStateModels.h"
 #include "coupling/MultiscaleDerivations.h"
 #include "multiscale/Couplings.h"
@@ -91,6 +92,9 @@ Outcome<std::vector<CapabilityView>> ApplicationService::capabilities(const Call
         add({"laboratory." + m.id, m.title, m.observable, "laboratory", "experimental", true, {}, {}, {m.assumptions}, m.domain});
     add({"laboratory.import", "Dataset import", "CSV, TSV, JSON and WAV with an import report", "laboratory", "experimental", true, {}, {},
          {"NetCDF, TDMS, external HDF5 and images are not imported"}, "general"});
+    // Functionally architected matter: the analyses that consume architectures, with their declarations.
+    for (const auto& cap : coupling::matterCapabilities())
+        add({"matter." + cap.id, cap.title, cap.solver, "matter", "analysis", true, {}, {}, cap.limitations, cap.physics.empty() ? std::string("general") : cap.physics.front()});
     // Accounting: every conservation law and consistency relation, and the sources it reads.
     for (const auto& m : accounting::checkModels())
         add({"accounting." + m.id, m.title, m.equation, "accounting", "experimental", true, {}, {}, {m.assumptions}, m.domain});

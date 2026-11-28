@@ -136,5 +136,5 @@ TEST(LaboratoryServices, ReportsAndExports)
     ASSERT_TRUE(js);
     EXPECT_EQ(json::parse(js.value())["data"]["points"], 161);
     auto models = f.s.laboratory.models(f.local());
-    EXPECT_EQ(models.value().size(), 7u);
+    EXPECT_EQ(models.value().size(), 8u);  // with matter.stack-metric (REQ-CHAT-20261127-001)
 }

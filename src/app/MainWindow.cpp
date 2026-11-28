@@ -25,6 +25,8 @@
 #include "AccountingPanel.h"
 #include "LaboratoryController.h"
 #include "LaboratoryPanel.h"
+#include "MatterController.h"
+#include "MatterPanel.h"
 #include "MaterialStateController.h"
 #include "MaterialStatePanel.h"
 #include "MultiscaleController.h"
@@ -114,6 +116,7 @@ MainWindow::MainWindow(QWidget* parent)
     ui_->menuPanels->addAction(ui_->materialStateDock->toggleViewAction());
     ui_->menuPanels->addAction(ui_->accountingDock->toggleViewAction());
     ui_->menuPanels->addAction(ui_->laboratoryDock->toggleViewAction());
+    ui_->menuPanels->addAction(ui_->matterDock->toggleViewAction());
     ui_->menuPanels->addAction(ui_->pythonConsoleDock->toggleViewAction());
     ui_->menuPanels->addAction(ui_->demoStudioDock->toggleViewAction());
     ui_->menuPanels->addSeparator();
@@ -164,6 +167,7 @@ MainWindow::MainWindow(QWidget* parent)
     connectMaterialState();
     connectAccounting();
     connectLaboratory();
+    connectMatter();
     connectAutomation();
     connectHelp();
     connectDemos();
@@ -194,7 +198,8 @@ MainWindow::MainWindow(QWidget* parent)
     tabifyDockWidget(ui_->materialScalesDock, ui_->materialStateDock);
     tabifyDockWidget(ui_->materialStateDock, ui_->accountingDock);
     tabifyDockWidget(ui_->accountingDock, ui_->laboratoryDock);
-    tabifyDockWidget(ui_->laboratoryDock, ui_->demoStudioDock);
+    tabifyDockWidget(ui_->laboratoryDock, ui_->matterDock);
+    tabifyDockWidget(ui_->matterDock, ui_->demoStudioDock);
     tabifyDockWidget(ui_->analysisDock, ui_->pythonConsoleDock);
     ui_->demoStudioDock->hide();
     ui_->presenterDock->hide();
@@ -599,6 +604,17 @@ void MainWindow::connectExperiments()
 OptimizationPanel& MainWindow::optimizationPanel()
 {
     return *ui_->optimizationPanel;
+}
+
+MatterPanel& MainWindow::matterPanel()
+{
+    return *ui_->matterPanel;
+}
+
+void MainWindow::connectMatter()
+{
+    matter_ = new MatterController(controller_, this);
+    ui_->matterPanel->setController(matter_);
 }
 
 LaboratoryPanel& MainWindow::laboratoryPanel()

@@ -133,7 +133,7 @@ own scope decides what each delivers.
 - **Risks:** expensive objectives; designs exploiting model weaknesses.
 - **Validation:** designs re-checked by a higher-fidelity model (multi-fidelity is available) and by experiment.
 - **Acceptance:** every designed candidate re-evaluated by the full model with provenance.
-- **Queued:** REQ-CHAT-20261127-001 (functionally architected matter and emergent function).
+- **Done (architected matter):** REQ-CHAT-20261127-001 (ADR-000228): architecture variables (layer thickness, orientation, electrode coverage, material choice, interface parameters) and manufacturing constraints in the optimizer's `matter` adapter, with Pareto trade-offs (`docs/materials/ARCHITECTED_MATTER_INTEGRATION.md`). Topology optimization of unit cells remains.
 
 ## Stage 12 — Experimental validation
 
@@ -142,7 +142,7 @@ own scope decides what each delivers.
 - **Risks:** sample fabrication; sensors.
 - **Validation:** the comparison is the validation.
 - **Acceptance:** each validated capability has a recorded measurement comparison.
-- **Queued:** REQ-CHAT-20261126-023 (Prompt 26, experimental energy–matter laboratory).
+- **Done:** REQ-CHAT-20261126-023 (Prompt 26, the experimental laboratory, ADR-000227): comparisons with predictions weighing both uncertainties, calibration with identifiability and validation on independent data (`docs/experiments/LABORATORY_ARCHITECTURE.md`); REQ-CHAT-20261127-001 links architectures and calibrates their interface and layer parameters.
 
 ## Rules for every stage
 

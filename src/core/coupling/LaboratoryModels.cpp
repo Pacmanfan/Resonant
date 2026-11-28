@@ -1,5 +1,8 @@
 #include "coupling/LaboratoryModels.h"
 
+#include "coupling/MatterAnalyses.h"
+#include "matter/MatterArchitecture.h"
+
 #include "coupling/MaterialStateModels.h"
 #include "coupling/StateEvolution.h"
 #include "electromagnetics/LayeredMedia.h"
@@ -356,6 +359,118 @@ Result<Prediction> predictMetric(const json& cfg, const std::map<std::string, do
     return R::failure("the analysis has no metric '" + key + "'");
 }
 
+// --- matter.stack-metric (REQ-CHAT-20261127-001, RES-FAM-018) ----------------------------------
+// Parameters: the stack's layer thicknesses ("layer.<i>.thickness"), its interface model
+// parameters ("interface.<id>.<model>.<key>") and the values stated on its regions
+// ("region.<id>.<domain.key>"): what a measurement can calibrate.
+
+Result<matter::Architecture> architectureOf(const json& cfg, const Project& project)
+{
+    auto w = matter::workspaceOf(project);
+    if (!w)
+        return Result<matter::Architecture>::failure(w.message());
+    const matter::Architecture* a = w.value().find(cfg.value("architecture", std::string()));
+    if (!a)
+        return Result<matter::Architecture>::failure("there is no architecture '" + cfg.value("architecture", std::string()) + "'");
+    if (!a->stack(cfg.value("stack", std::string())))
+        return Result<matter::Architecture>::failure("the architecture has no stack '" + cfg.value("stack", std::string()) + "'");
+    return *a;
+}
+
+Result<std::vector<LabModelParameter>> matterParameters(const json& cfg, const Project& project)
+{
+    using R = Result<std::vector<LabModelParameter>>;
+    auto a = architectureOf(cfg, project);
+    if (!a)
+        return R::failure(a.message());
+    std::vector<LabModelParameter> out;
+    const matter::Stack& s = *a.value().stack(cfg.value("stack", std::string()));
+    for (size_t i = 0; i < s.layers.size(); ++i)
+        out.push_back(mp("layer." + std::to_string(i) + ".thickness", "Thickness of " + s.layers[i].id, "m", s.layers[i].thickness, 1e-9, 1.0,
+                         "the layer's thickness"));
+    for (const auto& in : a.value().interfaces)
+        for (const auto& m : in.models)
+            for (const auto& [key, v] : m.parameters)
+                out.push_back(mp("interface." + in.id + "." + m.kind + "." + key, key + " of " + in.id, v.unit, v.value, 0.0, 1e300,
+                                 "an interface model parameter (" + m.kind + ")"));
+    for (const auto& r : a.value().regions)
+        for (const auto& [key, v] : r.properties)
+            out.push_back(mp("region." + r.id + "." + key, key + " of " + r.id, v.unit, v.value, 0.0, 1e300, "a value stated on the region"));
+    return out;
+}
+
+Result<Prediction> predictMatter(const json& cfg, const std::map<std::string, double>& p, const std::vector<double>& axis, const Project& project)
+{
+    using R = Result<Prediction>;
+    auto base = architectureOf(cfg, project);
+    if (!base)
+        return R::failure(base.message());
+    matter::Architecture a = base.value();
+    matter::Stack& s = *a.stack(cfg.value("stack", std::string()));
+    for (const auto& [key, value] : p) {
+        bool applied = false;
+        if (key.rfind("layer.", 0) == 0) {
+            const size_t dot = key.find('.', 6);
+            const size_t i = static_cast<size_t>(std::stoul(key.substr(6, dot - 6)));
+            if (i < s.layers.size() && key.substr(dot + 1) == "thickness") {
+                s.layers[i].thickness = value;
+                applied = true;
+            }
+        } else if (key.rfind("interface.", 0) == 0) {
+            for (auto& in : a.interfaces)
+                for (auto& m : in.models)
+                    for (auto& [pk, pv] : m.parameters)
+                        if (key == "interface." + in.id + "." + m.kind + "." + pk) {
+                            pv.value = value;
+                            applied = true;
+                        }
+        } else if (key.rfind("region.", 0) == 0) {
+            for (auto& r : a.regions)
+                for (auto& [pk, pv] : r.properties)
+                    if (key == "region." + r.id + "." + pk) {
+                        pv.value = value;
+                        applied = true;
+                    }
+        }
+        if (!applied)
+            return R::failure("'" + key + "' is not a parameter of the architecture");
+    }
+    const std::string analysis = cfg.value("analysis", std::string()), metric = cfg.value("metric", std::string());
+    const std::string axisOption = cfg.value("axisOption", std::string());
+    json options = cfg.value("options", json::object());
+    Prediction out;
+    out.model = "matter.stack-metric";
+    out.solver = analysis;
+    out.details = {{"architecture", a.id}, {"stack", s.id}, {"analysis", analysis}, {"metric", metric}};
+    auto evaluate = [&](const json& o) -> Result<double> {
+        auto r = analyzeStack(a, s.id, analysis, o, project.materials);
+        if (!r)
+            return Result<double>::failure(r.message());
+        const json& m = r.value()["metrics"];
+        if (!m.contains(metric) || !m[metric].is_number())
+            return Result<double>::failure("the " + analysis + " analysis reports no metric '" + metric + "'");
+        return m[metric].get<double>();
+    };
+    if (axisOption.empty() || axis.empty()) {
+        auto v = evaluate(options);
+        if (!v)
+            return R::failure(v.message());
+        out.scalar = true;
+        out.values = {v.value()};
+        return out;
+    }
+    out.axis = axis;
+    for (double x : axis) {
+        json o = options;
+        o[axisOption] = x;
+        auto v = evaluate(o);
+        if (!v)
+            return R::failure(v.message());
+        out.values.emplace_back(v.value(), 0.0);
+    }
+    return out;
+}
+
 }  // namespace
 
 json LabModel::toJson() const
@@ -392,6 +507,9 @@ const std::vector<LabModel>& laboratoryModels()
          "the value as stored (measured, homogenized, computed ...)", false, true, {}, {"material", "domain", "key"}},
         {"design-revision.metric", "Design revision: the candidate's evaluated quantity", "general", "one evaluated quantity", "-",
          "the optimization's evaluation of the promoted candidate", false, true, {}, {"revision", "quantity"}},
+        {"matter.stack-metric", "Architecture: a stack analysis metric", "general", "one metric of a stack analysis (per axis value, or one value)",
+         "the option the axis sets (heat flux, frequency ...)", "the stack analysis's own assumptions (lamination theory, series conduction, the lumped cantilever ...)",
+         false, false, {}, {"architecture", "stack", "analysis", "metric", "options", "axisOption"}},
     };
     return m;
 }
@@ -430,6 +548,8 @@ Result<std::vector<LabModelParameter>> laboratoryModelParameters(const std::stri
                                                                                   : "a structure parameter"));
         return out;
     }
+    if (id == "matter.stack-metric")
+        return matterParameters(cfg, project);
     return std::vector<LabModelParameter>{};
 }
 
@@ -467,6 +587,8 @@ Result<Prediction> predictLaboratoryModel(const std::string& id, const json& cfg
                        {"derivation", v->derivation}};
         return out;
     }
+    if (id == "matter.stack-metric")
+        return predictMatter(cfg, p, axis, project);
     if (id == "design-revision.metric") {
         const auto w = optimization::workspaceOf(project);
         const std::string rid = cfg.value("revision", std::string());

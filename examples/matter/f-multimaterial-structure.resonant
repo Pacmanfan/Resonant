@@ -1,0 +1,543 @@
+{
+  "format": "resonant-project",
+  "schemaVersion": 1,
+  "application": {
+    "name": "Resonant",
+    "version": "0.1.0"
+  },
+  "project": {
+    "id": "ex-fam-f",
+    "name": "f-multimaterial-structure",
+    "createdUtc": "2026-11-28T00:00:00Z",
+    "modifiedUtc": "2026-11-28T00:00:00Z"
+  },
+  "units": {
+    "angle": "rad",
+    "axes": "right-handed; X horizontal, Y depth, Z vertical (up)",
+    "frequency": "Hz",
+    "length": "m",
+    "mass": "kg",
+    "rotation": "intrinsic Z-Y-X Euler angles stored as [x, y, z]",
+    "time": "s"
+  },
+  "materials": [
+    {
+      "id": "mat-fam-al6061",
+      "name": "Aluminium 6061",
+      "description": "Representative handbook values for the architected-matter examples.",
+      "domains": {
+        "mechanical": {
+          "youngsModulus": {
+            "value": 69000000000.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "poissonsRatio": {
+            "value": 0.33,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "density": {
+            "value": 2700,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "lossFactor": {
+            "value": 0.001,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        },
+        "thermal": {
+          "density": {
+            "value": 2700,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "thermalConductivity": {
+            "value": 167,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "specificHeat": {
+            "value": 896,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "thermalExpansion": {
+            "value": 2.36e-05,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        },
+        "electromagnetic": {
+          "relativePermittivity": {
+            "value": 1.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "relativePermeability": {
+            "value": 1.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "conductivity": {
+            "value": 25000000.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "lossTangent": {
+            "value": 0.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        },
+        "acoustic": {
+          "density": {
+            "value": 2700,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "soundSpeed": {
+            "value": 6320,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        }
+      }
+    },
+    {
+      "id": "mat-fam-pzt5a",
+      "name": "PZT-5A (bulk ceramic)",
+      "description": "Representative handbook values for the architected-matter examples.",
+      "domains": {
+        "mechanical": {
+          "youngsModulus": {
+            "value": 61000000000.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "poissonsRatio": {
+            "value": 0.35,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "density": {
+            "value": 7750,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "lossFactor": {
+            "value": 0.012,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        },
+        "thermal": {
+          "density": {
+            "value": 7750,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "thermalConductivity": {
+            "value": 1.1,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "specificHeat": {
+            "value": 420,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "thermalExpansion": {
+            "value": 4e-06,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        },
+        "electromagnetic": {
+          "relativePermittivity": {
+            "value": 1700.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "relativePermeability": {
+            "value": 1.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "conductivity": {
+            "value": 1e-10,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "lossTangent": {
+            "value": 0.02,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        },
+        "acoustic": {
+          "density": {
+            "value": 7750,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "soundSpeed": {
+            "value": 4350,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        }
+      }
+    }
+  ],
+  "scene": {
+    "objects": [
+      {
+        "id": "ex-fam-frame",
+        "type": "geometry",
+        "name": "Frame",
+        "visible": true,
+        "transform": {
+          "position": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "children": [],
+        "geometry": {
+          "kind": "box",
+          "parameters": {
+            "width": 0.1,
+            "depth": 0.06,
+            "height": 0.01
+          }
+        },
+        "material": "mat-fam-al6061"
+      },
+      {
+        "id": "ex-fam-core",
+        "type": "geometry",
+        "name": "Lattice core",
+        "visible": true,
+        "transform": {
+          "position": [
+            0,
+            0,
+            0.009
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "children": [],
+        "geometry": {
+          "kind": "box",
+          "parameters": {
+            "width": 0.08,
+            "depth": 0.04,
+            "height": 0.008
+          }
+        },
+        "material": "mat-fam-al6061"
+      }
+    ]
+  },
+  "simulations": [],
+  "extensions": {
+    "matter": {
+      "format": "resonant.matter",
+      "version": 1,
+      "architectures": [
+        {
+          "id": "arch-multi",
+          "name": "Frame with a lattice core, a sensor patch and a channel",
+          "representation": "idealized",
+          "description": "Regions in three dimensions: a solid frame, an open-cell lattice core (a separate object), an embedded piezoelectric sensor and a cooling channel.",
+          "objects": [
+            "ex-fam-frame",
+            "ex-fam-core"
+          ],
+          "regions": [
+            {
+              "id": "frame",
+              "name": "Solid frame",
+              "object": "ex-fam-frame",
+              "extent": "object",
+              "role": "load-bearing",
+              "materialId": "mat-fam-al6061",
+              "materialClass": "metal",
+              "process": "proc-pbf-al"
+            },
+            {
+              "id": "core",
+              "name": "Lattice core",
+              "object": "ex-fam-core",
+              "extent": "object",
+              "role": "damping",
+              "materialId": "",
+              "materialClass": "metal",
+              "process": "proc-pbf-al",
+              "composition": {
+                "kind": "cellular",
+                "basis": "volume",
+                "matrix": "solid",
+                "method": "gibson-ashby-open-cell, hashin-shtrikman-upper",
+                "note": "Gibson-Ashby for the stiffness of the open cells; the conductivity only as its upper bound",
+                "constituents": [
+                  {
+                    "id": "solid",
+                    "materialId": "mat-fam-al6061",
+                    "materialClass": "metal",
+                    "fraction": 0.2
+                  },
+                  {
+                    "id": "pores",
+                    "substance": "void",
+                    "materialClass": "void",
+                    "fraction": 0.8
+                  }
+                ]
+              },
+              "microstructure": {
+                "crystalStructure": "fcc (the strut alloy)",
+                "porosity": {
+                  "value": 0.8,
+                  "provenance": "assumed",
+                  "source": "the design value of the lattice"
+                },
+                "texture": "an octet-like open-cell lattice",
+                "defects": [
+                  "strut waviness",
+                  "partially fused powder"
+                ],
+                "provenance": "assumed"
+              }
+            },
+            {
+              "id": "sensor",
+              "name": "Embedded sensor patch",
+              "object": "ex-fam-frame",
+              "extent": "subvolume",
+              "role": "sensing",
+              "materialId": "mat-fam-pzt5a",
+              "materialClass": "piezoelectric",
+              "process": "",
+              "anisotropic": {
+                "piezoelectric": {
+                  "values": {
+                    "d31": {
+                      "value": -1.71e-10,
+                      "provenance": "literature",
+                      "source": "PZT-5A (Navy type II) handbook coefficients; a bulk ceramic, not a measured batch",
+                      "unit": "C/N"
+                    },
+                    "d32": {
+                      "value": -1.71e-10,
+                      "provenance": "literature",
+                      "source": "PZT-5A (Navy type II) handbook coefficients; a bulk ceramic, not a measured batch",
+                      "unit": "C/N"
+                    },
+                    "d33": {
+                      "value": 3.74e-10,
+                      "provenance": "literature",
+                      "source": "PZT-5A (Navy type II) handbook coefficients; a bulk ceramic, not a measured batch",
+                      "unit": "C/N"
+                    },
+                    "eps33T": {
+                      "value": 1700.0,
+                      "provenance": "literature",
+                      "source": "PZT-5A (Navy type II) handbook coefficients; a bulk ceramic, not a measured batch"
+                    }
+                  },
+                  "poling": "+3"
+                }
+              },
+              "subvolume": {
+                "min": [
+                  -0.005,
+                  -0.005,
+                  0.003
+                ],
+                "max": [
+                  0.005,
+                  0.005,
+                  0.004
+                ]
+              }
+            },
+            {
+              "id": "channel",
+              "name": "Cooling channel",
+              "object": "ex-fam-frame",
+              "extent": "subvolume",
+              "role": "channel",
+              "materialId": "",
+              "materialClass": "void",
+              "process": "",
+              "composition": {
+                "kind": "homogeneous",
+                "constituents": [
+                  {
+                    "id": "void",
+                    "substance": "void",
+                    "materialClass": "void",
+                    "fraction": 1.0
+                  }
+                ]
+              },
+              "subvolume": {
+                "min": [
+                  -0.04,
+                  0.02,
+                  -0.002
+                ],
+                "max": [
+                  0.04,
+                  0.024,
+                  0.002
+                ]
+              }
+            }
+          ],
+          "stacks": [],
+          "fields": [],
+          "interfaces": [
+            {
+              "id": "i-frame-core",
+              "name": "i-frame-core",
+              "regions": [
+                "frame",
+                "core"
+              ],
+              "models": [
+                {
+                  "kind": "perfect-bonding",
+                  "parameters": {}
+                },
+                {
+                  "kind": "thermal-contact-resistance",
+                  "parameters": {
+                    "resistance": {
+                      "value": 0.0001,
+                      "provenance": "illustrative",
+                      "source": "illustrative: a brazed joint",
+                      "unit": "m^2 K/W"
+                    }
+                  }
+                }
+              ],
+              "preparation": "brazed"
+            },
+            {
+              "id": "i-frame-sensor",
+              "name": "i-frame-sensor",
+              "regions": [
+                "frame",
+                "sensor"
+              ],
+              "models": [
+                {
+                  "kind": "cohesive-zone",
+                  "parameters": {
+                    "strength": {
+                      "value": 25000000.0,
+                      "provenance": "illustrative",
+                      "source": "illustrative: an adhesive pocket",
+                      "unit": "Pa"
+                    },
+                    "fractureEnergy": {
+                      "value": 200.0,
+                      "provenance": "illustrative",
+                      "source": "illustrative: an adhesive pocket",
+                      "unit": "J/m^2"
+                    }
+                  }
+                },
+                {
+                  "kind": "perfect",
+                  "parameters": {}
+                }
+              ]
+            },
+            {
+              "id": "i-frame-channel",
+              "name": "i-frame-channel",
+              "regions": [
+                "frame",
+                "channel"
+              ],
+              "models": [
+                {
+                  "kind": "perfect",
+                  "parameters": {}
+                }
+              ]
+            }
+          ],
+          "functions": [
+            {
+              "id": "f-carry",
+              "name": "Carry and damp",
+              "kind": "load-bearing",
+              "regions": [
+                "frame",
+                "core"
+              ]
+            },
+            {
+              "id": "f-sense",
+              "name": "Sense strain",
+              "kind": "sensing",
+              "regions": [
+                "sensor"
+              ]
+            }
+          ],
+          "adaptive": {
+            "kind": "static",
+            "states": []
+          },
+          "processes": [
+            {
+              "id": "proc-pbf-al",
+              "name": "Laser powder-bed fusion (aluminium)",
+              "kind": "powder-bed-fusion",
+              "parameters": {},
+              "constraints": {
+                "minLayerThickness": 0.0003,
+                "minFeatureSize": 0.0003,
+                "maxDimension": 0.25,
+                "materialClasses": [
+                  "metal"
+                ],
+                "source": "illustrative process limits for the example; not a machine's specification"
+              },
+              "note": ""
+            }
+          ]
+        }
+      ],
+      "comparisons": []
+    }
+  }
+}

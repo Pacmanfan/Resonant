@@ -514,3 +514,25 @@ milestones below.)
 | NetCDF, TDMS, external HDF5 and image imports | Missing | |
 | Bayesian sampling of posteriors | Missing | maximum a posteriori with Gaussian priors only |
 | New instrument protocol adapters (VISA, SCPI, serial); instrument control through the automation API | Missing | acquisition stays in the Experiments workspace |
+
+## Functionally architected matter — `docs/requirements/architected_matter.md`, `docs/materials/ARCHITECTED_MATTER.md`
+
+| Capability | State | Notes |
+|---|---|---|
+| Architectures: regions (composition, phases, microstructure, orientation, anisotropic and piezoelectric sets), stacks, interfaces, fields, functions, adaptive class, processes, records; validation; persistence without loss | Tested | extension `matter`; projects without one unchanged |
+| Property resolution (field, region value, composition by its method, library) and effective-property estimators with bounds | Tested | no unqualified average; missing properties reported |
+| Interfaces with models and derived quantities (acoustic transmission, mismatch stress, temperature jump) | Tested | `docs/materials/INTERFACE_ENGINEERING.md` |
+| Solver capability declarations and compatibility checks | Tested | `docs/materials/SOLVER_CAPABILITY_MATRIX.md` |
+| Lamination theory (ABD, moduli, neutral surface, thermal curvature, ply stresses); beam and plate modes coated and bare | Tested | Kirchhoff, perfect bonding |
+| Piezoelectric cantilever (unimorph, bimorph; series, parallel; electrode span; orientation; energy balance in the accounting framework) | Tested | lumped, first mode |
+| Through-thickness conduction and electrical analysis with contact resistances; the layered electromagnetic solver on stacks | Tested | |
+| Contact resistance in the thermal conduction problem and the coupled engine; stacks as physical systems with laws | Tested | |
+| Optimizer adapter `matter`: thickness, angle, coverage, material choice, interface parameters; manufacturing constrained or rejected; Pareto | Tested | an optimized design is not a validated one |
+| Manufacturing: process kinds, stated constraints, residual stress at the process temperature, records | Tested | `docs/materials/MANUFACTURING_AWARENESS.md` |
+| Exploration (findings apart from hypotheses), mechanisms and cascades, transformation pathways with ledgers | Tested | deterministic; changes nothing |
+| Laboratory link and the `matter.stack-metric` model; MatterService, Python, MCP, Matter panel, examples a–h | Tested | |
+| Shell or solid finite-element models of layered bodies (the bell) | Missing | coated beams and plates only |
+| Thermoelectric, magnetostrictive, photovoltaic, triboelectric, induction and chemical conversion | Missing | listed as mechanisms, not modeled |
+| Finite-stiffness, frictional, diffusive, reactive and charge-transfer interfaces in the solvers | Missing | recorded and refused |
+| Fields in two and three dimensions; CAD export; 3D field rendering; editing in the panel | Missing | through the service and files today |
+

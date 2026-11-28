@@ -340,6 +340,11 @@
    <attribute name="dockWidgetArea"><number>2</number></attribute>
    <widget class="MaterialScalesPanel" name="materialScalesPanel"/>
   </widget>
+  <widget class="QDockWidget" name="matterDock">
+   <property name="windowTitle"><string>Matter</string></property>
+   <attribute name="dockWidgetArea"><number>2</number></attribute>
+   <widget class="MatterPanel" name="matterPanel"/>
+  </widget>
   <widget class="QDockWidget" name="laboratoryDock">
    <property name="windowTitle"><string>Laboratory</string></property>
    <attribute name="dockWidgetArea"><number>2</number></attribute>
@@ -995,6 +1000,7 @@
   <customwidget><class>ExperimentsPanel</class><extends>QWidget</extends><header>ExperimentsPanel.h</header><container>1</container></customwidget>
   <customwidget><class>OptimizationPanel</class><extends>QWidget</extends><header>OptimizationPanel.h</header><container>1</container></customwidget>
   <customwidget><class>FunctionalPanel</class><extends>QWidget</extends><header>FunctionalPanel.h</header><container>1</container></customwidget>
+  <customwidget><class>MatterPanel</class><extends>QWidget</extends><header>MatterPanel.h</header><container>1</container></customwidget>
   <customwidget><class>LaboratoryPanel</class><extends>QWidget</extends><header>LaboratoryPanel.h</header><container>1</container></customwidget>
   <customwidget><class>AccountingPanel</class><extends>QWidget</extends><header>AccountingPanel.h</header><container>1</container></customwidget>
   <customwidget><class>MaterialStatePanel</class><extends>QWidget</extends><header>MaterialStatePanel.h</header><container>1</container></customwidget>

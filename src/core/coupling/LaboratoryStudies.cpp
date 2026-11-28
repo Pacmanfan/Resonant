@@ -140,6 +140,8 @@ std::string currentRevision(const Project& project, const lab::ModelLink& link)
         content = findObject(doc.value("scene", json::object()).value("objects", json::array()), link.id);
     else if (link.kind == "accounting-study")
         content = findById(ext.value("accounting", json::object()).value("studies", json::array()), link.id);
+    else if (link.kind == "matter-architecture")
+        content = findById(ext.value("matter", json::object()).value("architectures", json::array()), link.id);
     return content.is_null() ? std::string() : lab::fingerprint(content);
 }
 

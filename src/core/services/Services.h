@@ -540,6 +540,54 @@ private:
     Session& s_;
 };
 
+// Functionally architected matter (REQ-CHAT-20261127-001, RES-FAM-019, ADR-000228):
+// architectures of regions, stacks, interfaces and fields in the project extension "matter";
+// their validation; the analyses' declared capabilities and compatibility checks; the analyses
+// themselves, effective properties, manufacturability, exploration, mechanisms and pathways;
+// stacks as physical systems of the coupled engine; comparisons of alternatives; manufacturing
+// records; reports and layer tables. Every change is one undo step; analyses change nothing.
+struct MatterChange {
+    Mutation mutation;
+    nlohmann::json result = nlohmann::json::object();
+};
+
+class MatterService {
+public:
+    explicit MatterService(Session& s) : s_(s) {}
+    Outcome<nlohmann::json> architectures(const CallContext& c);
+    Outcome<nlohmann::json> architecture(const CallContext& c, const std::string& id);
+    // Refused with the errors of the validation; the warnings are returned.
+    Outcome<MatterChange> setArchitecture(const CallContext& c, const nlohmann::json& architecture);
+    Outcome<Mutation> deleteArchitecture(const CallContext& c, const std::string& id);
+    // A copy as an alternative (its parent recorded), for comparison.
+    Outcome<MatterChange> duplicateArchitecture(const CallContext& c, const std::string& id, const std::string& newId, const std::string& name);
+    // {"architecture": "<id>"} or an architecture document.
+    Outcome<nlohmann::json> validate(const CallContext& c, const nlohmann::json& spec);
+    // The analyses' declarations, interface models, process kinds, mechanisms, mixing methods ...
+    Outcome<nlohmann::json> capabilities(const CallContext& c);
+    Outcome<nlohmann::json> mechanisms(const CallContext& c, const std::string& from, const std::string& to, const std::string& architectureId);
+    Outcome<nlohmann::json> check(const CallContext& c, const std::string& architectureId, const std::string& stackId, const std::string& analysis);
+    Outcome<nlohmann::json> analyze(const CallContext& c, const std::string& architectureId, const std::string& stackId, const std::string& analysis,
+                                    const nlohmann::json& options);
+    Outcome<nlohmann::json> effectiveProperties(const CallContext& c, const std::string& architectureId, const std::string& regionId);
+    Outcome<nlohmann::json> manufacturability(const CallContext& c, const std::string& architectureId);
+    Outcome<nlohmann::json> explore(const CallContext& c, const std::string& architectureId);
+    Outcome<nlohmann::json> pathway(const CallContext& c, const std::string& architectureId, const std::string& functionId, const nlohmann::json& options);
+    // A stack as a physical system of the coupled engine, added to the project.
+    Outcome<MatterChange> createPhysicalSystem(const CallContext& c, const std::string& architectureId, const std::string& stackId,
+                                               const nlohmann::json& options);
+    // {"architectures": [..], "stack", "analyses": [{"analysis", "options"}], "keep": bool}: side by side, no single score.
+    Outcome<MatterChange> compare(const CallContext& c, const nlohmann::json& spec);
+    Outcome<MatterChange> addRecord(const CallContext& c, const std::string& architectureId, const nlohmann::json& record);
+    Outcome<std::string> report(const CallContext& c, const std::string& architectureId, const std::string& format);
+    Outcome<std::string> exportLayers(const CallContext& c, const std::string& architectureId, const std::string& stackId, const std::string& format);
+
+private:
+    Outcome<Mutation> change(const CallContext& c, const std::string& operation, const std::string& description,
+                             const std::function<Outcome<bool>(Project&)>& apply);
+    Session& s_;
+};
+
 // Unified accounting (REQ-CHAT-20261126-022, RES-ACC-016, ADR-000226): quantity families and
 // unit conversion, the conservation and consistency models, accounting studies (stored in
 // the project extension "accounting") run as jobs, reports reclassified for any system,
@@ -666,6 +714,7 @@ public:
     MaterialStateService materialState;
     AccountingService accounting;
     LaboratoryService laboratory;
+    MatterService matter;
     ApplicationService application;
 
 private:

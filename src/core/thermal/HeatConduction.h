@@ -63,6 +63,11 @@ struct ConductionProblem {
     std::array<FaceCondition, 6> faces;
     std::vector<double> initialTemperature;    // K, per cell (transient only; empty: the reference)
     double referenceTemperature = 293.15;      // K: stored energy is counted from it
+    // Contact (thermal boundary) resistances on the internal planes of the grid, m^2 K/W:
+    // per axis, one value per plane between cell layers i and i + 1 (counts - 1 values),
+    // in series with the cells' half-widths; empty: perfect contact everywhere
+    // (REQ-CHAT-20261127-001, RES-FAM-009).
+    std::array<std::vector<double>, 3> contactResistance;
 
     Status validate(bool transient) const;
 };

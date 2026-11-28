@@ -74,7 +74,9 @@ Assembly assemble(const ConductionProblem& p)
                         ++next[static_cast<size_t>(axis)];
                         const size_t cn = g.index(next[0], next[1], next[2]);
                         const double wn = g.width(axis, ia + 1);
-                        const double cond = area / (w / (2 * p.conductivity[c]) + wn / (2 * p.conductivity[cn]));
+                        const auto& contact = p.contactResistance[static_cast<size_t>(axis)];
+                        const double rc = contact.empty() ? 0.0 : contact[ia];
+                        const double cond = area / (w / (2 * p.conductivity[c]) + wn / (2 * p.conductivity[cn]) + rc);
                         t.emplace_back(static_cast<int>(c), static_cast<int>(c), cond);
                         t.emplace_back(static_cast<int>(cn), static_cast<int>(cn), cond);
                         t.emplace_back(static_cast<int>(c), static_cast<int>(cn), -cond);
@@ -179,6 +181,16 @@ Status ConductionProblem::validate(bool transient) const
             return Status::failure("conductivities must be positive and finite");
     if (!source.empty() && source.size() != n)
         return Status::failure("the source needs one value per cell");
+    for (size_t axis = 0; axis < 3; ++axis) {
+        const auto& rc = contactResistance[axis];
+        if (rc.empty())
+            continue;
+        if (rc.size() + 1 != grid.edges[axis].size() - 1)
+            return Status::failure("the contact resistances need one value per internal plane of the grid");
+        for (double r : rc)
+            if (!(r >= 0.0) || !std::isfinite(r))
+                return Status::failure("contact resistances must be non-negative and finite");
+    }
     for (double q : source)
         if (!std::isfinite(q))
             return Status::failure("the heat source contains a value that is not finite");

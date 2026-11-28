@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MatterPanel</class>
+ <widget class="QWidget" name="MatterPanel">
+  <layout class="QVBoxLayout" name="mainLayout">
+   <item>
+    <layout class="QHBoxLayout" name="architectureRow">
+     <item><widget class="QLabel" name="architectureLabel"><property name="text"><string>Architecture</string></property></widget></item>
+     <item><widget class="QComboBox" name="architectureCombo"><property name="sizePolicy"><sizepolicy hsizetype="Expanding" vsizetype="Fixed"/></property></widget></item>
+     <item>
+      <widget class="QPushButton" name="duplicateButton">
+       <property name="text"><string>Duplicate as alternative</string></property>
+       <property name="toolTip"><string>Copy the architecture (its parent recorded) to change and compare it; undo removes the copy.</string></property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item><widget class="QLabel" name="statusLabel"><property name="wordWrap"><bool>true</bool></property><property name="text"><string/></property></widget></item>
+   <item>
+    <widget class="QTabWidget" name="tabs">
+     <widget class="QWidget" name="regionsTab">
+      <attribute name="title"><string>Regions</string></attribute>
+      <layout class="QVBoxLayout" name="regionsLayout">
+       <item><widget class="QTableWidget" name="regionTable"><property name="toolTip"><string>Each region: its role, where it is, what it is made of (a library material, a composition with its method, or a graded field) and how it is made.</string></property></widget></item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="stackTab">
+      <attribute name="title"><string>Stack</string></attribute>
+      <layout class="QVBoxLayout" name="stackLayout">
+       <item><widget class="QComboBox" name="stackCombo"/></item>
+       <item><widget class="StackView" name="stackView"><property name="minimumSize"><size><width>0</width><height>200</height></size></property></widget></item>
+       <item><widget class="QTableWidget" name="interfaceTable"><property name="toolTip"><string>Every interface with its models: nothing is assumed perfect unless it says so.</string></property></widget></item>
+       <item><widget class="QPushButton" name="systemButton"><property name="text"><string>Create physical system</string></property>
+        <property name="toolTip"><string>Add the stack to the Coupled Energy-Matter Engine as a layered slab (what the engine cannot represent is refused).</string></property></widget></item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="analyzeTab">
+      <attribute name="title"><string>Analyze</string></attribute>
+      <layout class="QVBoxLayout" name="analyzeLayout">
+       <item>
+        <layout class="QHBoxLayout" name="analyzeRow">
+         <item><widget class="QComboBox" name="analysisCombo"/></item>
+         <item><widget class="QLineEdit" name="optionsEdit"><property name="placeholderText"><string>options as JSON, e.g. {"tipMass": 0.002}</string></property></widget></item>
+         <item><widget class="QPushButton" name="runButton"><property name="text"><string>Run</string></property></widget></item>
+        </layout>
+       </item>
+       <item><widget class="PlotWidget" name="resultPlot"><property name="minimumSize"><size><width>0</width><height>150</height></size></property></widget></item>
+       <item><widget class="QPlainTextEdit" name="resultText"><property name="readOnly"><bool>true</bool></property></widget></item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="manufactureTab">
+      <attribute name="title"><string>Manufacture</string></attribute>
+      <layout class="QVBoxLayout" name="manufactureLayout">
+       <item><widget class="QPushButton" name="manufactureButton"><property name="text"><string>Check manufacturability</string></property></widget></item>
+       <item><widget class="QLabel" name="manufactureStatus"><property name="wordWrap"><bool>true</bool></property><property name="text"><string/></property></widget></item>
+       <item><widget class="QTableWidget" name="manufactureTable"/></item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="exploreTab">
+      <attribute name="title"><string>Explore</string></attribute>
+      <layout class="QVBoxLayout" name="exploreLayout">
+       <item>
+        <layout class="QHBoxLayout" name="exploreRow">
+         <item><widget class="QPushButton" name="exploreButton"><property name="text"><string>What can it do?</string></property>
+          <property name="toolTip"><string>The applicable analyses, the pathways, what is missing and what may fail - findings apart from hypotheses. Nothing is changed.</string></property></widget></item>
+         <item><widget class="QComboBox" name="fromCombo"/></item>
+         <item><widget class="QComboBox" name="toCombo"/></item>
+         <item><widget class="QPushButton" name="mechanismsButton"><property name="text"><string>Mechanisms</string></property>
+          <property name="toolTip"><string>From a desired input to an output domain: the mechanisms and two-stage cascades, with what Resonant models.</string></property></widget></item>
+        </layout>
+       </item>
+       <item><widget class="QPlainTextEdit" name="exploreText"><property name="readOnly"><bool>true</bool></property></widget></item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="compareTab">
+      <attribute name="title"><string>Compare</string></attribute>
+      <layout class="QVBoxLayout" name="compareLayout">
+       <item><widget class="QPushButton" name="compareButton"><property name="text"><string>Compare the architectures</string></property>
+        <property name="toolTip"><string>Every architecture of the project side by side - no single score.</string></property></widget></item>
+       <item><widget class="QTableWidget" name="compareTable"/></item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget><class>PlotWidget</class><extends>QWidget</extends><header>PlotWidget.h</header><container>0</container></customwidget>
+  <customwidget><class>StackView</class><extends>QWidget</extends><header>StackView.h</header><container>0</container></customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

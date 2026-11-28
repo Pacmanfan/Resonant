@@ -123,10 +123,12 @@ def violations():
     # multiscale model (ADR-000224): its derivations and couplings are in coupling. So is the
     # material state (ADR-000225): its constitutive models are in the domains. So is the
     # accounting framework (ADR-000226): its adapters are in coupling. So is the laboratory
-    # (ADR-000227): its physical models are in coupling, its data the experiment framework's.
+    # (ADR-000227): its physical models are in coupling, its data the experiment framework's. So
+    # are the architectures of functionally architected matter (ADR-000228): their analyses are in
+    # coupling, the new physics in the domains.
     for path in sorted(sum((list((ROOT / "src" / "core" / d).glob("*")) for d in ("optimization", "automation", "help", "demo", "plugins",
                                                                                 "multiphysics", "functional", "oscillators", "multiscale",
-                                                                                "materialstate", "accounting", "laboratory")), [])):
+                                                                                "materialstate", "accounting", "laboratory", "matter")), [])):
         if path.suffix not in (".h", ".cpp"):
             continue
         for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):

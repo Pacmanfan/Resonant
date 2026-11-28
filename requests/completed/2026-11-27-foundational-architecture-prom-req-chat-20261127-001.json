@@ -1,0 +1,417 @@
+{
+  "request_id": "REQ-CHAT-20261127-001",
+  "source": "chat",
+  "type": "FEATURE",
+  "priority": "NORMAL",
+  "created": "2026-11-27T00:16:34-05:00",
+  "created_utc": "2026-11-27T05:16:34+00:00",
+  "id_date": "2026-11-27",
+  "timezone": "EST (UTC-05:00)",
+  "status": "completed",
+  "original_text": "# FOUNDATIONAL ARCHITECTURE PROMPT \u2014 FUNCTIONALLY ARCHITECTED MATTER AND EMERGENT PHYSICAL SYSTEMS\n\n## Project: RESONANT \u2014 Wave Field Engineering Studio\n\n## Initiative: Functionally Architected Matter (FAM)\n\n## Mission\n\nEstablish a foundational architectural capability within RESONANT that fundamentally expands how the platform conceives, represents, designs, analyzes, and optimizes physical matter.\n\nRESONANT must evolve beyond designing objects from selected materials and predetermined geometries.\n\nIt must support the design of **functionally architected physical systems in which atomic composition, material phases, microstructure, interfaces, spatial organization, geometry, and operating conditions are deliberately coordinated to produce desired physical behavior.**\n\nThe central principle is:\n\n**Matter is not merely the substance from which an engineered object is made. The organization of matter is itself an engineering variable.**\n\nA material's composition, crystal structure, orientation, interfaces, internal architecture, and macroscopic geometry can work together to produce physical properties and functions that are unavailable from the constituent materials in isolation.\n\nRESONANT must provide an architectural foundation for designing these systems.\n\nThis initiative is not limited to energy harvesting, metamaterials, smart materials, or conventional composites.\n\nIt encompasses the broader engineering of physical behavior through the deliberate organization of matter.\n\nThe objective is to establish a platform capable of discovering and engineering structures whose intended functions are inherent in their physical construction.\n\n---\n\n# 1. FOUNDATIONAL DESIGN PHILOSOPHY\n\nEstablish Functionally Architected Matter as a first-class architectural concept within RESONANT.\n\nThe platform must recognize that the physical behavior of an engineered system emerges from interacting variables across multiple scales.\n\nThese include:\n\n1. Elemental composition.\n2. Atomic bonding and electronic structure.\n3. Molecular organization.\n4. Crystal structure and orientation.\n5. Material phases and phase boundaries.\n6. Grain structure, defects, and microstructure.\n7. Nanoscale features and interfaces.\n8. Material layers and functional regions.\n9. Mesoscale architecture and periodic structures.\n10. Macroscopic geometry and topology.\n11. Environmental and operational conditions.\n12. Dynamic material state and history.\n\nThese variables must not be treated as independent design categories.\n\nTheir interactions determine the effective behavior of the complete physical system.\n\nFor example:\n\n- Crystal orientation influences piezoelectric response.\n- Microstructure influences mechanical strength and electrical conductivity.\n- Interface properties influence stress transfer and charge transport.\n- Layer thickness influences mechanical resonance and thermal resistance.\n- Geometric topology influences wave propagation and energy localization.\n- Electrical loading influences electromechanical damping.\n- Temperature influences material properties and interface behavior.\n\nRESONANT must establish the infrastructure to represent and investigate these dependencies.\n\n## 1.1 Function is embedded in physical organization\n\nThe intended function of a structure should influence its material composition, architecture, and geometry from the beginning of the design process.\n\nDo not assume that an engineer must first select a conventional material and then construct a shape from it.\n\nInstead, support a function-driven approach:\n\nDesired physical outcome \u2192 candidate physical mechanisms \u2192 material selection \u2192 material architecture \u2192 interface design \u2192 geometry \u2192 coupled simulation \u2192 optimization \u2192 manufacturing \u2192 experimental validation.\n\nThe design process must also support the reverse direction.\n\nAn engineer should be able to begin with an existing material system or structure and investigate what functions it can perform.\n\n## 1.2 Material properties are not necessarily additive\n\nDo not assume that a combination of materials will behave as a simple weighted average of their individual properties.\n\nInterfaces, topology, anisotropy, periodicity, phase interactions, and scale-dependent effects can produce emergent effective behavior.\n\nRESONANT must distinguish:\n\n- Intrinsic constituent properties.\n- Interface properties.\n- Effective properties of composite structures.\n- Geometry-dependent properties.\n- Frequency-dependent properties.\n- Temperature-dependent properties.\n- Nonlinear and state-dependent properties.\n- Emergent behavior resulting from coupled interactions.\n\n## 1.3 Energy transformation is a central application\n\nThe architecture must explicitly support structures designed to transform energy between physical domains.\n\nExamples include:\n\n- Mechanical \u2192 electrical.\n- Acoustic \u2192 mechanical \u2192 electrical.\n- Thermal \u2192 electrical.\n- Electrical \u2192 mechanical.\n- Magnetic \u2192 mechanical.\n- Optical \u2192 electrical.\n- Mechanical \u2192 thermal.\n- Electrical \u2192 optical.\n- Fluid \u2192 mechanical \u2192 electrical.\n- Electromagnetic \u2192 mechanical.\n- Chemical \u2192 electrical.\n\nSupport multistage and cascaded transformations.\n\nThe architecture must not assume that every conversion mechanism is resonant. Resonance is an important design mechanism where applicable, but thermal conduction, chemical reactions, static field effects, and other physical processes require their appropriate governing models.\n\nEvery transformation must obey conservation laws and account for conversion losses.\n\n---\n\n# 2. ESTABLISH A UNIFIED MATERIAL ARCHITECTURE MODEL\n\nCreate a first-class data model for functionally architected matter.\n\nThis model must describe an engineered material system as a hierarchical physical object rather than a flat list of materials.\n\nThe architecture should support the following entities.\n\n## 2.1 Composition\n\nRepresent the constituent materials and their composition.\n\nSupport:\n\n- Elements.\n- Compounds.\n- Alloys.\n- Ceramics.\n- Polymers.\n- Semiconductors.\n- Dielectrics.\n- Conductors.\n- Magnetic materials.\n- Piezoelectric materials.\n- Ferroelectric materials.\n- Magnetostrictive materials.\n- Thermoelectric materials.\n- Photonic and optical materials.\n- Composite constituents.\n- Novel and experimentally characterized materials.\n\nRepresent composition at the appropriate level of detail.\n\nDo not require atomic-level composition for every engineering problem.\n\nA conventional engineering material can be represented through experimentally characterized bulk properties, while advanced investigations can use more detailed structural descriptions.\n\n## 2.2 Material phases\n\nSupport multiple material phases within a single engineered system.\n\nRepresent:\n\n- Phase identity.\n- Phase fraction.\n- Spatial distribution.\n- Phase boundaries.\n- Phase transitions.\n- Temperature dependence.\n- Pressure dependence.\n- Field dependence.\n- Metastable states where supported.\n\nConnect phase behavior to the Dynamic Material State architecture.\n\n## 2.3 Crystalline and microstructural organization\n\nProvide a representation for:\n\n- Crystal structures.\n- Lattice parameters.\n- Crystal orientation.\n- Grain boundaries.\n- Grain size distributions.\n- Defects.\n- Dislocations.\n- Vacancies.\n- Inclusions.\n- Porosity.\n- Domain structures.\n- Anisotropic properties.\n- Texture and orientation distributions.\n\nThe architecture must allow material properties to depend on microstructural organization.\n\nIt must not pretend that all such properties are available from a simple material database lookup.\n\n## 2.4 Nanoscale and molecular architecture\n\nEstablish extensible support for:\n\n- Thin films.\n- Nanoparticles.\n- Nanowires.\n- Nanotubes.\n- Molecular assemblies.\n- Layered nanoscale structures.\n- Surface functionalization.\n- Quantum-confined structures.\n- Molecular orientation.\n- Nanoscale inclusions.\n- Surface and interface effects.\n\nThese representations should connect to appropriate specialized simulation models.\n\nDo not attempt to solve every nanoscale problem through the continuum solver.\n\n## 2.5 Functional regions\n\nAllow a single physical object to contain multiple spatially defined functional regions.\n\nEach region must be able to specify:\n\n- Geometry or spatial extent.\n- Material composition.\n- Material phase.\n- Microstructural properties.\n- Orientation.\n- Anisotropy.\n- Functional role.\n- Operating conditions.\n- Interfaces with adjacent regions.\n- Manufacturing method.\n- Property uncertainty.\n\nA functional region may be a homogeneous material, a composite, a graded material, a patterned film, or a complex internal architecture.\n\n## 2.6 Spatially varying material properties\n\nSupport continuous and discontinuous material-property distributions.\n\nExamples:\n\n- Gradually changing composition.\n- Functionally graded materials.\n- Spatially varying elastic modulus.\n- Spatially varying thermal conductivity.\n- Spatially varying permittivity.\n- Magnetic permeability distributions.\n- Piezoelectric coefficient distributions.\n- Density distributions.\n- Anisotropic orientation fields.\n\nThe underlying data model must be extensible enough to support field-based property descriptions rather than relying exclusively on discrete material assignments.\n\n---\n\n# 3. INTERFACE ENGINEERING \u2014 A FIRST-CLASS PHYSICAL DOMAIN\n\nThis is a particularly important part of the initiative.\n\nRESONANT must recognize that interfaces between materials can determine the performance of the complete structure.\n\nAn interface is not merely a geometric boundary.\n\nIt can have its own mechanical, electrical, thermal, magnetic, chemical, and structural behavior.\n\nCreate an Interface Engineering subsystem.\n\n## 3.1 Interface properties\n\nSupport representations of:\n\n- Mechanical bonding.\n- Adhesion.\n- Interfacial stiffness.\n- Thermal boundary resistance.\n- Electrical contact resistance.\n- Charge transfer.\n- Dielectric boundary behavior.\n- Diffusion.\n- Interfacial reactions.\n- Surface energy.\n- Friction.\n- Delamination.\n- Residual stress.\n- Interfacial defects.\n- Chemical compatibility.\n\n## 3.2 Interface behavior\n\nAllow different interface models depending on the physical problem.\n\nExamples:\n\n- Perfect mechanical bonding.\n- Finite-stiffness bonding.\n- Cohesive-zone behavior.\n- Frictional contact.\n- Thermal contact resistance.\n- Electrical contact resistance.\n- Dielectric interfaces.\n- Charge-transfer interfaces.\n- Diffusive interfaces.\n- Reactive interfaces.\n\nInterface models must be selected based on physical assumptions and solver capabilities.\n\n## 3.3 Interface optimization\n\nAllow RESONANT to investigate whether changing an interface improves the overall physical function.\n\nFor example:\n\n- Improve mechanical strain transfer into a piezoelectric film.\n- Reduce thermal leakage between functional regions.\n- Improve electrical charge collection.\n- Prevent unwanted charge leakage.\n- Reduce mechanical delamination.\n- Control interfacial damping.\n- Improve compatibility between materials with different thermal expansion coefficients.\n\nInterface design must participate in inverse-design and multi-objective optimization.\n\n---\n\n# 4. MATERIAL ARCHITECTURE AND SPATIAL ORGANIZATION\n\nDevelop a system that allows engineers to construct and modify complex material architectures.\n\nSupport more than conventional flat layers.\n\n## 4.1 Layered structures\n\nRepresent:\n\n- Multilayer stacks.\n- Thin-film assemblies.\n- Alternating material layers.\n- Conductive/dielectric stacks.\n- Piezoelectric/electrode assemblies.\n- Thermal barrier layers.\n- Magnetic/electrical functional layers.\n- Protective and encapsulation layers.\n\nEach layer must have independent material properties, thickness, orientation, and interface definitions.\n\n## 4.2 Patterned structures\n\nSupport:\n\n- Periodic patterns.\n- Aperiodic patterns.\n- Locally patterned regions.\n- Segmented electrodes.\n- Embedded material regions.\n- Spatially varying inclusions.\n- Resonator arrays.\n- Defect structures.\n- Gradient architectures.\n\n## 4.3 Three-dimensional material architectures\n\nSupport complex internal structures such as:\n\n- Lattices.\n- Cellular materials.\n- Porous structures.\n- Interlocking material regions.\n- Embedded channels.\n- Internal resonators.\n- Periodic metamaterial structures.\n- Hierarchical architectures.\n- Architected composites.\n\nMaterial architecture must be represented in three dimensions and must remain compatible with the existing geometry engine.\n\n## 4.4 Functionally graded materials\n\nSupport gradual transitions between compositions and properties.\n\nFor example:\n\n- Metal-to-ceramic transitions.\n- Stiffness gradients.\n- Thermal conductivity gradients.\n- Electrical conductivity gradients.\n- Magnetic property gradients.\n- Density gradients.\n\nThe architecture must distinguish physically realizable graded materials from idealized mathematical distributions.\n\n---\n\n# 5. MULTISCALE PROPERTY ENGINE\n\nIntegrate Functionally Architected Matter with the existing Multiscale Material Modeling initiative.\n\nEstablish a hierarchical model of how material structure determines effective physical behavior.\n\nThe architecture should support connections between:\n\nAtomic and electronic scale:\n- Electronic structure.\n- Bonding.\n- Charge distribution.\n- Polarization.\n- Magnetic moments.\n- Atomic-scale interactions.\n\nMolecular scale:\n- Molecular structure.\n- Molecular orientation.\n- Molecular dynamics.\n- Chemical interactions.\n\nCrystalline scale:\n- Crystal structure.\n- Lattice behavior.\n- Defects.\n- Domains.\n- Orientation.\n\nMicrostructural scale:\n- Grain structure.\n- Porosity.\n- Inclusions.\n- Phase distribution.\n- Grain boundaries.\n\nMesoscale:\n- Layers.\n- Fibers.\n- Lattices.\n- Resonators.\n- Interfaces.\n- Periodic arrangements.\n\nContinuum scale:\n- Effective constitutive behavior.\n- Mechanical response.\n- Electrical response.\n- Thermal response.\n- Magnetic response.\n- Optical response.\n\nDevice scale:\n- Complete structural and functional behavior.\n- Energy transformation.\n- Resonance.\n- Operating performance.\n- Reliability.\n\n## 5.1 Scale-to-scale property transfer\n\nCreate an extensible architecture for transferring information between models at different scales.\n\nExamples:\n\n- Atomic-scale calculations produce material parameters.\n- Microstructural models determine effective stiffness or conductivity.\n- Effective properties feed continuum simulations.\n- Device simulations determine system performance.\n- Experimental results update material and interface parameters.\n\nThe transfer must preserve units, coordinate systems, assumptions, uncertainty, and provenance.\n\n## 5.2 Homogenization and effective properties\n\nSupport appropriate methods for deriving effective material properties from heterogeneous architectures.\n\nPotential methods include:\n\n- Analytical homogenization.\n- Numerical homogenization.\n- Representative volume elements.\n- Periodic boundary conditions.\n- Multiscale finite-element methods.\n- Reduced-order constitutive models.\n\nDo not treat homogenized properties as universally valid.\n\nRecord the length scales, frequency ranges, loading conditions, and assumptions under which they are applicable.\n\n## 5.3 Specialized atomic and molecular methods\n\nEstablish interfaces for future or existing specialized methods such as:\n\n- Density Functional Theory.\n- Molecular Dynamics.\n- Tight-binding methods.\n- Atomistic simulations.\n- Phase-field methods.\n- Crystal plasticity.\n- Mesoscale modeling.\n\nDo not implement placeholder solvers that claim to provide these capabilities without actually performing the required physics.\n\nThe architecture should permit external computational backends and specialized solver integrations.\n\n---\n\n# 6. EMERGENT PHYSICAL FUNCTION\n\nEstablish the ability to identify and optimize collective behavior arising from material organization.\n\nThe system must distinguish between:\n\n1. Properties of individual constituents.\n2. Properties of interfaces.\n3. Effective properties of the combined structure.\n4. Emergent behavior arising from the architecture.\n\nInvestigate behaviors including:\n\n- Negative effective Poisson's ratio.\n- Tunable stiffness.\n- Mechanical wave localization.\n- Phononic band gaps.\n- Photonic band gaps.\n- Effective anisotropy.\n- Nonlinear response.\n- Coupled resonances.\n- Energy localization.\n- Enhanced electromechanical coupling.\n- Tunable thermal transport.\n- Magnetic field concentration.\n- Unusual dispersion behavior.\n- Controlled damping.\n- Adaptive material response.\n\nThese should be treated as possible physical phenomena, not guaranteed outcomes.\n\nThe system must identify the physical conditions under which an emergent property occurs.\n\nIt must also determine whether the property remains valid under realistic boundaries, losses, manufacturing tolerances, and operating conditions.\n\n## 6.1 Discovering useful combinations\n\nCreate a framework for exploring combinations of materials and architectures that may produce useful behavior.\n\nFor example:\n\nA structure may combine:\n\n- A high-strain piezoelectric region.\n- A compliant mechanical region.\n- A conductive collection region.\n- A dielectric isolation region.\n- A resonant mechanical architecture.\n\nThe purpose is not simply to stack materials.\n\nIt is to engineer the interactions between them.\n\nRESONANT should be capable of evaluating alternative arrangements and discovering which combinations produce the desired physical response.\n\n---\n\n# 7. FUNCTION-DRIVEN MATTER DESIGN AND INVERSE DESIGN\n\nIntegrate this initiative with the existing Function-Driven Inverse Design architecture.\n\nExtend inverse design beyond geometry and conventional material selection.\n\nThe engineer must be able to specify a desired physical function and allow RESONANT to investigate the complete material architecture.\n\n## 7.1 Design inputs\n\nSupport requirements such as:\n\n- Desired physical transformation.\n- Input energy domain.\n- Output energy domain.\n- Operating frequency or frequency range.\n- Operating temperature.\n- Mechanical loading.\n- Electrical loading.\n- Magnetic field conditions.\n- Optical wavelength.\n- Pressure and environmental conditions.\n- Physical dimensions.\n- Weight limits.\n- Strength requirements.\n- Efficiency targets.\n- Durability requirements.\n- Manufacturing constraints.\n- Cost constraints.\n- Material availability.\n- Safety requirements.\n\nNot every problem requires every input.\n\n## 7.2 Design variables\n\nAllow inverse design to investigate:\n\n- Material composition.\n- Material selection.\n- Phase selection.\n- Crystal orientation.\n- Microstructure.\n- Grain size.\n- Defect distributions.\n- Layer thickness.\n- Layer ordering.\n- Interface properties.\n- Spatial material distribution.\n- Geometric topology.\n- Resonator dimensions.\n- Functional-region placement.\n- Electrode arrangement.\n- Operating conditions.\n\n## 7.3 Optimization objectives\n\nSupport multiple simultaneous objectives.\n\nExamples:\n\n- Maximize useful energy conversion.\n- Minimize dissipated energy.\n- Maximize mechanical strength.\n- Minimize mass.\n- Maximize bandwidth.\n- Optimize resonance.\n- Maximize field localization.\n- Minimize temperature rise.\n- Maximize service life.\n- Minimize manufacturing complexity.\n- Maximize environmental stability.\n- Minimize material cost.\n\nDo not silently collapse conflicting objectives into a single score.\n\nProvide Pareto-optimal candidate designs and expose trade-offs.\n\n## 7.4 Design exploration\n\nRESONANT should be able to:\n\n1. Identify applicable physical mechanisms.\n2. Identify candidate materials.\n3. Propose material architectures.\n4. Generate candidate geometries.\n5. Evaluate interface configurations.\n6. Determine required solver capabilities.\n7. Simulate candidate designs.\n8. Compare predicted behavior.\n9. Identify uncertainties.\n10. Rank candidates against engineering objectives.\n11. Recommend experiments to distinguish competing candidates.\n\nThe system must distinguish between an optimized design and a validated design.\n\n---\n\n# 8. MULTIDOMAIN ENERGY TRANSFORMATION\n\nExplicitly integrate Functionally Architected Matter with the Coupled Energy\u2013Matter Engine.\n\nThe architecture must support structures that perform multiple physical transformations within a single engineered object.\n\nExamples:\n\nMechanical vibration:\n\u2192 resonant mechanical structure\n\u2192 piezoelectric material\n\u2192 electrical energy.\n\nAcoustic energy:\n\u2192 acoustic metamaterial\n\u2192 localized mechanical deformation\n\u2192 piezoelectric conversion\n\u2192 electrical storage.\n\nThermal gradient:\n\u2192 engineered thermal architecture\n\u2192 thermoelectric material\n\u2192 electrical energy.\n\nElectrical energy:\n\u2192 electrode architecture\n\u2192 piezoelectric material\n\u2192 mechanical deformation.\n\nMagnetic field:\n\u2192 magnetostrictive material\n\u2192 mechanical motion.\n\nOptical energy:\n\u2192 photonic architecture\n\u2192 photovoltaic conversion\n\u2192 electrical energy.\n\nSupport cascaded transformations and multiple simultaneous conversion mechanisms.\n\nFor every transformation stage, account for:\n\n- Input energy.\n- Useful output energy.\n- Stored energy.\n- Dissipated energy.\n- Conversion efficiency.\n- Coupling efficiency.\n- Uncertainty.\n- Operating conditions.\n\nThe complete system must obey conservation laws.\n\nNo predicted enhancement may imply creation of energy.\n\n## 8.1 Coupled and competing functions\n\nAllow a structure to perform several functions simultaneously.\n\nFor example, one component might:\n\n- Carry mechanical load.\n- Suppress unwanted vibration.\n- Harvest mechanical energy.\n- Sense deformation.\n- Monitor damage.\n- Control thermal transport.\n\nThe architecture must support both beneficial and detrimental interactions between these functions.\n\nAn improvement in one objective must not be assumed to improve every other objective.\n\n---\n\n# 9. DYNAMIC AND ADAPTIVE MATERIAL ARCHITECTURES\n\nIntegrate with the existing Dynamic Material State and Nonlinear Matter architecture.\n\nFunctionally Architected Matter must support structures whose behavior changes during operation.\n\nInvestigate:\n\n- Temperature-dependent material properties.\n- Stress-dependent material properties.\n- Field-dependent polarization.\n- Magnetic state changes.\n- Phase transitions.\n- Ferroelectric domain switching.\n- Shape-memory behavior.\n- Electroactive materials.\n- Magnetorheological behavior.\n- Electrorheological behavior.\n- Nonlinear stiffness.\n- Tunable damping.\n- Reconfigurable resonant structures.\n- Hysteresis.\n- Fatigue and degradation.\n\nDistinguish between:\n\n- Static functionally engineered matter.\n- Passive adaptive matter.\n- Externally controlled adaptive matter.\n- Actively reconfigurable physical systems.\n\nThe architecture must permit future designs in which the physical structure changes its response to different operating conditions.\n\nA material architecture should be able to perform different functions under different states without assuming that all transformations are reversible or instantaneous.\n\n---\n\n# 10. MANUFACTURING-AWARE MATERIAL ARCHITECTURE\n\nIntegrate with existing geometry, CAD, and manufacturing workflows.\n\nA proposed material architecture must be evaluated against plausible manufacturing processes.\n\nSupport manufacturing descriptions including:\n\n- Metal additive manufacturing.\n- Polymer additive manufacturing.\n- Ceramic additive manufacturing.\n- Multi-material printing.\n- Directed-energy deposition.\n- Powder-bed fusion.\n- Sputter deposition.\n- Atomic layer deposition.\n- Chemical vapor deposition.\n- Physical vapor deposition.\n- Thin-film processing.\n- Lithography.\n- Patterned electrode fabrication.\n- Lamination.\n- Diffusion bonding.\n- Sintering.\n- Heat treatment.\n- Machining and finishing.\n- Composite fabrication.\n\n## 10.1 Manufacturing constraints\n\nRepresent:\n\n- Minimum feature size.\n- Minimum layer thickness.\n- Material compatibility.\n- Deposition limitations.\n- Thermal processing limitations.\n- Surface roughness.\n- Residual stress.\n- Porosity.\n- Anisotropy.\n- Material availability.\n- Process repeatability.\n- Post-processing requirements.\n- Geometric accessibility.\n- Interface reliability.\n\n## 10.2 Manufacturing-aware optimization\n\nInverse design must be capable of rejecting or penalizing architectures that cannot reasonably be manufactured.\n\nWhere appropriate, propose alternative architectures that retain the desired physical behavior while simplifying fabrication.\n\nDo not confuse theoretical material arrangements with manufacturable designs.\n\n## 10.3 Manufacturing provenance\n\nThe material architecture must preserve a record of:\n\n- Material batch.\n- Composition.\n- Fabrication process.\n- Processing parameters.\n- Deposition conditions.\n- Heat-treatment history.\n- Layer sequence.\n- Interface preparation.\n- Post-processing.\n- Inspection results.\n- Measured material properties.\n\nManufacturing history can materially influence physical behavior and must be available to simulation and validation workflows.\n\n---\n\n# 11. MATERIAL ARCHITECTURE DESIGN ENVIRONMENT\n\nDevelop the conceptual and technical foundation for a dedicated Functionally Architected Matter design environment.\n\nIt must integrate with the existing RESONANT interface rather than create an isolated application.\n\nThe engineer should be able to:\n\n1. Create or import a geometry.\n2. Divide the object into functional regions.\n3. Assign material compositions and properties.\n4. Define layered and graded regions.\n5. Define interfaces.\n6. Specify orientations and anisotropy.\n7. Define internal structures.\n8. Associate physical functions with regions.\n9. Inspect material architecture at different scales.\n10. Run applicable simulations.\n11. Explore design alternatives.\n12. Compare candidate architectures.\n13. Export manufacturing and analysis data.\n\n## 11.1 Visualization\n\nProvide appropriate visualization for:\n\n- Material composition maps.\n- Functional-region maps.\n- Layer stacks.\n- Interface boundaries.\n- Crystal orientation fields.\n- Microstructure.\n- Spatial property distributions.\n- Strain and stress fields.\n- Electric and magnetic fields.\n- Thermal fields.\n- Wave propagation.\n- Resonant modes.\n- Energy-flow paths.\n- Material-state changes.\n\nSupport scale-aware visualization.\n\nAn engineer should be able to move conceptually between the overall device and its internal material architecture without losing the relationship between scales.\n\nDo not present illustrative microstructures or atomic structures as experimentally validated physical representations.\n\nEvery visualization must identify whether it is:\n\n- Actual material data.\n- A computed result.\n- An idealized model.\n- A schematic representation.\n- An illustrative visualization.\n\n---\n\n# 12. MATERIAL KNOWLEDGE AND PROPERTY PROVENANCE\n\nCreate an extensible material-property infrastructure.\n\nMaterial data must support:\n\n- Source and provenance.\n- Units.\n- Temperature dependence.\n- Frequency dependence.\n- Anisotropy.\n- Nonlinearity.\n- Validity ranges.\n- Measurement conditions.\n- Uncertainty.\n- Experimental versus theoretical origin.\n- Material batch and processing history where available.\n\nDistinguish clearly between:\n\n1. Experimentally measured properties.\n2. Manufacturer-published properties.\n3. Literature-derived properties.\n4. First-principles predictions.\n5. Molecular or microstructural simulation results.\n6. Estimated properties.\n7. User-defined assumptions.\n\nDo not silently substitute missing properties with generic values.\n\nIf a simulation requires unavailable material parameters, identify them and explain the consequences of using estimates.\n\nAllow material-property datasets to be updated through experimental characterization.\n\nIntegrate with the Experimental Energy\u2013Matter Laboratory.\n\nExperimental measurements should be capable of improving material models, interface models, and effective-property predictions.\n\n---\n\n# 13. SCIENTIFIC VALIDATION AND UNCERTAINTY\n\nScientific integrity is mandatory.\n\nFunctionally Architected Matter must not become a mechanism for producing attractive but physically unsupported designs.\n\nImplement explicit validation requirements.\n\n## 13.1 Model validity\n\nEvery physical model must identify:\n\n- Governing equations.\n- Material assumptions.\n- Boundary conditions.\n- Validity range.\n- Relevant length and time scales.\n- Numerical limitations.\n- Coupling assumptions.\n- Known omissions.\n\n## 13.2 Uncertainty\n\nRepresent uncertainty in:\n\n- Material composition.\n- Material properties.\n- Interface properties.\n- Geometry.\n- Manufacturing tolerances.\n- Microstructure.\n- Environmental conditions.\n- Solver parameters.\n- Experimental measurements.\n\nPropagate uncertainty where technically feasible.\n\n## 13.3 Independent validation\n\nDistinguish:\n\n- Calibration data.\n- Model development data.\n- Independent validation data.\n- Experimental verification.\n\nDo not treat a model as validated simply because it reproduces the data used to calibrate it.\n\n## 13.4 Physical consistency\n\nEnforce appropriate:\n\n- Conservation of mass.\n- Conservation of momentum.\n- Conservation of energy.\n- Charge conservation.\n- Thermodynamic consistency.\n- Constitutive stability.\n- Boundary-condition consistency.\n\nReject or flag physically inconsistent designs and simulations.\n\n---\n\n# 14. SOFTWARE ARCHITECTURE AND INTEGRATION\n\nThis initiative must extend RESONANT's existing architecture, not create a parallel application.\n\nBefore implementing anything, perform a comprehensive repository audit.\n\nExamine:\n\n- Existing Shape\u2013Function\u2013Energy architecture.\n- Coupled Energy\u2013Matter Engine.\n- Geometry engine.\n- Material database.\n- Multiscale Material Modeling.\n- Metamaterials and engineered effective properties.\n- Dynamic Material State and Nonlinear Matter.\n- Conservation and energy accounting.\n- Function-Driven Inverse Design.\n- Experimental Energy\u2013Matter Laboratory.\n- Existing simulation backends.\n- CAD and manufacturing integration.\n- Serialization and project persistence.\n- Visualization infrastructure.\n- AI and orchestration capabilities.\n\nRead all relevant architecture documents, project guidance, implementation plans, and existing tests.\n\nIdentify existing capabilities that should be extended.\n\nDo not duplicate existing functionality.\n\n## 14.1 Core architectural components\n\nEstablish appropriate modular services or domain components for:\n\n- MaterialCompositionModel.\n- MaterialPhaseModel.\n- MicrostructureModel.\n- FunctionalRegionModel.\n- MaterialArchitectureModel.\n- InterfaceModel.\n- SpatialPropertyField.\n- MultiscalePropertyTransfer.\n- EffectivePropertyModel.\n- MaterialFunctionModel.\n- EnergyTransformationPathway.\n- ManufacturingConstraintModel.\n- MaterialArchitectureOptimizer.\n- ArchitectureValidationService.\n- MaterialProvenanceService.\n\nThese are conceptual responsibilities, not mandatory class names.\n\nFollow existing naming, layering, dependency-injection, and architectural conventions.\n\nAvoid building an unnecessarily fragmented service architecture.\n\n## 14.2 Shared data representation\n\nEstablish a canonical representation of functionally architected matter that can be consumed by:\n\n- Geometry and CAD systems.\n- Material-property systems.\n- CEME.\n- Structural solvers.\n- Acoustic solvers.\n- Electromagnetic solvers.\n- Thermal solvers.\n- Multiscale models.\n- Inverse-design systems.\n- Manufacturing systems.\n- Experimental validation systems.\n\nPreserve consistent identities, references, units, coordinate systems, and provenance.\n\n## 14.3 Plugin and solver extensibility\n\nDo not hardwire the architecture to a single simulation backend.\n\nProvide extensible interfaces for specialized physical models.\n\nA solver must explicitly declare:\n\n- Supported physics.\n- Supported material models.\n- Supported interface models.\n- Spatial dimensionality.\n- Relevant scales.\n- Coupling capabilities.\n- Supported nonlinearities.\n- Numerical limitations.\n- Input requirements.\n- Output quantities.\n\nThe architecture must not imply that a solver supports a coupling simply because its input data structures can represent the relevant fields.\n\n---\n\n# 15. AI-ASSISTED MATERIAL ARCHITECTURE DISCOVERY\n\nEstablish the foundation for AI-assisted exploration and design.\n\nAI should help engineers investigate candidate physical systems, not replace physical modeling.\n\nPotential capabilities:\n\n- Suggest candidate material combinations.\n- Identify relevant conversion mechanisms.\n- Recommend promising interface architectures.\n- Propose spatial material arrangements.\n- Identify potentially useful resonant configurations.\n- Explain competing physical effects.\n- Generate candidate optimization objectives.\n- Recommend simulation sequences.\n- Identify missing material parameters.\n- Recommend experiments that discriminate between competing hypotheses.\n- Summarize physical trade-offs.\n\nAI-generated designs must be treated as hypotheses until evaluated through appropriate physical models and experiments.\n\nThe system must explain why a proposed combination might work.\n\nIt must also be capable of explaining why a seemingly attractive combination may fail.\n\nExamples include:\n\n- Poor mechanical coupling.\n- Electrical leakage.\n- Excessive dielectric loss.\n- Thermal incompatibility.\n- Unwanted damping.\n- Opposing polarization.\n- Delamination.\n- Unstable material states.\n- Manufacturing incompatibility.\n\nPreserve the distinction between established science, plausible hypotheses, computational predictions, and experimental findings.\n\n---\n\n# 16. SIGNATURE APPLICATION: THE FUNCTIONALLY ARCHITECTED ENERGY CONVERTER\n\nUse the integrated piezoelectric bell concept as an architectural reference example, not as the sole purpose of this initiative.\n\nThe example should demonstrate how the new architecture can represent a complete physical object whose function emerges from its composition, layers, interfaces, and geometry.\n\nExample:\n\nA metal structure is additively manufactured with geometry optimized for a desired vibration spectrum.\n\nSelected regions receive functional material layers.\n\nThese may include:\n\n- An adhesion or transition layer.\n- A piezoelectric film.\n- Patterned electrodes.\n- Dielectric isolation.\n- Protective encapsulation.\n\nThe complete assembly is optimized for:\n\n- Structural behavior.\n- Resonance.\n- Acoustic radiation.\n- Surface strain.\n- Piezoelectric conversion.\n- Electrical collection.\n- Mechanical durability.\n- Manufacturing feasibility.\n\nThe model must account for the effect of the deposited layers on the structural behavior.\n\nIt must not calculate the bare metal structure and assume that the addition of functional layers leaves its behavior unchanged.\n\nThe same architecture should subsequently be reusable for other examples, including:\n\n- Vibration-harvesting structures.\n- Thermoelectric architectures.\n- Photonic energy-conversion systems.\n- Magnetostrictive structures.\n- Adaptive mechanical systems.\n- Multifunctional load-bearing materials.\n\nThe bell is a validation example for the architecture, not a hardcoded special case.\n\n---\n\n# 17. USER EXPERIENCE AND DESIGN WORKFLOW\n\nThe new capability must feel like a natural extension of RESONANT.\n\nThe engineer should be able to approach the system from two directions.\n\n### Direction A: Design from function\n\n\"I want a structure that converts mechanical vibration into electricity while retaining a specified load-bearing capability.\"\n\nRESONANT helps discover the mechanisms, materials, architecture, geometry, and operating conditions.\n\n### Direction B: Explore an existing structure\n\n\"I have this material architecture. What can it do?\"\n\nRESONANT analyzes its composition, internal structure, interfaces, geometry, and physical properties to identify possible functions and limitations.\n\nSupport iterative exploration.\n\nThe engineer must remain in control of assumptions, design variables, material selection, and optimization objectives.\n\nThe system should expose physical reasoning rather than hiding decisions behind a black-box recommendation.\n\n---\n\n# 18. IMPLEMENTATION STRATEGY\n\nThis prompt establishes a foundational architecture. It does not authorize a superficial implementation of every advanced physical capability simultaneously.\n\nProceed in deliberate stages.\n\n## Phase 0 \u2014 Repository and architecture audit\n\n- Inspect the complete existing implementation.\n- Identify reusable components.\n- Map existing material, geometry, and physics representations.\n- Identify architectural gaps.\n- Review the previous engineering prompts and their implementation status.\n- Document integration requirements.\n- Establish a dependency map.\n\nDo not begin by replacing existing systems.\n\n## Phase 1 \u2014 Canonical Functionally Architected Matter model\n\nImplement the foundational data representation.\n\nEstablish:\n\n- Hierarchical material composition.\n- Functional regions.\n- Layered structures.\n- Material assignments.\n- Spatially varying properties.\n- Interfaces.\n- Anisotropy and orientation.\n- Material provenance.\n- Serialization and persistence.\n\nProvide tests for creation, editing, serialization, loading, and round-trip preservation.\n\n## Phase 2 \u2014 Interface and material architecture infrastructure\n\nImplement the interface representation and initial supported interface models.\n\nProvide:\n\n- Layered-material support.\n- Region adjacency.\n- Interface properties.\n- Material orientation.\n- Spatial property fields.\n- Basic validation.\n- Geometry association.\n\nEnsure the model can represent a multimaterial physical structure without requiring a specific solver.\n\n## Phase 3 \u2014 Multiscale integration\n\nIntegrate with existing material and multiscale systems.\n\nEstablish:\n\n- Property transfer interfaces.\n- Effective-property records.\n- Scale and validity metadata.\n- Uncertainty and provenance.\n- Backend extensibility.\n\nImplement only scale-transfer capabilities supported by existing models or validated new work.\n\n## Phase 4 \u2014 CEME and multiphysics integration\n\nIntegrate material architecture with the coupled physical engine.\n\nEnsure that functional regions and interfaces can participate in appropriate simulations.\n\nImplement explicit coupling declarations and validation.\n\nDo not claim complete multiphysics coupling until it exists and has been tested.\n\n## Phase 5 \u2014 Inverse-design integration\n\nExtend existing inverse design to include material architecture variables.\n\nStart with manageable optimization problems involving:\n\n- Layer thickness.\n- Material selection.\n- Region placement.\n- Geometry.\n- Interface parameters.\n- Resonance.\n\nDemonstrate multi-objective optimization and trade-off reporting.\n\n## Phase 6 \u2014 Visualization and design environment\n\nImplement the user-facing material architecture environment.\n\nSupport editing, inspection, visualization, simulation preparation, and persistence.\n\n## Phase 7 \u2014 Experimental and manufacturing integration\n\nConnect the architecture to experimental characterization and manufacturing constraints.\n\nEnsure that measured properties and actual manufacturing history can inform future simulations.\n\n## Phase 8 \u2014 Advanced discovery\n\nEstablish extension points for:\n\n- Advanced atomistic modeling.\n- Microstructure generation.\n- Advanced interface physics.\n- AI-assisted architecture discovery.\n- Adaptive and reconfigurable matter.\n- More sophisticated multiscale optimization.\n\nDo not simulate capabilities that have not been implemented.\n\n---\n\n# 19. TESTING AND ACCEPTANCE CRITERIA\n\nThe initiative is not complete simply because a material architecture can be displayed in the GUI.\n\nIt must function as an engineering representation.\n\n## Data model tests\n\n- Represent a conventional homogeneous material.\n- Represent a multilayer material.\n- Represent a functionally graded material.\n- Represent a multimaterial 3D structure.\n- Represent spatially varying properties.\n- Represent material orientation.\n- Represent interfaces.\n- Preserve property provenance.\n- Serialize and reload complete architectures without information loss.\n\n## Integration tests\n\n- Associate material regions with existing geometry.\n- Pass appropriate properties to existing solvers.\n- Preserve units and coordinate systems.\n- Validate unsupported solver configurations.\n- Integrate with CEME.\n- Integrate with inverse design.\n- Integrate with experimental records.\n\n## Physical modeling tests\n\nCreate at least one supported benchmark demonstrating that a change in material architecture changes predicted physical behavior.\n\nExamples:\n\n- A layered composite with different effective stiffness.\n- A piezoelectric structure with altered electrode or material orientation.\n- A multilayer thermal structure with different effective thermal transport.\n- A periodic mechanical structure with a measurable frequency-dependent response.\n\nChoose benchmarks that existing or newly implemented solvers can actually support.\n\nCompare results against analytical solutions, established benchmarks, or experimental data where available.\n\n## Optimization tests\n\nDemonstrate that an optimization variable changes a physical result in the expected direction.\n\nDemonstrate that competing objectives are represented honestly.\n\nDemonstrate that infeasible or unsupported architectures are identified.\n\n## User acceptance\n\nAn engineer must be able to:\n\n1. Create a multimaterial physical structure.\n2. Assign multiple functional regions.\n3. Define layers and interfaces.\n4. Inspect spatial material properties.\n5. Prepare an appropriate simulation.\n6. Evaluate physical behavior.\n7. Compare architectural alternatives.\n8. Preserve the complete design.\n9. Reopen and continue the project without loss of information.\n\n---\n\n# 20. NON-NEGOTIABLE SCIENTIFIC AND ARCHITECTURAL RULES\n\n1. Do not treat materials as interchangeable scalar property records.\n2. Do not assume that constituent properties combine through simple averaging.\n3. Do not treat interfaces as automatically perfect.\n4. Do not confuse a theoretical architecture with a manufacturable design.\n5. Do not claim atomistic accuracy from continuum approximations.\n6. Do not invent missing material properties.\n7. Do not hide uncertainty.\n8. Do not confuse optimization with experimental validation.\n9. Do not claim energy creation or violate conservation.\n10. Do not assume resonance improves every physical system.\n11. Do not assume a functional layer has negligible influence on its substrate.\n12. Do not introduce unsupported solver capabilities.\n13. Do not create a parallel architecture that duplicates existing RESONANT systems.\n14. Do not sacrifice established functionality for the new initiative.\n15. Preserve backward compatibility and existing project data.\n\nEvery new capability must be traceable to a physical model, material property, engineering assumption, or experimental observation.\n\n---\n\n# 21. REQUIRED FINAL DELIVERABLES\n\nAt completion, provide:\n\n1. Architecture audit and existing-capability assessment.\n2. Functionally Architected Matter architectural specification.\n3. Canonical data model and relationship diagrams.\n4. Interface Engineering design.\n5. Multiscale integration specification.\n6. CEME integration documentation.\n7. Inverse-design integration documentation.\n8. Manufacturing-awareness specification.\n9. User-interface and workflow implementation.\n10. Solver capability and limitation matrix.\n11. Test suite and benchmark results.\n12. Performance and scalability assessment.\n13. Known limitations and outstanding work.\n14. A phased roadmap for future advanced capabilities.\n\nIdentify every new module, service, model, interface, and major file.\n\nDocument all changes and provide evidence that existing functionality remains operational.\n\nDo not report incomplete capabilities as complete.\n\n---\n\n# 22. THE LONG-TERM VISION\n\nThis initiative establishes a new level of physical engineering within RESONANT.\n\nThe ultimate objective is to allow engineers to design physical systems by specifying what matter should accomplish, rather than being restricted to choosing from conventional materials and shaping them into conventional components.\n\nA structure may be designed to:\n\n- Carry loads.\n- Control waves.\n- Concentrate energy.\n- Transform energy.\n- Generate electricity.\n- Manage heat.\n- Manipulate magnetic fields.\n- Control light.\n- Sense its environment.\n- Adapt to changing conditions.\n- Perform multiple functions simultaneously.\n\nThese functions can emerge from the coordinated behavior of its constituents, interfaces, internal architecture, and overall geometry.\n\nThe physical form is not merely a container for the function.\n\n**The physical form, material organization, and function are inseparable parts of the same engineered system.**\n\nRESONANT should ultimately become a platform capable of designing, predicting, optimizing, and experimentally validating these systems.\n\nEstablish the architecture accordingly.\n\n# FINAL DIRECTIVE\n\nThink beyond the immediate examples.\n\nDo not design this initiative around the piezoelectric bell, energy harvesting, or any single material family.\n\nThe bell is merely an accessible demonstration of a much larger principle.\n\nBuild the foundational architecture for engineering matter itself.\n\nBe ambitious in the architecture, rigorous in the physics, conservative in scientific claims, and disciplined in implementation.\n\nThe objective is not simply to make RESONANT better at designing objects.\n\n**The objective is to make RESONANT capable of designing new physical systems whose functions are inherent in the way their matter is organized.**",
+  "file": "requests/inbox/2026-11-27-foundational-architecture-prom-req-chat-20261127-001.md",
+  "attachments": [],
+  "context": "User: 'add this and perform in order' (queued after REQ-CHAT-20261126-023, Prompt 26). An unnumbered foundational architecture prompt (Functionally Architected Matter); it builds on Prompts 17-26, including the missing Prompt 25 (inverse design).",
+  "text_sha256": "30ed316a793c0af4184081c639946361525495d11493c1ff6c07a2a194cb9c26",
+  "classification": {
+    "proposed_type": null,
+    "proposed_source": "heuristic",
+    "normalized_type": null,
+    "heuristic_type": "FEATURE",
+    "final_type": "FEATURE",
+    "confidence": "high",
+    "validation": "PASS",
+    "classifier_reason": "request statement is framed as feature: capability, evolve, must provide, must support",
+    "correction_reason": null,
+    "normalization_note": null,
+    "evidence": [
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "capability",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Establish a foundational architectural capability within RESONANT that fundamentally expands how the platform conceives, represents, designs, analyzes, and optimizes physical matter."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "evolve",
+        "strength": "strong",
+        "note": "",
+        "sentence": "RESONANT must evolve beyond designing objects from selected materials and predetermined geometries."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "must support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "It must support the design of **functionally architected physical systems in which atomic composition, material phases, microstructure, interfaces, spatial organization, geometry, and operating condit"
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "must provide",
+        "strength": "strong",
+        "note": "",
+        "sentence": "RESONANT must provide an architectural foundation for designing these systems."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "objective",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The objective is to establish a platform capable of discovering and engineering structures whose intended functions are inherent in their physical construction."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "first-class",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Establish Functionally Architected Matter as a first-class architectural concept within RESONANT."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "features",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Nanoscale features and interfaces."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "must establish",
+        "strength": "strong",
+        "note": "",
+        "sentence": "RESONANT must establish the infrastructure to represent and investigate these dependencies."
+      },
+      {
+        "category": "PERFORMANCE",
+        "where": "body",
+        "phrase": "optimization",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Desired physical outcome \u2192 candidate physical mechanisms \u2192 material selection \u2192 material architecture \u2192 interface design \u2192 geometry \u2192 coupled simulation \u2192 optimization \u2192 manufacturing \u2192 experimental v"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "must also support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The design process must also support the reverse direction."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "should be able to",
+        "strength": "strong",
+        "note": "",
+        "sentence": "An engineer should be able to begin with an existing material system or structure and investigate what functions it can perform."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support multistage and cascaded transformations."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Create a first-class data model for functionally architected matter."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "first-class",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Create a first-class data model for functionally architected matter."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "should support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The architecture should support the following entities."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support multiple",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support multiple material phases within a single engineered system."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Provide",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Provide a representation for:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "must allow",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The architecture must allow material properties to depend on microstructural organization."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "support for",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Establish extensible support for:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Allow",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Allow a single physical object to contain multiple spatially defined functional regions."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "must be able",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Each region must be able to specify:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support continuous and discontinuous material-property distributions."
+      },
+      {
+        "category": "PERFORMANCE",
+        "where": "body",
+        "phrase": "performance",
+        "strength": "strong",
+        "note": "",
+        "sentence": "RESONANT must recognize that interfaces between materials can determine the performance of the complete structure."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Create an Interface Engineering subsystem."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support representations of:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Allow",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Allow different interface models depending on the physical problem."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capabilities",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Interface models must be selected based on physical assumptions and solver capabilities."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Allow",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Allow RESONANT to investigate whether changing an interface improves the overall physical function."
+      },
+      {
+        "category": "PERFORMANCE",
+        "where": "body",
+        "phrase": "optimization",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Interface design must participate in inverse-design and multi-objective optimization."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "objective",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Interface design must participate in inverse-design and multi-objective optimization."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Develop",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Develop a system that allows engineers to construct and modify complex material architectures."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "allows",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Develop a system that allows engineers to construct and modify complex material architectures."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support more",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support more than conventional flat layers."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support complex internal structures such as:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support gradual transitions between compositions and properties."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Integrate",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Integrate Functionally Architected Matter with the existing Multiscale Material Modeling initiative."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "should support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The architecture should support connections between:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Create an extensible architecture for transferring information between models at different scales."
+      }
+    ],
+    "scores": {
+      "FEATURE": {
+        "head": 4,
+        "body": 148
+      },
+      "BUG": {
+        "head": 2,
+        "body": 16
+      },
+      "CRASH": {
+        "head": 0,
+        "body": 0
+      },
+      "REGRESSION": {
+        "head": 0,
+        "body": 0
+      },
+      "PERFORMANCE": {
+        "head": 0,
+        "body": 14
+      },
+      "REFACTOR": {
+        "head": 0,
+        "body": 12
+      },
+      "BUILD": {
+        "head": 0,
+        "body": 0
+      },
+      "DOCUMENTATION": {
+        "head": 0,
+        "body": 6
+      },
+      "INVESTIGATION": {
+        "head": 1,
+        "body": 32
+      },
+      "PROCESS-CHANGE": {
+        "head": 0,
+        "body": 0
+      }
+    },
+    "evidence_total": 235,
+    "validator": "scripts/request_classification.py"
+  },
+  "links": {
+    "work": [
+      "WORK-000025"
+    ]
+  },
+  "commits": [],
+  "resolution": {
+    "from": "processing",
+    "to": "completed",
+    "at": "2026-11-28T08:49:14.740607+00:00",
+    "by": "agent-dev-20261126151713-76f632",
+    "gates": [
+      {
+        "work": "WORK-000025",
+        "at": "2026-11-28T08:49:02.268254+00:00",
+        "verdict": "PASS",
+        "request_fingerprint": "187371b70ba549c029d7d1e30de58574dd1f9322cf7b66057b3707045d5ed740",
+        "test_runs": [
+          "20261128T034320-1408368"
+        ]
+      }
+    ]
+  }
+}

@@ -5,8 +5,8 @@ screenshot manifest, `demos/profiles/` and the Python package; `python/tests`
 fails when this report is out of date. A major user-facing feature is not complete
 without a help topic (RES-HELP-012).
 
-**37 features.** Help topic: 37/37. Illustrated with a screenshot: 19/37. Example project: 29/37. Demonstration: 17/37. Python API: 28/37.
-Help: 128 topics in 12 categories.
+**38 features.** Help topic: 38/38. Illustrated with a screenshot: 19/38. Example project: 30/38. Demonstration: 17/38. Python API: 29/38.
+Help: 129 topics in 12 categories.
 
 | Feature | Help topic | Status | Screenshots | Example projects | Demos | Python API |
 |---|---|---|---|---|---|---|
@@ -34,6 +34,7 @@ Help: 128 topics in 12 categories.
 | Metamaterials and effective properties | `opt.metamaterials` | available | - | metamaterials/a-mass-in-mass-lattice.resonant, metamaterials/e-layered-thermal.resonant | - | resonant_api (FunctionalStructureService.CreateEffectiveMaterial) |
 | Multiscale materials and lineage | `concepts.multiscale` | available | - | multiscale/a-crystalline-argon.resonant, multiscale/c-porous-composite.resonant | - | resonant_api (MultiscaleService) |
 | Energy, momentum and force accounting | `concepts.accounting` | available | - | accounting/d-coupled-resonators.resonant, accounting/e-microwave-absorption.resonant | - | resonant_api (AccountingService) |
+| Functionally architected matter | `concepts.architected-matter` | available | - | matter/b-energy-converter.resonant, matter/c-thermal-barrier.resonant | - | resonant_api (MatterService) |
 | Experimental laboratory | `exp.laboratory` | available | - | laboratory/a-resonator-frf.resonant, laboratory/c-thermal-slab.resonant | - | resonant_api (LaboratoryService) |
 | Dynamic material state | `concepts.material-state` | available | - | materialstate/c-plastic-bar.resonant, materialstate/d-damage-resonance.resonant | - | resonant_api (MaterialStateService) |
 | Topology optimization | `opt.topology` | experimental | - | - | - | - |

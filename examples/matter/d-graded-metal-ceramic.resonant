@@ -1,0 +1,375 @@
+{
+  "format": "resonant-project",
+  "schemaVersion": 1,
+  "application": {
+    "name": "Resonant",
+    "version": "0.1.0"
+  },
+  "project": {
+    "id": "ex-fam-d",
+    "name": "d-graded-metal-ceramic",
+    "createdUtc": "2026-11-28T00:00:00Z",
+    "modifiedUtc": "2026-11-28T00:00:00Z"
+  },
+  "units": {
+    "angle": "rad",
+    "axes": "right-handed; X horizontal, Y depth, Z vertical (up)",
+    "frequency": "Hz",
+    "length": "m",
+    "mass": "kg",
+    "rotation": "intrinsic Z-Y-X Euler angles stored as [x, y, z]",
+    "time": "s"
+  },
+  "materials": [
+    {
+      "id": "mat-fam-nickel",
+      "name": "Nickel",
+      "description": "Representative handbook values for the architected-matter examples.",
+      "domains": {
+        "mechanical": {
+          "youngsModulus": {
+            "value": 200000000000.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "poissonsRatio": {
+            "value": 0.31,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "density": {
+            "value": 8900,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        },
+        "thermal": {
+          "density": {
+            "value": 8900,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "thermalConductivity": {
+            "value": 90.9,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "specificHeat": {
+            "value": 444,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "thermalExpansion": {
+            "value": 1.34e-05,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        },
+        "electromagnetic": {
+          "relativePermittivity": {
+            "value": 1.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "relativePermeability": {
+            "value": 1.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "conductivity": {
+            "value": 14300000.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "lossTangent": {
+            "value": 0.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        }
+      }
+    },
+    {
+      "id": "mat-fam-alumina",
+      "name": "Alumina (dense)",
+      "description": "Representative handbook values for the architected-matter examples.",
+      "domains": {
+        "mechanical": {
+          "youngsModulus": {
+            "value": 370000000000.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "poissonsRatio": {
+            "value": 0.22,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "density": {
+            "value": 3950,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        },
+        "thermal": {
+          "density": {
+            "value": 3950,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "thermalConductivity": {
+            "value": 30.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "specificHeat": {
+            "value": 880,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "thermalExpansion": {
+            "value": 8.1e-06,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        },
+        "electromagnetic": {
+          "relativePermittivity": {
+            "value": 9.8,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "relativePermeability": {
+            "value": 1.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "conductivity": {
+            "value": 1e-12,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "lossTangent": {
+            "value": 0.0001,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        }
+      }
+    }
+  ],
+  "scene": {
+    "objects": [
+      {
+        "id": "ex-fam-fgm",
+        "type": "geometry",
+        "name": "Graded plate",
+        "visible": true,
+        "transform": {
+          "position": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "children": [],
+        "geometry": {
+          "kind": "box",
+          "parameters": {
+            "width": 0.1,
+            "depth": 0.1,
+            "height": 0.002
+          }
+        },
+        "material": "mat-fam-nickel"
+      }
+    ]
+  },
+  "simulations": [],
+  "extensions": {
+    "matter": {
+      "format": "resonant.matter",
+      "version": 1,
+      "architectures": [
+        {
+          "id": "arch-fgm",
+          "name": "Graded nickel - alumina plate",
+          "representation": "idealized",
+          "description": "Nickel at the bottom, alumina at the top, a power-law fraction between: an idealized distribution, combined by stated bounds.",
+          "objects": [
+            "ex-fam-fgm"
+          ],
+          "regions": [
+            {
+              "id": "graded",
+              "name": "Graded layer",
+              "object": "ex-fam-fgm",
+              "extent": "layer",
+              "role": "thermal-barrier",
+              "materialId": "",
+              "materialClass": "",
+              "process": "",
+              "operating": {
+                "temperature": [
+                  293.15,
+                  900.0
+                ]
+              },
+              "composition": {
+                "kind": "composite",
+                "basis": "volume",
+                "matrix": "nickel",
+                "method": "hashin-shtrikman-upper",
+                "note": "the upper bound: nickel coats alumina at the metal-rich side; the real arrangement lies between the bounds",
+                "constituents": [
+                  {
+                    "id": "nickel",
+                    "materialId": "mat-fam-nickel",
+                    "materialClass": "metal",
+                    "fraction": 0.5
+                  },
+                  {
+                    "id": "alumina",
+                    "materialId": "mat-fam-alumina",
+                    "materialClass": "ceramic",
+                    "fraction": 0.5
+                  }
+                ]
+              }
+            }
+          ],
+          "stacks": [
+            {
+              "id": "st-fgm",
+              "name": "Graded plate",
+              "object": "ex-fam-fgm",
+              "axis": "+z",
+              "length": 0.1,
+              "width": 0.1,
+              "layers": [
+                {
+                  "id": "graded.0",
+                  "region": "graded",
+                  "thickness": 0.002,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ],
+          "interfaces": [],
+          "fields": [
+            {
+              "id": "fld-alumina",
+              "region": "graded",
+              "property": "fraction:alumina",
+              "axis": "stack",
+              "kind": "power-law",
+              "from": 0.0,
+              "to": 1.0,
+              "exponent": 2.0,
+              "unit": "",
+              "realizable": false,
+              "provenance": "assumed",
+              "note": "an idealized profile: no process is shown to produce it"
+            }
+          ],
+          "functions": [
+            {
+              "id": "f-insulate",
+              "name": "Graded insulation",
+              "kind": "thermal-management",
+              "regions": [
+                "graded"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "arch-step",
+          "name": "Two discrete layers (for comparison)",
+          "representation": "idealized",
+          "parent": "arch-fgm",
+          "description": "The same mass of nickel and alumina as two layers with a sharp interface.",
+          "objects": [
+            "ex-fam-fgm"
+          ],
+          "regions": [
+            {
+              "id": "nickel",
+              "name": "Nickel layer",
+              "object": "ex-fam-fgm",
+              "extent": "layer",
+              "role": "substrate",
+              "materialId": "mat-fam-nickel",
+              "materialClass": "metal",
+              "process": ""
+            },
+            {
+              "id": "alumina",
+              "name": "Alumina layer",
+              "object": "ex-fam-fgm",
+              "extent": "layer",
+              "role": "thermal-barrier",
+              "materialId": "mat-fam-alumina",
+              "materialClass": "ceramic",
+              "process": ""
+            }
+          ],
+          "stacks": [
+            {
+              "id": "st-fgm",
+              "name": "Two layers",
+              "object": "ex-fam-fgm",
+              "axis": "+z",
+              "length": 0.1,
+              "width": 0.1,
+              "layers": [
+                {
+                  "id": "nickel.0",
+                  "region": "nickel",
+                  "thickness": 0.0013333333333333333,
+                  "angle": 0.0
+                },
+                {
+                  "id": "alumina.0",
+                  "region": "alumina",
+                  "thickness": 0.0006666666666666666,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ],
+          "interfaces": [
+            {
+              "id": "i-step",
+              "name": "i-step",
+              "regions": [
+                "nickel",
+                "alumina"
+              ],
+              "models": [
+                {
+                  "kind": "perfect",
+                  "parameters": {}
+                }
+              ]
+            }
+          ],
+          "fields": [],
+          "functions": []
+        }
+      ],
+      "comparisons": []
+    }
+  }
+}

@@ -1,0 +1,92 @@
+syntax = "proto3";
+package resonant.v1;
+
+import "google/protobuf/struct.proto";
+import "resonant/v1/common/metadata.proto";
+import "resonant/v1/common/validation.proto";
+
+// Requests and responses of functionally architected matter (REQ-CHAT-20261127-001, RES-FAM-019).
+// The documents are JSON (Struct) in the formats of the architecture records (resonant.matter).
+message ListArchitecturesRequest { RequestHeader header = 1; }
+message ListArchitecturesResponse { ResponseHeader header = 1; repeated google.protobuf.Struct architectures = 2; }
+message GetArchitectureRequest { RequestHeader header = 1; string architecture_id = 2; }
+message GetArchitectureResponse { ResponseHeader header = 1; google.protobuf.Struct architecture = 2; }
+message SetArchitectureRequest { RequestHeader header = 1; google.protobuf.Struct architecture = 2; }
+message SetArchitectureResponse { ResponseHeader header = 1; ChangeSummary changes = 2; google.protobuf.Struct result = 3; }
+message DeleteArchitectureRequest { RequestHeader header = 1; string architecture_id = 2; }
+message DeleteArchitectureResponse { ResponseHeader header = 1; ChangeSummary changes = 2; }
+message DuplicateArchitectureRequest { RequestHeader header = 1; string architecture_id = 2; string new_id = 3; string name = 4; }
+message DuplicateArchitectureResponse { ResponseHeader header = 1; ChangeSummary changes = 2; google.protobuf.Struct result = 3; }
+message ValidateArchitectureRequest { RequestHeader header = 1; google.protobuf.Struct spec = 2; }
+message ValidateArchitectureResponse { ResponseHeader header = 1; google.protobuf.Struct result = 2; }
+message GetMatterCapabilitiesRequest { RequestHeader header = 1; }
+message GetMatterCapabilitiesResponse { ResponseHeader header = 1; google.protobuf.Struct capabilities = 2; }
+message ListMechanismsRequest { RequestHeader header = 1; string from_domain = 2; string to_domain = 3; string architecture_id = 4; }
+message ListMechanismsResponse { ResponseHeader header = 1; google.protobuf.Struct result = 2; }
+message CheckStackCompatibilityRequest { RequestHeader header = 1; string architecture_id = 2; string stack_id = 3; string analysis = 4; }
+message CheckStackCompatibilityResponse { ResponseHeader header = 1; google.protobuf.Struct result = 2; }
+message AnalyzeStackRequest { RequestHeader header = 1; string architecture_id = 2; string stack_id = 3; string analysis = 4; google.protobuf.Struct options = 5; }
+message AnalyzeStackResponse { ResponseHeader header = 1; google.protobuf.Struct result = 2; }
+message GetEffectivePropertiesRequest { RequestHeader header = 1; string architecture_id = 2; string region_id = 3; }
+message GetEffectivePropertiesResponse { ResponseHeader header = 1; google.protobuf.Struct result = 2; }
+message CheckManufacturabilityRequest { RequestHeader header = 1; string architecture_id = 2; }
+message CheckManufacturabilityResponse { ResponseHeader header = 1; google.protobuf.Struct result = 2; }
+message ExploreArchitectureRequest { RequestHeader header = 1; string architecture_id = 2; }
+message ExploreArchitectureResponse { ResponseHeader header = 1; google.protobuf.Struct result = 2; }
+message EvaluatePathwayRequest { RequestHeader header = 1; string architecture_id = 2; string function_id = 3; google.protobuf.Struct options = 4; }
+message EvaluatePathwayResponse { ResponseHeader header = 1; google.protobuf.Struct result = 2; }
+message CreatePhysicalSystemFromStackRequest { RequestHeader header = 1; string architecture_id = 2; string stack_id = 3; google.protobuf.Struct options = 4; }
+message CreatePhysicalSystemFromStackResponse { ResponseHeader header = 1; ChangeSummary changes = 2; google.protobuf.Struct result = 3; }
+message CompareArchitecturesRequest { RequestHeader header = 1; google.protobuf.Struct spec = 2; }
+message CompareArchitecturesResponse { ResponseHeader header = 1; ChangeSummary changes = 2; google.protobuf.Struct result = 3; }
+message AddManufacturingRecordRequest { RequestHeader header = 1; string architecture_id = 2; google.protobuf.Struct record = 3; }
+message AddManufacturingRecordResponse { ResponseHeader header = 1; ChangeSummary changes = 2; google.protobuf.Struct result = 3; }
+message GenerateArchitectureReportRequest { RequestHeader header = 1; string architecture_id = 2; string format = 3; }
+message GenerateArchitectureReportResponse { ResponseHeader header = 1; string text = 2; }
+message ExportLayerTableRequest { RequestHeader header = 1; string architecture_id = 2; string stack_id = 3; string format = 4; }
+message ExportLayerTableResponse { ResponseHeader header = 1; string text = 2; }
+
+// Functionally architected matter: architectures of regions, layer stacks, interfaces and property
+// fields bound to scene objects; their validation; analyses through declared solver capabilities;
+// effective properties with their methods and bounds; manufacturability; exploration and mechanisms;
+// transformation pathways; stacks in the coupled engine; comparisons; manufacturing records; reports.
+service MatterService {
+  // The project's architectures: summaries with their revision and validation counts.
+  rpc ListArchitectures(ListArchitecturesRequest) returns (ListArchitecturesResponse);
+  // One architecture with its revision and validation issues.
+  rpc GetArchitecture(GetArchitectureRequest) returns (GetArchitectureResponse);
+  // Adds or replaces an architecture; refused with the validation's errors; one undo step.
+  rpc SetArchitecture(SetArchitectureRequest) returns (SetArchitectureResponse);
+  // Removes an architecture; one undo step.
+  rpc DeleteArchitecture(DeleteArchitectureRequest) returns (DeleteArchitectureResponse);
+  // Copies an architecture as an alternative (its parent recorded); one undo step.
+  rpc DuplicateArchitecture(DuplicateArchitectureRequest) returns (DuplicateArchitectureResponse);
+  // Validates an architecture document or a stored one ({"architecture": id}).
+  rpc ValidateArchitecture(ValidateArchitectureRequest) returns (ValidateArchitectureResponse);
+  // The analyses' declared capabilities, interface models, process kinds, mechanisms and mixing methods.
+  rpc GetMatterCapabilities(GetMatterCapabilitiesRequest) returns (GetMatterCapabilitiesResponse);
+  // Mechanisms and cascades between two domains with their implementation status (design from function).
+  rpc ListMechanisms(ListMechanismsRequest) returns (ListMechanismsResponse);
+  // Checks a stack against an analysis's declared capability: what it would refuse and why.
+  rpc CheckStackCompatibility(CheckStackCompatibilityRequest) returns (CheckStackCompatibilityResponse);
+  // Runs an analysis of a stack (laminate, modes, harvester, thermal, electrical, electromagnetic, interfaces); changes nothing.
+  rpc AnalyzeStack(AnalyzeStackRequest) returns (AnalyzeStackResponse);
+  // A region's resolved properties with their origin, and every combination method of its composition with its bounds.
+  rpc GetEffectiveProperties(GetEffectivePropertiesRequest) returns (GetEffectivePropertiesResponse);
+  // The architecture against its processes' constraints, with the residual stresses built in.
+  rpc CheckManufacturability(CheckManufacturabilityRequest) returns (CheckManufacturabilityResponse);
+  // What an architecture can do and what may fail: findings apart from hypotheses; changes nothing.
+  rpc ExploreArchitecture(ExploreArchitectureRequest) returns (ExploreArchitectureResponse);
+  // Evaluates a function's transformation stages with their balances; a chain efficiency only when every stage is modeled.
+  rpc EvaluatePathway(EvaluatePathwayRequest) returns (EvaluatePathwayResponse);
+  // Adds a stack to the project as a physical system of the coupled engine; one undo step.
+  rpc CreatePhysicalSystemFromStack(CreatePhysicalSystemFromStackRequest) returns (CreatePhysicalSystemFromStackResponse);
+  // Compares architectures side by side (no single score); kept in the project when asked (one undo step), so it needs the modify permission.
+  rpc CompareArchitectures(CompareArchitecturesRequest) returns (CompareArchitecturesResponse);
+  // Adds a manufacturing record (batch, process, sequence, inspections, measured datasets); one undo step.
+  rpc AddManufacturingRecord(AddManufacturingRecordRequest) returns (AddManufacturingRecordResponse);
+  // An architecture's report (markdown or html).
+  rpc GenerateArchitectureReport(GenerateArchitectureReportRequest) returns (GenerateArchitectureReportResponse);
+  // A stack's layer table (csv or json) for manufacturing and analysis.
+  rpc ExportLayerTable(ExportLayerTableRequest) returns (ExportLayerTableResponse);
+}

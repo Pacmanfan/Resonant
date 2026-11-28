@@ -1,0 +1,222 @@
+{
+  "format": "resonant-project",
+  "schemaVersion": 1,
+  "application": {
+    "name": "Resonant",
+    "version": "0.1.0"
+  },
+  "project": {
+    "id": "ex-fam-a",
+    "name": "a-homogeneous-plate",
+    "createdUtc": "2026-11-28T00:00:00Z",
+    "modifiedUtc": "2026-11-28T00:00:00Z"
+  },
+  "units": {
+    "angle": "rad",
+    "axes": "right-handed; X horizontal, Y depth, Z vertical (up)",
+    "frequency": "Hz",
+    "length": "m",
+    "mass": "kg",
+    "rotation": "intrinsic Z-Y-X Euler angles stored as [x, y, z]",
+    "time": "s"
+  },
+  "materials": [
+    {
+      "id": "mat-fam-al6061",
+      "name": "Aluminium 6061",
+      "description": "Representative handbook values for the architected-matter examples.",
+      "domains": {
+        "mechanical": {
+          "youngsModulus": {
+            "value": 69000000000.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "poissonsRatio": {
+            "value": 0.33,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "density": {
+            "value": 2700,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "lossFactor": {
+            "value": 0.001,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        },
+        "thermal": {
+          "density": {
+            "value": 2700,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "thermalConductivity": {
+            "value": 167,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "specificHeat": {
+            "value": 896,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "thermalExpansion": {
+            "value": 2.36e-05,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        },
+        "electromagnetic": {
+          "relativePermittivity": {
+            "value": 1.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "relativePermeability": {
+            "value": 1.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "conductivity": {
+            "value": 25000000.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "lossTangent": {
+            "value": 0.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        },
+        "acoustic": {
+          "density": {
+            "value": 2700,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "soundSpeed": {
+            "value": 6320,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        }
+      }
+    }
+  ],
+  "scene": {
+    "objects": [
+      {
+        "id": "ex-fam-plate",
+        "type": "geometry",
+        "name": "Aluminium plate",
+        "visible": true,
+        "transform": {
+          "position": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "children": [],
+        "geometry": {
+          "kind": "box",
+          "parameters": {
+            "width": 0.2,
+            "depth": 0.15,
+            "height": 0.002
+          }
+        },
+        "material": "mat-fam-al6061"
+      }
+    ]
+  },
+  "simulations": [],
+  "extensions": {
+    "matter": {
+      "format": "resonant.matter",
+      "version": 1,
+      "architectures": [
+        {
+          "id": "arch-plate",
+          "name": "Homogeneous aluminium plate",
+          "representation": "as-designed",
+          "description": "A conventional material as an architecture: one region, one layer. The same record holds everything that follows.",
+          "objects": [
+            "ex-fam-plate"
+          ],
+          "regions": [
+            {
+              "id": "plate",
+              "name": "Plate",
+              "object": "ex-fam-plate",
+              "extent": "object",
+              "role": "load-bearing",
+              "materialId": "mat-fam-al6061",
+              "materialClass": "metal",
+              "process": "proc-machining"
+            }
+          ],
+          "stacks": [
+            {
+              "id": "st-plate",
+              "name": "Plate",
+              "object": "ex-fam-plate",
+              "axis": "+z",
+              "length": 0.2,
+              "width": 0.15,
+              "layers": [
+                {
+                  "id": "plate.0",
+                  "region": "plate",
+                  "thickness": 0.002,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ],
+          "interfaces": [],
+          "fields": [],
+          "functions": [
+            {
+              "id": "f-carry",
+              "name": "Carry a load",
+              "kind": "load-bearing",
+              "regions": [
+                "plate"
+              ]
+            }
+          ],
+          "processes": [
+            {
+              "id": "proc-machining",
+              "name": "Machined from plate stock",
+              "kind": "machining",
+              "parameters": {},
+              "constraints": {
+                "minFeatureSize": 0.0005,
+                "maxDimension": 1.0,
+                "source": "illustrative process limits for the example; not a machine's specification"
+              },
+              "note": ""
+            }
+          ]
+        }
+      ],
+      "comparisons": []
+    }
+  }
+}

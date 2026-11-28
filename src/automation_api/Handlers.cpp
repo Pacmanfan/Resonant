@@ -20,6 +20,7 @@
 #include "resonant/v1/functional/functional_service.pb.h"
 #include "resonant/v1/accounting/accounting_service.pb.h"
 #include "resonant/v1/laboratory/laboratory_service.pb.h"
+#include "resonant/v1/matter/matter_service.pb.h"
 #include "resonant/v1/materialstate/material_state_service.pb.h"
 #include "resonant/v1/multiscale/multiscale_service.pb.h"
 #include "resonant/v1/resonance/resonance_service.pb.h"
@@ -1978,6 +1979,174 @@ void Dispatcher::registerAutomation()
             if (!job)
                 return job.error();
             toProto(job.value(), out.mutable_job());
+            return std::nullopt;
+        });
+    // --- MatterService (REQ-CHAT-20261127-001, RES-FAM-019) ---------------------------------------
+    const auto matterChanged = [](v1::ResponseHeader* header, v1::ChangeSummary* changes, const services::Mutation& m) {
+        detail::mutated(header, m);
+        toProto(m.changes, changes);
+    };
+    unary<v1::ListArchitecturesRequest, v1::ListArchitecturesResponse>(
+        "MatterService", "ListArchitectures", Permission::Read, false, true,
+        [this](const v1::ListArchitecturesRequest&, v1::ListArchitecturesResponse& out, const CallContext& c) -> Failure {
+            auto r = session_.services().matter.architectures(c);
+            if (!r)
+                return r.error();
+            for (const auto& item : r.value())
+                if (Failure f = structOf(item, out.mutable_architectures()->Add()))
+                    return f;
+            return std::nullopt;
+        });
+    unary<v1::GetArchitectureRequest, v1::GetArchitectureResponse>(
+        "MatterService", "GetArchitecture", Permission::Read, false, true,
+        [this](const v1::GetArchitectureRequest& in, v1::GetArchitectureResponse& out, const CallContext& c) -> Failure {
+            auto r = session_.services().matter.architecture(c, in.architecture_id());
+            if (!r)
+                return r.error();
+            return structOf(r.value(), out.mutable_architecture());
+        });
+    unary<v1::SetArchitectureRequest, v1::SetArchitectureResponse>(
+        "MatterService", "SetArchitecture", Permission::Modify, true, false,
+        [this, matterChanged](const v1::SetArchitectureRequest& in, v1::SetArchitectureResponse& out, const CallContext& c) -> Failure {
+            auto m = session_.services().matter.setArchitecture(c, jsonOf(in.architecture()));
+            if (!m)
+                return m.error();
+            matterChanged(out.mutable_header(), out.mutable_changes(), m.value().mutation);
+            return structOf(m.value().result, out.mutable_result());
+        });
+    unary<v1::DeleteArchitectureRequest, v1::DeleteArchitectureResponse>(
+        "MatterService", "DeleteArchitecture", Permission::Modify, true, false,
+        [this, matterChanged](const v1::DeleteArchitectureRequest& in, v1::DeleteArchitectureResponse& out, const CallContext& c) -> Failure {
+            auto m = session_.services().matter.deleteArchitecture(c, in.architecture_id());
+            if (!m)
+                return m.error();
+            matterChanged(out.mutable_header(), out.mutable_changes(), m.value());
+            return std::nullopt;
+        });
+    unary<v1::DuplicateArchitectureRequest, v1::DuplicateArchitectureResponse>(
+        "MatterService", "DuplicateArchitecture", Permission::Modify, true, false,
+        [this, matterChanged](const v1::DuplicateArchitectureRequest& in, v1::DuplicateArchitectureResponse& out, const CallContext& c) -> Failure {
+            auto m = session_.services().matter.duplicateArchitecture(c, in.architecture_id(), in.new_id(), in.name());
+            if (!m)
+                return m.error();
+            matterChanged(out.mutable_header(), out.mutable_changes(), m.value().mutation);
+            return structOf(m.value().result, out.mutable_result());
+        });
+    unary<v1::ValidateArchitectureRequest, v1::ValidateArchitectureResponse>(
+        "MatterService", "ValidateArchitecture", Permission::Read, false, true,
+        [this](const v1::ValidateArchitectureRequest& in, v1::ValidateArchitectureResponse& out, const CallContext& c) -> Failure {
+            auto r = session_.services().matter.validate(c, jsonOf(in.spec()));
+            if (!r)
+                return r.error();
+            return structOf(r.value(), out.mutable_result());
+        });
+    unary<v1::GetMatterCapabilitiesRequest, v1::GetMatterCapabilitiesResponse>(
+        "MatterService", "GetMatterCapabilities", Permission::Read, false, true,
+        [this](const v1::GetMatterCapabilitiesRequest&, v1::GetMatterCapabilitiesResponse& out, const CallContext& c) -> Failure {
+            auto r = session_.services().matter.capabilities(c);
+            if (!r)
+                return r.error();
+            return structOf(r.value(), out.mutable_capabilities());
+        });
+    unary<v1::ListMechanismsRequest, v1::ListMechanismsResponse>(
+        "MatterService", "ListMechanisms", Permission::Read, false, true,
+        [this](const v1::ListMechanismsRequest& in, v1::ListMechanismsResponse& out, const CallContext& c) -> Failure {
+            auto r = session_.services().matter.mechanisms(c, in.from_domain(), in.to_domain(), in.architecture_id());
+            if (!r)
+                return r.error();
+            return structOf(r.value(), out.mutable_result());
+        });
+    unary<v1::CheckStackCompatibilityRequest, v1::CheckStackCompatibilityResponse>(
+        "MatterService", "CheckStackCompatibility", Permission::Read, false, true,
+        [this](const v1::CheckStackCompatibilityRequest& in, v1::CheckStackCompatibilityResponse& out, const CallContext& c) -> Failure {
+            auto r = session_.services().matter.check(c, in.architecture_id(), in.stack_id(), in.analysis());
+            if (!r)
+                return r.error();
+            return structOf(r.value(), out.mutable_result());
+        });
+    unary<v1::AnalyzeStackRequest, v1::AnalyzeStackResponse>(
+        "MatterService", "AnalyzeStack", Permission::Read, false, true,
+        [this](const v1::AnalyzeStackRequest& in, v1::AnalyzeStackResponse& out, const CallContext& c) -> Failure {
+            auto r = session_.services().matter.analyze(c, in.architecture_id(), in.stack_id(), in.analysis(), in.has_options() ? jsonOf(in.options()) : nlohmann::json::object());
+            if (!r)
+                return r.error();
+            return structOf(r.value(), out.mutable_result());
+        });
+    unary<v1::GetEffectivePropertiesRequest, v1::GetEffectivePropertiesResponse>(
+        "MatterService", "GetEffectiveProperties", Permission::Read, false, true,
+        [this](const v1::GetEffectivePropertiesRequest& in, v1::GetEffectivePropertiesResponse& out, const CallContext& c) -> Failure {
+            auto r = session_.services().matter.effectiveProperties(c, in.architecture_id(), in.region_id());
+            if (!r)
+                return r.error();
+            return structOf(r.value(), out.mutable_result());
+        });
+    unary<v1::CheckManufacturabilityRequest, v1::CheckManufacturabilityResponse>(
+        "MatterService", "CheckManufacturability", Permission::Read, false, true,
+        [this](const v1::CheckManufacturabilityRequest& in, v1::CheckManufacturabilityResponse& out, const CallContext& c) -> Failure {
+            auto r = session_.services().matter.manufacturability(c, in.architecture_id());
+            if (!r)
+                return r.error();
+            return structOf(r.value(), out.mutable_result());
+        });
+    unary<v1::ExploreArchitectureRequest, v1::ExploreArchitectureResponse>(
+        "MatterService", "ExploreArchitecture", Permission::Read, false, true,
+        [this](const v1::ExploreArchitectureRequest& in, v1::ExploreArchitectureResponse& out, const CallContext& c) -> Failure {
+            auto r = session_.services().matter.explore(c, in.architecture_id());
+            if (!r)
+                return r.error();
+            return structOf(r.value(), out.mutable_result());
+        });
+    unary<v1::EvaluatePathwayRequest, v1::EvaluatePathwayResponse>(
+        "MatterService", "EvaluatePathway", Permission::Read, false, true,
+        [this](const v1::EvaluatePathwayRequest& in, v1::EvaluatePathwayResponse& out, const CallContext& c) -> Failure {
+            auto r = session_.services().matter.pathway(c, in.architecture_id(), in.function_id(), in.has_options() ? jsonOf(in.options()) : nlohmann::json::object());
+            if (!r)
+                return r.error();
+            return structOf(r.value(), out.mutable_result());
+        });
+    unary<v1::CreatePhysicalSystemFromStackRequest, v1::CreatePhysicalSystemFromStackResponse>(
+        "MatterService", "CreatePhysicalSystemFromStack", Permission::Modify, true, false,
+        [this, matterChanged](const v1::CreatePhysicalSystemFromStackRequest& in, v1::CreatePhysicalSystemFromStackResponse& out, const CallContext& c) -> Failure {
+            auto m = session_.services().matter.createPhysicalSystem(c, in.architecture_id(), in.stack_id(), in.has_options() ? jsonOf(in.options()) : nlohmann::json::object());
+            if (!m)
+                return m.error();
+            matterChanged(out.mutable_header(), out.mutable_changes(), m.value().mutation);
+            return structOf(m.value().result, out.mutable_result());
+        });
+    unary<v1::CompareArchitecturesRequest, v1::CompareArchitecturesResponse>(
+        "MatterService", "CompareArchitectures", Permission::Modify, true, false,
+        [this, matterChanged](const v1::CompareArchitecturesRequest& in, v1::CompareArchitecturesResponse& out, const CallContext& c) -> Failure {
+            auto m = session_.services().matter.compare(c, jsonOf(in.spec()));
+            if (!m)
+                return m.error();
+            matterChanged(out.mutable_header(), out.mutable_changes(), m.value().mutation);
+            return structOf(m.value().result, out.mutable_result());
+        });
+    unary<v1::AddManufacturingRecordRequest, v1::AddManufacturingRecordResponse>(
+        "MatterService", "AddManufacturingRecord", Permission::Modify, true, false,
+        [this, matterChanged](const v1::AddManufacturingRecordRequest& in, v1::AddManufacturingRecordResponse& out, const CallContext& c) -> Failure {
+            auto m = session_.services().matter.addRecord(c, in.architecture_id(), jsonOf(in.record()));
+            if (!m)
+                return m.error();
+            matterChanged(out.mutable_header(), out.mutable_changes(), m.value().mutation);
+            return structOf(m.value().result, out.mutable_result());
+        });
+    unary<v1::GenerateArchitectureReportRequest, v1::GenerateArchitectureReportResponse>(
+        "MatterService", "GenerateArchitectureReport", Permission::Read, false, true,
+        [this](const v1::GenerateArchitectureReportRequest& in, v1::GenerateArchitectureReportResponse& out, const CallContext& c) -> Failure {
+            auto r = session_.services().matter.report(c, in.architecture_id(), in.format().empty() ? std::string("markdown") : in.format());
+            if (!r)
+                return r.error();
+            out.set_text(r.value());
+            return std::nullopt;
+        });
+    unary<v1::ExportLayerTableRequest, v1::ExportLayerTableResponse>(
+        "MatterService", "ExportLayerTable", Permission::Read, false, true,
+        [this](const v1::ExportLayerTableRequest& in, v1::ExportLayerTableResponse& out, const CallContext& c) -> Failure {
+            auto r = session_.services().matter.exportLayers(c, in.architecture_id(), in.stack_id(), in.format().empty() ? std::string("csv") : in.format());
+            if (!r)
+                return r.error();
+            out.set_text(r.value());
             return std::nullopt;
         });
     // --- LaboratoryService (REQ-CHAT-20261126-023, RES-LAB-017) -----------------------------------

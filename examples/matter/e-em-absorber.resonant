@@ -1,0 +1,306 @@
+{
+  "format": "resonant-project",
+  "schemaVersion": 1,
+  "application": {
+    "name": "Resonant",
+    "version": "0.1.0"
+  },
+  "project": {
+    "id": "ex-fam-e",
+    "name": "e-em-absorber",
+    "createdUtc": "2026-11-28T00:00:00Z",
+    "modifiedUtc": "2026-11-28T00:00:00Z"
+  },
+  "units": {
+    "angle": "rad",
+    "axes": "right-handed; X horizontal, Y depth, Z vertical (up)",
+    "frequency": "Hz",
+    "length": "m",
+    "mass": "kg",
+    "rotation": "intrinsic Z-Y-X Euler angles stored as [x, y, z]",
+    "time": "s"
+  },
+  "materials": [
+    {
+      "id": "mat-fam-resistive-film",
+      "name": "Carbon-loaded polymer film",
+      "description": "A resistive film specified for 377 ohm per square at 50 um (a design value, illustrative).",
+      "domains": {
+        "mechanical": {
+          "youngsModulus": {
+            "value": 3000000000.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "poissonsRatio": {
+            "value": 0.35,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "density": {
+            "value": 1300,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        },
+        "thermal": {
+          "density": {
+            "value": 1300,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "thermalConductivity": {
+            "value": 0.3,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "specificHeat": {
+            "value": 1100,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "thermalExpansion": {
+            "value": 5e-05,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        },
+        "electromagnetic": {
+          "relativePermittivity": {
+            "value": 3.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "relativePermeability": {
+            "value": 1.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "conductivity": {
+            "value": 53.05,
+            "provenance": "illustrative",
+            "source": "a design value: 1 / (377 ohm x 50 um)"
+          },
+          "lossTangent": {
+            "value": 0.01,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        }
+      }
+    },
+    {
+      "id": "mat-fam-ptfe",
+      "name": "PTFE",
+      "description": "Representative handbook values for the architected-matter examples.",
+      "domains": {
+        "mechanical": {
+          "youngsModulus": {
+            "value": 500000000.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "poissonsRatio": {
+            "value": 0.46,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "density": {
+            "value": 2200,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        },
+        "thermal": {
+          "density": {
+            "value": 2200,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "thermalConductivity": {
+            "value": 0.25,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "specificHeat": {
+            "value": 1000,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "thermalExpansion": {
+            "value": 0.000135,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        },
+        "electromagnetic": {
+          "relativePermittivity": {
+            "value": 2.1,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "relativePermeability": {
+            "value": 1.0,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "conductivity": {
+            "value": 1e-15,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          },
+          "lossTangent": {
+            "value": 0.0002,
+            "provenance": "literature",
+            "source": "representative handbook value (example data; not a supplier's data sheet)"
+          }
+        }
+      }
+    }
+  ],
+  "scene": {
+    "objects": [
+      {
+        "id": "ex-fam-absorber",
+        "type": "geometry",
+        "name": "Absorber panel",
+        "visible": true,
+        "transform": {
+          "position": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "children": [],
+        "geometry": {
+          "kind": "box",
+          "parameters": {
+            "width": 0.3,
+            "depth": 0.3,
+            "height": 0.00522191125540973
+          }
+        },
+        "material": "mat-fam-ptfe"
+      }
+    ]
+  },
+  "simulations": [],
+  "extensions": {
+    "matter": {
+      "format": "resonant.matter",
+      "version": 1,
+      "architectures": [
+        {
+          "id": "arch-absorber",
+          "name": "Salisbury screen for 10 GHz",
+          "representation": "as-designed",
+          "description": "A 377 ohm per square film a quarter wave in front of a metal plate (a PTFE spacer): the reflection vanishes near 10 GHz.",
+          "objects": [
+            "ex-fam-absorber"
+          ],
+          "regions": [
+            {
+              "id": "sheet",
+              "name": "Resistive film",
+              "object": "ex-fam-absorber",
+              "extent": "layer",
+              "role": "absorber",
+              "materialId": "mat-fam-resistive-film",
+              "materialClass": "polymer",
+              "process": ""
+            },
+            {
+              "id": "spacer",
+              "name": "PTFE spacer",
+              "object": "ex-fam-absorber",
+              "extent": "layer",
+              "role": "spacer",
+              "materialId": "mat-fam-ptfe",
+              "materialClass": "polymer",
+              "process": ""
+            }
+          ],
+          "stacks": [
+            {
+              "id": "st-absorber",
+              "name": "Absorber",
+              "object": "ex-fam-absorber",
+              "axis": "+z",
+              "length": 0.3,
+              "width": 0.3,
+              "layers": [
+                {
+                  "id": "sheet.0",
+                  "region": "sheet",
+                  "thickness": 5e-05,
+                  "angle": 0.0
+                },
+                {
+                  "id": "spacer.0",
+                  "region": "spacer",
+                  "thickness": 0.00517191125540973,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ],
+          "interfaces": [
+            {
+              "id": "i-sheet-spacer",
+              "name": "i-sheet-spacer",
+              "regions": [
+                "sheet",
+                "spacer"
+              ],
+              "models": [
+                {
+                  "kind": "perfect",
+                  "parameters": {}
+                }
+              ]
+            }
+          ],
+          "fields": [],
+          "functions": [
+            {
+              "id": "f-absorb",
+              "name": "Absorb 10 GHz",
+              "kind": "wave-control",
+              "regions": [
+                "sheet"
+              ],
+              "stages": [
+                {
+                  "id": "s-absorb",
+                  "from": "electromagnetic",
+                  "to": "thermal",
+                  "mechanism": "em-absorption",
+                  "regions": [
+                    "sheet"
+                  ],
+                  "settings": {
+                    "stack": "st-absorber",
+                    "frequency": 10000000000.0,
+                    "exit": "metal"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "comparisons": []
+    }
+  }
+}

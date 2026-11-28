@@ -13,7 +13,7 @@ using nlohmann::json;
 const std::vector<std::string>& modelLinkKinds()
 {
     static const std::vector<std::string> k = {"physical-system", "functional-structure", "material", "material-state-study", "design-revision",
-                                               "multiscale-representation", "scene-object", "accounting-study"};
+                                               "multiscale-representation", "scene-object", "accounting-study", "matter-architecture"};
     return k;
 }
 

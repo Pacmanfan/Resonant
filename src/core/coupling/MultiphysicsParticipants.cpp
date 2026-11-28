@@ -317,6 +317,34 @@ public:
             const double cp = state.materials.property(region.id, "thermal.specificHeat", at, tm.value().specificHeat);
             p.volumetricHeatCapacity[c] = rho * cp;
         }
+        // Thermal contact resistances between adjacent regions (REQ-CHAT-20261127-001, RES-FAM-013):
+        // settings.interfaces = [{"regions": [a, b], "resistance": m^2 K/W}].
+        const nlohmann::json interfaces = def_.settings.value("interfaces", nlohmann::json::array());
+        if (!interfaces.empty() && n > 1) {
+            std::vector<double> planes(n - 1, 0.0);
+            for (const auto& in : interfaces) {
+                const auto names = in.value("regions", nlohmann::json::array());
+                if (!names.is_array() || names.size() != 2 || !names[0].is_string() || !names[1].is_string())
+                    return Status::failure("an interface names two regions");
+                const double r = in.value("resistance", -1.0);
+                if (!(r >= 0.0) || !std::isfinite(r))
+                    return Status::failure("an interface needs a non-negative resistance (m^2 K/W)");
+                bool found = false;
+                for (size_t c = 0; c + 1 < n; ++c) {
+                    const std::string& a = system_.regions[reference_.region[c]].id;
+                    const std::string& b = system_.regions[reference_.region[c + 1]].id;
+                    if (a != b && ((a == names[0].get<std::string>() && b == names[1].get<std::string>()) ||
+                                   (a == names[1].get<std::string>() && b == names[0].get<std::string>()))) {
+                        planes[c] = r;
+                        found = true;
+                    }
+                }
+                if (!found)
+                    return Status::failure("the interface between '" + names[0].get<std::string>() + "' and '" + names[1].get<std::string>() +
+                                           "' joins regions that are not adjacent in the slab");
+            }
+            p.contactResistance[2] = planes;
+        }
         if (source_.size() == n)
             p.source = source_;
         else {

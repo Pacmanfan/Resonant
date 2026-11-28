@@ -1,7 +1,7 @@
 # Resonant — Architecture Overview
 
 **Status:** current. Decisions: ADR-000204 (stack, build systems),
-ADR-000205 (layers, domains), ADR-000207 (acoustics), ADR-000208 (manipulators), ADR-000209 (full-wave solver), ADR-000210 (mechanics), ADR-000211 (electromagnetics), ADR-000212 (compute backends), ADR-000213 (experiments), ADR-000214 (optimization), ADR-000219 (Shape–Function–Energy direction), ADR-000220 (Coupled Energy–Matter Engine), ADR-000221 (functional structures), ADR-000226 (accounting), ADR-000227 (laboratory), ADR-000225 (material state), ADR-000224 (multiscale materials), ADR-000223 (metamaterials), ADR-000222 (resonance engineering). Requirements: `docs/requirements/product.md`.
+ADR-000205 (layers, domains), ADR-000207 (acoustics), ADR-000208 (manipulators), ADR-000209 (full-wave solver), ADR-000210 (mechanics), ADR-000211 (electromagnetics), ADR-000212 (compute backends), ADR-000213 (experiments), ADR-000214 (optimization), ADR-000219 (Shape–Function–Energy direction), ADR-000220 (Coupled Energy–Matter Engine), ADR-000221 (functional structures), ADR-000226 (accounting), ADR-000227 (laboratory), ADR-000228 (architected matter), ADR-000225 (material state), ADR-000224 (multiscale materials), ADR-000223 (metamaterials), ADR-000222 (resonance engineering). Requirements: `docs/requirements/product.md`.
 
 This document describes the architecture every milestone builds on. Each
 subsystem gets its own document in this directory when it is implemented;
@@ -134,6 +134,9 @@ boundary by a domain-independent framework (`src/core/accounting`) whose adapter
 outputs (ADR-000226, `ACCOUNTING_ARCHITECTURE.md`). Measurements meet the models in the laboratory
 (`src/core/laboratory`, no domains): studies, imports, comparisons, calibration with identifiability and validation on
 independent data, with the predictions and studies in coupling (ADR-000227, `docs/experiments/LABORATORY_ARCHITECTURE.md`).
+How the matter of an object is organized - regions, layer stacks, interfaces and graded fields - is recorded in
+`src/core/matter` (no domains) and analyzed by the solvers through declared capabilities, with lamination theory and the
+piezoelectric cantilever in mechanics (ADR-000228, `docs/materials/ARCHITECTED_MATTER.md`).
 The audit of the
 current architecture against this direction is
 `SHAPE_FUNCTION_ENERGY_AUDIT.md`; the plan is `ENERGY_MATTER_RESEARCH_ROADMAP.md`.

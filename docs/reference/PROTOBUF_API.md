@@ -24,6 +24,7 @@ carries a `resonant.v1.Error` (see [errors](#errors)).
 - [LaboratoryService](#laboratoryservice) (24 methods)
 - [MaterialService](#materialservice) (6 methods)
 - [MaterialStateService](#materialstateservice) (12 methods)
+- [MatterService](#matterservice) (19 methods)
 - [MultiphysicsService](#multiphysicsservice) (8 methods)
 - [MultiscaleService](#multiscaleservice) (17 methods)
 - [OptimizationService](#optimizationservice) (3 methods)
@@ -215,6 +216,32 @@ Dynamic material state: constitutive models (plasticity, damage, viscoelasticity
 | `RunMaterialStateStudy` | `RunMaterialStateStudyRequest` | `RunMaterialStateStudyResponse` | Runs a stored or inline study as a job; the result id is in the finished job's results. |
 | `SaveMaterialStateRecord` | `SaveMaterialStateRecordRequest` | `SaveMaterialStateRecordResponse` | Stores a result as a record in the project; one undo step. |
 | `SetMaterialStateStudy` | `SetMaterialStateStudyRequest` | `SetMaterialStateStudyResponse` | Adds a study, or replaces the one with its id; one undo step. |
+
+## MatterService
+
+Functionally architected matter: architectures of regions, layer stacks, interfaces and property fields bound to scene objects; their validation; analyses through declared solver capabilities; effective properties with their methods and bounds; manufacturability; exploration and mechanisms; transformation pathways; stacks in the coupled engine; comparisons; manufacturing records; reports.
+
+| Method | Request | Response | Description |
+|---|---|---|---|
+| `AddManufacturingRecord` | `AddManufacturingRecordRequest` | `AddManufacturingRecordResponse` | Adds a manufacturing record (batch, process, sequence, inspections, measured datasets); one undo step. |
+| `AnalyzeStack` | `AnalyzeStackRequest` | `AnalyzeStackResponse` | Runs an analysis of a stack (laminate, modes, harvester, thermal, electrical, electromagnetic, interfaces); changes nothing. |
+| `CheckManufacturability` | `CheckManufacturabilityRequest` | `CheckManufacturabilityResponse` | The architecture against its processes' constraints, with the residual stresses built in. |
+| `CheckStackCompatibility` | `CheckStackCompatibilityRequest` | `CheckStackCompatibilityResponse` | Checks a stack against an analysis's declared capability: what it would refuse and why. |
+| `CompareArchitectures` | `CompareArchitecturesRequest` | `CompareArchitecturesResponse` | Compares architectures side by side (no single score); kept in the project when asked (one undo step), so it needs the modify permission. |
+| `CreatePhysicalSystemFromStack` | `CreatePhysicalSystemFromStackRequest` | `CreatePhysicalSystemFromStackResponse` | Adds a stack to the project as a physical system of the coupled engine; one undo step. |
+| `DeleteArchitecture` | `DeleteArchitectureRequest` | `DeleteArchitectureResponse` | Removes an architecture; one undo step. |
+| `DuplicateArchitecture` | `DuplicateArchitectureRequest` | `DuplicateArchitectureResponse` | Copies an architecture as an alternative (its parent recorded); one undo step. |
+| `EvaluatePathway` | `EvaluatePathwayRequest` | `EvaluatePathwayResponse` | Evaluates a function's transformation stages with their balances; a chain efficiency only when every stage is modeled. |
+| `ExploreArchitecture` | `ExploreArchitectureRequest` | `ExploreArchitectureResponse` | What an architecture can do and what may fail: findings apart from hypotheses; changes nothing. |
+| `ExportLayerTable` | `ExportLayerTableRequest` | `ExportLayerTableResponse` | A stack's layer table (csv or json) for manufacturing and analysis. |
+| `GenerateArchitectureReport` | `GenerateArchitectureReportRequest` | `GenerateArchitectureReportResponse` | An architecture's report (markdown or html). |
+| `GetArchitecture` | `GetArchitectureRequest` | `GetArchitectureResponse` | One architecture with its revision and validation issues. |
+| `GetEffectiveProperties` | `GetEffectivePropertiesRequest` | `GetEffectivePropertiesResponse` | A region's resolved properties with their origin, and every combination method of its composition with its bounds. |
+| `GetMatterCapabilities` | `GetMatterCapabilitiesRequest` | `GetMatterCapabilitiesResponse` | The analyses' declared capabilities, interface models, process kinds, mechanisms and mixing methods. |
+| `ListArchitectures` | `ListArchitecturesRequest` | `ListArchitecturesResponse` | The project's architectures: summaries with their revision and validation counts. |
+| `ListMechanisms` | `ListMechanismsRequest` | `ListMechanismsResponse` | Mechanisms and cascades between two domains with their implementation status (design from function). |
+| `SetArchitecture` | `SetArchitectureRequest` | `SetArchitectureResponse` | Adds or replaces an architecture; refused with the validation's errors; one undo step. |
+| `ValidateArchitecture` | `ValidateArchitectureRequest` | `ValidateArchitectureResponse` | Validates an architecture document or a stored one ({"architecture": id}). |
 
 ## MultiphysicsService
 
@@ -436,6 +463,22 @@ The plan of an acoustic field calculation on a field region, without running it.
 | `frequency_hz` | `double` |  |
 | `warnings` | repeated `string` |  |
 
+### AddManufacturingRecordRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `architecture_id` | `string` |  |
+| `record` | `google.protobuf.Struct` |  |
+
+### AddManufacturingRecordResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `changes` | `ChangeSummary` |  |
+| `result` | `google.protobuf.Struct` |  |
+
 ### AnalysisKind
 
 What an analysis kind computes and with which models.
@@ -474,6 +517,23 @@ A model of an analysis kind.
 | `fidelity` | `string` | analytical, reduced, full-wave, finite-element, coupled |
 | `assumptions` | repeated `string` |  |
 | `validity` | `string` |  |
+
+### AnalyzeStackRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `architecture_id` | `string` |  |
+| `stack_id` | `string` |  |
+| `analysis` | `string` |  |
+| `options` | `google.protobuf.Struct` |  |
+
+### AnalyzeStackResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `result` | `google.protobuf.Struct` |  |
 
 ### AnalyzeStructureRequest
 
@@ -669,6 +729,36 @@ What a mutation changed, or would change in a dry run.
 | `deleted` | repeated `ResourceRef` |  |
 | `description` | `string` |  |
 
+### CheckManufacturabilityRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `architecture_id` | `string` |  |
+
+### CheckManufacturabilityResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `result` | `google.protobuf.Struct` |  |
+
+### CheckStackCompatibilityRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `architecture_id` | `string` |  |
+| `stack_id` | `string` |  |
+| `analysis` | `string` |  |
+
+### CheckStackCompatibilityResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `result` | `google.protobuf.Struct` |  |
+
 ### CloseSessionRequest
 
 | Field | Type | Description |
@@ -727,6 +817,21 @@ What a mutation changed, or would change in a dry run.
 |---|---|---|
 | `header` | `ResponseHeader` |  |
 | `comparison` | `google.protobuf.Struct` |  |
+
+### CompareArchitecturesRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `spec` | `google.protobuf.Struct` |  |
+
+### CompareArchitecturesResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `changes` | `ChangeSummary` |  |
+| `result` | `google.protobuf.Struct` |  |
 
 ### CompareWithPredictionRequest
 
@@ -1000,6 +1105,23 @@ Creates a material from its JSON form (the project file's material format) or fr
 | `material` | `Material` |  |
 | `changes` | `ChangeSummary` |  |
 
+### CreatePhysicalSystemFromStackRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `architecture_id` | `string` |  |
+| `stack_id` | `string` |  |
+| `options` | `google.protobuf.Struct` |  |
+
+### CreatePhysicalSystemFromStackResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `changes` | `ChangeSummary` |  |
+| `result` | `google.protobuf.Struct` |  |
+
 ### CreatePrimitiveRequest
 
 Creates a geometry object (a primitive or a parametric kind). Unset parameters take their defaults.
@@ -1061,6 +1183,20 @@ Replaces the open project with a new, empty one. Refused (FAILED_PRECONDITION) w
 | `study_id` | `string` |  |
 
 ### DeleteAccountingStudyResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `changes` | `ChangeSummary` |  |
+
+### DeleteArchitectureRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `architecture_id` | `string` |  |
+
+### DeleteArchitectureResponse
 
 | Field | Type | Description |
 |---|---|---|
@@ -1216,6 +1352,23 @@ Deletes objects with their children, in one undoable step.
 | `uptime_seconds` | `double` |  |
 | `time` | `google.protobuf.Timestamp` |  |
 
+### DuplicateArchitectureRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `architecture_id` | `string` |  |
+| `new_id` | `string` |  |
+| `name` | `string` |  |
+
+### DuplicateArchitectureResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `changes` | `ChangeSummary` |  |
+| `result` | `google.protobuf.Struct` |  |
+
 ### DuplicateObjectsRequest
 
 Copies objects with their children (new ids), placed after the originals.
@@ -1353,6 +1506,22 @@ Rotation as Z-Y-X Euler angles in radians (about X, Y, Z of the parent frame).
 | `header` | `ResponseHeader` |  |
 | `result` | `google.protobuf.Struct` |  |
 
+### EvaluatePathwayRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `architecture_id` | `string` |  |
+| `function_id` | `string` |  |
+| `options` | `google.protobuf.Struct` |  |
+
+### EvaluatePathwayResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `result` | `google.protobuf.Struct` |  |
+
 ### Event
 
 | Field | Type | Description |
@@ -1474,6 +1643,20 @@ Runs a template (or a definition) on a copy of the project as a job; when it com
 | `header` | `ResponseHeader` |  |
 | `explanation` | `google.protobuf.Struct` |  |
 
+### ExploreArchitectureRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `architecture_id` | `string` |  |
+
+### ExploreArchitectureResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `result` | `google.protobuf.Struct` |  |
+
 ### ExportAccountingRequest
 
 | Field | Type | Description |
@@ -1499,6 +1682,22 @@ Runs a template (or a definition) on a copy of the project as a job; when it com
 | `format` | `string` |  |
 
 ### ExportDatasetResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `text` | `string` |  |
+
+### ExportLayerTableRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `architecture_id` | `string` |  |
+| `stack_id` | `string` |  |
+| `format` | `string` |  |
+
+### ExportLayerTableResponse
 
 | Field | Type | Description |
 |---|---|---|
@@ -1657,6 +1856,21 @@ Sent instead of events a client asked for but that are no longer retained: the c
 | `last_missed_sequence` | `uint64` |  |
 | `oldest_retained_sequence` | `uint64` |  |
 
+### GenerateArchitectureReportRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `architecture_id` | `string` |  |
+| `format` | `string` |  |
+
+### GenerateArchitectureReportResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `text` | `string` |  |
+
 ### GenerateLaboratoryReportRequest
 
 | Field | Type | Description |
@@ -1774,6 +1988,20 @@ Geometry of an object: a kind of the geometry registry with its parameters (SI u
 | `header` | `ResponseHeader` |  |
 | `info` | `ApplicationInfo` |  |
 
+### GetArchitectureRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `architecture_id` | `string` |  |
+
+### GetArchitectureResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `architecture` | `google.protobuf.Struct` |  |
+
 ### GetArrayRequest
 
 | Field | Type | Description |
@@ -1860,6 +2088,21 @@ Geometry of an object: a kind of the geometry registry with its parameters (SI u
 |---|---|---|
 | `header` | `ResponseHeader` |  |
 | `diagnostics` | `Diagnostics` |  |
+
+### GetEffectivePropertiesRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `architecture_id` | `string` |  |
+| `region_id` | `string` |  |
+
+### GetEffectivePropertiesResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `result` | `google.protobuf.Struct` |  |
 
 ### GetEmitterRequest
 
@@ -2019,6 +2262,19 @@ Geometry of an object: a kind of the geometry registry with its parameters (SI u
 | `header` | `ResponseHeader` |  |
 | `document` | `google.protobuf.Struct` |  |
 | `reliable` | `bool` |  |
+
+### GetMatterCapabilitiesRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+
+### GetMatterCapabilitiesResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `capabilities` | `google.protobuf.Struct` |  |
 
 ### GetMultiscaleModelRequest
 
@@ -2332,6 +2588,21 @@ job.updated (state or progress; progress events are throttled)
 | `header` | `ResponseHeader` |  |
 | `kinds` | repeated `AnalysisKind` |  |
 
+### ListArchitecturesRequest
+
+Requests and responses of functionally architected matter (REQ-CHAT-20261127-001, RES-FAM-019). The documents are JSON (Struct) in the formats of the architecture records (resonant.matter).
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+
+### ListArchitecturesResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `architectures` | repeated `google.protobuf.Struct` |  |
+
 ### ListConservationModelsRequest
 
 | Field | Type | Description |
@@ -2563,6 +2834,22 @@ Requests and responses of the laboratory (REQ-CHAT-20261126-023, RES-LAB-017). T
 |---|---|---|
 | `header` | `ResponseHeader` |  |
 | `materials` | repeated `Material` |  |
+
+### ListMechanismsRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `from_domain` | `string` |  |
+| `to_domain` | `string` |  |
+| `architecture_id` | `string` |  |
+
+### ListMechanismsResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `result` | `google.protobuf.Struct` |  |
 
 ### ListModelCardsRequest
 
@@ -3347,6 +3634,21 @@ session.opened / closed
 | `header` | `ResponseHeader` |  |
 | `changes` | `ChangeSummary` |  |
 
+### SetArchitectureRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `architecture` | `google.protobuf.Struct` |  |
+
+### SetArchitectureResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `changes` | `ChangeSummary` |  |
+| `result` | `google.protobuf.Struct` |  |
+
 ### SetArrayExcitationRequest
 
 | Field | Type | Description |
@@ -3738,6 +4040,20 @@ Changes the fields that are set. Refused with CONFLICT when expected_revision is
 | `header` | `ResponseHeader` |  |
 | `object` | `SceneObject` |  |
 | `changes` | `ChangeSummary` |  |
+
+### ValidateArchitectureRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `spec` | `google.protobuf.Struct` |  |
+
+### ValidateArchitectureResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `result` | `google.protobuf.Struct` |  |
 
 ### ValidateCalibrationRequest
 
