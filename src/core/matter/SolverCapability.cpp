@@ -108,6 +108,10 @@ Compatibility checkStack(const Architecture& a, const Stack& stack, const Solver
             refuse("unknown-region", l.id, "the layer '" + l.id + "' names no region");
             continue;
         }
+        // Tensor-valued material fields: read only by the analyses that declare them.
+        for (const auto& f : a.materialFields)
+            if (f.region == r->id && !cap.supports("tensor-field"))
+                refuse("tensor-field-not-supported", l.id, cap.title + " does not read the material field '" + f.id + "' (" + f.property + ") of '" + r->id + "'");
         // Anisotropic sets the analysis's physics reads.
         for (const auto& [kind, set] : r->anisotropic) {
             const std::string physics = physicsOfSet(kind);

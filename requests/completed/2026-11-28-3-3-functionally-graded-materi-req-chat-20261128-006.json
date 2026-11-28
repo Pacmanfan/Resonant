@@ -1,0 +1,170 @@
+{
+  "request_id": "REQ-CHAT-20261128-006",
+  "source": "chat",
+  "type": "FEATURE",
+  "priority": "NORMAL",
+  "created": "2026-11-28T11:25:49-05:00",
+  "created_utc": "2026-11-28T16:25:49+00:00",
+  "id_date": "2026-11-28",
+  "timezone": "EST (UTC-05:00)",
+  "status": "completed",
+  "original_text": "## 3.3 Functionally graded materials\n\nExpand material-field representation.\n\nSupport:\n\n- Spatially varying density.\n- Spatially varying stiffness.\n- Spatially varying thermal conductivity.\n- Spatially varying electrical conductivity.\n- Spatially varying dielectric properties.\n- Spatially varying piezoelectric coefficients.\n- Spatially varying magnetic properties.\n\nSupport directional and anisotropic material fields.\n\nEach field must identify its coordinate system and tensor representation.\n\nSupport interpolation between measured, imported, and analytically defined fields.\n\n# PART IV \u2014 MULTISCALE AND ATOMISTIC ARCHITECTURE\n\nNo atomistic engines are currently installed.\n\nDo not make the application dependent on an unavailable external solver.\n\nInstead, establish a formal multiscale integration architecture.\n\n## 4.1 Solver integration\n\nDesign an adapter architecture capable of integrating appropriate external atomistic engines.\n\nInvestigate compatibility with:\n\n- LAMMPS.\n- GROMACS where appropriate.\n- Other scientifically relevant atomistic engines.\n\nDo not assume these engines are interchangeable.\n\nIdentify their respective domains of applicability.\n\n## 4.2 Atomistic-to-continuum bridge\n\nDesign the data model for transferring information between scales.\n\nPotential transferred quantities include:\n\n- Elastic constants.\n- Thermal conductivity.\n- Density.\n- Diffusion coefficients.\n- Interfacial properties.\n- Defect-related properties.\n- Temperature-dependent constitutive behavior.\n\nPreserve:\n\n- Units.\n- Coordinate systems.\n- Temperature.\n- Pressure.\n- Composition.\n- Simulation conditions.\n- Statistical uncertainty.\n- Provenance.\n\nDo not generate fabricated atomistic results.\n\nWhen an external engine is unavailable, report the missing dependency and provide a testable integration interface.\n\n## 4.3 Microstructure representation\n\nEstablish foundations for:\n\n- Grains.\n- Grain boundaries.\n- Defects.\n- Inclusions.\n- Porosity.\n- Phase distributions.\n- Multiphase materials.\n\nEnsure microstructure can eventually influence continuum-scale material properties.",
+  "file": "requests/inbox/2026-11-28-3-3-functionally-graded-materi-req-chat-20261128-006.md",
+  "attachments": [],
+  "context": "Phase 5 of REQ-CHAT-20261128-001 (Prompt 27): material fields and the multiscale architecture.",
+  "text_sha256": "92b1b23ea26bb93c70a42b14aa8a37b61f7d197ccd4ca630a612a40be2ca83f6",
+  "classification": {
+    "proposed_type": "FEATURE",
+    "proposed_source": "override",
+    "normalized_type": "FEATURE",
+    "heuristic_type": "FEATURE",
+    "final_type": "FEATURE",
+    "confidence": "low",
+    "validation": "PASS",
+    "classifier_reason": "no framing in the request statement; body suggests feature: Design, Support, integrating, integration",
+    "correction_reason": null,
+    "normalization_note": null,
+    "evidence": [
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support directional and anisotropic material fields."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support interpolation between measured, imported, and analytically defined fields."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "integration",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Instead, establish a formal multiscale integration architecture."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Design",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Design an adapter architecture capable of integrating appropriate external atomistic engines."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "integrating",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Design an adapter architecture capable of integrating appropriate external atomistic engines."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Design",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Design the data model for transferring information between scales."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "provide",
+        "strength": "strong",
+        "note": "",
+        "sentence": "When an external engine is unavailable, report the missing dependency and provide a testable integration interface."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "integration",
+        "strength": "strong",
+        "note": "",
+        "sentence": "When an external engine is unavailable, report the missing dependency and provide a testable integration interface."
+      }
+    ],
+    "scores": {
+      "FEATURE": {
+        "head": 0,
+        "body": 9
+      },
+      "BUG": {
+        "head": 0,
+        "body": 2
+      },
+      "CRASH": {
+        "head": 0,
+        "body": 0
+      },
+      "REGRESSION": {
+        "head": 0,
+        "body": 0
+      },
+      "PERFORMANCE": {
+        "head": 0,
+        "body": 0
+      },
+      "REFACTOR": {
+        "head": 0,
+        "body": 1
+      },
+      "BUILD": {
+        "head": 0,
+        "body": 0
+      },
+      "DOCUMENTATION": {
+        "head": 0,
+        "body": 0
+      },
+      "INVESTIGATION": {
+        "head": 0,
+        "body": 1
+      },
+      "PROCESS-CHANGE": {
+        "head": 0,
+        "body": 0
+      }
+    },
+    "evidence_total": 13,
+    "validator": "scripts/request_classification.py"
+  },
+  "links": {
+    "work": [
+      "WORK-000031"
+    ]
+  },
+  "commits": [],
+  "resolution": {
+    "from": "processing",
+    "to": "completed",
+    "at": "2026-11-28T20:05:32.375718+00:00",
+    "by": "agent-dev-20261126151713-76f632",
+    "gates": [
+      {
+        "work": "WORK-000031",
+        "at": "2026-11-28T20:05:22.039713+00:00",
+        "verdict": "PASS",
+        "request_fingerprint": "ca5274e6ed3498f8484bc10d704ade99cfc04455c1a4849d49b6507f794d1320",
+        "test_runs": [
+          "20261128T145046-3242849",
+          "20261128T150043-3323152"
+        ]
+      }
+    ]
+  }
+}

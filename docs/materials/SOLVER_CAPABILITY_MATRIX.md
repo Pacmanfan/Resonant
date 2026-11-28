@@ -15,8 +15,8 @@ field that a solver's input could hold is not thereby supported.
 | electrical | series conduction and capacitance | electrical | isotropic, graded, composition | perfect, electrical contact resistance | segmented (per covered area) | sigma, eps_r |
 | electromagnetic | `em::LayeredSolution` | electromagnetic | isotropic, graded, composition | perfect | - | eps_r, tan delta, sigma, mu_r |
 | coupled-engine | the layered slab of the engine | thermal, electromagnetic | isotropic, through-thickness conductivity, graded, composition | perfect, thermal contact resistance | - | k, rho, c |
-| layered-solid | 3D layered solid, 20-node hexahedra (`mechanics/LayeredSolid`) | mechanical | isotropic, graded (sublayers), composition | perfect, perfect-bonding, finite-stiffness, sliding, frictional-contact | - | E, nu, rho |
-| layered-solid-thermal | 3D layered conduction, 20-node hexahedra | thermal | isotropic, graded (sublayers), composition | perfect, thermal contact resistance | - | k |
+| layered-solid | 3D layered solid, 20-node hexahedra (`mechanics/LayeredSolid`) | mechanical | isotropic, graded (sublayers), composition, tensor fields (stiffness, density) | perfect, perfect-bonding, finite-stiffness, sliding, frictional-contact | - | E, nu, rho |
+| layered-solid-thermal | 3D layered conduction, 20-node hexahedra | thermal | isotropic, graded (sublayers), composition, tensor fields (conductivity) | perfect, thermal contact resistance | - | k |
 
 Every analysis also declares its dimensionality, scales, couplings,
 nonlinearities, limitations, inputs and outputs. The main limitations:
@@ -38,3 +38,7 @@ charge-transfer, diffusive and reactive interfaces; out-of-plane orientations
 of orthotropic layers; periodic and inclusion patterns. Finite-stiffness,
 sliding and frictional interfaces, and curved layered solids, are represented
 by the 3D layered solid only (REQ-CHAT-20261128-004).
+
+Tensor material fields (`MATERIAL_FIELDS.md`) are read only by the analyses that
+declare the `tensor-field` material model. Every other analysis refuses a stack
+whose regions carry them, and names the field.

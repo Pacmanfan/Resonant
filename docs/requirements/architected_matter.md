@@ -1,6 +1,6 @@
 # Functionally Architected Matter
 
-**Owner of:** `RES-FAM-001..020`
+**Owner of:** `RES-FAM-001..021`
 **Source:** REQ-CHAT-20261127-001 (the foundational architecture prompt "Functionally Architected Matter and Emergent Physical Systems")
 **Refines:** `multiscale.md` RES-MSC-001..014 (lineage, homogenization), `metamaterials.md` RES-META-001..012 (effective properties), `coupled_engine.md` RES-CEME-001..016 (physical systems), `material_state.md` RES-DMS-001..014, `optimization.md` RES-OPT-001..025, `laboratory.md` RES-LAB-001..018, `accounting.md` RES-ACC-001..016
 **Decisions:** ADR-000228 (builds on ADR-000220, ADR-000224, ADR-000225, ADR-000226, ADR-000227)
@@ -330,3 +330,20 @@ The benchmarks are:
 - an optimization variable that moves a result in the expected direction,
   competing objectives kept apart, and an infeasible architecture identified.
 *Verification:* `docs/materials/ARCHITECTED_MATTER_VALIDATION.md`.
+
+### RES-FAM-021 — Tensor-valued material fields
+
+A region's density, elastic stiffness, thermal and electrical conductivity,
+permittivity, piezoelectric coupling or magnetic permeability may vary in
+space as a material field. Each field states:
+- its coordinate system (Cartesian, cylindrical, spherical);
+- its tensor representation and the basis of its components;
+- its form and its source (analytic, measured, imported, computed).
+
+Analytic fields blend two tensors along a coordinate. Sampled fields
+interpolate convexly within their support and are never extrapolated.
+Invalid tensors are refused. The three-dimensional analyses read the fields
+element by element; an analysis that does not read them refuses the stack
+with the reason.
+*Verification:* `MaterialFields.*`, `MatterAnalyses.MaterialFieldsReachTheThreeDimensionalSolidAndOnlyIt`.
+

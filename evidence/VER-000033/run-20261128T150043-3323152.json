@@ -1,0 +1,341 @@
+{
+ "run_id": "20261128T150043-3323152",
+ "runner_version": 2,
+ "started_at": "2026-11-28T20:05:05.414653+00:00",
+ "wall_seconds": 261.9,
+ "tier": "t2",
+ "scope": "affected",
+ "changes_from": "request 2026-11-28-3-3-functionally-graded-materi-req-chat-20261128-006.md",
+ "changed": [
+  "DECISIONS.md",
+  "IMPLEMENTATION_STATUS.md",
+  "docs/README.md",
+  "docs/architecture/ATOMISTIC_INTEGRATION.md",
+  "docs/architecture/MILESTONE_27_GAP_ANALYSIS.md",
+  "docs/decisions/ADR-000234-tensor-material-fields-and-atomistic-adapters.md",
+  "docs/decisions/decisions.txt",
+  "docs/materials/ARCHITECTED_MATTER.md",
+  "docs/materials/MATERIAL_FIELDS.md",
+  "docs/materials/SOLVER_CAPABILITY_MATRIX.md",
+  "docs/mechanics/LAYERED_SOLIDS.md",
+  "docs/requirements/architected_matter.md",
+  "docs/requirements/multiscale.md",
+  "docs/requirements/requirements.txt",
+  "requests/inbox/2026-11-28-3-3-functionally-graded-materi-req-chat-20261128-006.json",
+  "requests/inbox/2026-11-28-3-3-functionally-graded-materi-req-chat-20261128-006.md",
+  "requests/processing/2026-11-28-3-3-functionally-graded-materi-req-chat-20261128-006.json",
+  "requests/processing/2026-11-28-3-3-functionally-graded-materi-req-chat-20261128-006.md",
+  "src/core/coupling/EngineAdapters.cpp",
+  "src/core/coupling/EngineAdapters.h",
+  "src/core/coupling/MatterAnalyses.cpp",
+  "src/core/materials/MaterialField.cpp",
+  "src/core/materials/MaterialField.h",
+  "src/core/matter/MatterArchitecture.cpp",
+  "src/core/matter/MatterArchitecture.h",
+  "src/core/matter/SolverCapability.cpp",
+  "src/core/mechanics/LayeredSolid.cpp",
+  "src/core/mechanics/LayeredSolid.h",
+  "src/core/mechanics/PiezoelectricSolid.cpp",
+  "src/core/mechanics/PiezoelectricSolid.h",
+  "src/core/multiscale/EngineAdapters.cpp",
+  "src/core/multiscale/EngineAdapters.h",
+  "src/core/multiscale/ExternalSolvers.cpp",
+  "src/core/multiscale/ExternalSolvers.h",
+  "src/core/multiscale/MicrostructureAnalysis.cpp",
+  "src/core/multiscale/MicrostructureAnalysis.h",
+  "tests/core/test_engine_adapters.cpp",
+  "tests/core/test_material_fields.cpp",
+  "tests/core/test_matter_analyses.cpp",
+  "work/active/WORK-000031-tensor-material-fields-with-frames-and-i.md",
+  "work/work.txt"
+ ],
+ "unmapped": [],
+ "head": "da8d6b7e885799e792ecd2fd3a822cbf4424bac8",
+ "describe": "da8d6b7",
+ "provenance": {
+  "dirty": true,
+  "dirty_paths": 24,
+  "diff_sha256": "1c76dc06b5f2afd388f210b7d94841d53c2b58bf7afb82aa7a23d3fb58c9db38",
+  "python": "3.12.3",
+  "platform": "Linux-7.0.0-43-generic-x86_64-with-glibc2.39",
+  "git": "git version 2.43.0",
+  "manifest_sha256": "3e9782a716e07d5cfe9aab5bab9c80e70ee0322c0f96f3b8b2d34904b0fae55d",
+  "config_sha256": "373797242bd5edccb39ec6184d416ba85a780c7f323ef80920326b005964964a",
+  "build_system": "qmake"
+ },
+ "build_dir": "/home/dev/Resonant/build/debug",
+ "jobs": 4,
+ "host": "dev",
+ "request": "2026-11-28-3-3-functionally-graded-materi-req-chat-20261128-006.md",
+ "request_fingerprint": "ca5274e6ed3498f8484bc10d704ade99cfc04455c1a4849d49b6507f794d1320",
+ "request_code_paths": [
+  "src/core/coupling/EngineAdapters.cpp",
+  "src/core/coupling/EngineAdapters.h",
+  "src/core/coupling/MatterAnalyses.cpp",
+  "src/core/materials/MaterialField.cpp",
+  "src/core/materials/MaterialField.h",
+  "src/core/matter/MatterArchitecture.cpp",
+  "src/core/matter/MatterArchitecture.h",
+  "src/core/matter/SolverCapability.cpp",
+  "src/core/mechanics/LayeredSolid.cpp",
+  "src/core/mechanics/LayeredSolid.h",
+  "src/core/mechanics/PiezoelectricSolid.cpp",
+  "src/core/mechanics/PiezoelectricSolid.h",
+  "src/core/multiscale/EngineAdapters.cpp",
+  "src/core/multiscale/EngineAdapters.h",
+  "src/core/multiscale/ExternalSolvers.cpp",
+  "src/core/multiscale/ExternalSolvers.h",
+  "src/core/multiscale/MicrostructureAnalysis.cpp",
+  "src/core/multiscale/MicrostructureAnalysis.h",
+  "tests/core/test_engine_adapters.cpp",
+  "tests/core/test_material_fields.cpp",
+  "tests/core/test_matter_analyses.cpp"
+ ],
+ "allow_stale": false,
+ "classification": "PASS",
+ "warnings": [],
+ "groups": [
+  {
+   "suite": "devsys",
+   "group": "structure",
+   "shards": 1,
+   "statuses": [
+    "PASS"
+   ],
+   "seconds": 0.06476681586354971,
+   "wall": 0.06476681586354971,
+   "cases": 0,
+   "failed": [],
+   "flaky": [],
+   "expected": [],
+   "detail": [],
+   "reasons": [
+    "t0 (always)"
+   ],
+   "command": "python3 scripts/devsys.py verify-structure",
+   "status": "PASS"
+  },
+  {
+   "suite": "audits",
+   "group": "drift",
+   "shards": 1,
+   "statuses": [
+    "PASS"
+   ],
+   "seconds": 0.36528559518046677,
+   "wall": 0.36528559518046677,
+   "cases": 0,
+   "failed": [],
+   "flaky": [],
+   "expected": [],
+   "detail": [],
+   "reasons": [
+    "requested by WORK-000031"
+   ],
+   "command": "python3 scripts/drift_detect.py",
+   "status": "PASS"
+  },
+  {
+   "suite": "audits",
+   "group": "doc_integrity",
+   "shards": 1,
+   "statuses": [
+    "PASS"
+   ],
+   "seconds": 0.26580510078929365,
+   "wall": 0.26580510078929365,
+   "cases": 0,
+   "failed": [],
+   "flaky": [],
+   "expected": [],
+   "detail": [],
+   "reasons": [
+    "requested by WORK-000031"
+   ],
+   "command": "python3 scripts/doc_integrity.py",
+   "status": "PASS"
+  },
+  {
+   "suite": "audits",
+   "group": "invariants",
+   "shards": 1,
+   "statuses": [
+    "PASS"
+   ],
+   "seconds": 0.068739403039217,
+   "wall": 0.068739403039217,
+   "cases": 0,
+   "failed": [],
+   "flaky": [],
+   "expected": [],
+   "detail": [],
+   "reasons": [
+    "requested by WORK-000031"
+   ],
+   "command": "python3 scripts/invariant_check.py",
+   "status": "PASS"
+  },
+  {
+   "suite": "core",
+   "group": "unit",
+   "shards": 1,
+   "statuses": [
+    "CACHED"
+   ],
+   "seconds": 0.0,
+   "wall": 0.0,
+   "cases": 0,
+   "failed": [],
+   "flaky": [],
+   "expected": [],
+   "detail": [
+    "unchanged since run 20261128T145046-3242849 (2026-11-28T19:57:25)"
+   ],
+   "reasons": [
+    "builds tests/core/core_tests.pro",
+    "requested by WORK-000031"
+   ],
+   "command": "resonant_core_tests",
+   "status": "CACHED"
+  },
+  {
+   "suite": "app",
+   "group": "gui",
+   "shards": 1,
+   "statuses": [
+    "CACHED"
+   ],
+   "seconds": 0.0,
+   "wall": 0.0,
+   "cases": 0,
+   "failed": [],
+   "flaky": [],
+   "expected": [],
+   "detail": [
+    "unchanged since run 20261128T145046-3242849 (2026-11-28T19:57:25)"
+   ],
+   "reasons": [
+    "builds tests/app/app_tests.pro"
+   ],
+   "command": "xvfb-run -a -s -screen 0 1600x1000x24 /home/dev/Resonant/build/debug/tests/app/resonant_app_tests",
+   "status": "CACHED"
+  },
+  {
+   "suite": "cmake",
+   "group": "build_and_ctest",
+   "shards": 1,
+   "statuses": [
+    "PASS"
+   ],
+   "seconds": 261.5479962879326,
+   "wall": 261.5479962879326,
+   "cases": 0,
+   "failed": [],
+   "flaky": [],
+   "expected": [],
+   "detail": [],
+   "reasons": [
+    "input src/core/coupling/EngineAdapters.cpp (+20)",
+    "requested by WORK-000031"
+   ],
+   "command": "bash tools/verify_cmake_build.sh",
+   "status": "PASS"
+  },
+  {
+   "suite": "layering",
+   "group": "rules",
+   "shards": 1,
+   "statuses": [
+    "CACHED"
+   ],
+   "seconds": 0.0,
+   "wall": 0.0,
+   "cases": 0,
+   "failed": [],
+   "flaky": [],
+   "expected": [],
+   "detail": [
+    "unchanged since run 20261128T145046-3242849 (2026-11-28T19:57:25)"
+   ],
+   "reasons": [
+    "input src/core/coupling/EngineAdapters.cpp (+17)"
+   ],
+   "command": "python3 tools/check_layering.py",
+   "status": "CACHED"
+  }
+ ],
+ "jobs_detail": [
+  {
+   "label": "devsys/structure",
+   "status": "PASS",
+   "seconds": 0.06,
+   "rc": 0,
+   "detail": "",
+   "log": "/home/dev/Resonant/tmp/tr/43-3323152/001/output.log",
+   "cases": []
+  },
+  {
+   "label": "audits/drift",
+   "status": "PASS",
+   "seconds": 0.37,
+   "rc": 0,
+   "detail": "",
+   "log": "/home/dev/Resonant/tmp/tr/43-3323152/003/output.log",
+   "cases": []
+  },
+  {
+   "label": "audits/doc_integrity",
+   "status": "PASS",
+   "seconds": 0.27,
+   "rc": 0,
+   "detail": "",
+   "log": "/home/dev/Resonant/tmp/tr/43-3323152/004/output.log",
+   "cases": []
+  },
+  {
+   "label": "audits/invariants",
+   "status": "PASS",
+   "seconds": 0.07,
+   "rc": 0,
+   "detail": "",
+   "log": "/home/dev/Resonant/tmp/tr/43-3323152/002/output.log",
+   "cases": []
+  },
+  {
+   "label": "core/unit",
+   "status": "CACHED",
+   "seconds": 0.0,
+   "rc": null,
+   "detail": "unchanged since run 20261128T145046-3242849 (2026-11-28T19:57:25)",
+   "log": null,
+   "cases": []
+  },
+  {
+   "label": "app/gui",
+   "status": "CACHED",
+   "seconds": 0.0,
+   "rc": null,
+   "detail": "unchanged since run 20261128T145046-3242849 (2026-11-28T19:57:25)",
+   "log": null,
+   "cases": []
+  },
+  {
+   "label": "cmake/build_and_ctest",
+   "status": "PASS",
+   "seconds": 261.55,
+   "rc": 0,
+   "detail": "",
+   "log": "/home/dev/Resonant/tmp/tr/43-3323152/005/output.log",
+   "cases": []
+  },
+  {
+   "label": "layering/rules",
+   "status": "CACHED",
+   "seconds": 0.0,
+   "rc": null,
+   "detail": "unchanged since run 20261128T145046-3242849 (2026-11-28T19:57:25)",
+   "log": null,
+   "cases": []
+  }
+ ]
+}

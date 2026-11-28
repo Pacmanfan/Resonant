@@ -120,6 +120,28 @@ Result<Coupled> build(const PiezoelectricBody& pb, const LayeredSupports& suppor
             continue;
         const auto& par = c.mesh.elementParameter[e];
         world[e] = rotated(it->second->constants, poledFrame(body.surface, par[0], par[1], it->second->poling));
+        if (!it->second->fields.empty()) {
+            const std::array<Vec3, 20> xe = solid20Positions(m, m.elements[e]);
+            Eigen::Matrix<double, 20, 1> nn;
+            Eigen::Matrix<double, 20, 3> dn;
+            solid20Shape(0, 0, 0, nn, dn);
+            Vec3 centre = Vec3::Zero();
+            for (size_t q = 0; q < 20; ++q)
+                centre += nn(static_cast<Eigen::Index>(q)) * xe[q];
+            for (const auto& f : it->second->fields) {
+                auto t = f.tensorAt(centre);
+                if (!t)
+                    return R::failure("piezoelectric layer " + std::to_string(it->first) + ": " + t.message());
+                if (f.property == "piezoelectric.e")
+                    world[e]->e = t.value();
+                else if (f.property == "electromagnetic.permittivity")
+                    world[e]->eps = t.value().rows() == 1 ? Eigen::Matrix3d(Eigen::Matrix3d::Identity() * t.value()(0, 0)) : Eigen::Matrix3d(t.value());
+                else if (f.property == "mechanical.stiffness")
+                    world[e]->c = t.value();
+                else
+                    return R::failure("the piezoelectric layer does not use the field '" + f.id + "' (" + f.property + ")");
+            }
+        }
         Constitutive con;
         con.stiffness = world[e]->c;
         con.density = it->second->constants.density;
@@ -415,6 +437,9 @@ Status PiezoelectricBody::validate() const
             return Status::failure("a layer is declared piezoelectric twice");
         if (Status s = p.constants.validate(); !s)
             return s;
+        for (const auto& f : p.fields)
+            if (Status s = f.validate(); !s)
+                return s;
     }
     if (piezo.empty())
         return Status::failure("the body has no piezoelectric layer");

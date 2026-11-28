@@ -903,6 +903,7 @@ Result<mechanics::LayeredBody> bodyOf(const Architecture& a, const Stack& s, con
     const int through = static_cast<int>(optionNumber(mesh, "elementsThrough", 2));
     const json debonded = o.value("debonded", json::object());
     const std::vector<Sub>& list = subs.value();
+    std::vector<std::string> fieldRegions;
     for (size_t i = 0; i < list.size(); ++i) {
         const Sub& sub = list[i];
         mechanics::BodyLayer l;
@@ -925,6 +926,15 @@ Result<mechanics::LayeredBody> bodyOf(const Architecture& a, const Stack& s, con
             l.material.base.lossFactor = sub.loss;
             l.material.base.lossFactorStated = sub.loss > 0.0;
             l.material.base.provenance = sub.origins.empty() ? "the material library" : sub.origins.front();
+        }
+        // The region's material fields, in the body's frame (x along the stack's length, y its
+        // width, z its normal from the stack's base).
+        for (const auto& f : a.materialFields)
+            if (f.region == sub.region && (thermal ? f.property == "thermal.conductivity" : (f.property == "mechanical.stiffness" || f.property == "mechanical.density")))
+                l.material.fields.push_back(f);
+        if (!l.material.fields.empty() && std::find(fieldRegions.begin(), fieldRegions.end(), sub.region) == fieldRegions.end()) {
+            fieldRegions.push_back(sub.region);
+            notes.push_back("the material fields of '" + sub.region + "' are evaluated in the body's frame (x along the stack, z its normal from the base)");
         }
         body.layers.push_back(l);
         if (i == 0)
@@ -1201,7 +1211,7 @@ const std::vector<SolverCapability>& matterCapabilities()
          {"the stack as regions", "the domains and couplings of the engine"}, {"the coupled result and its ledger"},
          {"thermal.thermalConductivity", "thermal.density", "thermal.specificHeat"}},
         {"layered-solid", "Three-dimensional layered solid", "mechanics.layered-solid.hex20", {"mechanical"},
-         {"isotropic", "graded", "composition-effective"}, {"perfect", "perfect-bonding", "finite-stiffness", "sliding", "frictional-contact"}, {},
+         {"isotropic", "graded", "composition-effective", "tensor-field"}, {"perfect", "perfect-bonding", "finite-stiffness", "sliding", "frictional-contact"}, {},
          "three-dimensional: a flat, cylindrical, spherical or revolved stack", {"continuum", "mesoscale (layers)", "device"}, {},
          {"frictional contact (Coulomb, holonomic)"},
          {"linear elasticity, small displacements (larger ones are flagged)", "isotropic layers: an in-plane orthotropic set does not give the nine 3D constants",
@@ -1210,7 +1220,7 @@ const std::vector<SolverCapability>& matterCapabilities()
          {"the stack's layers with E, nu, rho", "options: surface, mesh, supports, analysis (modal or static), loads, debonded regions"},
          {"frequencies (modal)", "displacements, layer stresses, interface tractions, states and initiation indices (static)"}, mech},
         {"layered-solid-thermal", "Three-dimensional layered conduction", "thermal.layered-solid.hex20", {"thermal"},
-         {"isotropic", "graded", "composition-effective"}, {"perfect", "thermal-contact-resistance"}, {},
+         {"isotropic", "graded", "composition-effective", "tensor-field"}, {"perfect", "thermal-contact-resistance"}, {},
          "three-dimensional: a flat, cylindrical, spherical or revolved stack", {"continuum", "mesoscale (layers)", "device"}, {}, {},
          {"steady conduction, isotropic layers, no radiation", "faces without a condition insulated", "debonded regions not represented thermally"},
          {"the stack's conductivities", "options: surface, mesh, thermal (inner and outer temperatures, inner flux, outer convection)"},

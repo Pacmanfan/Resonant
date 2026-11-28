@@ -423,6 +423,14 @@ std::string ReferenceSurface::describe() const
     return "";
 }
 
+const materials::MaterialField* LayerMaterial::field(const std::string& property) const
+{
+    for (const auto& f : fields)
+        if (f.property == property)
+            return &f;
+    return nullptr;
+}
+
 double LayerThickness::at(double u, double v) const
 {
     switch (along) {
@@ -471,6 +479,15 @@ Status LayeredBody::validate() const
         total += static_cast<long>(elementsU) * elementsV * l.elementsThrough;
         if (!(l.thickness.start > 0.0) || (l.thickness.along != LayerThickness::Along::Constant && !(l.thickness.end > 0.0)))
             return Status::failure(who + " needs a positive thickness everywhere");
+        for (const auto& f : l.material.fields) {
+            if (Status s = f.validate(); !s)
+                return Status::failure(who + ": " + s.message());
+            if (f.property != "mechanical.stiffness" && f.property != "mechanical.density" && f.property != "thermal.conductivity" &&
+                f.property != "piezoelectric.e" && f.property != "electromagnetic.permittivity")
+                return Status::failure(who + ": the layered solid does not use the field '" + f.id + "' (" + f.property + ")");
+        }
+        if (l.material.field("mechanical.stiffness") && (l.material.orthotropic || l.material.graded))
+            return Status::failure(who + ": a stiffness field replaces the orthotropic or graded description; give one, not both");
     }
     if (total > 60000)
         return Status::failure("the mesh would have " + std::to_string(total) + " elements: more than the 60000 this solver accepts");
@@ -591,7 +608,7 @@ Result<LayeredMesh> meshLayeredBody(const LayeredBody& body, const LayeredSuppor
         }
         m.materials.push_back(base);
     }
-    bool anyGraded = false, anyOrthotropic = false;
+    bool anyGraded = false, anyOrthotropic = false, anyField = false;
     for (size_t e = 0; e < b.elements.size(); ++e) {
         Element el;
         for (size_t q = 0; q < 20; ++q)
@@ -615,6 +632,39 @@ Result<LayeredMesh> meshLayeredBody(const LayeredBody& body, const LayeredSuppor
             con.description = "orthotropic, layer '" + body.layers[static_cast<size_t>(layer)].name + "' at " + num(lm.angle * 180 / kPi) + " deg";
             el.constitutive = static_cast<int>(m.constitutive.size());
             m.constitutive.push_back(con);
+        } else if (lm.field("mechanical.stiffness") || lm.field("mechanical.density")) {
+            // Material fields at the element's centre (the body's frame).
+            const std::array<Vec3, 20> xe = [&] {
+                std::array<Vec3, 20> x;
+                for (size_t q = 0; q < 20; ++q)
+                    x[q] = b.nodes[static_cast<size_t>(b.elements[e][q])];
+                return x;
+            }();
+            Eigen::Matrix<double, 20, 1> nn;
+            Eigen::Matrix<double, 20, 3> dn;
+            solid20Shape(0, 0, 0, nn, dn);
+            Vec3 centre = Vec3::Zero();
+            for (size_t q = 0; q < 20; ++q)
+                centre += nn(static_cast<Eigen::Index>(q)) * xe[q];
+            Constitutive con;
+            con.stiffness = isotropic(lm.base.youngsModulus, lm.base.poissonsRatio);
+            con.density = lm.base.density;
+            if (const auto* f = lm.field("mechanical.stiffness")) {
+                auto t = f->tensorAt(centre);
+                if (!t)
+                    return R::failure("layer '" + body.layers[static_cast<size_t>(layer)].name + "': " + t.message());
+                con.stiffness = t.value();
+            }
+            if (const auto* f = lm.field("mechanical.density")) {
+                auto t = f->tensorAt(centre);
+                if (!t)
+                    return R::failure("layer '" + body.layers[static_cast<size_t>(layer)].name + "': " + t.message());
+                con.density = t.value()(0, 0);
+            }
+            con.description = "material fields, layer '" + body.layers[static_cast<size_t>(layer)].name + "'";
+            el.constitutive = static_cast<int>(m.constitutive.size());
+            m.constitutive.push_back(con);
+            anyField = true;
         } else if (lm.graded) {
             anyGraded = true;
             const double f = gradedFraction(lm, p);
@@ -723,6 +773,8 @@ Result<LayeredMesh> meshLayeredBody(const LayeredBody& body, const LayeredSuppor
         out.assumptions.push_back("orthotropic layers: their axes follow the surface, element by element");
     if (anyGraded)
         out.assumptions.push_back("graded layers: the Voigt (rule-of-mixtures) estimate of E, nu and rho, constant in each element (an upper bound of the stiffness)");
+    if (anyField)
+        out.assumptions.push_back("material fields evaluated at each element's centre (constant in the element): refine the mesh to resolve their gradients");
     for (size_t i = 0; i < body.interfaces.size(); ++i) {
         const LayerInterface& li = body.interfaces[i];
         std::string text = "interface '" + li.name + "': " + std::string(toString(*li.mechanical));
@@ -1228,9 +1280,9 @@ Result<LayeredThermalResult> solveLayeredConduction(const LayeredBody& body, con
         if (!i.thermal)
             return R::failure("the interface '" + i.name + "' has no thermal model: perfect contact is never assumed (declare it, or a contact resistance)");
     for (const auto& l : body.layers) {
-        if (!l.material.conductivity)
+        if (!l.material.conductivity && !l.material.field("thermal.conductivity"))
             return R::failure("the layer '" + l.name + "' has no thermal conductivity");
-        if (l.material.graded && !l.material.gradedConductivity)
+        if (l.material.graded && l.material.conductivity && !l.material.gradedConductivity)
             return R::failure("the graded layer '" + l.name + "' has no conductivity for its graded material");
     }
     if (!boundary.innerTemperature && !boundary.outerTemperature && !boundary.outerConvection)
@@ -1255,19 +1307,31 @@ Result<LayeredThermalResult> solveLayeredConduction(const LayeredBody& body, con
     for (size_t e = 0; e < b.elements.size(); ++e) {
         const int layer = b.elementLayer[e];
         const LayerMaterial& lm = body.layers[static_cast<size_t>(layer)].material;
-        double k = *lm.conductivity;
-        if (lm.graded) {
-            const double g = gradedFraction(lm, b.elementParameter[e]);
-            k = (1 - g) * k + g * *lm.gradedConductivity;
-        }
         const std::array<Vec3, 20> x = positions(e);
+        Eigen::Matrix3d k = Eigen::Matrix3d::Identity() * lm.conductivity.value_or(0.0);
+        if (lm.graded && lm.conductivity) {
+            const double g = gradedFraction(lm, b.elementParameter[e]);
+            k = Eigen::Matrix3d::Identity() * ((1 - g) * *lm.conductivity + g * *lm.gradedConductivity);
+        }
+        if (const auto* field = lm.field("thermal.conductivity")) {
+            Eigen::Matrix<double, 20, 1> nn;
+            Eigen::Matrix<double, 20, 3> dn;
+            solid20Shape(0, 0, 0, nn, dn);
+            Vec3 centre = Vec3::Zero();
+            for (size_t q = 0; q < 20; ++q)
+                centre += nn(static_cast<Eigen::Index>(q)) * x[q];
+            auto tensor = field->tensorAt(centre);
+            if (!tensor)
+                return R::failure("layer '" + body.layers[static_cast<size_t>(layer)].name + "': " + tensor.message());
+            k = tensor.value().rows() == 1 ? Eigen::Matrix3d(Eigen::Matrix3d::Identity() * tensor.value()(0, 0)) : Eigen::Matrix3d(tensor.value());
+        }
         Eigen::Matrix<double, 20, 20> ke = Eigen::Matrix<double, 20, 20>::Zero();
         for (int a = 0; a < 3; ++a)
             for (int c = 0; c < 3; ++c)
                 for (int d = 0; d < 3; ++d) {
                     double detJ = 0.0;
                     const Eigen::Matrix<double, 20, 3> g = solid20Gradients(x, kGauss3[a], kGauss3[c], kGauss3[d], detJ);
-                    ke.noalias() += (k * kWeight3[a] * kWeight3[c] * kWeight3[d] * detJ) * (g * g.transpose());
+                    ke.noalias() += (kWeight3[a] * kWeight3[c] * kWeight3[d] * detJ) * (g * k * g.transpose());
                 }
         for (size_t p = 0; p < 20; ++p)
             for (size_t q = 0; q < 20; ++q)

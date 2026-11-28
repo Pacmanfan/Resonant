@@ -21,7 +21,9 @@ A layered or coated body in three dimensions:
     along u or v, mixed by the Voigt rule (an upper bound of the stiffness)
     and constant in each element.
 
-  Thickness is constant or linear in u or v.
+  Thickness is constant or linear in u or v. Material fields (stiffness,
+  density, a tensor conductivity) may replace a layer's description, element
+  by element (`../materials/MATERIAL_FIELDS.md`, REQ-CHAT-20261128-006).
 - **Mesh:** quadratic 20-node hexahedra, with `elementsU x elementsV` in the
   surface and `elementsThrough` in every layer. Curvature is resolved to
   second order in each element. Seams (a full sweep) and poles are joined by
@@ -138,6 +140,7 @@ Interface strengths are optional parameters (`normalStrength`,
   debonded regions.
 - **Materials:** graded layers by element-constant properties (Voigt);
   orthotropic layers need all nine constants.
-- **Conduction:** isotropic; no radiation; faces without a condition are
+- **Conduction:** isotropic, or anisotropic through a conductivity field; no
+  radiation; faces without a condition are
   insulated.
 - **Size:** at most 60000 elements; a sparse direct solver.

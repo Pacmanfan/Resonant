@@ -112,6 +112,16 @@ In the **Matter** panel an engineer:
   and sends a stack to the coupled engine;
 - saves and reopens without loss (`MatterArchitecture.EveryExampleRoundTripsWithoutLossAndValidates`).
 
+## Tensor material fields
+
+Besides the scalar property fields along one axis, an architecture holds
+`materialFields`: tensor-valued fields of a region, with their frame,
+component basis, form (analytic or sampled) and source (analytic, measured,
+imported, computed). They are read by the analyses that declare
+`tensor-field` and refused by the others (`MATERIAL_FIELDS.md`,
+REQ-CHAT-20261128-006). Atomistic results reach them as computed fields
+(`../architecture/ATOMISTIC_INTEGRATION.md`).
+
 ## Known limitations
 
 These are also listed in ADR-000228 and `IMPLEMENTATION_STATUS.md`.

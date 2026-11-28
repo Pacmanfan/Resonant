@@ -47,8 +47,8 @@
 |---|---|---|---|
 | Library properties | V | scalar per key; frequency tables; no tensors, no temperature laws in the library (the engine has laws) | -006 |
 | Architecture regions, anisotropic sets, orientation | V | anisotropy used by lamination and through-thickness conduction only | -006 |
-| Property fields | L | one axis; scalar; idealized or realizable; no imported or measured fields; no coordinate systems or tensor fields | -006 |
-| Microstructure | L | voxel RVEs with grains and phases (multiscale); descriptive records on regions | -006 |
+| Property fields | L | one axis; scalar; idealized or realizable; no imported or measured fields; no coordinate systems or tensor fields | -006: tensor material fields with frames, bases, analytic or sampled forms and sources (ADR-000234); read by the 3D solids |
+| Microstructure | L | voxel RVEs with grains and phases (multiscale); descriptive records on regions | -006: boundary, porosity, inclusion and defect statistics; a grain-boundary resistance in the homogenized conductivity |
 
 ## 4. Interfaces and boundary conditions
 
@@ -65,8 +65,8 @@
 |---|---|---|---|
 | Representations, derivations, lineage, voxel RVE homogenization | V | elastic RVE homogenization missing | -006 |
 | Built-in Lennard-Jones reference calculations | V | - | - |
-| External engines (LAMMPS, GROMACS, Quantum ESPRESSO ...) | X | none installed; detection only | -006: adapter contracts, input and output translation tested without an engine |
-| The atomistic-to-continuum data bridge (conditions, statistics, units, frames) | P | partly in `multiscale::Derivation` | -006 |
+| External engines (LAMMPS, GROMACS, Quantum ESPRESSO ...) | X | none installed; detection only | -006: adapters with applicability (in-house static lattice runs; LAMMPS decks and parser, run only when found; GROMACS applicability only) |
+| The atomistic-to-continuum data bridge (conditions, statistics, units, frames) | P | partly in `multiscale::Derivation` | -006: transferred-property records with orders, frames, conditions, uncertainty and provenance, as computed material fields |
 
 ## 6. GUI and visualization
 

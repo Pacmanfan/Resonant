@@ -402,6 +402,12 @@ json Architecture::toJson() const
     for (const auto& f : fields)
         fs.push_back(f.toJson());
     j["fields"] = fs;
+    if (!materialFields.empty()) {
+        json mf = json::array();
+        for (const auto& f : materialFields)
+            mf.push_back(f.toJson());
+        j["materialFields"] = mf;
+    }
     json fns = json::array();
     for (const auto& f : functions) {
         json st = json::array();
@@ -602,6 +608,12 @@ Result<Architecture> Architecture::fromJson(const json& j)
         if (!f)
             return R::failure(f.message());
         a.fields.push_back(f.value());
+    }
+    for (const json& fj : j.value("materialFields", json::array())) {
+        auto f = materials::MaterialField::fromJson(fj);
+        if (!f)
+            return R::failure(f.message());
+        a.materialFields.push_back(f.value());
     }
     const json functions = j.value("functions", json::array());
     for (const json& fj : functions) {
@@ -828,6 +840,13 @@ std::vector<Issue> validate(const Architecture& a, const Project* project)
                 else
                     checkValue(*m.parameter(key), i.id, m.kind + "." + key, out);
         }
+    }
+    for (const auto& f : a.materialFields) {
+        unique(f.id, "field");
+        if (!a.region(f.region))
+            error("unknown-region", f.id, "the material field '" + f.id + "' names the region '" + f.region + "', which does not exist");
+        if (Status st = f.validate(); !st)
+            error("invalid-material-field", f.id, st.message());
     }
     for (const auto& f : a.fields) {
         unique(f.id, "field");

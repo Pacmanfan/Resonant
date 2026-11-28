@@ -1,0 +1,51 @@
+{
+ "work": "WORK-000031",
+ "runs": [
+  {
+   "at": "2026-11-28T20:05:22.039713+00:00",
+   "verdict": "PASS",
+   "gate_version": 3,
+   "work": "WORK-000031",
+   "request": "2026-11-28-3-3-functionally-graded-materi-req-chat-20261128-006.md",
+   "request_id": "REQ-CHAT-20261128-006",
+   "request_fingerprint": "ca5274e6ed3498f8484bc10d704ade99cfc04455c1a4849d49b6507f794d1320",
+   "request_code_paths": [
+    "src/core/coupling/EngineAdapters.cpp",
+    "src/core/coupling/EngineAdapters.h",
+    "src/core/coupling/MatterAnalyses.cpp",
+    "src/core/materials/MaterialField.cpp",
+    "src/core/materials/MaterialField.h",
+    "src/core/matter/MatterArchitecture.cpp",
+    "src/core/matter/MatterArchitecture.h",
+    "src/core/matter/SolverCapability.cpp",
+    "src/core/mechanics/LayeredSolid.cpp",
+    "src/core/mechanics/LayeredSolid.h",
+    "src/core/mechanics/PiezoelectricSolid.cpp",
+    "src/core/mechanics/PiezoelectricSolid.h",
+    "src/core/multiscale/EngineAdapters.cpp",
+    "src/core/multiscale/EngineAdapters.h",
+    "src/core/multiscale/ExternalSolvers.cpp",
+    "src/core/multiscale/ExternalSolvers.h",
+    "src/core/multiscale/MicrostructureAnalysis.cpp",
+    "src/core/multiscale/MicrostructureAnalysis.h",
+    "tests/core/test_engine_adapters.cpp",
+    "tests/core/test_material_fields.cpp",
+    "tests/core/test_matter_analyses.cpp"
+   ],
+   "test_runs": [
+    "20261128T145046-3242849",
+    "20261128T150043-3323152"
+   ],
+   "evidence": [
+    "VER-000033"
+   ],
+   "head": "da8d6b7e885799e792ecd2fd3a822cbf4424bac8",
+   "agent_id": "agent-dev-20261126151713-76f632",
+   "fails": [],
+   "warns": [
+    "351 unowned change(s) in the tree (not this request's; never committed by it)"
+   ],
+   "passes": 15
+  }
+ ]
+}

@@ -31,6 +31,7 @@
 
 #include "foundation/Result.h"
 #include "foundation/Types.h"
+#include "materials/MaterialField.h"
 #include "mechanics/ElasticMaterial.h"
 #include "mechanics/StructuralModel.h"
 
@@ -86,6 +87,11 @@ struct LayerMaterial {
     // Thermal conduction (the thermal analysis needs it).
     std::optional<double> conductivity;        // W/(m K)
     std::optional<double> gradedConductivity;  // W/(m K), of `graded`
+    // Material fields (materials/MaterialField), evaluated at each element's centre in
+    // the body's frame: mechanical.stiffness and mechanical.density replace the layer's
+    // elastic description, thermal.conductivity (scalar or tensor) its conductivity.
+    std::vector<materials::MaterialField> fields;
+    const materials::MaterialField* field(const std::string& property) const;
 };
 
 // Layer thickness, constant or varying linearly along u or v.

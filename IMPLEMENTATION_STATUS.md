@@ -461,6 +461,9 @@ milestones below.)
 | External engines (LAMMPS, OpenMM, Quantum ESPRESSO, CP2K, GPAW, phonopy) | Missing | listed with detection and requirements; none installed or integrated |
 | Electronic-structure and molecular calculations | Missing | representations only |
 | Elastic RVE homogenization, FE2, concurrent coupling, uncertainty propagated through chains | Missing | planned |
+| Atomistic engine adapters: applicability, availability, input preparation, running; in-house static lattice; LAMMPS strain decks and log parser (run only when found); GROMACS applicability | Tested | `docs/architecture/ATOMISTIC_INTEGRATION.md`, RES-MSC-015; no external engine installed, so the LAMMPS run path is not exercised |
+| The atomistic-to-continuum bridge record (orders, units, frames, conditions, uncertainty, provenance) as a computed material field | Tested | RES-MSC-016 |
+| Microstructure statistics (phases, porosity, grains, boundary densities, inclusions, defect records) and a grain-boundary resistance in the homogenized conductivity | Tested | RES-MSC-017; diffuse-interface approximation, exact for planar boundaries normal to an axis |
 
 ## Dynamic material state — `docs/requirements/material_state.md`, `docs/materials/DYNAMIC_MATERIAL_STATE.md`
 
@@ -551,6 +554,7 @@ milestones below.)
 | Thermoelectric, magnetostrictive, photovoltaic, triboelectric, induction and chemical conversion | Missing | listed as mechanisms, not modeled |
 | Finite-stiffness, frictional, diffusive, reactive and charge-transfer interfaces in the solvers | Missing | recorded and refused |
 | Fields in two and three dimensions; CAD export; 3D field rendering; editing in the panel | Missing | through the service and files today |
+| Tensor material fields (frames, local bases, analytic or sampled forms, sources; no extrapolation) read by the 3D layered and piezoelectric solids and stored in architectures for the analyses that declare `tensor-field` | Tested | `docs/materials/MATERIAL_FIELDS.md`, RES-FAM-021; element-constant in the solids |
 
 ## Release readiness (milestone 27) — `docs/requirements/release_readiness.md`, `docs/architecture/MILESTONE_27_GAP_ANALYSIS.md`
 

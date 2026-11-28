@@ -10,6 +10,7 @@
 // data: no physics domain, no coupling. Regions reference library materials,
 // which stay as they are.
 
+#include "materials/MaterialField.h"
 #include "foundation/Result.h"
 #include "matter/PropertyField.h"
 
@@ -274,6 +275,9 @@ struct Architecture {
     std::vector<Stack> stacks;
     std::vector<Interface> interfaces;
     std::vector<PropertyField> fields;
+    // Tensor-valued, frame-aware material fields of regions (materials/MaterialField,
+    // REQ-CHAT-20261128-006): read by the analyses that declare "tensor-field".
+    std::vector<materials::MaterialField> materialFields;
     std::vector<Function> functions;
     Adaptive adaptive;
     std::vector<Process> processes;

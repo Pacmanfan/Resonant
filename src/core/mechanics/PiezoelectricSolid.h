@@ -69,6 +69,9 @@ struct PiezoLayer3D {
     int layer = 0;
     PiezoelectricConstants constants;
     int poling = +1;  // +1 along the surface normal (outwards), -1 against it
+    // Material fields replacing the rotated constants at each element's centre (body
+    // frame): piezoelectric.e, electromagnetic.permittivity (eps^S), mechanical.stiffness (c^E).
+    std::vector<materials::MaterialField> fields;
 };
 
 struct Electrode {

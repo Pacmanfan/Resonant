@@ -1,6 +1,6 @@
 # Multiscale Material Modeling
 
-**Owner of:** `RES-MSC-001..014`
+**Owner of:** `RES-MSC-001..017`
 **Source:** REQ-CHAT-20261126-020 (Prompt 22, "Multiscale Material Modeling")
 **Refines:** `shape_function_energy.md` RES-SFE-009 (multiscale integration), RES-SFE-005 (effective properties); `metamaterials.md` RES-META-011
 **Decisions:** ADR-000224 (builds on ADR-000223, ADR-000220, ADR-000219)
@@ -133,3 +133,48 @@ Scales panel shows representations, relationships, model cards and a
 material's lineage; example projects for a crystal, a polycrystal, a porous
 composite, a multiscale metamaterial and a cross-scale investigation.
 *Verification:* `MultiscaleServices.*`, `python/tests/test_multiscale_api.py`, `MaterialScalesPanel.*`, `MultiscaleExamples.*`.
+
+### RES-MSC-015 — Atomistic engine adapters
+
+Atomistic engines are reached through adapters. Each adapter states:
+- its engine's applicability: material classes, properties, and what it is
+  not for;
+- whether the engine can run here, and if not, what is missing.
+
+It prepares the engine's input for a task and runs it. Engines are optional
+and never linked. A missing engine is reported, and no result is invented.
+Adapters exist for:
+- the in-house static lattice (elastic constants, density, cohesive energy
+  at 0 K);
+- LAMMPS (strain-deformation decks and their output parser, run only when
+  found);
+- GROMACS (applicability only).
+
+*Verification:* `EngineAdapters.EachEngineStatesWhatItIsForAndWhetherItCanRun`, `-LammpsInputsArePreparedAndNothingIsInventedWithoutTheEngine`, `-TheLammpsLogParserRecoversTheStiffness`, `-GromacsIsDeclaredForSoftMatterOnly`.
+
+### RES-MSC-016 — The atomistic-to-continuum bridge
+
+A property computed at the atomistic scale crosses to the continuum as a
+record. The record carries:
+- its representation and component order, its units and its frame;
+- temperature, pressure, composition and simulation conditions;
+- its uncertainty and its kind;
+- the engine, version, force field, method and an input digest.
+
+Component orders are converted explicitly. The record becomes a computed
+material field of a region.
+*Verification:* `EngineAdapters.TheInHouseLatticeCrossesToTheContinuumWithItsProvenance`.
+
+### RES-MSC-017 — Microstructure statistics and boundary resistance
+
+The statistics of a voxel microstructure are:
+- phase fractions and porosity;
+- grains and their mean size;
+- grain- and phase-boundary area densities;
+- separate inclusions;
+- recorded defects.
+
+A conduction problem with a grain-boundary resistance feeds the
+homogenization, so the microstructure changes the continuum conductivity.
+*Verification:* `Microstructure.GrainBoundariesAreCountedAndResistInSeries`, `-PorosityInclusionsAndDefectsAreReported`.
+

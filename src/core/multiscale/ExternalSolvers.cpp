@@ -28,6 +28,11 @@ std::string findOnPath(const std::string& name)
 
 }  // namespace
 
+std::string findExecutable(const std::string& name)
+{
+    return findOnPath(name);
+}
+
 nlohmann::json ExternalSolver::toJson() const
 {
     // The path is reported as found / not found only: a machine path is not part of a report.
@@ -42,6 +47,9 @@ std::vector<ExternalSolver> externalSolvers()
         {"lammps", "LAMMPS", "atomistic / molecular", "GPL-2.0", {"lmp", "lmp_serial", "lmp_mpi"}, "lammps",
          {"molecular dynamics", "many force fields", "elastic constants", "thermal conductivity (Green-Kubo, NEMD)"},
          "a distribution package (e.g. apt install lammps; administrator rights) or a conda environment"},
+        {"gromacs", "GROMACS", "molecular", "LGPL-2.1", {"gmx", "gmx_mpi"}, "",
+         {"molecular dynamics of biomolecules, polymers and liquids", "densities, diffusion and transport of soft matter"},
+         "a distribution package (e.g. apt install gromacs; administrator rights)"},
         {"openmm", "OpenMM", "molecular", "MIT / LGPL", {}, "openmm",
          {"molecular dynamics of biomolecular and organic systems", "GPU acceleration"}, "pip or conda (openmm)"},
         {"quantum-espresso", "Quantum ESPRESSO", "electronic", "GPL-2.0", {"pw.x"}, "",
@@ -52,13 +60,21 @@ std::vector<ExternalSolver> externalSolvers()
         {"phonopy", "phonopy", "atomistic", "BSD-3-Clause", {"phonopy"}, "phonopy",
          {"phonon dispersion and density of states", "heat capacity", "quasi-harmonic thermal expansion"}, "pip (phonopy), with a force calculator"},
     };
+    // The adapters of coupling/EngineAdapters (REQ-CHAT-20261128-006).
+    for (ExternalSolver& s : list) {
+        if (s.id == "lammps")
+            s.status = "not integrated in the analyses: an adapter (coupling/EngineAdapters) prepares its inputs, parses its output and runs it only when found";
+        if (s.id == "gromacs")
+            s.status = "not integrated: an adapter (coupling/EngineAdapters) declares its applicability only, without input generation";
+    }
     for (ExternalSolver& s : list)
         for (const std::string& exe : s.executables) {
             const std::string where = findOnPath(exe);
             if (!where.empty()) {
                 s.found = true;
                 s.foundPath = where;
-                s.status = "found on PATH, not integrated (no adapter in this build)";
+                if (s.id != "lammps" && s.id != "gromacs")
+                    s.status = "found on PATH, not integrated (no adapter in this build)";
                 break;
             }
         }

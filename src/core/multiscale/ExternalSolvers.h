@@ -26,4 +26,7 @@ struct ExternalSolver {
 // The candidates with their detection on this machine.
 std::vector<ExternalSolver> externalSolvers();
 
+// The full path of an executable on PATH, or empty.
+std::string findExecutable(const std::string& name);
+
 }  // namespace resonant::multiscale

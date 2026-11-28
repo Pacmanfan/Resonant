@@ -345,3 +345,63 @@ TEST(MatterAnalyses, TheLayeredSolidReportsInterfaceTractionsAndRefusesWhatItCan
     ASSERT_TRUE(curved) << curved.message();
     EXPECT_NE(curved.value()["result"]["surface"].get<std::string>().find("cylinder"), std::string::npos);
 }
+
+// --- tensor material fields in architectures (REQ-CHAT-20261128-006, RES-FAM-021) ------------
+
+TEST(MatterAnalyses, MaterialFieldsReachTheThreeDimensionalSolidAndOnlyIt)
+{
+    auto d = example("d-graded-metal-ceramic.resonant");
+    const auto plain = architecture(*d, "arch-step");
+    auto withFields = plain;
+    // Fields equal to each region's resolved properties, and then a fourfold density.
+    const auto fieldsFor = [&](double densityScale) {
+        std::vector<resonant::materials::MaterialField> out;
+        for (const auto& r : plain.regions) {
+            const double e = resolve(plain, r, "mechanical.youngsModulus", 0.5, d->materials).value;
+            const double nu = resolve(plain, r, "mechanical.poissonsRatio", 0.5, d->materials).value;
+            const double rho = resolve(plain, r, "mechanical.density", 0.5, d->materials).value;
+            const double l = e * nu / ((1 + nu) * (1 - 2 * nu)), g = e / (2 * (1 + nu));
+            resonant::materials::MaterialField c;
+            c.id = "c-" + r.id;
+            c.region = r.id;
+            c.property = "mechanical.stiffness";
+            c.rank = resonant::materials::FieldRank::Stiffness6;
+            c.profile = "constant";
+            for (int i = 0; i < 6; ++i)
+                for (int j = i; j < 6; ++j)
+                    c.value0.push_back(i < 3 && j < 3 ? (i == j ? l + 2 * g : l) : (i == j ? g : 0.0));
+            resonant::materials::MaterialField m;
+            m.id = "rho-" + r.id;
+            m.region = r.id;
+            m.property = "mechanical.density";
+            m.profile = "constant";
+            m.value0 = {densityScale * rho};
+            out.push_back(c);
+            out.push_back(m);
+        }
+        return out;
+    };
+    const json options{{"mesh", {{"elementsU", 8}, {"elementsV", 2}}}, {"modes", 3}};
+    auto reference = analyzeStack(plain, "st-fgm", "layered-solid", options, d->materials);
+    ASSERT_TRUE(reference) << reference.message();
+    withFields.materialFields = fieldsFor(1.0);
+    EXPECT_FALSE(hasErrors(validate(withFields, d.get())));
+    auto same = analyzeStack(withFields, "st-fgm", "layered-solid", options, d->materials);
+    ASSERT_TRUE(same) << same.message();
+    const auto f0 = reference.value()["result"]["frequencies"], f1 = same.value()["result"]["frequencies"];
+    for (size_t i = 0; i < f0.size(); ++i)
+        EXPECT_NEAR(f1[i].get<double>(), f0[i].get<double>(), 1e-9 * f0[i].get<double>());
+    withFields.materialFields = fieldsFor(4.0);
+    auto heavy = analyzeStack(withFields, "st-fgm", "layered-solid", options, d->materials);
+    ASSERT_TRUE(heavy) << heavy.message();
+    for (size_t i = 0; i < f0.size(); ++i)
+        EXPECT_NEAR(heavy.value()["result"]["frequencies"][i].get<double>(), 0.5 * f0[i].get<double>(), 1e-9 * f0[i].get<double>());
+    // The fields survive the architecture's JSON form.
+    auto back = Architecture::fromJson(withFields.toJson());
+    ASSERT_TRUE(back) << back.message();
+    EXPECT_EQ(back.value().materialFields.size(), withFields.materialFields.size());
+    // An analysis that does not read tensor fields refuses the stack, with the reason.
+    auto laminate = analyzeStack(withFields, "st-fgm", "laminate", json::object(), d->materials);
+    ASSERT_FALSE(laminate);
+    EXPECT_NE(laminate.message().find("does not read the material field"), std::string::npos) << laminate.message();
+}
