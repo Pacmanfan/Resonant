@@ -17,6 +17,7 @@ carries a `resonant.v1.Error` (see [errors](#errors)).
 - [AuditService](#auditservice) (1 method)
 - [EmitterService](#emitterservice) (4 methods)
 - [EventService](#eventservice) (2 methods)
+- [FunctionalStructureService](#functionalstructureservice) (14 methods)
 - [GeometryService](#geometryservice) (4 methods)
 - [JobService](#jobservice) (4 methods)
 - [MaterialService](#materialservice) (6 methods)
@@ -78,6 +79,27 @@ Subscriptions (streaming) and polling of the application's events.
 |---|---|---|---|
 | `ListEvents` | `ListEventsRequest` | `ListEventsResponse` | The retained events after a sequence, one page at a time (polling clients). |
 | `SubscribeEvents` | `SubscribeEventsRequest` | stream `SubscribeEventsResponse` | A live stream of events in sequence order, optionally after a scene snapshot. It resumes after a given sequence and sends a gap notice for events no longer retained. |
+
+## FunctionalStructureService
+
+Functional structures: engineered objects whose behavior the analyses compute; parameters, analyses, sweeps, sensitivities and optimization of geometry-driven designs.
+
+| Method | Request | Response | Description |
+|---|---|---|---|
+| `AnalyzeStructure` | `AnalyzeStructureRequest` | `AnalyzeStructureResponse` | Runs the structure's analysis as a job; the result id is in the finished job's results. |
+| `ComputeStructureSensitivity` | `ComputeStructureSensitivityRequest` | `ComputeStructureSensitivityResponse` | Central-difference sensitivities of every metric to the parameters, as a job. |
+| `DeleteFunctionalStructure` | `DeleteFunctionalStructureRequest` | `DeleteFunctionalStructureResponse` | Removes a structure, as one undo step (its objects stay in the scene). |
+| `ExplainCandidates` | `ExplainCandidatesRequest` | `ExplainCandidatesResponse` | The best feasible candidates of a run, each explained against the present design. |
+| `GetFunctionalResult` | `GetFunctionalResultRequest` | `GetFunctionalResultResponse` | An analysis, sweep or sensitivity result with its staleness against the current project. |
+| `GetFunctionalStructure` | `GetFunctionalStructureRequest` | `GetFunctionalStructureResponse` | One stored structure. |
+| `GetStructureParameters` | `GetStructureParametersRequest` | `GetStructureParametersResponse` | The structure's parameters with their present values and ranges. |
+| `ListAnalysisKinds` | `ListAnalysisKindsRequest` | `ListAnalysisKindsResponse` | The analyses: their domains, models (with fidelity and assumptions) and metrics. |
+| `ListFunctionalStructures` | `ListFunctionalStructuresRequest` | `ListFunctionalStructuresResponse` | The functional structures stored in the project. |
+| `OptimizeStructure` | `OptimizeStructureRequest` | `OptimizeStructureResponse` | Optimizes the structure's parameters for its objectives and constraints with the optimization framework (adapter "functional") as a job; the run is recorded in the optimization workspace. |
+| `SetFunctionalStructure` | `SetFunctionalStructureRequest` | `SetFunctionalStructureResponse` | Adds a structure, or replaces the one with its id, after validation, as one undo step. |
+| `SetStructureParameters` | `SetStructureParametersRequest` | `SetStructureParametersResponse` | Sets parameters: bound ones change their scene objects (through the geometry kinds' rules), free ones the structure; one undo step. Derived parameters cannot be set. |
+| `SweepStructure` | `SweepStructureRequest` | `SweepStructureResponse` | Evaluates the analysis over a grid of parameter values (each point on its own copy of the design) as a job. |
+| `ValidateFunctionalStructure` | `ValidateFunctionalStructureRequest` | `ValidateFunctionalStructureResponse` | Checks a stored structure or a definition against the project and the analysis; nothing runs. |
 
 ## GeometryService
 
@@ -274,6 +296,60 @@ The plan of an acoustic field calculation on a field region, without running it.
 | `frequency_hz` | `double` |  |
 | `warnings` | repeated `string` |  |
 
+### AnalysisKind
+
+What an analysis kind computes and with which models.
+
+| Field | Type | Description |
+|---|---|---|
+| `kind_id` | `string` | e.g. "em.cavity.rectangular" |
+| `title` | `string` |  |
+| `description` | `string` |  |
+| `domains` | repeated `string` |  |
+| `category` | `string` | propagation, reflection, focusing, confinement, dissipation, force, coupled |
+| `mechanism` | `string` | the physical mechanism, in words |
+| `models` | repeated `AnalysisModel` |  |
+| `metrics` | repeated `AnalysisMetric` |  |
+
+### AnalysisMetric
+
+A metric an analysis computes.
+
+| Field | Type | Description |
+|---|---|---|
+| `key` | `string` | e.g. "cavity.f1" |
+| `label` | `string` |  |
+| `unit` | `string` | SI symbol, "" for ratios |
+| `definition` | `string` |  |
+
+### AnalysisModel
+
+A model of an analysis kind.
+
+| Field | Type | Description |
+|---|---|---|
+| `model_id` | `string` |  |
+| `name` | `string` |  |
+| `version` | `string` |  |
+| `fidelity` | `string` | analytical, reduced, full-wave, finite-element, coupled |
+| `assumptions` | repeated `string` |  |
+| `validity` | `string` |  |
+
+### AnalyzeStructureRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `structure_id` | `string` |  |
+| `model_id` | `string` |  |
+
+### AnalyzeStructureResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `job` | `Job` |  |
+
 ### ApplicationInfo
 
 | Field | Type | Description |
@@ -377,6 +453,20 @@ One project change (the inner requests' headers are ignored).
 | `header` | `ResponseHeader` |  |
 | `job` | `Job` |  |
 
+### CandidateExplanation
+
+An optimization candidate and why it differs from the present design.
+
+| Field | Type | Description |
+|---|---|---|
+| `candidate_id` | `string` |  |
+| `weighted_score` | `double` |  |
+| `feasible` | `bool` |  |
+| `values` | `google.protobuf.Struct` | parameter values by id |
+| `metrics` | `google.protobuf.Struct` | metric values by key |
+| `explanation` | `google.protobuf.Struct` | parameters changed, objectives improved and worsened, constraints, mechanism, limits |
+| `model_id` | `string` |  |
+
 ### Capability
 
 | Field | Type | Description |
@@ -439,6 +529,23 @@ A complex value (peak amplitude, phase convention exp(+j omega t)).
 |---|---|---|
 | `real` | `double` |  |
 | `imag` | `double` |  |
+
+### ComputeStructureSensitivityRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `structure_id` | `string` |  |
+| `parameter_ids` | repeated `string` | empty: every parameter that can be set |
+| `relative_step` | `double` | 0: 1e-3 |
+| `model_id` | `string` |  |
+
+### ComputeStructureSensitivityResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `job` | `Job` |  |
 
 ### ConservationAudit
 
@@ -649,6 +756,20 @@ Replaces the open project with a new, empty one. Refused (FAILED_PRECONDITION) w
 |---|---|---|
 | `header` | `ResponseHeader` |  |
 | `project` | `Project` |  |
+
+### DeleteFunctionalStructureRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `structure_id` | `string` |  |
+
+### DeleteFunctionalStructureResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `changes` | `ChangeSummary` |  |
 
 ### DeleteMaterialRequest
 
@@ -896,6 +1017,22 @@ Runs a template (or a definition) on a copy of the project as a job; when it com
 | `header` | `ResponseHeader` |  |
 | `job` | `Job` |  |
 
+### ExplainCandidatesRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `run_id` | `string` |  |
+| `count` | `int32` |  |
+
+### ExplainCandidatesResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `structure_id` | `string` |  |
+| `candidates` | repeated `CandidateExplanation` |  |
+
 ### ExportProjectJsonRequest
 
 The open project's export as the project file's JSON (for inspection, copies and diffs).
@@ -978,6 +1115,35 @@ Sets the element phases (or delays) so the waves arrive in phase at a target obj
 | `header` | `ResponseHeader` |  |
 | `array` | `AcousticArray` |  |
 | `changes` | `ChangeSummary` |  |
+
+### FunctionalResult
+
+An analysis, sweep or sensitivity result.
+
+| Field | Type | Description |
+|---|---|---|
+| `result_id` | `string` |  |
+| `kind` | `string` | analysis, sweep, sensitivity |
+| `structure_id` | `string` |  |
+| `model_id` | `string` |  |
+| `metrics` | repeated `MetricValue` | analysis: the metrics; sweep and sensitivity: empty (see the document) |
+| `stale` | `bool` | against the current project |
+| `staleness` | repeated `StaleReason` |  |
+| `stale_on_completion` | `bool` | the project changed while the job ran |
+| `feasible` | `bool` | the hard constraints hold (analysis) |
+| `behaviour` | `string` | resonant, broadband, non-resonant, mixed, coupled |
+| `warnings` | repeated `string` |  |
+| `document` | `google.protobuf.Struct` | the full resonant.functional-result document, when requested |
+
+### FunctionalStructure
+
+A structure stored in the project; `definition` is its resonant.functional-structure document.
+
+| Field | Type | Description |
+|---|---|---|
+| `structure_id` | `string` |  |
+| `name` | `string` |  |
+| `definition` | `google.protobuf.Struct` |  |
 
 ### GapNotice
 
@@ -1103,6 +1269,35 @@ Geometry of an object: a kind of the geometry registry with its parameters (SI u
 | `header` | `ResponseHeader` |  |
 | `emitter` | `Emitter` |  |
 
+### GetFunctionalResultRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `result_id` | `string` |  |
+| `include_document` | `bool` |  |
+
+### GetFunctionalResultResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `result` | `FunctionalResult` |  |
+
+### GetFunctionalStructureRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `structure_id` | `string` |  |
+
+### GetFunctionalStructureResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `structure` | `FunctionalStructure` |  |
+
 ### GetJobRequest
 
 | Field | Type | Description |
@@ -1199,6 +1394,20 @@ Geometry of an object: a kind of the geometry registry with its parameters (SI u
 | `header` | `ResponseHeader` |  |
 | `snapshot` | `SceneSnapshot` |  |
 
+### GetStructureParametersRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `structure_id` | `string` |  |
+
+### GetStructureParametersResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `parameters` | repeated `StructureParameter` |  |
+
 ### GetTransactionRequest
 
 | Field | Type | Description |
@@ -1254,6 +1463,19 @@ job.updated (state or progress; progress events are throttled)
 |---|---|---|
 | `job` | `Job` |  |
 
+### ListAnalysisKindsRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+
+### ListAnalysisKindsResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `kinds` | repeated `AnalysisKind` |  |
+
 ### ListCouplingModelsRequest
 
 | Field | Type | Description |
@@ -1297,6 +1519,19 @@ job.updated (state or progress; progress events are throttled)
 | `events` | repeated `Event` |  |
 | `gap` | `GapNotice` | set when events after after_sequence are no longer retained |
 | `last_sequence` | `uint64` |  |
+
+### ListFunctionalStructuresRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+
+### ListFunctionalStructuresResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `structures` | repeated `FunctionalStructure` |  |
 
 ### ListGeometryKindsRequest
 
@@ -1479,6 +1714,15 @@ One property of one physics domain. Values are SI (kg/m^3, m/s, Pa, S/m, relativ
 | `provenance` | `MaterialProvenance` |  |
 | `source` | `string` | citation, data sheet, note |
 
+### MetricValue
+
+| Field | Type | Description |
+|---|---|---|
+| `key` | `string` |  |
+| `label` | `string` |  |
+| `unit` | `string` |  |
+| `value` | `double` | +infinity for an infinite Q (a lossless model) |
+
 ### ObjectEvent
 
 scene.object.created / updated / deleted / moved
@@ -1568,6 +1812,24 @@ One RPC of the contract and whether this server implements it.
 | `termination` | `string` |  |
 | `best_candidate_id` | `string` | one objective only |
 | `best_objective_values` | repeated `double` |  |
+
+### OptimizeStructureRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `structure_id` | `string` |  |
+| `algorithm` | `string` | empty: nelder-mead for one objective, nsga2 for several |
+| `max_evaluations` | `int32` | 0: 40 |
+| `model_id` | `string` |  |
+| `seed` | `uint64` |  |
+
+### OptimizeStructureResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `job` | `Job` |  |
 
 ### PageRequest
 
@@ -1890,6 +2152,21 @@ session.opened / closed
 | `array` | `AcousticArray` |  |
 | `changes` | `ChangeSummary` |  |
 
+### SetFunctionalStructureRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `definition` | `google.protobuf.Struct` |  |
+
+### SetFunctionalStructureResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `structure` | `FunctionalStructure` |  |
+| `changes` | `ChangeSummary` |  |
+
 ### SetPhysicalSystemRequest
 
 | Field | Type | Description |
@@ -1903,6 +2180,23 @@ session.opened / closed
 |---|---|---|
 | `header` | `ResponseHeader` |  |
 | `system` | `PhysicalSystem` |  |
+| `changes` | `ChangeSummary` |  |
+
+### SetStructureParametersRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `structure_id` | `string` |  |
+| `values` | repeated `SetStructureParametersRequest.ValuesEntry` | by parameter id |
+| `expected_revision` | `uint64` | 0: no check; otherwise a different project revision is a conflict |
+
+### SetStructureParametersResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `parameters` | repeated `StructureParameter` |  |
 | `changes` | `ChangeSummary` |  |
 
 ### Solver
@@ -1965,6 +2259,15 @@ Fields to change; unset fields keep their value.
 | `header` | `ResponseHeader` |  |
 | `transaction` | `Transaction` |  |
 
+### StaleReason
+
+Why a result no longer describes the project.
+
+| Field | Type | Description |
+|---|---|---|
+| `what` | `string` | geometry, material, definition, discretization |
+| `detail` | `string` |  |
+
 ### StartAcousticFieldSimulationRequest
 
 Starts the field calculation as a job (returns at once with the job; the result arrives with result.created).
@@ -2014,6 +2317,24 @@ Starts a problem's run as a job; the run is recorded in the project when it comp
 | `header` | `ResponseHeader` |  |
 | `job` | `Job` |  |
 
+### StructureParameter
+
+A parameter with its present value.
+
+| Field | Type | Description |
+|---|---|---|
+| `parameter_id` | `string` |  |
+| `name` | `string` |  |
+| `kind` | `string` | bound, free, derived |
+| `value` | `double` |  |
+| `unit` | `string` |  |
+| `min` | `double` | -infinity when unbounded |
+| `max` | `double` | +infinity when unbounded |
+| `editable` | `bool` | false for derived parameters |
+| `binding` | `string` | bound: object/<id>/geometry/<key> or object/<id>/position/<axis> |
+| `object_name` | `string` |  |
+| `group` | `string` |  |
+
 ### SubscribeEventsRequest
 
 | Field | Type | Description |
@@ -2030,6 +2351,32 @@ Starts a problem's run as a job; the run is recorded in the project when it comp
 | `snapshot` | `SceneSnapshot` |  |
 | `event` | `Event` |  |
 | `gap` | `GapNotice` |  |
+
+### SweepAxis
+
+| Field | Type | Description |
+|---|---|---|
+| `parameter_id` | `string` |  |
+| `values` | repeated `double` | the values, or |
+| `first` | `double` | a range of `points` values from first to last |
+| `last` | `double` |  |
+| `points` | `int32` |  |
+
+### SweepStructureRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `structure_id` | `string` |  |
+| `axes` | repeated `SweepAxis` |  |
+| `model_id` | `string` |  |
+
+### SweepStructureResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `job` | `Job` |  |
 
 ### Transaction
 
@@ -2122,6 +2469,21 @@ Changes the fields that are set. Refused with CONFLICT when expected_revision is
 | `header` | `ResponseHeader` |  |
 | `object` | `SceneObject` |  |
 | `changes` | `ChangeSummary` |  |
+
+### ValidateFunctionalStructureRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `structure_id` | `string` | a stored structure, or |
+| `definition` | `google.protobuf.Struct` | a definition |
+
+### ValidateFunctionalStructureResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `validation` | `ValidationResult` |  |
 
 ### ValidateGeometryRequest
 

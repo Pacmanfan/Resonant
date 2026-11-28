@@ -5,6 +5,7 @@
 
 #include "foundation/Units.h"
 #include "manipulators/Analytics.h"
+#include "manipulators/Horn.h"
 
 #include <cmath>
 #include <functional>
@@ -525,6 +526,36 @@ void registerManipulatorGeometry(GeometryRegistry& registry)
                           return tubeMesh(g.parameter("radius"), g.parameter("endRadius"), g.parameter("length"),
                                           g.parameter("wallThickness"), o.segments);
                       }));
+    {
+        ParameterDef profile = number("profile", "Profile (0 conical, 1 exponential, 2 hyperbolic, 3 uniform)", 1.0, 0.0, 3.0);
+        profile.integer = true;
+        registry.add(kind("horn.acoustic", "Acoustic horn", "waveguide",
+                          {length("throatRadius", "Throat radius (-Z end)", 0.02), length("mouthRadius", "Mouth radius (+Z end)", 0.15),
+                           length("length", "Length (Z)", 0.5), profile, number("flare", "Hyperbolic flare T (0 - 1)", 0.7, 0.0, 1.0, true),
+                           length("wallThickness", "Wall thickness", 0.003)},
+                          [](const Geometry& g, const TessellationOptions& o) {
+                              const HornSpec h = hornSpecOf(g);
+                              const double L = h.length, t = g.parameter("wallThickness");
+                              const int n = 48;
+                              std::vector<ProfilePoint> inner, outer;
+                              for (int i = 0; i <= n; ++i) {
+                                  const double x = L * i / n, dx = 1e-4 * L;
+                                  const double r = hornRadius(h, x);
+                                  const double x1 = std::min(L, x + dx), x0 = std::max(0.0, x - dx);
+                                  const double slope = (hornRadius(h, x1) - hornRadius(h, x0)) / (x1 - x0);
+                                  const double norm = std::sqrt(1.0 + slope * slope);
+                                  inner.push_back({r, x - 0.5 * L, -1.0 / norm, slope / norm});
+                                  outer.push_back({r + t, x - 0.5 * L, 1.0 / norm, -slope / norm});
+                              }
+                              TriangleMesh mesh;
+                              revolveProfile(mesh, inner, o.segments);
+                              revolveProfile(mesh, outer, o.segments);
+                              revolveProfile(mesh, {{h.throatRadius, -0.5 * L, 0.0, -1.0}, {h.throatRadius + t, -0.5 * L, 0.0, -1.0}}, o.segments);
+                              revolveProfile(mesh, {{h.mouthRadius, 0.5 * L, 0.0, 1.0}, {h.mouthRadius + t, 0.5 * L, 0.0, 1.0}}, o.segments);
+                              return mesh;
+                          },
+                          [](const Geometry& g) { return hornSpecOf(g).validate(); }));
+    }
     registry.add(kind("waveguide.rectangular", "Rectangular waveguide", "waveguide",
                       {length("width", "Inner width (X)", 0.04), length("height", "Inner height (Y)", 0.02),
                        length("length", "Length (Z)", 0.3), length("wallThickness", "Wall thickness", 0.002)},

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>FunctionalPanel</class>
+ <widget class="QWidget" name="FunctionalPanel">
+  <layout class="QVBoxLayout" name="mainLayout">
+   <item>
+    <layout class="QHBoxLayout" name="structureRow">
+     <item><widget class="QLabel" name="structureLabel"><property name="text"><string>Structure</string></property></widget></item>
+     <item><widget class="QComboBox" name="structureCombo"><property name="sizePolicy"><sizepolicy hsizetype="Expanding" vsizetype="Fixed"/></property></widget></item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QLabel" name="summaryLabel">
+     <property name="wordWrap"><bool>true</bool></property>
+     <property name="text"><string>No functional structure in this project. Example projects: examples/functional.</string></property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="parameterGroup">
+     <property name="title"><string>Parameters</string></property>
+     <layout class="QVBoxLayout" name="parameterLayout">
+      <item>
+       <widget class="QTableWidget" name="parameterTable">
+        <property name="columnCount"><number>5</number></property>
+        <property name="toolTip"><string>Edit a value to change the design (one undoable step). Derived parameters are computed.</string></property>
+        <column><property name="text"><string>Parameter</string></property></column>
+        <column><property name="text"><string>Value</string></property></column>
+        <column><property name="text"><string>Unit</string></property></column>
+        <column><property name="text"><string>Range</string></property></column>
+        <column><property name="text"><string>Kind</string></property></column>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="analyzeRow">
+     <item><widget class="QLabel" name="modelLabel"><property name="text"><string>Model</string></property></widget></item>
+     <item><widget class="QComboBox" name="modelCombo"><property name="sizePolicy"><sizepolicy hsizetype="Expanding" vsizetype="Fixed"/></property></widget></item>
+     <item><widget class="QPushButton" name="analyzeButton"><property name="text"><string>Analyze</string></property></widget></item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QLabel" name="statusLabel">
+     <property name="wordWrap"><bool>true</bool></property>
+     <property name="text"><string/></property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTabWidget" name="resultTabs">
+     <widget class="QWidget" name="metricsTab">
+      <attribute name="title"><string>Metrics</string></attribute>
+      <layout class="QVBoxLayout" name="metricsLayout">
+       <item>
+        <widget class="QTableWidget" name="metricTable">
+         <property name="columnCount"><number>3</number></property>
+         <property name="editTriggers"><set>QAbstractItemView::NoEditTriggers</set></property>
+         <column><property name="text"><string>Metric</string></property></column>
+         <column><property name="text"><string>Value</string></property></column>
+         <column><property name="text"><string>Unit</string></property></column>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="modesTab">
+      <attribute name="title"><string>Modes</string></attribute>
+      <layout class="QVBoxLayout" name="modesLayout">
+       <item>
+        <widget class="QTableWidget" name="modeTable">
+         <property name="columnCount"><number>3</number></property>
+         <property name="editTriggers"><set>QAbstractItemView::NoEditTriggers</set></property>
+         <column><property name="text"><string>Mode</string></property></column>
+         <column><property name="text"><string>Frequency (Hz)</string></property></column>
+         <column><property name="text"><string>Q</string></property></column>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="plotTab">
+      <attribute name="title"><string>Curves and sweep</string></attribute>
+      <layout class="QVBoxLayout" name="plotLayout">
+       <item>
+        <layout class="QHBoxLayout" name="curveRow">
+         <item><widget class="QLabel" name="curveLabel"><property name="text"><string>Show</string></property></widget></item>
+         <item><widget class="QComboBox" name="curveCombo"><property name="sizePolicy"><sizepolicy hsizetype="Expanding" vsizetype="Fixed"/></property></widget></item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="sweepRow">
+         <item><widget class="QComboBox" name="sweepParameterCombo"><property name="toolTip"><string>The parameter to sweep</string></property></widget></item>
+         <item><widget class="QDoubleSpinBox" name="sweepFrom"><property name="decimals"><number>6</number></property><property name="minimum"><double>-1000000.0</double></property><property name="maximum"><double>1000000000.0</double></property></widget></item>
+         <item><widget class="QDoubleSpinBox" name="sweepTo"><property name="decimals"><number>6</number></property><property name="minimum"><double>-1000000.0</double></property><property name="maximum"><double>1000000000.0</double></property></widget></item>
+         <item><widget class="QSpinBox" name="sweepPoints"><property name="minimum"><number>2</number></property><property name="maximum"><number>200</number></property><property name="value"><number>11</number></property></widget></item>
+         <item><widget class="QComboBox" name="sweepMetricCombo"><property name="toolTip"><string>The metric to plot against the parameter</string></property></widget></item>
+         <item><widget class="QPushButton" name="sweepButton"><property name="text"><string>Sweep</string></property></widget></item>
+        </layout>
+       </item>
+       <item><widget class="PlotWidget" name="plot"><property name="minimumSize"><size><width>200</width><height>160</height></size></property></widget></item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="detailsTab">
+      <attribute name="title"><string>Model and assumptions</string></attribute>
+      <layout class="QVBoxLayout" name="detailsLayout">
+       <item><widget class="QPlainTextEdit" name="detailsText"><property name="readOnly"><bool>true</bool></property></widget></item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget><class>PlotWidget</class><extends>QWidget</extends><header>PlotWidget.h</header><container>0</container></customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

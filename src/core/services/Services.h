@@ -344,6 +344,49 @@ private:
     Session& s_;
 };
 
+// Functional structures (REQ-CHAT-20261126-017, RES-FUNC-014): engineered objects
+// whose behavior an analysis computes; parameters change the scene undoably;
+// analyses, sweeps and sensitivities are jobs; candidates come from the
+// optimization framework (the "functional" adapter).
+class FunctionalStructureService {
+public:
+    explicit FunctionalStructureService(Session& s) : s_(s) {}
+    Outcome<nlohmann::json> analysisKinds(const CallContext& c);
+    Outcome<std::vector<nlohmann::json>> structures(const CallContext& c);
+    Outcome<nlohmann::json> structure(const CallContext& c, const std::string& id);
+    // Adds the structure, or replaces the one with its id (after validation); one undoable step.
+    Outcome<Mutation> setStructure(const CallContext& c, const nlohmann::json& document);
+    Outcome<Mutation> deleteStructure(const CallContext& c, const std::string& id);
+    // [{id, name, kind, value, unit, min, max, editable, binding, object}]
+    Outcome<nlohmann::json> parameters(const CallContext& c, const std::string& id);
+    // Bound parameters change their objects, free ones the structure: one undoable step.
+    // A stale expected project revision is a conflict.
+    Outcome<Mutation> setParameters(const CallContext& c, const std::string& id, const std::map<std::string, double, std::less<>>& values,
+                                    std::optional<std::uint64_t> expectedRevision);
+    // A stored structure (id) or a document (inline).
+    Outcome<ValidationView> validate(const CallContext& c, const std::string& id, const nlohmann::json& document);
+    Outcome<JobView> analyze(const CallContext& c, const std::string& id, const std::string& model);
+    // spec: {"axes": [{"parameter", "values": [...]} or {"parameter", "from", "to", "points"}], "model"}
+    Outcome<JobView> sweep(const CallContext& c, const std::string& id, const nlohmann::json& spec);
+    // spec: {"parameters": [...], "relativeStep": 1e-3, "model"}
+    Outcome<JobView> sensitivity(const CallContext& c, const std::string& id, const nlohmann::json& spec);
+    // The result document with its staleness against the current project.
+    Outcome<nlohmann::json> result(const CallContext& c, const std::string& resultId);
+    // spec: {"algorithm", "maxEvaluations", "model", "seed"}: an optimization run over the structure's
+    // parameters, objectives and constraints through the functional adapter.
+    Outcome<JobView> optimize(const CallContext& c, const std::string& id, const nlohmann::json& spec);
+    // The best candidates of an optimization run of a structure, each explained against the current design.
+    Outcome<nlohmann::json> explain(const CallContext& c, const std::string& runId, int count);
+
+    static constexpr const char* kExtension = "functional";
+    static constexpr const char* kResultKind = "functional.result";
+
+private:
+    Outcome<JobView> startStudy(const CallContext& c, const std::string& operation, const std::string& id, const std::string& kind,
+                                std::function<Result<nlohmann::json>(const Project&, const nlohmann::json& structure, JobContext&)> work);
+    Session& s_;
+};
+
 // Batches and transactions: operations run on a staging copy of the project
 // (with the same revisions), and are committed as one undoable step.
 class TransactionService {
@@ -424,6 +467,7 @@ public:
     WorkflowService workflows;
     TransactionService transactions;
     MultiphysicsService multiphysics;
+    FunctionalStructureService functional;
     ApplicationService application;
 
 private:

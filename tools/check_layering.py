@@ -22,7 +22,9 @@ the instrument rules of ADR-000213:
 the optimization rules of ADR-000214 (and the engine rule of ADR-000220:
 src/core/multiphysics, the Coupled Energy-Matter Engine, includes no physics
 domain - thermal included - and no coupling; the thermal domain is a domain
-like the others):
+like the others; and of ADR-000221: src/core/functional, the functional
+structures, includes no physics domain and no coupling - its analyses are
+registered in src/core/coupling):
 
     src/core/optimization includes no physics domain (no acoustics, manipulators,
                       fdtd, solvers, mechanics, electromagnetics, coupling,
@@ -114,9 +116,10 @@ def violations():
                              f"(a physics domain); put the physical interpretation in the domain")
     # The optimization framework and the workflow engine are domain independent.
     # So is the Coupled Energy-Matter Engine (ADR-000220): src/core/multiphysics orchestrates;
-    # the participants that adapt the domains live in src/core/coupling.
+    # the participants that adapt the domains live in src/core/coupling. So are the
+    # functional structures (ADR-000221): their analyses are registered in coupling.
     for path in sorted(sum((list((ROOT / "src" / "core" / d).glob("*")) for d in ("optimization", "automation", "help", "demo", "plugins",
-                                                                                "multiphysics")), [])):
+                                                                                "multiphysics", "functional")), [])):
         if path.suffix not in (".h", ".cpp"):
             continue
         for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):

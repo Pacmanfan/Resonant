@@ -1,0 +1,101 @@
+syntax = "proto3";
+package resonant.v1;
+
+import "google/protobuf/struct.proto";
+
+// Functional structures (REQ-CHAT-20261126-017,
+// docs/architecture/FUNCTIONAL_STRUCTURE_ARCHITECTURE.md): engineered objects
+// whose behavior an analysis computes from their geometry, materials,
+// excitation and environment. Values are SI; units are named per metric.
+
+// A model of an analysis kind.
+message AnalysisModel {
+  string model_id = 1;
+  string name = 2;
+  string version = 3;
+  string fidelity = 4;              // analytical, reduced, full-wave, finite-element, coupled
+  repeated string assumptions = 5;
+  string validity = 6;
+}
+
+// A metric an analysis computes.
+message AnalysisMetric {
+  string key = 1;                   // e.g. "cavity.f1"
+  string label = 2;
+  string unit = 3;                  // SI symbol, "" for ratios
+  string definition = 4;
+}
+
+// What an analysis kind computes and with which models.
+message AnalysisKind {
+  string kind_id = 1;               // e.g. "em.cavity.rectangular"
+  string title = 2;
+  string description = 3;
+  repeated string domains = 4;
+  string category = 5;              // propagation, reflection, focusing, confinement, dissipation, force, coupled
+  string mechanism = 6;             // the physical mechanism, in words
+  repeated AnalysisModel models = 7;
+  repeated AnalysisMetric metrics = 8;
+}
+
+// A structure stored in the project; `definition` is its resonant.functional-structure document.
+message FunctionalStructure {
+  string structure_id = 1;
+  string name = 2;
+  google.protobuf.Struct definition = 3;
+}
+
+// A parameter with its present value.
+message StructureParameter {
+  string parameter_id = 1;
+  string name = 2;
+  string kind = 3;                  // bound, free, derived
+  double value = 4;
+  string unit = 5;
+  double min = 6;                   // -infinity when unbounded
+  double max = 7;                   // +infinity when unbounded
+  bool editable = 8;                // false for derived parameters
+  string binding = 9;               // bound: object/<id>/geometry/<key> or object/<id>/position/<axis>
+  string object_name = 10;
+  string group = 11;
+}
+
+message MetricValue {
+  string key = 1;
+  string label = 2;
+  string unit = 3;
+  double value = 4;                 // +infinity for an infinite Q (a lossless model)
+}
+
+// Why a result no longer describes the project.
+message StaleReason {
+  string what = 1;                  // geometry, material, definition, discretization
+  string detail = 2;
+}
+
+// An analysis, sweep or sensitivity result.
+message FunctionalResult {
+  string result_id = 1;
+  string kind = 2;                  // analysis, sweep, sensitivity
+  string structure_id = 3;
+  string model_id = 4;
+  repeated MetricValue metrics = 5; // analysis: the metrics; sweep and sensitivity: empty (see the document)
+  bool stale = 6;                   // against the current project
+  repeated StaleReason staleness = 7;
+  bool stale_on_completion = 8;     // the project changed while the job ran
+  bool feasible = 9;                // the hard constraints hold (analysis)
+  string behaviour = 10;            // resonant, broadband, non-resonant, mixed, coupled
+  repeated string warnings = 11;
+  google.protobuf.Struct document = 12;  // the full resonant.functional-result document, when requested
+}
+
+// An optimization candidate and why it differs from the present design.
+message CandidateExplanation {
+  string candidate_id = 1;
+  double weighted_score = 2;
+  bool feasible = 3;
+  google.protobuf.Struct values = 4;       // parameter values by id
+  google.protobuf.Struct metrics = 5;      // metric values by key
+  google.protobuf.Struct explanation = 6;  // parameters changed, objectives improved and worsened, constraints, mechanism, limits
+  string model_id = 7;
+}

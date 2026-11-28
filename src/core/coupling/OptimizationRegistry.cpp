@@ -1,6 +1,7 @@
 #include "coupling/OptimizationRegistry.h"
 
 #include "acoustic_optimization/AcousticOptimization.h"
+#include "coupling/FunctionalAdapter.h"
 #include "electromagnetics/EmOptimization.h"
 #include "mechanics/MechanicalOptimization.h"
 
@@ -11,6 +12,7 @@ void registerOptimizationAdapters(optimization::AdapterRegistry& registry)
     acoustics::registerAcousticOptimization(registry);
     mechanics::registerMechanicalOptimization(registry);
     em::registerEmOptimization(registry);
+    registerFunctionalOptimization(registry);
 }
 
 }  // namespace resonant::coupling

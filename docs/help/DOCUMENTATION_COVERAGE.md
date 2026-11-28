@@ -5,8 +5,8 @@ screenshot manifest, `demos/profiles/` and the Python package; `python/tests`
 fails when this report is out of date. A major user-facing feature is not complete
 without a help topic (RES-HELP-012).
 
-**30 features.** Help topic: 30/30. Illustrated with a screenshot: 19/30. Example project: 22/30. Demonstration: 17/30. Python API: 21/30.
-Help: 122 topics in 12 categories.
+**31 features.** Help topic: 31/31. Illustrated with a screenshot: 19/31. Example project: 23/31. Demonstration: 17/31. Python API: 22/31.
+Help: 123 topics in 12 categories.
 
 | Feature | Help topic | Status | Screenshots | Example projects | Demos | Python API |
 |---|---|---|---|---|---|---|
@@ -29,6 +29,7 @@ Help: 122 topics in 12 categories.
 | Transmission lines and waveguides | `em.transmission-lines` | available | - | electromagnetics/f-rectangular-waveguide.resonant | - | - |
 | Electromagnetic full-wave (Yee) | `em.solvers` | available | - | electromagnetics/g-full-wave-scattering.resonant | - | - |
 | Optimization Studio | `opt.studio` | available | optimization-studio.png | optimization/a-acoustic-focal-array.resonant, optimization/f-sidelobe-reduction.resonant | F | resonant.optimization |
+| Functional structures | `opt.functional-structures` | available | - | functional/a-microwave-cavity.resonant, functional/c-acoustic-horn.resonant | - | resonant_api (FunctionalStructureService) |
 | Topology optimization | `opt.topology` | experimental | - | - | - | - |
 | Experiments and acquisition | `exp.acquisition` | available | experiment-workspace.png | experiments/acoustic_experiments.resonant, experiments/mechanical_experiments.resonant | - | resonant.experiments |
 | Measurement correlation | `exp.correlation` | available | - | experiments/rf_experiments.resonant | G (partial) | resonant.measurements.compare |

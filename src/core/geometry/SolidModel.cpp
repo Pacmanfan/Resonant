@@ -135,6 +135,38 @@ std::optional<SolidModel> solidModelOf(const Geometry& g, double minThickness)
             return r >= inner && r <= inner + wall;
         };
         model.boundingRadius = std::hypot(std::max(ra, rb) + wall, 0.5 * length);
+    } else if (kind == "horn.acoustic") {
+        // An axisymmetric horn shell along Z, throat at -L/2 (the manipulators' geometry kind,
+        // described here from its parameters: conical, exponential, hyperbolic, uniform).
+        const double rt = p("throatRadius"), rm = p("mouthRadius"), length = p("length"), wall = shellThickness("wallThickness");
+        const long profile = std::lround(p("profile"));
+        const double flare = p("flare");
+        double x0 = 1.0;
+        if (profile == 2) {
+            const auto f = [&](double u) { return std::cosh(u) + flare * std::sinh(u) - rm / rt; };
+            double lo = 0.0, hi = 1.0;
+            while (f(hi) < 0.0 && hi < 700.0)
+                hi *= 2.0;
+            for (int i = 0; i < 100; ++i)
+                (f(0.5 * (lo + hi)) < 0.0 ? lo : hi) = 0.5 * (lo + hi);
+            x0 = length / (0.5 * (lo + hi));
+        }
+        const auto radiusAt = [rt, rm, length, profile, flare, x0](double z) {
+            const double s = std::clamp(z / length + 0.5, 0.0, 1.0);
+            switch (profile) {
+            case 0: return rt + (rm - rt) * s;
+            case 1: return rt * std::pow(rm / rt, s);
+            case 2: return rt * (std::cosh(s * length / x0) + flare * std::sinh(s * length / x0));
+            default: return rt;
+            }
+        };
+        model.contains = [radiusAt, length, wall](const Vec3& q) {
+            if (std::abs(q.z()) > 0.5 * length)
+                return false;
+            const double inner = radiusAt(q.z()), r = std::hypot(q.x(), q.y());
+            return r >= inner && r <= inner + wall;
+        };
+        model.boundingRadius = std::hypot(std::max(rt, profile == 3 ? rt : rm) + wall, 0.5 * length);
     } else if (kind == "waveguide.rectangular") {
         const double w = 0.5 * p("width"), h = 0.5 * p("height"), l = 0.5 * p("length"), wall = shellThickness("wallThickness");
         model.contains = [w, h, l, wall](const Vec3& q) {

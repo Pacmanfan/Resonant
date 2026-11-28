@@ -330,6 +330,11 @@
    <attribute name="dockWidgetArea"><number>2</number></attribute>
    <widget class="OptimizationPanel" name="optimizationPanel"/>
   </widget>
+  <widget class="QDockWidget" name="functionalDock">
+   <property name="windowTitle"><string>Functional Structures</string></property>
+   <attribute name="dockWidgetArea"><number>2</number></attribute>
+   <widget class="FunctionalPanel" name="functionalPanel"/>
+  </widget>
   <widget class="QDockWidget" name="solverDock">
    <property name="windowTitle"><string>Full-Wave Solver</string></property>
    <attribute name="dockWidgetArea"><number>2</number></attribute>
@@ -969,6 +974,7 @@
   <customwidget><class>EmPanel</class><extends>QWidget</extends><header>EmPanel.h</header><container>1</container></customwidget>
   <customwidget><class>ExperimentsPanel</class><extends>QWidget</extends><header>ExperimentsPanel.h</header><container>1</container></customwidget>
   <customwidget><class>OptimizationPanel</class><extends>QWidget</extends><header>OptimizationPanel.h</header><container>1</container></customwidget>
+  <customwidget><class>FunctionalPanel</class><extends>QWidget</extends><header>FunctionalPanel.h</header><container>1</container></customwidget>
   <customwidget><class>FdtdPanel</class><extends>QWidget</extends><header>FdtdPanel.h</header><container>1</container></customwidget>
   <customwidget><class>AcousticsPanel</class><extends>QWidget</extends><header>AcousticsPanel.h</header><container>1</container></customwidget>
   <customwidget><class>PythonConsole</class><extends>QWidget</extends><header>PythonConsole.h</header><container>1</container></customwidget>

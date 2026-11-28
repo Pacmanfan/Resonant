@@ -49,7 +49,7 @@ excitation and computing again, by hand or through optimization.
 |---|---|---|---|---|
 | Parabolic or elliptical reflector | redirect and concentrate sound | path length and phase from curvature | Kirchhoff reflector model, full-wave FDTD | current |
 | Acoustic cavity, Helmholtz resonator | store energy at selected frequencies | standing waves fitting the walls | analytical estimates (rectangular, cylindrical, spherical, Helmholtz, quarter-wave); FDTD for the field | current (estimates and full wave); no Q or wall loss in the estimates |
-| Microwave cavity | confine electromagnetic modes | boundary conditions on conducting walls | TE/TM modes of a rectangular cavity (ideal walls); Yee solver | current (rectangular, lossless) |
+| Microwave cavity | confine electromagnetic modes | boundary conditions on conducting walls | TE/TM modes, wall and fill losses, Q, port response (closed form); Yee frequencies and fill decay | current for rectangular cavities (REQ-CHAT-20261126-017, functional structures) |
 | Waveguide | guide selected modes | cut-off set by the cross-section | electromagnetic guide modes; acoustic cut-off estimates | current (simple sections) |
 | Ultrasonic horn | transform vibration velocity | change of cross-section along a resonant rod | finite elements (`rod.horn`, conical, exponential, stepped) | current |
 | Mechanical resonator (plate, beam, membrane) | store and exchange energy | mass and stiffness distribution | modal, harmonic and transient finite-element analyses | current |
@@ -134,3 +134,15 @@ the rest is planned ([the roadmap](../architecture/ENERGY_MATTER_RESEARCH_ROADMA
   and numerical methods its physics needs.
 - Nothing here is implemented merely by being described: the status column
   above and `IMPLEMENTATION_STATUS.md` are the record.
+
+## From principle to practice: functional structures
+
+A functional structure (REQ-CHAT-20261126-017,
+[architecture](../architecture/FUNCTIONAL_STRUCTURE_ARCHITECTURE.md)) names the
+scene objects, regions and parameters of an engineered object and the
+analysis that computes what it does: a cavity's modes and Q, a two-mirror
+resonator's stability and finesse, a horn's impedance transformation, a
+beam's natural frequencies, a photonic cell's band gap, a coupled slab's
+heating. Parameters change the geometry undoably; sweeps, sensitivities and
+the optimization framework search for geometry that meets an objective, and
+every candidate is explained by the model that evaluated it.

@@ -1,7 +1,7 @@
 # Resonant — Architecture Overview
 
 **Status:** current. Decisions: ADR-000204 (stack, build systems),
-ADR-000205 (layers, domains), ADR-000207 (acoustics), ADR-000208 (manipulators), ADR-000209 (full-wave solver), ADR-000210 (mechanics), ADR-000211 (electromagnetics), ADR-000212 (compute backends), ADR-000213 (experiments), ADR-000214 (optimization), ADR-000219 (Shape–Function–Energy direction), ADR-000220 (Coupled Energy–Matter Engine). Requirements: `docs/requirements/product.md`.
+ADR-000205 (layers, domains), ADR-000207 (acoustics), ADR-000208 (manipulators), ADR-000209 (full-wave solver), ADR-000210 (mechanics), ADR-000211 (electromagnetics), ADR-000212 (compute backends), ADR-000213 (experiments), ADR-000214 (optimization), ADR-000219 (Shape–Function–Energy direction), ADR-000220 (Coupled Energy–Matter Engine), ADR-000221 (functional structures). Requirements: `docs/requirements/product.md`.
 
 This document describes the architecture every milestone builds on. Each
 subsystem gets its own document in this directory when it is implemented;
@@ -117,7 +117,10 @@ accounting, without replacing them (ADR-000219,
 `src/core/multiphysics` (it includes no domain); participants and coupling
 models live in `src/core/coupling`; the thermal domain is `src/core/thermal`
 (ADR-000220, `COUPLED_ENGINE_ARCHITECTURE.md`; implemented for layered
-systems). The audit of the
+systems). Functional structures (`src/core/functional`, no physics; analyses
+registered in `src/core/coupling`) name the objects, parameters and analysis
+of an engineered object and search its geometry with the optimization
+framework (ADR-000221, `FUNCTIONAL_STRUCTURE_ARCHITECTURE.md`). The audit of the
 current architecture against this direction is
 `SHAPE_FUNCTION_ENERGY_AUDIT.md`; the plan is `ENERGY_MATTER_RESEARCH_ROADMAP.md`.
 

@@ -1,5 +1,6 @@
 #include "coupling/CouplingModels.h"
 #include "foundation/Types.h"
+#include "functional/Analysis.h"
 #include "geometry/Geometry.h"
 #include "optimization/Algorithms.h"
 #include "project/Project.h"
@@ -56,6 +57,14 @@ Outcome<std::vector<CapabilityView>> ApplicationService::capabilities(const Call
         const std::string maturity = m.status == "validated" ? "stable" : m.status == "experimental" ? "experimental" : m.status == "planned" ? "planned" : "unavailable";
         add({"coupling." + m.id, m.name, m.mechanism, "coupling", maturity, m.status == "validated" || m.status == "experimental", {}, {},
              m.limitations.empty() ? std::vector<std::string>{} : std::vector<std::string>{m.limitations}, m.sourceDomain + " -> " + m.targetDomain});
+    }
+    // Functional structures: every analysis with its models.
+    for (const functional::AnalysisKind& k : functional::AnalysisRegistry::instance().kinds()) {
+        std::string models;
+        for (const functional::ModelInfo& m : k.models)
+            models += (models.empty() ? "" : "; ") + m.name + " (" + m.fidelity + ")";
+        add({"functional.analysis." + k.id, k.title, k.description + ". Models: " + models, "functional-structure", "stable", true, {}, {},
+             {}, k.domains.empty() ? std::string() : k.domains.front()});
     }
     // Optimization algorithms.
     for (const optimization::Algorithm* algorithm : optimization::algorithms()) {

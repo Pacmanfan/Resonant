@@ -1,0 +1,424 @@
+{
+  "request_id": "REQ-CHAT-20261126-017",
+  "source": "chat",
+  "type": "FEATURE",
+  "priority": "NORMAL",
+  "created": "2026-11-26T23:29:53-05:00",
+  "created_utc": "2026-11-27T04:29:53+00:00",
+  "id_date": "2026-11-26",
+  "timezone": "EST (UTC-05:00)",
+  "status": "completed",
+  "original_text": "# PROMPT 19 \u2014 GEOMETRY-DRIVEN ENERGY TRANSFORMATION AND FUNCTIONAL STRUCTURES\n\n## Project: RESONANT \u2014 Wave Field Engineering Studio\n\n## Mission\n\nImplement the next major engineering capability in RESONANT: **Geometry-Driven Energy Transformation and Functional Structures**.\n\nThis capability makes geometry a first-class physical design variable.\n\nRESONANT must move beyond treating geometry as something that is merely displayed, imported, or converted into a simulation mesh. Geometry must become something the user can deliberately engineer to control how physical energy propagates, reflects, refracts, focuses, confines, resonates, couples, transfers, stores, dissipates, and interacts with matter.\n\nThe system must support both:\n\n1. **Object-centric engineering:** The user creates or imports a structure, assigns materials and excitation conditions, and investigates its physical behavior.\n2. **Function-centric engineering:** The user specifies a desired physical behavior, operating conditions, and constraints. RESONANT evaluates candidate geometries, materials, and configurations to identify structures that may achieve the desired result.\n\nThe governing design philosophy is:\n\nGeometry + Material Properties + Excitation + Environment + Boundary Conditions\n\u2192 Physical Interaction\n\u2192 Energy and Matter Response\n\u2192 Functional Behavior\n\nA shape does not possess a physical function merely because it has been assigned a label. Its behavior must emerge from the relevant physical equations, material constitutive models, operating conditions, boundaries, and environmental conditions.\n\nThis work must integrate with the Shape\u2013Function\u2013Energy architecture established in Prompt 17 and the Coupled Energy\u2013Matter Engine (CEME) established in Prompt 18.\n\nDo not duplicate those systems. Extend them through well-defined interfaces.\n\n---\n\n# 1. AUDIT FIRST\n\nBefore implementation, inspect the existing repository and establish the current state of:\n\n- Geometry representation and CAD import.\n- OpenCASCADE integration.\n- Geometry editing and parameterization.\n- Geometry-to-mesh pipeline.\n- Material-region assignment.\n- Boundary-condition assignment.\n- Existing physics solvers.\n- Resonance and modal analysis.\n- Field visualization.\n- Energy and momentum accounting.\n- CEME interfaces and simulation orchestration.\n- Optimization infrastructure.\n- Project serialization.\n- GUI workspaces and dockable panels.\n- Automation and gRPC services.\n- Existing documentation and roadmap.\n\nRead AGENTS.md and all applicable development instructions.\n\nIdentify what already exists, what is partially implemented, what is missing, and what can be extended.\n\nProduce an implementation plan based on actual repository evidence.\n\nDo not invent existing capabilities. Do not create parallel implementations of existing functionality. Preserve working systems and existing project compatibility.\n\n---\n\n# 2. GEOMETRY AS A PHYSICAL DESIGN VARIABLE\n\nEstablish a geometry architecture that supports physical analysis and engineering optimization.\n\nGeometry must be represented in a way that preserves more than its visible exterior surface.\n\nSupport the following concepts:\n\n## 2.1 Geometric properties\n\n- Dimensions and proportions.\n- Surface curvature.\n- Surface orientation and normals.\n- Volume and enclosed volume.\n- Surface area.\n- Topology and connectivity.\n- Openings and apertures.\n- Cavities and internal volumes.\n- Channels, ducts, and passages.\n- Walls, shells, and thickness.\n- Layers and interfaces.\n- Periodic structures.\n- Internal inclusions and resonant elements.\n- Spatially varying cross-sections.\n- Tapers and transitions.\n- Component placement and orientation.\n- Mechanical connections and constraints.\n- Geometric tolerances.\n\n## 2.2 Distinguish geometry representations\n\nKeep these representations conceptually and technically distinct:\n\n1. Visual geometry: what the user sees.\n2. Engineering geometry: editable CAD and parameterized design geometry.\n3. Physical geometry: the boundaries and material regions used by physical models.\n4. Simulation geometry: the discretized representation used by a solver.\n5. Functional geometry: the parameters and geometric relationships that control a desired physical response.\n\nThese representations must be traceable to one another.\n\nA change to engineering geometry must invalidate affected downstream representations and results.\n\nDo not silently reuse stale meshes, field solutions, or derived properties.\n\n## 2.3 Geometry revision and dependency tracking\n\nImplement or extend revision tracking so the system can determine whether:\n\n- A CAD model changed.\n- A material region changed.\n- A physical boundary changed.\n- A mesh is stale.\n- A field solution is stale.\n- A functional objective is stale.\n- An optimization result no longer applies.\n\nEvery geometry-dependent result must identify the geometry revision on which it was calculated.\n\n---\n\n# 3. FUNCTIONAL STRUCTURE MODEL\n\nIntroduce a functional structure abstraction.\n\nA functional structure is an engineered physical object whose geometry, materials, excitation, and environment are configured to produce a measurable physical response.\n\nIt is not a hardcoded shape category.\n\nA functional structure should reference:\n\n- One or more geometric bodies.\n- Material regions.\n- Interfaces and boundaries.\n- Physical domains.\n- Excitation sources.\n- Operating frequency or frequency range.\n- Environmental conditions.\n- Relevant physical constraints.\n- Desired or measured response.\n- Simulation configurations.\n- Optimization parameters.\n- Manufacturing constraints, where applicable.\n\nSupport structures that combine multiple physical functions.\n\nFor example, a single assembly might contain:\n\n- An electromagnetic resonant cavity.\n- A thermal management structure.\n- A mechanically supported reflector.\n- A cooling channel.\n- A sensor or measurement region.\n\nThese components must be able to participate in the same physical system through existing CEME interfaces.\n\nDo not require every structure to participate in every physics domain.\n\n---\n\n# 4. ENERGY TRANSFORMATION AND PHYSICAL INTERACTION\n\nImplement a domain-aware framework for understanding how a structure transforms energy.\n\nDo not create a universal energy equation that replaces domain-specific physics.\n\nUse the appropriate existing or integrated solver for each physical domain.\n\nThe functional structure layer should coordinate and expose the resulting behavior.\n\nSupport the following categories.\n\n## 4.1 Propagation and transmission\n\nAnalyze how energy propagates through or along a structure.\n\nExamples:\n\n- Waveguides.\n- Acoustic ducts.\n- Optical waveguides.\n- Transmission structures.\n- Mechanical waveguides.\n- Layered media.\n- Periodic media.\n\nExpose relevant quantities such as:\n\n- Propagating modes.\n- Phase and group velocity where supported.\n- Attenuation.\n- Transmission.\n- Reflection.\n- Impedance.\n- Dispersion.\n- Field distribution.\n- Energy flux.\n- Power transmission.\n\n## 4.2 Reflection and redirection\n\nAnalyze how geometry redirects incident energy.\n\nExamples:\n\n- Reflectors.\n- Curved reflecting surfaces.\n- Acoustic reflectors.\n- Electromagnetic reflectors.\n- Optical mirrors.\n- Mechanical wave reflection boundaries.\n\nSupport investigation of:\n\n- Reflection coefficients.\n- Scattering.\n- Directional redistribution.\n- Interference.\n- Standing-wave formation.\n- Boundary effects.\n- Energy carried away from the structure.\n\n## 4.3 Focusing and concentration\n\nAnalyze structures that redistribute energy into a smaller spatial region.\n\nExamples:\n\n- Acoustic lenses.\n- Electromagnetic lenses.\n- Optical lenses.\n- Reflective focusing geometries.\n- Horns and impedance transformers.\n- Concentrating waveguide structures.\n\nExpose:\n\n- Field amplitude.\n- Intensity.\n- Energy density.\n- Power density.\n- Focal location.\n- Focal region dimensions.\n- Spatial concentration ratio.\n- Side lobes and unwanted secondary maxima.\n- Efficiency and losses.\n\nDistinguish carefully between field amplitude, intensity, power density, and total energy.\n\nDo not describe an increase in local energy density as an increase in total energy.\n\nAccount for aperture, source power, losses, radiation, and conservation.\n\n## 4.4 Confinement and storage\n\nAnalyze geometries that confine energy or support stored energy.\n\nExamples:\n\n- Microwave cavities.\n- Optical resonators.\n- Acoustic cavities.\n- Mechanical resonators.\n- Coupled resonant structures.\n- Distributed resonant networks.\n\nExpose:\n\n- Resonant frequencies.\n- Natural modes.\n- Mode shapes.\n- Modal energy.\n- Stored energy.\n- Leakage.\n- Damping.\n- Quality factor.\n- Bandwidth.\n- Coupling strength.\n- Frequency response.\n\nDistinguish energy stored in a resonator from energy continuously supplied by an external source.\n\n## 4.5 Dissipation and conversion\n\nAnalyze how energy is absorbed, dissipated, or converted into another physical form.\n\nExamples:\n\n- Electromagnetic absorption and heating.\n- Dielectric and conductive losses.\n- Acoustic absorption.\n- Viscous dissipation.\n- Mechanical damping.\n- Thermoelastic conversion.\n- Fluid heating.\n- Piezoelectric conversion where supported.\n\nConnect to CEME so that energy transfers between domains are accounted for rather than counted twice.\n\n## 4.6 Force and momentum transfer\n\nWhere supported by the underlying physics, calculate mechanical effects resulting from energy interactions.\n\nExamples:\n\n- Electromagnetic forces and Maxwell stress.\n- Acoustic radiation force.\n- Radiation pressure.\n- Mechanical wave momentum transfer.\n- Fluid pressure and viscous loading.\n- Thermal expansion and associated mechanical stress.\n\nKeep the different physical mechanisms distinct.\n\nDo not introduce arbitrary geometry-to-force mappings or claim that a geometry produces a force without an appropriate physical model.\n\n---\n\n# 5. RESONANCE AND MODAL ENGINEERING\n\nResonance must be treated as a cross-domain engineering capability.\n\nIntegrate existing modal and resonance systems rather than creating a competing resonance subsystem.\n\nSupport analysis of:\n\n- Electromagnetic cavity modes.\n- Optical resonator modes.\n- Acoustic modes.\n- Mechanical natural modes.\n- Elastic wave modes.\n- Coupled resonators.\n- Local resonances.\n- Distributed resonant structures.\n- Mode coupling and splitting.\n- Mode localization.\n- Frequency-dependent response.\n\nFor each supported model, expose appropriate quantities:\n\n- Natural or resonant frequency.\n- Mode shape.\n- Spatial field distribution.\n- Damping.\n- Quality factor.\n- Bandwidth.\n- Stored energy.\n- Coupling.\n- Modal participation.\n- Sensitivity to geometry changes.\n\nSupport geometry-driven resonance tuning.\n\nThe user should be able to change a cavity dimension, mirror separation, reflector curvature, wall thickness, or resonator spacing and observe the calculated effect on resonant behavior.\n\nDo not assume that every structure is resonant. Clearly distinguish resonant, broadband, non-resonant, and mixed behavior.\n\n---\n\n# 6. REQUIRED REFERENCE ENGINEERING EXAMPLES\n\nImplement these as real engineering examples using the underlying physical models.\n\nThey are not merely demonstration graphics.\n\n## 6.1 Microwave cavity resonator\n\nThis is a primary reference case.\n\nAllow the user to create or configure a microwave cavity with:\n\n- Editable dimensions.\n- Cavity shape.\n- Conducting wall material.\n- Wall conductivity.\n- Dielectric inserts.\n- Excitation port configuration.\n- Port placement and orientation.\n- Operating frequency range.\n- Boundary conditions.\n- Optional internal structures.\n\nAnalyze:\n\n- Resonant modes.\n- Resonant frequencies.\n- Electric-field distribution.\n- Magnetic-field distribution.\n- Stored electromagnetic energy.\n- Surface and volume losses where modeled.\n- Quality factor.\n- Bandwidth.\n- Coupling and port response.\n- Sensitivity to dimensions and material properties.\n\nShow how geometry changes affect the modes and response.\n\nInclude a simple analytical or established benchmark comparison for a geometry where an analytical solution is available.\n\nValidate the numerical solution against the analytical result within a documented tolerance.\n\n## 6.2 Two-mirror optical resonator\n\nImplement a reference optical resonator model.\n\nSupport:\n\n- Mirror separation.\n- Mirror curvature.\n- Mirror reflectivity.\n- Aperture.\n- Optical wavelength.\n- Alignment and positioning.\n- Relevant optical losses.\n- Stable and unstable resonator configurations.\n\nAnalyze:\n\n- Resonator stability.\n- Supported transverse modes where supported.\n- Longitudinal mode spacing.\n- Beam waist.\n- Beam propagation.\n- Mode distribution.\n- Cavity losses.\n- Stored optical energy and coupling where modeled.\n\nUse an appropriate optical resonator model.\n\nDo not represent a full electromagnetic optical solution as a paraxial approximation. Identify the assumptions and validity range of each model.\n\n## 6.3 Acoustic horn and reflector\n\nImplement a reference acoustic structure.\n\nSupport:\n\n- Horn profile.\n- Throat and mouth dimensions.\n- Length.\n- Cross-sectional profile.\n- Material and wall properties.\n- Source configuration.\n- Operating frequency range.\n- Acoustic boundary conditions.\n\nAnalyze:\n\n- Pressure field.\n- Particle velocity.\n- Acoustic intensity.\n- Impedance transformation.\n- Reflection.\n- Transmission.\n- Radiation pattern.\n- Directivity.\n- Acoustic power transfer.\n\nAllow the user to compare different horn profiles under equivalent source and operating conditions.\n\n## 6.4 Mechanical resonator\n\nImplement a reference mechanical resonant structure.\n\nSupport:\n\n- Geometry.\n- Material.\n- Supports and constraints.\n- Mass distribution.\n- Excitation.\n- Damping.\n- Frequency range.\n\nAnalyze:\n\n- Natural frequencies.\n- Mode shapes.\n- Displacement.\n- Velocity.\n- Stress and strain.\n- Modal energy.\n- Frequency response.\n- Sensitivity to geometric changes.\n\n## 6.5 Metamaterial unit cell\n\nImplement a parameterized periodic unit-cell example.\n\nSupport:\n\n- Unit-cell geometry.\n- Periodicity.\n- Material assignment.\n- Internal resonators.\n- Layered structures.\n- Boundary conditions appropriate to the model.\n- Frequency sweep.\n\nAnalyze, where supported:\n\n- Dispersion relations.\n- Band structure.\n- Band gaps.\n- Transmission.\n- Reflection.\n- Local resonances.\n- Effective constitutive properties.\n- Anisotropy.\n- Frequency-dependent effective response.\n\nDistinguish effective or homogenized properties from constituent material properties.\n\nDo not assign negative effective density, stiffness, permittivity, or permeability by hand to make a result look like a metamaterial effect.\n\nDerive such behavior from a valid model and clearly state the homogenization assumptions and frequency range.\n\n---\n\n# 7. GEOMETRY PARAMETERIZATION\n\nImplement a reusable parameterization framework.\n\nThe user must be able to identify geometric parameters that control physical behavior.\n\nExamples:\n\n- Cavity length, width, and height.\n- Mirror spacing and curvature.\n- Lens curvature and thickness.\n- Horn length and expansion profile.\n- Resonator dimensions and spacing.\n- Wall thickness.\n- Channel dimensions.\n- Unit-cell periodicity.\n- Inclusion size and placement.\n- Layer thickness.\n- Structural support positions.\n\nSupport:\n\n- Named parameters.\n- Units and valid ranges.\n- Default values.\n- Constraints.\n- Dependencies.\n- Derived parameters.\n- Parameter groups.\n- Geometric constraints.\n- Parameter sweeps.\n- Revision tracking.\n\nParameter changes must produce predictable geometry updates.\n\nUse the existing CAD kernel and parameterization capabilities where possible.\n\nAvoid a separate geometry-editing engine unless the audit proves it is necessary.\n\n---\n\n# 8. FUNCTION-DRIVEN DESIGN\n\nIntroduce the architecture for designing a structure from a desired physical response.\n\nThe user should eventually be able to specify a goal such as:\n\n- Produce a resonance near a target frequency.\n- Maximize energy concentration in a specified region.\n- Minimize reflection across a frequency band.\n- Maximize acoustic directivity.\n- Produce a desired mechanical mode.\n- Create a band gap in a specified frequency range.\n- Minimize unwanted energy leakage.\n- Maximize energy transfer into a selected region.\n- Control the spatial distribution of a field.\n- Achieve a desired force or stress distribution subject to physical constraints.\n\nThe system must translate a goal into a measurable objective function.\n\nEach objective must specify:\n\n- Physical quantity.\n- Units.\n- Spatial region or boundary.\n- Frequency or time range.\n- Desired value or target range.\n- Weighting.\n- Constraints.\n- Solver and model dependencies.\n- Validity conditions.\n\nSupport multiple objectives and tradeoffs.\n\nFor example, a design that maximizes field concentration but creates excessive heating should not automatically be considered successful.\n\nUse multi-objective optimization where appropriate.\n\n## 8.1 Candidate design generation\n\nCreate an extensible architecture for generating and evaluating candidate designs.\n\nInitially support:\n\n- Parameter sweeps.\n- Structured parameter sampling.\n- Existing optimization algorithms.\n- Constraint-based search.\n- Sensitivity analysis.\n\nLater approaches may include:\n\n- Evolutionary optimization.\n- Bayesian optimization.\n- Surrogate models.\n- Topology optimization.\n- Gradient-based optimization.\n- Adjoint methods.\n\nDo not attempt to implement every optimization algorithm in this prompt.\n\nUse existing optimization infrastructure where possible.\n\n## 8.2 Explainable design results\n\nEvery recommended candidate must explain:\n\n- Which geometric parameters changed.\n- Which material properties were used.\n- Which operating conditions were assumed.\n- Which solver and physical model were used.\n- Which objective improved.\n- Which objectives became worse.\n- Which constraints were active.\n- What physical mechanism explains the result.\n- What uncertainty or validity limitations remain.\n\nDo not present an optimizer's output as a proven physical result without validating it through the relevant solver.\n\n---\n\n# 9. GEOMETRY SENSITIVITY AND DESIGN EXPLORATION\n\nImplement tools to understand how physical behavior changes as geometry changes.\n\nSupport:\n\n- One-parameter sweeps.\n- Multi-parameter sweeps.\n- Local sensitivity analysis.\n- Frequency-versus-geometry comparisons.\n- Mode tracking across geometry revisions.\n- Response surface visualization where appropriate.\n- Parameter correlation.\n- Tolerance sensitivity.\n- Robustness evaluation.\n\nA critical capability is understanding how a small dimensional change affects a resonant or functional response.\n\nFor example:\n\nChanging cavity length may shift a resonant frequency. Changing mirror separation may affect optical mode spacing. Changing horn expansion may affect acoustic impedance and radiation pattern.\n\nThe software must calculate these effects using appropriate models rather than hardcoded rules.\n\nWhen modes move, split, or exchange characteristics during a parameter sweep, implement appropriate mode-tracking logic or clearly flag ambiguous mode correspondence.\n\n---\n\n# 10. MANUFACTURABILITY AND ENGINEERING CONSTRAINTS\n\nFunctional structures must be physically realizable.\n\nIntroduce a manufacturing-constraint interface that can support:\n\n- Minimum wall thickness.\n- Minimum feature size.\n- Minimum channel size.\n- Minimum spacing.\n- Material availability.\n- Tolerance limits.\n- Assembly constraints.\n- Support and mounting requirements.\n- Surface finish requirements where relevant.\n- Fabrication process constraints.\n\nDo not assume that a numerically optimal geometry is manufacturable.\n\nAllow constraints to be associated with a manufacturing process, such as:\n\n- CNC machining.\n- Sheet fabrication.\n- Additive manufacturing.\n- Injection molding.\n- Lamination.\n- Composite fabrication.\n\nDo not implement detailed manufacturing process simulation here.\n\nThe immediate goal is to ensure that design optimization can reject or penalize geometries that violate defined engineering constraints.\n\n---\n\n# 11. VISUALIZATION AND ENGINEERING INSPECTION\n\nExtend the existing GUI without creating an unrelated application or duplicating the viewport.\n\nThe user should be able to inspect a functional structure and its physical response together.\n\nSupport:\n\n## Geometry inspection\n\n- CAD geometry.\n- Material regions.\n- Interfaces.\n- Boundaries.\n- Parameter labels.\n- Dimensions.\n- Selected features.\n- Functional regions.\n- Simulation mesh overlay.\n\n## Physical field inspection\n\nWhere available:\n\n- Electric field.\n- Magnetic field.\n- Acoustic pressure.\n- Particle velocity.\n- Acoustic intensity.\n- Mechanical displacement.\n- Stress and strain.\n- Temperature.\n- Energy density.\n- Energy flux.\n- Momentum flux.\n- Force density.\n\n## Engineering visualization\n\nProvide:\n\n- Field overlays on geometry.\n- Cross-sectional inspection.\n- Slice planes.\n- Probe points.\n- Region measurements.\n- Frequency response plots.\n- Modal visualizations.\n- Geometry comparison.\n- Before/after comparison.\n- Parameter sweep plots.\n- Optimization result comparison.\n\nSupport synchronized views of geometry, field response, and engineering metrics.\n\nChanging the visualization must not trigger an unnecessary physics recalculation.\n\nClearly identify the displayed quantity, units, normalization, solver, geometry revision, and simulation time or frequency.\n\n---\n\n# 12. USER WORKFLOW\n\nBuild on the existing RESONANT workspace and dockable panel architecture.\n\nDo not redesign the entire GUI.\n\nIntroduce a coherent functional-structure workflow:\n\n1. Create or import geometry.\n2. Define or select geometric parameters.\n3. Assign material regions.\n4. Configure physical domains.\n5. Define boundaries and interfaces.\n6. Add excitation sources.\n7. Define the operating environment.\n8. Select the desired physical analysis.\n9. Validate the physical system.\n10. Generate or update the simulation mesh.\n11. Run the appropriate solver or coupled simulation.\n12. Inspect field distributions and energy flow.\n13. Review resonances, forces, and material response.\n14. Sweep geometry parameters.\n15. Optimize against a functional objective.\n16. Compare candidate designs.\n17. Save and document the resulting engineering design.\n\nMake it possible to transition between object-centric and function-centric design without rebuilding the project.\n\n---\n\n# 13. CEME INTEGRATION\n\nUse the existing Coupled Energy\u2013Matter Engine as the coordinating architecture for multiphysics behavior.\n\nDo not reproduce CEME's:\n\n- Physical quantity registry.\n- Material state management.\n- Geometry state management.\n- Coupling manager.\n- Energy transfer records.\n- Conservation auditing.\n- Time coordination.\n- Solver orchestration.\n- Provenance system.\n\nFunctional structures should reference and configure these systems.\n\nExamples:\n\n- Microwave cavity absorption can produce thermal sources.\n- Heating can change material properties.\n- Temperature changes can shift resonant frequency.\n- Thermal expansion can change cavity dimensions.\n- Mechanical deformation can change acoustic or electromagnetic response.\n- Acoustic pressure can excite structural modes.\n- Structural vibration can radiate acoustic energy.\n\nWhere feedback exists, use the appropriate CEME coupling strategy.\n\nWhere there is no meaningful feedback, use a simpler one-way analysis.\n\nDo not force coupled simulation when independent domain analysis is sufficient.\n\n---\n\n# 14. AUTOMATION AND PROGRAMMATIC ACCESS\n\nExpose meaningful functional-structure capabilities through the existing application services and automation architecture.\n\nThe existing Protobuf contract remains authoritative.\n\nUse the established package and naming conventions.\n\nPotential operations include:\n\n- Create functional structure.\n- Import or reference geometry.\n- List geometric parameters.\n- Update geometric parameters.\n- Assign material regions.\n- Configure physical domains.\n- Configure excitation and boundaries.\n- Validate a functional structure.\n- Generate or update a mesh.\n- Run functional analysis.\n- Run modal analysis.\n- Run parameter sweep.\n- Define a functional objective.\n- Run geometry optimization.\n- Inspect candidate designs.\n- Compare candidate results.\n- Retrieve physical response metrics.\n- Retrieve energy and momentum accounting.\n- Export engineering results.\n\nFollow existing patterns for:\n\n- Asynchronous jobs.\n- Job status and cancellation.\n- Progress reporting.\n- Idempotency.\n- Optimistic concurrency.\n- Project revision tracking.\n- Error handling.\n- Capability discovery.\n- Provenance.\n\nDo not put large field arrays or simulation datasets into ordinary control-plane protobuf messages. Use the established scientific-data and bulk-transfer mechanisms.\n\nGUI, Python, and automation must invoke the same underlying application services.\n\nDo not create a second implementation of functional engineering logic for the automation interface.\n\n---\n\n# 15. DATA MODEL AND PROJECT SERIALIZATION\n\nFunctional structures, parameters, objectives, constraints, and analysis configurations must be persistent project resources.\n\nUse stable UUIDs and the existing serialization conventions.\n\nPersist:\n\n- Structure identity.\n- Geometry references and revisions.\n- Parameter definitions and values.\n- Material-region assignments.\n- Physical domains.\n- Excitation configurations.\n- Boundary conditions.\n- Environment.\n- Functional objectives.\n- Constraints.\n- Optimization configuration.\n- Analysis configuration.\n- Simulation references.\n- Result provenance.\n\nDo not serialize transient solver state as if it were a durable engineering definition.\n\nEnsure that projects created before this work continue to open correctly.\n\n---\n\n# 16. VALIDATION AND SCIENTIFIC CORRECTNESS\n\nScientific correctness is a release requirement.\n\nEach reference structure must have a documented validation strategy.\n\nInclude:\n\n## Microwave cavity\n\n- Analytical resonant-frequency comparison where applicable.\n- Mesh convergence.\n- Boundary-condition verification.\n- Energy balance.\n- Material-loss behavior where modeled.\n\n## Optical resonator\n\n- Resonator stability checks.\n- Analytical mode-spacing comparison.\n- Beam parameter consistency.\n- Documented paraxial assumptions.\n\n## Acoustic horn\n\n- Impedance and transmission behavior.\n- Frequency-response comparison.\n- Mesh convergence.\n- Energy/power accounting.\n\n## Mechanical resonator\n\n- Analytical or established modal benchmark.\n- Boundary-condition verification.\n- Mesh convergence.\n- Modal consistency.\n\n## Metamaterial unit cell\n\n- Periodic boundary-condition verification.\n- Dispersion or band-structure benchmark.\n- Frequency-range and homogenization validity.\n- Comparison with a full-structure model where practical.\n\nFor all analyses:\n\n- Record solver and model versions.\n- Record geometry and material revisions.\n- Record boundary conditions and excitation.\n- Record mesh and convergence information.\n- Record approximations and assumptions.\n- Identify unsupported physical effects.\n- Report numerical failures explicitly.\n\nDo not silently substitute an approximate model for a more complete physical model.\n\nThe user must be able to see what physics was actually calculated.\n\n---\n\n# 17. TESTING REQUIREMENTS\n\nAdd tests for:\n\n- Geometry parameterization.\n- Parameter dependency updates.\n- Geometry revision tracking.\n- Stale mesh detection.\n- Stale result detection.\n- Material-region association.\n- Boundary association.\n- Functional structure serialization.\n- Functional objective serialization.\n- Constraint evaluation.\n- Parameter sweeps.\n- Sensitivity calculations.\n- Candidate comparison.\n- Solver integration.\n- CEME integration.\n- Automation operations.\n- Project compatibility.\n\nAdd regression tests for all existing geometry and physics functionality.\n\nEvery reference engineering example must have at least one automated validation test appropriate to its model.\n\nInclude failure tests for:\n\n- Invalid geometry.\n- Missing materials.\n- Invalid boundary conditions.\n- Unsupported solver configurations.\n- Mesh generation failure.\n- Non-convergence.\n- Invalid optimization bounds.\n- Stale geometry during a job.\n- Cancellation.\n- Missing or incompatible solver capabilities.\n\nDo not mark a capability complete merely because a GUI panel or data structure exists.\n\n---\n\n# 18. IMPLEMENTATION PHASES\n\nImplement in carefully scoped phases.\n\n## Phase A \u2014 Architecture and audit\n\n- Inspect existing systems.\n- Document integration points.\n- Identify reusable components.\n- Define functional structure and parameterization contracts.\n- Identify missing geometry capabilities.\n\n## Phase B \u2014 Geometry-driven engineering foundation\n\n- Implement or extend functional structure resources.\n- Implement parameter definitions and dependencies.\n- Implement geometry revision tracking.\n- Implement physical geometry and material-region associations.\n- Integrate existing CAD and meshing infrastructure.\n\n## Phase C \u2014 Reference engineering models\n\nPrioritize in this order:\n\n1. Microwave cavity.\n2. Two-mirror optical resonator.\n3. Acoustic horn and reflector.\n4. Mechanical resonator.\n5. Metamaterial unit cell.\n\nReuse existing solvers and external scientific packages where appropriate.\n\nDo not implement a new general-purpose solver simply to complete a reference example.\n\n## Phase D \u2014 Parameter exploration\n\n- Parameter sweeps.\n- Sensitivity analysis.\n- Mode tracking.\n- Geometry comparisons.\n- Response plots.\n\n## Phase E \u2014 Function-driven design foundation\n\n- Objective definitions.\n- Constraints.\n- Candidate generation.\n- Candidate evaluation.\n- Explainable results.\n\n## Phase F \u2014 GUI and automation\n\n- Integrate the workflow into the existing application.\n- Expose application services.\n- Add automation operations.\n- Add project serialization and documentation.\n\n## Phase G \u2014 Validation and release readiness\n\n- Execute scientific benchmarks.\n- Run regression suites.\n- Test project compatibility.\n- Test automation.\n- Document limitations and unsupported physics.\n\nIf a phase depends on missing functionality from Prompt 18, implement the necessary interface or dependency cleanly and report the limitation. Do not fabricate a result to make the phase appear complete.\n\n---\n\n# 19. PERFORMANCE AND ARCHITECTURAL REQUIREMENTS\n\n- Keep physics computation independent of rendering.\n- Preserve CPU reference implementations.\n- Use existing CUDA acceleration where appropriate.\n- Keep geometry and solver operations asynchronous when expensive.\n- Reuse mesh and solver results only when their dependencies are unchanged.\n- Avoid unnecessary remeshing.\n- Support cancellation and progress reporting.\n- Avoid copying large field datasets unnecessarily.\n- Preserve modular solver architecture.\n- Keep domain-specific physical equations separate.\n- Avoid monolithic functional-structure classes.\n- Do not make the GUI responsible for physics.\n- Do not duplicate CEME or optimization logic.\n- Keep external scientific dependencies optional where practical.\n- Document license and redistribution implications of new dependencies.\n\n---\n\n# 20. DOCUMENTATION\n\nCreate or update documentation covering:\n\n- Functional structure architecture.\n- Geometry parameterization.\n- Geometry-to-physics relationships.\n- Energy transformation mechanisms.\n- Resonant structure engineering.\n- Function-driven design.\n- Geometry sensitivity and optimization.\n- Manufacturing constraints.\n- Scientific assumptions and limitations.\n- Reference engineering examples.\n- Automation API.\n- Validation methodology.\n\nUpdate the Shape\u2013Function\u2013Energy documentation established in Prompt 17.\n\nUpdate the CEME documentation established in Prompt 18 where new integration contracts are required.\n\nInclude diagrams of the architecture and representative workflows.\n\nKeep documentation synchronized with actual implementation. Clearly distinguish implemented functionality, partial functionality, and future roadmap items.\n\n---\n\n# 21. ACCEPTANCE CRITERIA\n\nThis work is complete only when the following are demonstrated:\n\n1. A user can create or import a physical engineering geometry.\n2. The user can define and modify meaningful geometric parameters.\n3. Geometry changes correctly invalidate dependent meshes and results.\n4. Material regions and physical boundaries remain associated with the intended geometry.\n5. At least the microwave cavity reference model is implemented and scientifically validated.\n6. The optical resonator, acoustic horn, mechanical resonator, and metamaterial examples have implemented model paths or clearly documented dependency-backed limitations; they must not be represented as completed simulations if only visual examples exist.\n7. The system can analyze geometry-driven changes in a physical response.\n8. The user can execute parameter sweeps and compare results.\n9. The user can define at least one measurable functional objective and evaluate candidate designs against it.\n10. Results identify the actual physical model, assumptions, solver, geometry revision, and material revision.\n11. CEME integration works where energy\u2013matter feedback is required.\n12. GUI, Python, and automation use the same application services.\n13. Existing projects remain compatible.\n14. Existing geometry and physics regression tests pass.\n15. Scientific validation tests pass within documented tolerances.\n16. Documentation accurately reflects implementation and limitations.\n\n---\n\n# 22. FINAL ENGINEERING REPORT\n\nAt completion, provide a detailed report containing:\n\n- Repository audit findings.\n- Existing capabilities reused.\n- New architecture introduced.\n- Files and modules changed.\n- Reference models implemented.\n- Solvers and external packages integrated.\n- Scientific equations and approximations used.\n- Validation results and tolerances.\n- Test results.\n- Performance observations.\n- Known limitations.\n- Incomplete work and reasons.\n- New dependencies and license implications.\n- Automation API additions.\n- GUI workflow changes.\n- Recommended next development prompt.\n\nDo not claim that a feature is implemented unless it is present, integrated, and tested.\n\nDo not conceal failed tests or unsupported physics.\n\n## Final directive\n\nThe objective is to make RESONANT a genuine geometry-driven engineering environment.\n\nA user should be able to ask:\n\n- What happens if I change this shape?\n- How does this geometry transform the energy entering it?\n- Where does the energy go?\n- What is stored, transmitted, reflected, concentrated, converted, or dissipated?\n- What forces or material changes result?\n- How does the structure behave at different frequencies?\n- What geometry would produce the physical response I want?\n- What tradeoffs and manufacturing constraints determine whether that design is practical?\n\nRESONANT should progressively answer those questions through rigorous physical models, explainable engineering analysis, and controlled design exploration.\n\n**Do not build a collection of decorative shape presets. Build the foundation for engineering physical behavior through geometry.**",
+  "file": "requests/inbox/2026-11-26-prompt-19-geometry-driven-ener-req-chat-20261126-017.md",
+  "attachments": [],
+  "context": "User: 'add this ticket and process in order' (queued after REQ-CHAT-20261126-016)",
+  "text_sha256": "0f8f28c372c78016ede5d13a1e9600e410c8920cd076be7ad363d6e842f6eaf7",
+  "classification": {
+    "proposed_type": null,
+    "proposed_source": "heuristic",
+    "normalized_type": null,
+    "heuristic_type": "FEATURE",
+    "final_type": "FEATURE",
+    "confidence": "high",
+    "validation": "PASS",
+    "classifier_reason": "request statement is framed as feature: Implement, capability, creates, first-class",
+    "correction_reason": null,
+    "normalization_note": null,
+    "evidence": [
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement the next major engineering capability in RESONANT: **Geometry-Driven Energy Transformation and Functional Structures**."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "capability",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement the next major engineering capability in RESONANT: **Geometry-Driven Energy Transformation and Functional Structures**."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "capability",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This capability makes geometry a first-class physical design variable."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "first-class",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This capability makes geometry a first-class physical design variable."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "must become",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Geometry must become something the user can deliberately engineer to control how physical energy propagates, reflects, refracts, focuses, confines, resonates, couples, transfers, stores, dissipates, a"
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "user can",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Geometry must become something the user can deliberately engineer to control how physical energy propagates, reflects, refracts, focuses, confines, resonates, couples, transfers, stores, dissipates, a"
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "must support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The system must support both:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "creates",
+        "strength": "strong",
+        "note": "",
+        "sentence": "**Object-centric engineering:** The user creates or imports a structure, assigns materials and excitation conditions, and investigates its physical behavior."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "integrate",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This work must integrate with the Shape\u2013Function\u2013Energy architecture established in Prompt 17 and the Coupled Energy\u2013Matter Engine (CEME) established in Prompt 18."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Extend",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Extend them through well-defined interfaces."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "integration",
+        "strength": "strong",
+        "note": "",
+        "sentence": "OpenCASCADE integration."
+      },
+      {
+        "category": "PERFORMANCE",
+        "where": "body",
+        "phrase": "Optimization",
+        "strength": "weak",
+        "note": "bullet",
+        "sentence": "Optimization infrastructure."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "roadmap",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Existing documentation and roadmap."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Produce",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Produce an implementation plan based on actual repository evidence."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capabilities",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not invent existing capabilities."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not create parallel implementations of existing functionality."
+      },
+      {
+        "category": "PERFORMANCE",
+        "where": "body",
+        "phrase": "optimization",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Establish a geometry architecture that supports physical analysis and engineering optimization."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support the following concepts:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "reuse",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not silently reuse stale meshes, field solutions, or derived properties."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement or extend revision tracking so the system can determine whether:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "extend",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement or extend revision tracking so the system can determine whether:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "objective",
+        "strength": "strong",
+        "note": "",
+        "sentence": "A functional objective is stale."
+      },
+      {
+        "category": "PERFORMANCE",
+        "where": "body",
+        "phrase": "optimization",
+        "strength": "strong",
+        "note": "",
+        "sentence": "An optimization result no longer applies."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Introduce",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Introduce a functional structure abstraction."
+      },
+      {
+        "category": "PERFORMANCE",
+        "where": "body",
+        "phrase": "Optimization",
+        "strength": "weak",
+        "note": "bullet",
+        "sentence": "Optimization parameters."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support structures that combine multiple physical functions."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "must be able",
+        "strength": "strong",
+        "note": "",
+        "sentence": "These components must be able to participate in the same physical system through existing CEME interfaces."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement a domain-aware framework for understanding how a structure transforms energy."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "framework",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement a domain-aware framework for understanding how a structure transforms energy."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not create a universal energy equation that replaces domain-specific physics."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "expose",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The functional structure layer should coordinate and expose the resulting behavior."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support the following categories."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Expose",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Expose relevant quantities such as:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support investigation of:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Expose",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Expose:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Expose",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Expose:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "introduce",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not introduce arbitrary geometry-to-force mappings or claim that a geometry produces a force without an appropriate physical model."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capability",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Resonance must be treated as a cross-domain engineering capability."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Integrate",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Integrate existing modal and resonance systems rather than creating a competing resonance subsystem."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "creating",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Integrate existing modal and resonance systems rather than creating a competing resonance subsystem."
+      }
+    ],
+    "scores": {
+      "FEATURE": {
+        "head": 8,
+        "body": 140
+      },
+      "BUG": {
+        "head": 0,
+        "body": 18
+      },
+      "CRASH": {
+        "head": 0,
+        "body": 0
+      },
+      "REGRESSION": {
+        "head": 0,
+        "body": 0
+      },
+      "PERFORMANCE": {
+        "head": 0,
+        "body": 16
+      },
+      "REFACTOR": {
+        "head": 1,
+        "body": 21
+      },
+      "BUILD": {
+        "head": 0,
+        "body": 1
+      },
+      "DOCUMENTATION": {
+        "head": 0,
+        "body": 12
+      },
+      "INVESTIGATION": {
+        "head": 2,
+        "body": 50
+      },
+      "PROCESS-CHANGE": {
+        "head": 0,
+        "body": 1
+      }
+    },
+    "evidence_total": 270,
+    "validator": "scripts/request_classification.py"
+  },
+  "follow_ups": [
+    {
+      "timestamp": "2026-11-27T04:50:30.915012+00:00",
+      "text": "The user pasted Prompt 19 (Geometry-Driven Energy Transformation and Functional Structures) a second time with 'add this and implement in order'. The text matches this request section for section (sections 1-22, same acceptance criteria), so no new request was created; it is processed here, in its existing place in the queue.",
+      "attachments": []
+    }
+  ],
+  "links": {
+    "work": [
+      "WORK-000018"
+    ]
+  },
+  "commits": [],
+  "resolution": {
+    "from": "processing",
+    "to": "completed",
+    "at": "2026-11-28T01:54:31.889681+00:00",
+    "by": "agent-dev-20261126151713-76f632",
+    "gates": [
+      {
+        "work": "WORK-000018",
+        "at": "2026-11-28T01:54:25.884774+00:00",
+        "verdict": "PASS",
+        "request_fingerprint": "efd68118f38e1adbfe0df3a80894b2ef46313db06330d58c976138dd510c685c",
+        "test_runs": [
+          "20261127T204945-196363"
+        ]
+      }
+    ]
+  }
+}

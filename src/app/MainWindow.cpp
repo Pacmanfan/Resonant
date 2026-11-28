@@ -18,6 +18,8 @@
 #include "ExperimentsPanel.h"
 #include "OptimizationController.h"
 #include "OptimizationPanel.h"
+#include "FunctionalController.h"
+#include "FunctionalPanel.h"
 #include "MechanicsController.h"
 #include "MechanicsMarkers.h"
 #include "MechanicsPanel.h"
@@ -99,6 +101,7 @@ MainWindow::MainWindow(QWidget* parent)
     ui_->menuPanels->addAction(ui_->emDock->toggleViewAction());
     ui_->menuPanels->addAction(ui_->experimentsDock->toggleViewAction());
     ui_->menuPanels->addAction(ui_->optimizationDock->toggleViewAction());
+    ui_->menuPanels->addAction(ui_->functionalDock->toggleViewAction());
     ui_->menuPanels->addAction(ui_->pythonConsoleDock->toggleViewAction());
     ui_->menuPanels->addAction(ui_->demoStudioDock->toggleViewAction());
     ui_->menuPanels->addSeparator();
@@ -144,6 +147,7 @@ MainWindow::MainWindow(QWidget* parent)
     connectElectromagnetics();
     connectExperiments();
     connectOptimization();
+    connectFunctional();
     connectAutomation();
     connectHelp();
     connectDemos();
@@ -169,7 +173,8 @@ MainWindow::MainWindow(QWidget* parent)
     tabifyDockWidget(ui_->mechanicsDock, ui_->emDock);
     tabifyDockWidget(ui_->emDock, ui_->experimentsDock);
     tabifyDockWidget(ui_->experimentsDock, ui_->optimizationDock);
-    tabifyDockWidget(ui_->optimizationDock, ui_->demoStudioDock);
+    tabifyDockWidget(ui_->optimizationDock, ui_->functionalDock);
+    tabifyDockWidget(ui_->functionalDock, ui_->demoStudioDock);
     tabifyDockWidget(ui_->analysisDock, ui_->pythonConsoleDock);
     ui_->demoStudioDock->hide();
     ui_->presenterDock->hide();
@@ -574,6 +579,19 @@ void MainWindow::connectExperiments()
 OptimizationPanel& MainWindow::optimizationPanel()
 {
     return *ui_->optimizationPanel;
+}
+
+FunctionalPanel& MainWindow::functionalPanel()
+{
+    return *ui_->functionalPanel;
+}
+
+void MainWindow::connectFunctional()
+{
+    functional_ = new FunctionalController(controller_, this);
+    ui_->functionalPanel->setController(functional_);
+    connect(functional_, &FunctionalController::studyFailed, this,
+            [this](const QString& message) { statusBar()->showMessage(tr("Functional structure: %1").arg(message), 8000); });
 }
 
 void MainWindow::connectOptimization()

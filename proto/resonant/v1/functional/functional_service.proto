@@ -1,0 +1,114 @@
+syntax = "proto3";
+package resonant.v1;
+
+import "google/protobuf/struct.proto";
+import "resonant/v1/common/jobs.proto";
+import "resonant/v1/common/metadata.proto";
+import "resonant/v1/common/validation.proto";
+import "resonant/v1/functional/functional.proto";
+
+message ListAnalysisKindsRequest { RequestHeader header = 1; }
+message ListAnalysisKindsResponse { ResponseHeader header = 1; repeated AnalysisKind kinds = 2; }
+
+message ListFunctionalStructuresRequest { RequestHeader header = 1; }
+message ListFunctionalStructuresResponse { ResponseHeader header = 1; repeated FunctionalStructure structures = 2; }
+
+message GetFunctionalStructureRequest { RequestHeader header = 1; string structure_id = 2; }
+message GetFunctionalStructureResponse { ResponseHeader header = 1; FunctionalStructure structure = 2; }
+
+message SetFunctionalStructureRequest { RequestHeader header = 1; google.protobuf.Struct definition = 2; }
+message SetFunctionalStructureResponse { ResponseHeader header = 1; FunctionalStructure structure = 2; ChangeSummary changes = 3; }
+
+message DeleteFunctionalStructureRequest { RequestHeader header = 1; string structure_id = 2; }
+message DeleteFunctionalStructureResponse { ResponseHeader header = 1; ChangeSummary changes = 2; }
+
+message GetStructureParametersRequest { RequestHeader header = 1; string structure_id = 2; }
+message GetStructureParametersResponse { ResponseHeader header = 1; repeated StructureParameter parameters = 2; }
+
+message SetStructureParametersRequest {
+  RequestHeader header = 1;
+  string structure_id = 2;
+  map<string, double> values = 3;           // by parameter id
+  uint64 expected_revision = 4;             // 0: no check; otherwise a different project revision is a conflict
+}
+message SetStructureParametersResponse { ResponseHeader header = 1; repeated StructureParameter parameters = 2; ChangeSummary changes = 3; }
+
+message ValidateFunctionalStructureRequest {
+  RequestHeader header = 1;
+  string structure_id = 2;                  // a stored structure, or
+  google.protobuf.Struct definition = 3;    // a definition
+}
+message ValidateFunctionalStructureResponse { ResponseHeader header = 1; ValidationResult validation = 2; }
+
+message AnalyzeStructureRequest { RequestHeader header = 1; string structure_id = 2; string model_id = 3; }
+message AnalyzeStructureResponse { ResponseHeader header = 1; Job job = 2; }
+
+message SweepAxis {
+  string parameter_id = 1;
+  repeated double values = 2;               // the values, or
+  double first = 3;                         // a range of `points` values from first to last
+  double last = 4;
+  int32 points = 5;
+}
+message SweepStructureRequest { RequestHeader header = 1; string structure_id = 2; repeated SweepAxis axes = 3; string model_id = 4; }
+message SweepStructureResponse { ResponseHeader header = 1; Job job = 2; }
+
+message ComputeStructureSensitivityRequest {
+  RequestHeader header = 1;
+  string structure_id = 2;
+  repeated string parameter_ids = 3;        // empty: every parameter that can be set
+  double relative_step = 4;                 // 0: 1e-3
+  string model_id = 5;
+}
+message ComputeStructureSensitivityResponse { ResponseHeader header = 1; Job job = 2; }
+
+message GetFunctionalResultRequest { RequestHeader header = 1; string result_id = 2; bool include_document = 3; }
+message GetFunctionalResultResponse { ResponseHeader header = 1; FunctionalResult result = 2; }
+
+message OptimizeStructureRequest {
+  RequestHeader header = 1;
+  string structure_id = 2;
+  string algorithm = 3;                     // empty: nelder-mead for one objective, nsga2 for several
+  int32 max_evaluations = 4;                // 0: 40
+  string model_id = 5;
+  uint64 seed = 6;
+}
+message OptimizeStructureResponse { ResponseHeader header = 1; Job job = 2; }
+
+message ExplainCandidatesRequest { RequestHeader header = 1; string run_id = 2; int32 count = 3; }
+message ExplainCandidatesResponse { ResponseHeader header = 1; string structure_id = 2; repeated CandidateExplanation candidates = 3; }
+
+// Functional structures: engineered objects whose behavior the analyses compute; parameters,
+// analyses, sweeps, sensitivities and optimization of geometry-driven designs.
+service FunctionalStructureService {
+  // The analyses: their domains, models (with fidelity and assumptions) and metrics.
+  rpc ListAnalysisKinds(ListAnalysisKindsRequest) returns (ListAnalysisKindsResponse);
+  // The functional structures stored in the project.
+  rpc ListFunctionalStructures(ListFunctionalStructuresRequest) returns (ListFunctionalStructuresResponse);
+  // One stored structure.
+  rpc GetFunctionalStructure(GetFunctionalStructureRequest) returns (GetFunctionalStructureResponse);
+  // Adds a structure, or replaces the one with its id, after validation, as one undo step.
+  rpc SetFunctionalStructure(SetFunctionalStructureRequest) returns (SetFunctionalStructureResponse);
+  // Removes a structure, as one undo step (its objects stay in the scene).
+  rpc DeleteFunctionalStructure(DeleteFunctionalStructureRequest) returns (DeleteFunctionalStructureResponse);
+  // The structure's parameters with their present values and ranges.
+  rpc GetStructureParameters(GetStructureParametersRequest) returns (GetStructureParametersResponse);
+  // Sets parameters: bound ones change their scene objects (through the geometry kinds' rules), free
+  // ones the structure; one undo step. Derived parameters cannot be set.
+  rpc SetStructureParameters(SetStructureParametersRequest) returns (SetStructureParametersResponse);
+  // Checks a stored structure or a definition against the project and the analysis; nothing runs.
+  rpc ValidateFunctionalStructure(ValidateFunctionalStructureRequest) returns (ValidateFunctionalStructureResponse);
+  // Runs the structure's analysis as a job; the result id is in the finished job's results.
+  rpc AnalyzeStructure(AnalyzeStructureRequest) returns (AnalyzeStructureResponse);
+  // Evaluates the analysis over a grid of parameter values (each point on its own copy of the design) as a job.
+  rpc SweepStructure(SweepStructureRequest) returns (SweepStructureResponse);
+  // Central-difference sensitivities of every metric to the parameters, as a job.
+  rpc ComputeStructureSensitivity(ComputeStructureSensitivityRequest) returns (ComputeStructureSensitivityResponse);
+  // An analysis, sweep or sensitivity result with its staleness against the current project.
+  rpc GetFunctionalResult(GetFunctionalResultRequest) returns (GetFunctionalResultResponse);
+  // Optimizes the structure's parameters for its objectives and constraints with the optimization
+  // framework (adapter "functional") as a job; the run is recorded in the optimization workspace.
+  rpc OptimizeStructure(OptimizeStructureRequest) returns (OptimizeStructureResponse);
+  // The best feasible candidates of a run, each explained against the present design.
+  rpc ExplainCandidates(ExplainCandidatesRequest) returns (ExplainCandidatesResponse);
+}

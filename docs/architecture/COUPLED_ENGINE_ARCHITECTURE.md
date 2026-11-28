@@ -88,6 +88,14 @@ to the reference grids is exact.
 (read, modify, execute). Capabilities list the engine, its participants and
 every coupling model with its real maturity. There is no GUI panel yet.
 
+## Used by functional structures
+
+A functional structure that names a physical system (`physicalSystem`) is
+analyzed by running it (`multiphysics.coupled-slab`, REQ-CHAT-20261126-017):
+the regions linked to box objects take their thickness from the objects, so
+geometry parameters drive coupled runs; the engine itself is unchanged
+([functional structures](FUNCTIONAL_STRUCTURE_ARCHITECTURE.md)).
+
 ## Not implemented (and refused)
 
 Scene-object systems and the Yee/FDTD/finite-element-plate solvers as

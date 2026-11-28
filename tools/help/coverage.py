@@ -39,6 +39,8 @@ FEATURES = [
     ("Transmission lines and waveguides", "em.transmission-lines", ["electromagnetics/f-rectangular-waveguide.resonant"], [], "-"),
     ("Electromagnetic full-wave (Yee)", "em.solvers", ["electromagnetics/g-full-wave-scattering.resonant"], [], "-"),
     ("Optimization Studio", "opt.studio", ["optimization/a-acoustic-focal-array.resonant", "optimization/f-sidelobe-reduction.resonant"], ["demo-f-inverse-design"], "resonant.optimization"),
+    ("Functional structures", "opt.functional-structures", ["functional/a-microwave-cavity.resonant", "functional/c-acoustic-horn.resonant"], [],
+     "resonant_api (FunctionalStructureService)"),
     ("Topology optimization", "opt.topology", [], [], "-"),
     ("Experiments and acquisition", "exp.acquisition", ["experiments/acoustic_experiments.resonant", "experiments/mechanical_experiments.resonant"], [], "resonant.experiments"),
     ("Measurement correlation", "exp.correlation", ["experiments/rf_experiments.resonant"], ["demo-g-experimental-correlation"], "resonant.measurements.compare"),

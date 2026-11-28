@@ -17,6 +17,7 @@
 #include "resonant/v1/geometry/geometry_service.pb.h"
 #include "resonant/v1/materials/material_service.pb.h"
 #include "resonant/v1/multiphysics/multiphysics_service.pb.h"
+#include "resonant/v1/functional/functional_service.pb.h"
 #include "resonant/v1/optimization/optimization_service.pb.h"
 #include "resonant/v1/project/project_service.pb.h"
 #include "resonant/v1/results/results_service.pb.h"
@@ -29,6 +30,7 @@
 #include <google/protobuf/util/time_util.h>
 
 #include <chrono>
+#include <limits>
 #include <thread>
 
 namespace resonant::automation_api {
@@ -332,6 +334,73 @@ void sessionToProto(const services::SessionInfo& s, v1::Session* out)
 bool remote(services::Interface source)
 {
     return source == services::Interface::Grpc || source == services::Interface::Mcp || source == services::Interface::Unspecified;
+}
+
+// --- functional structures ------------------------------------------------------------------
+
+double numberOf(const nlohmann::json& v)
+{
+    if (v.is_number())
+        return v.get<double>();
+    if (v.is_string())
+        return v.get<std::string>() == "-inf" ? -std::numeric_limits<double>::infinity() : std::numeric_limits<double>::infinity();
+    return std::numeric_limits<double>::quiet_NaN();
+}
+
+void structureToProto(const nlohmann::json& document, v1::FunctionalStructure* out)
+{
+    out->set_structure_id(document.value("id", std::string()));
+    out->set_name(document.value("name", std::string()));
+    [[maybe_unused]] const Failure f = structOf(document, out->mutable_definition());
+}
+
+void parametersToProto(const nlohmann::json& list, google::protobuf::RepeatedPtrField<v1::StructureParameter>* out)
+{
+    for (const auto& p : list) {
+        auto* x = out->Add();
+        x->set_parameter_id(p.value("id", std::string()));
+        x->set_name(p.value("name", std::string()));
+        x->set_kind(p.value("kind", std::string()));
+        x->set_value(p.value("value", 0.0));
+        x->set_unit(p.value("unit", std::string()));
+        x->set_min(p["min"].is_number() ? p["min"].get<double>() : -std::numeric_limits<double>::infinity());
+        x->set_max(p["max"].is_number() ? p["max"].get<double>() : std::numeric_limits<double>::infinity());
+        x->set_editable(p.value("editable", false));
+        x->set_binding(p.value("binding", std::string()));
+        x->set_object_name(p.value("object", std::string()));
+        x->set_group(p.value("group", std::string()));
+    }
+}
+
+Failure functionalResultToProto(const nlohmann::json& d, bool includeDocument, v1::FunctionalResult* out)
+{
+    out->set_result_id(d.value("resultId", std::string()));
+    out->set_kind(d.value("kind", std::string()));
+    out->set_structure_id(d.value("structure", nlohmann::json::object()).value("id", std::string()));
+    out->set_model_id(d.value("analysis", nlohmann::json::object()).value("model", nlohmann::json::object()).value("id", std::string()));
+    if (d.value("kind", std::string()) == "analysis")
+        for (const auto& m : d.value("metrics", nlohmann::json::array())) {
+            auto* x = out->add_metrics();
+            x->set_key(m.value("key", std::string()));
+            x->set_label(m.value("label", std::string()));
+            x->set_unit(m.value("unit", std::string()));
+            x->set_value(numberOf(m["value"]));
+        }
+    out->set_stale(d.value("stale", false));
+    for (const auto& r : d.value("currentStaleness", nlohmann::json::array())) {
+        auto* x = out->add_staleness();
+        x->set_what(r.value("what", std::string()));
+        x->set_detail(r.value("detail", std::string()));
+    }
+    out->set_stale_on_completion(d.value("staleOnCompletion", false));
+    out->set_feasible(d.value("feasible", true));
+    out->set_behaviour(d.value("behaviour", std::string()));
+    for (const auto& w : d.value("warnings", nlohmann::json::array()))
+        if (w.is_string())
+            out->add_warnings(w.get<std::string>());
+    if (includeDocument)
+        return structOf(d, out->mutable_document());
+    return std::nullopt;
 }
 
 // --- multiphysics ----------------------------------------------------------------------------
@@ -1420,6 +1489,202 @@ void Dispatcher::registerAutomation()
             if (!r)
                 return r.error();
             return coupledResultToProto(in.result_id(), *r.value(), in.include_document(), out.mutable_result());
+        });
+    unary<v1::ListAnalysisKindsRequest, v1::ListAnalysisKindsResponse>(
+        "FunctionalStructureService", "ListAnalysisKinds", Permission::Read, false, true,
+        [this](const v1::ListAnalysisKindsRequest&, v1::ListAnalysisKindsResponse& out, const CallContext& c) -> Failure {
+            auto kinds = session_.services().functional.analysisKinds(c);
+            if (!kinds)
+                return kinds.error();
+            for (const auto& k : kinds.value()) {
+                auto* x = out.add_kinds();
+                x->set_kind_id(k.value("id", std::string()));
+                x->set_title(k.value("title", std::string()));
+                x->set_description(k.value("description", std::string()));
+                for (const auto& d : k.value("domains", nlohmann::json::array()))
+                    x->add_domains(d.get<std::string>());
+                x->set_category(k.value("category", std::string()));
+                x->set_mechanism(k.value("mechanism", std::string()));
+                for (const auto& m : k.value("models", nlohmann::json::array())) {
+                    auto* y = x->add_models();
+                    y->set_model_id(m.value("id", std::string()));
+                    y->set_name(m.value("name", std::string()));
+                    y->set_version(m.value("version", std::string()));
+                    y->set_fidelity(m.value("fidelity", std::string()));
+                    for (const auto& a : m.value("assumptions", nlohmann::json::array()))
+                        y->add_assumptions(a.get<std::string>());
+                    y->set_validity(m.value("validity", std::string()));
+                }
+                for (const auto& m : k.value("metrics", nlohmann::json::array())) {
+                    auto* y = x->add_metrics();
+                    y->set_key(m.value("key", std::string()));
+                    y->set_label(m.value("label", std::string()));
+                    y->set_unit(m.value("unit", std::string()));
+                    y->set_definition(m.value("definition", std::string()));
+                }
+            }
+            return std::nullopt;
+        });
+    unary<v1::ListFunctionalStructuresRequest, v1::ListFunctionalStructuresResponse>(
+        "FunctionalStructureService", "ListFunctionalStructures", Permission::Read, false, true,
+        [this](const v1::ListFunctionalStructuresRequest&, v1::ListFunctionalStructuresResponse& out, const CallContext& c) -> Failure {
+            auto list = session_.services().functional.structures(c);
+            if (!list)
+                return list.error();
+            for (const auto& d : list.value())
+                structureToProto(d, out.add_structures());
+            return std::nullopt;
+        });
+    unary<v1::GetFunctionalStructureRequest, v1::GetFunctionalStructureResponse>(
+        "FunctionalStructureService", "GetFunctionalStructure", Permission::Read, false, true,
+        [this](const v1::GetFunctionalStructureRequest& in, v1::GetFunctionalStructureResponse& out, const CallContext& c) -> Failure {
+            auto d = session_.services().functional.structure(c, in.structure_id());
+            if (!d)
+                return d.error();
+            structureToProto(d.value(), out.mutable_structure());
+            return std::nullopt;
+        });
+    unary<v1::SetFunctionalStructureRequest, v1::SetFunctionalStructureResponse>(
+        "FunctionalStructureService", "SetFunctionalStructure", Permission::Modify, true, true,
+        [this](const v1::SetFunctionalStructureRequest& in, v1::SetFunctionalStructureResponse& out, const CallContext& c) -> Failure {
+            const nlohmann::json definition = in.has_definition() ? jsonOf(in.definition()) : nlohmann::json::object();
+            auto m = session_.services().functional.setStructure(c, definition);
+            if (!m)
+                return m.error();
+            detail::mutated(out.mutable_header(), m.value());
+            toProto(m.value().changes, out.mutable_changes());
+            if (auto stored = session_.services().functional.structure(c, definition.value("id", std::string())))
+                structureToProto(stored.value(), out.mutable_structure());
+            return std::nullopt;
+        });
+    unary<v1::DeleteFunctionalStructureRequest, v1::DeleteFunctionalStructureResponse>(
+        "FunctionalStructureService", "DeleteFunctionalStructure", Permission::Modify, true, false,
+        [this](const v1::DeleteFunctionalStructureRequest& in, v1::DeleteFunctionalStructureResponse& out, const CallContext& c) -> Failure {
+            auto m = session_.services().functional.deleteStructure(c, in.structure_id());
+            if (!m)
+                return m.error();
+            detail::mutated(out.mutable_header(), m.value());
+            toProto(m.value().changes, out.mutable_changes());
+            return std::nullopt;
+        });
+    unary<v1::GetStructureParametersRequest, v1::GetStructureParametersResponse>(
+        "FunctionalStructureService", "GetStructureParameters", Permission::Read, false, true,
+        [this](const v1::GetStructureParametersRequest& in, v1::GetStructureParametersResponse& out, const CallContext& c) -> Failure {
+            auto p = session_.services().functional.parameters(c, in.structure_id());
+            if (!p)
+                return p.error();
+            parametersToProto(p.value(), out.mutable_parameters());
+            return std::nullopt;
+        });
+    unary<v1::SetStructureParametersRequest, v1::SetStructureParametersResponse>(
+        "FunctionalStructureService", "SetStructureParameters", Permission::Modify, true, true,
+        [this](const v1::SetStructureParametersRequest& in, v1::SetStructureParametersResponse& out, const CallContext& c) -> Failure {
+            std::map<std::string, double, std::less<>> values(in.values().begin(), in.values().end());
+            const std::optional<std::uint64_t> expected = in.expected_revision() ? std::optional<std::uint64_t>(in.expected_revision()) : std::nullopt;
+            auto m = session_.services().functional.setParameters(c, in.structure_id(), values, expected);
+            if (!m)
+                return m.error();
+            detail::mutated(out.mutable_header(), m.value());
+            toProto(m.value().changes, out.mutable_changes());
+            if (auto p = session_.services().functional.parameters(c, in.structure_id()))
+                parametersToProto(p.value(), out.mutable_parameters());
+            return std::nullopt;
+        });
+    unary<v1::ValidateFunctionalStructureRequest, v1::ValidateFunctionalStructureResponse>(
+        "FunctionalStructureService", "ValidateFunctionalStructure", Permission::Read, false, true,
+        [this](const v1::ValidateFunctionalStructureRequest& in, v1::ValidateFunctionalStructureResponse& out, const CallContext& c) -> Failure {
+            auto v = session_.services().functional.validate(c, in.structure_id(), in.has_definition() ? jsonOf(in.definition()) : nlohmann::json());
+            if (!v)
+                return v.error();
+            toProto(v.value(), out.mutable_validation());
+            return std::nullopt;
+        });
+    unary<v1::AnalyzeStructureRequest, v1::AnalyzeStructureResponse>(
+        "FunctionalStructureService", "AnalyzeStructure", Permission::Execute, false, false,
+        [this](const v1::AnalyzeStructureRequest& in, v1::AnalyzeStructureResponse& out, const CallContext& c) -> Failure {
+            auto job = session_.services().functional.analyze(c, in.structure_id(), in.model_id());
+            if (!job)
+                return job.error();
+            toProto(job.value(), out.mutable_job());
+            return std::nullopt;
+        });
+    unary<v1::SweepStructureRequest, v1::SweepStructureResponse>(
+        "FunctionalStructureService", "SweepStructure", Permission::Execute, false, false,
+        [this](const v1::SweepStructureRequest& in, v1::SweepStructureResponse& out, const CallContext& c) -> Failure {
+            nlohmann::json spec{{"axes", nlohmann::json::array()}, {"model", in.model_id()}};
+            for (const auto& a : in.axes()) {
+                nlohmann::json axis{{"parameter", a.parameter_id()}};
+                if (a.values_size() > 0)
+                    axis["values"] = std::vector<double>(a.values().begin(), a.values().end());
+                else
+                    axis.update({{"from", a.first()}, {"to", a.last()}, {"points", a.points() > 0 ? a.points() : 11}});
+                spec["axes"].push_back(std::move(axis));
+            }
+            auto job = session_.services().functional.sweep(c, in.structure_id(), spec);
+            if (!job)
+                return job.error();
+            toProto(job.value(), out.mutable_job());
+            return std::nullopt;
+        });
+    unary<v1::ComputeStructureSensitivityRequest, v1::ComputeStructureSensitivityResponse>(
+        "FunctionalStructureService", "ComputeStructureSensitivity", Permission::Execute, false, false,
+        [this](const v1::ComputeStructureSensitivityRequest& in, v1::ComputeStructureSensitivityResponse& out, const CallContext& c) -> Failure {
+            const nlohmann::json spec{{"parameters", std::vector<std::string>(in.parameter_ids().begin(), in.parameter_ids().end())},
+                                      {"relativeStep", in.relative_step() > 0.0 ? in.relative_step() : 1e-3},
+                                      {"model", in.model_id()}};
+            auto job = session_.services().functional.sensitivity(c, in.structure_id(), spec);
+            if (!job)
+                return job.error();
+            toProto(job.value(), out.mutable_job());
+            return std::nullopt;
+        });
+    unary<v1::GetFunctionalResultRequest, v1::GetFunctionalResultResponse>(
+        "FunctionalStructureService", "GetFunctionalResult", Permission::Read, false, true,
+        [this](const v1::GetFunctionalResultRequest& in, v1::GetFunctionalResultResponse& out, const CallContext& c) -> Failure {
+            auto r = session_.services().functional.result(c, in.result_id());
+            if (!r)
+                return r.error();
+            return functionalResultToProto(r.value(), in.include_document(), out.mutable_result());
+        });
+    unary<v1::OptimizeStructureRequest, v1::OptimizeStructureResponse>(
+        "FunctionalStructureService", "OptimizeStructure", Permission::Execute, false, false,
+        [this](const v1::OptimizeStructureRequest& in, v1::OptimizeStructureResponse& out, const CallContext& c) -> Failure {
+            nlohmann::json spec = nlohmann::json::object();
+            if (!in.algorithm().empty())
+                spec["algorithm"] = in.algorithm();
+            if (in.max_evaluations() > 0)
+                spec["maxEvaluations"] = in.max_evaluations();
+            if (!in.model_id().empty())
+                spec["model"] = in.model_id();
+            if (in.seed() > 0)
+                spec["seed"] = in.seed();
+            auto job = session_.services().functional.optimize(c, in.structure_id(), spec);
+            if (!job)
+                return job.error();
+            toProto(job.value(), out.mutable_job());
+            return std::nullopt;
+        });
+    unary<v1::ExplainCandidatesRequest, v1::ExplainCandidatesResponse>(
+        "FunctionalStructureService", "ExplainCandidates", Permission::Read, false, true,
+        [this](const v1::ExplainCandidatesRequest& in, v1::ExplainCandidatesResponse& out, const CallContext& c) -> Failure {
+            auto e = session_.services().functional.explain(c, in.run_id(), in.count() > 0 ? in.count() : 3);
+            if (!e)
+                return e.error();
+            out.set_structure_id(e.value().value("structure", std::string()));
+            for (const auto& k : e.value().value("candidates", nlohmann::json::array())) {
+                auto* x = out.add_candidates();
+                x->set_candidate_id(k.value("candidate", std::string()));
+                x->set_weighted_score(k.value("weightedScore", 0.0));
+                x->set_feasible(k.value("feasible", false));
+                x->set_model_id(k.value("model", std::string()));
+                if (Failure f = structOf(k.value("values", nlohmann::json::object()), x->mutable_values()))
+                    return f;
+                if (Failure f = structOf(k.value("metrics", nlohmann::json::object()), x->mutable_metrics()))
+                    return f;
+                if (Failure f = structOf(k.value("explanation", nlohmann::json::object()), x->mutable_explanation()))
+                    return f;
+            }
+            return std::nullopt;
         });
 }
 

@@ -386,3 +386,22 @@ milestones below.)
 | A physical-system panel, ledger and coupling-graph views in the GUI | Missing | planned (`docs/architecture/COUPLED_ENGINE_ROADMAP.md`) |
 | Yee, FDTD, finite-element plates and 3D conduction as participants | Missing | planned |
 | Acoustic ↔ structure, Lorentz, radiation-pressure, magnetic-loss, piezoelectric, acoustic-heating and fluid couplings | Missing | registered as planned; validation refuses them |
+
+## Functional structures — `docs/requirements/functional_structures.md`, `docs/architecture/FUNCTIONAL_STRUCTURE_ARCHITECTURE.md`
+
+| Capability | State | Notes |
+|---|---|---|
+| Functional structures as project resources (undoable, saved, validated) with bodies, regions, boundaries, analysis, objectives, constraints | Tested | `src/core/functional`; created through Python, the API or example projects |
+| Bound, free and derived parameters; changes as one undoable step through the geometry kinds' rules; optimistic concurrency | Tested | rotations and material choices are not structure parameters yet |
+| Content-keyed staleness of results (geometry, material, definition, discretization), stale-on-completion, the simulation-geometry cache | Tested | |
+| Microwave cavity: modes, fields, stored energy, wall and fill Q, bandwidth, port response, sensitivity, thermal detuning; Yee full-wave frequencies and fill decay | Tested | rectangular cavities; lumped port; Yee walls perfectly conducting |
+| Two-mirror optical resonator (paraxial): stability, waist, spots, spacing, finesse, Q, clipping | Tested | no misalignment, no diffraction calculation |
+| Acoustic horn (Webster, baffled piston) and the `horn.acoustic` geometry kind | Tested | plane waves, lossless walls |
+| Mechanical resonator (finite elements, closed form) | Tested | reuses the mechanics studies |
+| Photonic two-layer cell (exact Bloch, finite stack, homogenized index) and the periodic rod | Tested | 1D, normal incidence |
+| Coupled slab through the Coupled Energy–Matter Engine with geometry from the scene | Tested | layered systems |
+| Sweeps, sensitivities, mode tracking, objectives, constraints (manufacturing), explained candidates; optimization through the existing framework | Tested | no adjoints, no topology optimization of structures |
+| `FunctionalStructureService` (14 operations), Python, MCP, capabilities | Tested | `tests/core/test_functional_services.cpp`, `python/tests/test_functional_api.py` |
+| Functional Structures panel (parameters, analysis, metrics, modes, staleness, curves, sweep) | Tested | `tests/app/test_functional_panel.cpp`; no structure editor, no viewport overlays of functional results |
+| CAD import, OpenCASCADE | Missing | no CAD kernel in Resonant (open V1 item RES-PRODUCT-015) |
+| Force and momentum metrics, coupled resonators, cylindrical cavities, 2D/3D lattices | Missing | planned (`docs/architecture/ENERGY_MATTER_RESEARCH_ROADMAP.md`) |

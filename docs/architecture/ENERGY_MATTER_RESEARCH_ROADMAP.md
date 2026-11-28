@@ -76,6 +76,8 @@ own scope decides what each delivers.
 
 ## Stage 6 — Geometry-driven resonant systems
 
+- **Status:** partly current (REQ-CHAT-20261126-017): functional structures with resonance across the cavity, optical, mechanical and periodic analyses (modes, Q, bandwidth, mode tracking, geometric sensitivity); coupled resonators and mode splitting remain.
+
 - **Goals:** `ResonanceDescriptor` across domains; Q from losses; mode extraction from time-domain runs; coupled resonators and mode splitting; boundary and region objects; conversion fidelity records.
 - **Depends on:** stages 3–4. **Reuses:** every domain's mode types, spectra, modal analysis.
 - **Risks:** Q from inadequate loss models; spurious modes from discretization.
@@ -84,6 +86,8 @@ own scope decides what each delivers.
 - **Queued:** REQ-CHAT-20261126-017 (Prompt 19, geometry-driven energy transformation), REQ-CHAT-20261126-018 (Prompt 20, resonant structures and coupled oscillatory systems).
 
 ## Stage 7 — Metamaterials and periodic structures
+
+- **Status:** 1D current (REQ-CHAT-20261126-017): the two-layer electromagnetic cell (exact Bloch, gaps, finite-stack transmission) and the periodic rod as analyses; 2D/3D lattices remain.
 
 - **Goals:** `UnitCell` and `Lattice`; 2D/3D Bloch analysis (elastic, acoustic, electromagnetic with phase-shifted periodic boundaries); band diagrams; finite structures from lattices.
 - **Depends on:** stage 6. **Reuses:** `mechanics/Bloch`, Yee periodic boundaries, finite elements.
@@ -120,6 +124,8 @@ own scope decides what each delivers.
 - **Queued:** REQ-CHAT-20261126-021.
 
 ## Stage 11 — Function-driven inverse design
+
+- **Status:** partly current (REQ-CHAT-20261126-017): objectives, constraints (manufacturing), sweeps, sensitivities and the optimization framework over structure parameters, with explained candidates; unit-cell topology optimization remains.
 
 - **Goals:** objectives over coupled and cross-domain quantities (a resonance that does not drift with temperature, a band gap, an effective impedance); unit-cell topology optimization.
 - **Depends on:** stages 5–8. **Reuses:** the optimization framework (all algorithms, multi-fidelity, robust, surrogates, SIMP).

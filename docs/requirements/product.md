@@ -21,7 +21,9 @@ and interaction with energy, and to predict that behavior from physical
 models (`docs/vision/SHAPE_FUNCTION_ENERGY.md`,
 `shape_function_energy.md` RES-SFE-001..012). Its first implementation is
 the Coupled Energy–Matter Engine (REQ-CHAT-20261126-016,
-`coupled_engine.md` RES-CEME-001..016).
+`coupled_engine.md` RES-CEME-001..016); functional structures make geometry
+a physical design variable (REQ-CHAT-20261126-017, `functional_structures.md`
+RES-FUNC-001..016).
 
 Each requirement below names the release in which it must first hold:
 **V1** (the initial release, a complete acoustic workflow), or **LATER**
