@@ -189,6 +189,8 @@ void solid20Shape(double xi, double eta, double zeta, Eigen::Matrix<double, 20, 
 // determinant there (corner and midpoint positions x).
 Eigen::Matrix<double, 20, 3> solid20Gradients(const std::array<Vec3, 20>& x, double xi, double eta, double zeta, double& detJ);
 std::array<Vec3, 20> solid20Positions(const StructuralModel& model, const Element& element);
+// The 20-node element's strain-displacement matrix (Voigt, engineering shear) from its gradients.
+Eigen::Matrix<double, 6, 60> solid20StrainMatrix(const Eigen::Matrix<double, 20, 3>& gradients);
 
 // Stress (Voigt order, Pa) of a Solid or Solid20 element at a natural point.
 Eigen::Matrix<double, 6, 1> solidStress(const StructuralModel& model, const Element& element, const Eigen::VectorXd& u, double xi, double eta,

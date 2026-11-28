@@ -61,6 +61,14 @@ TEST(MatterExploration, DirectionAMechanismsWithTheirStatus)
     EXPECT_TRUE(findMechanism("engine:em.absorption-to-heat")->implemented());
     const json ae = mechanismsFor("optical", "electrical", nullptr, *p);
     EXPECT_FALSE(ae["modeled"].get<bool>());
+    // Standalone models (REQ-CHAT-20261128-005) are named, without claiming an analysis of architectures.
+    for (const char* id : {"thermoelectric", "magnetostrictive", "photovoltaic"}) {
+        const Mechanism* m = findMechanism(id);
+        ASSERT_NE(m, nullptr) << id;
+        EXPECT_EQ(m->status, "standalone") << id;
+        EXPECT_FALSE(m->implemented()) << id;
+        EXPECT_FALSE(m->model.empty()) << id;
+    }
 }
 
 TEST(MatterExploration, DirectionBFindsWhatTheConverterCanDoAndWhatMayFail)

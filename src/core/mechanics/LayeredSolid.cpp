@@ -667,6 +667,28 @@ Result<LayeredMesh> meshLayeredBody(const LayeredBody& body, const LayeredSuppor
         out.interfaceParameter.push_back(uv);
         out.interfaceDebonded.push_back(debonded);
     }
+    // The faces of every layer, and the (u, v) of every node.
+    out.layerFaceNodes.resize(body.layers.size());
+    out.nodeParameter.assign(m.nodes.size(), {0.0, 0.0});
+    for (size_t layer = 0; layer < body.layers.size(); ++layer) {
+        const int nt = body.layers[layer].elementsThrough;
+        for (int K = 0; K <= 2 * nt; ++K)
+            for (int J = 0; J <= 2 * b.nv; ++J)
+                for (int I = 0; I <= 2 * b.nu; ++I) {
+                    const int node = b.lattice[layer][static_cast<size_t>(I + (2 * b.nu + 1) * (J + (2 * b.nv + 1) * K))];
+                    if (node < 0)
+                        continue;
+                    out.nodeParameter[static_cast<size_t>(node)] = {I / (2.0 * b.nu), J / (2.0 * b.nv)};
+                    if (K == 0)
+                        out.layerFaceNodes[layer][0].push_back(node);
+                    if (K == 2 * nt)
+                        out.layerFaceNodes[layer][1].push_back(node);
+                }
+        for (auto& face : out.layerFaceNodes[layer]) {
+            std::sort(face.begin(), face.end());
+            face.erase(std::unique(face.begin(), face.end()), face.end());
+        }
+    }
     // Supports.
     const double tol = 1e-8 * b.scale;
     const int nu = b.nu, nv = b.nv;
@@ -812,6 +834,11 @@ std::string fidelityOf(const LayeredBody& body)
 }
 
 }  // namespace
+
+Result<Eigen::VectorXd> layeredLoadVector(const LayeredBody& body, const LayeredMesh& mesh, const LayeredLoads& loads)
+{
+    return layeredLoads(body, mesh, loads);
+}
 
 std::optional<double> LayeredStaticResult::maxFailureIndex(int interface) const
 {

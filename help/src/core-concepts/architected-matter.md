@@ -58,7 +58,8 @@ project in `examples/matter` to see one.
   Findings are kept apart from hypotheses, and nothing is changed.
 - **Mechanisms** lists, for a desired conversion (say thermal to
   electrical), what Resonant models and what it does not (there is no
-  thermoelectric model, for example).
+  thermoelectric analysis of architectures, for example; the standalone
+  thermoelectric, magnetostrictive and photovoltaic models are listed as such).
 - **Check manufacturability** compares the layers with their processes. That
   includes the stress built in when a film cools from its deposition
   temperature.

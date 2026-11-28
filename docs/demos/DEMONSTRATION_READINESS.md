@@ -42,9 +42,9 @@ These belong to REQ-CHAT-20261128-011.
 | A bell's modes, with its geometry | yes since REQ-CHAT-20261128-004: a layered solid of revolution on the bell's meridian (ADR-000232) | the bell's profile and material (Prompt 30) |
 | The sound the bell radiates | for baffled plates (Rayleigh, one-way) | radiation from a curved vibrating body (REQ-CHAT-20261128-004, -005) |
 | Helmholtz resonance | yes: lumped resonators (REQ-CHAT-20261126-018) | the resonator driven by the computed field |
-| Pressure loading the cantilever | no: `acoustic.pressure-to-structure` is planned | the acoustic load on a structure (REQ-CHAT-20261128-005) |
-| Piezoelectric conversion | the lumped cantilever (REQ-CHAT-20261127-001) | the coupled piezoelectric formulation (REQ-CHAT-20261128-005) |
-| An energy ledger across the chain | per stage only | a cross-domain chain (REQ-CHAT-20261128-005) |
+| Pressure loading the cantilever | a plane wave's pressure on a piezoelectric plate in a duct (REQ-CHAT-20261128-005); the full-wave load on a structure is still planned | a resonator-coupled load path (Prompt 30) |
+| Piezoelectric conversion | the lumped cantilever and the 3D piezoelectric continuum (REQ-CHAT-20261128-005, ADR-000233) | - |
+| An energy ledger across the chain | yes: conversion chains with every stage and join checked (REQ-CHAT-20261128-005) | the bell's own stages (Prompt 30) |
 
 **Not ready.** Every stage after the excitation needs physics from phases 3 and 4.
 

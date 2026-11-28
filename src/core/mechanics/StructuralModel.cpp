@@ -840,6 +840,11 @@ Eigen::Matrix<double, 20, 3> solid20Gradients(const std::array<Vec3, 20>& x, dou
     return dn * j.inverse().transpose();
 }
 
+Eigen::Matrix<double, 6, 60> solid20StrainMatrix(const Eigen::Matrix<double, 20, 3>& gradients)
+{
+    return hex20B(gradients);
+}
+
 std::array<Vec3, 20> solid20Positions(const StructuralModel& model, const Element& e)
 {
     std::array<Vec3, 20> x;

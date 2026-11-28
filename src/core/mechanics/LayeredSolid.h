@@ -165,12 +165,16 @@ struct LayeredMesh {
     std::vector<std::array<int, 3>> elementCell;           // (i, j, k): k through its layer
     std::vector<std::array<std::array<double, 2>, 9>> interfaceParameter;  // (u, v) of each interface element's Gauss points
     std::vector<std::array<bool, 9>> interfaceDebonded;
+    std::vector<std::array<std::vector<int>, 2>> layerFaceNodes;  // per layer: the nodes of its inner (0) and outer (1) face
+    std::vector<std::array<double, 2>> nodeParameter;             // (u, v) of each node
     std::vector<std::string> assumptions;
 };
 // The mechanical mesh: perfect bonding (without debonded regions) shares the
 // nodes; every other interface gets interface elements (a perfect bond with a
 // debonded region is enforced by a stated penalty).
 Result<LayeredMesh> meshLayeredBody(const LayeredBody& body, const LayeredSupports& supports);
+// The nodal forces (full dofs) of the loads on a meshed body.
+Result<Eigen::VectorXd> layeredLoadVector(const LayeredBody& body, const LayeredMesh& mesh, const LayeredLoads& loads);
 
 struct LayeredElementResult {
     int layer = 0;

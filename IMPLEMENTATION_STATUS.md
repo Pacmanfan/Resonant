@@ -500,6 +500,17 @@ milestones below.)
 | Moving control volumes, mass and charge balances, open systems with mass flow | Missing | registered models without data |
 | 3D spatial accounting views | Missing | the layered profiles only |
 
+## Energy conversion — `docs/requirements/energy_conversion.md`, `docs/physics/ENERGY_CONVERSION.md`
+
+| Capability | State | Notes |
+|---|---|---|
+| Conversion stages and chains in one ledger: each stage's balance and every join checked; missing terms reported (RES-CONV-001) | Tested | |
+| 3D piezoelectric continuum: stress-charge constants rotated with surface and poling, electrodes and terminals, static, short- and open-circuit modes, harmonic with loads and a balance (RES-CONV-002) | Tested | no dielectric loss, ferroelectric switching or electrode stiffness; the engine's piezoelectric participant planned |
+| Thermoelectric couples: alpha, rho, kappa of T; Joule, Peltier, Thomson; generator and cooler; entropy (RES-CONV-003) | Tested | 1D legs, imposed junction temperatures; not yet an analysis of architectures |
+| Magnetostrictive rods: linear piezomagnetic actuator and coil harvester (RES-CONV-004) | Tested | linear about a bias only: no hysteresis, saturation or Delta-E effect |
+| Photovoltaic cells: single-diode circuit (Newton and Lambert W), spectral photocurrent, temperature, a term-by-term light budget (RES-CONV-005) | Tested | no semiconductor transport; a scaled black-body spectrum unless one is given |
+| Acoustic to electrical chain: a duct plane wave, a piezoelectric plate, a load (RES-CONV-006) | Tested | 1D plane wave; nothing behind the plate |
+
 ## Experimental laboratory — `docs/requirements/laboratory.md`, `docs/experiments/LABORATORY_ARCHITECTURE.md`
 
 | Capability | State | Notes |
