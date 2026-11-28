@@ -43,6 +43,11 @@ public:
     // The alternating extrema that define the present state (the "staircase" memory).
     const std::vector<double>& memory() const { return memory_; }
     const PreisachParameters& parameters() const { return p_; }
+    // The loss per volume (J/m^3) of a closed loop between the fields `low` and `high`, from
+    // the relays alone (REQ-CHAT-20261126-022, RES-ACC-014): every relay with alpha <= high
+    // and beta >= low switches up and down once, dissipating 2 mu0 Ms w (alpha - beta); the
+    // reversible part dissipates nothing. The continuum of the loop integral mu0 closed H dM.
+    double hysteronLoopLoss(double low, double high) const;
 
 private:
     PreisachParameters p_;

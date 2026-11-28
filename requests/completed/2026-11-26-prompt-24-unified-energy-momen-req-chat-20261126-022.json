@@ -1,0 +1,417 @@
+{
+  "request_id": "REQ-CHAT-20261126-022",
+  "source": "chat",
+  "type": "FEATURE",
+  "priority": "NORMAL",
+  "created": "2026-11-26T23:49:11-05:00",
+  "created_utc": "2026-11-27T04:49:11+00:00",
+  "id_date": "2026-11-26",
+  "timezone": "EST (UTC-05:00)",
+  "status": "completed",
+  "original_text": "# PROMPT 24 \u2014 UNIFIED ENERGY, MOMENTUM, FORCE AND CONSERVATION FRAMEWORK\n\n## Project: RESONANT \u2014 Wave Field Engineering Studio\n\n## Mission\n\nImplement the next major scientific foundation in RESONANT: **Unified Energy, Momentum, Force and Conservation Accounting**.\n\nRESONANT now has an architectural foundation for geometry-driven energy transformation, resonance, metamaterials, multiscale material modeling, and dynamic material evolution.\n\nThe next requirement is to establish a rigorous physical accounting framework connecting these capabilities.\n\nEvery physical simulation involves some combination of:\n\n- Energy entering a system.\n- Energy leaving a system.\n- Energy stored within a system.\n- Energy transferred between physical domains.\n- Energy converted from one form to another.\n- Energy dissipated or irreversibly transformed.\n- Momentum transported by matter and fields.\n- Forces acting between objects and physical domains.\n- Changes in motion and angular momentum.\n- Exchanges across boundaries.\n- Conservation relationships and numerical residuals.\n\nRESONANT must be able to account for these processes consistently.\n\nThe goal is to make physical accounting a first-class capability of the architecture rather than leaving energy, force, momentum, and power calculations scattered across individual solvers.\n\nThe governing concept is:\n\n**Physical Sources + Boundary Exchanges + Initial State \u2192 Physical Evolution \u2192 Stored Energy and Momentum + Transfers + Dissipation + Final State**\n\nThe system must be able to determine whether its calculations are physically and numerically consistent, identify missing or duplicated contributions, and explain where quantities flow throughout a simulation.\n\nThis is not an attempt to replace domain-specific physical equations with one universal equation.\n\nIt is an attempt to create a common accounting and verification architecture that allows different physical domains to exchange information while retaining their correct governing physics.\n\n---\n\n# 1. Governing Physical Principles\n\nEstablish the following distinctions throughout RESONANT.\n\n## 1.1 Energy\n\nEnergy is a conserved physical quantity for an appropriately defined isolated system.\n\nEnergy may exist in different forms, including:\n\n- Electromagnetic field energy.\n- Electric and magnetic potential energy.\n- Optical energy.\n- Acoustic energy.\n- Elastic strain energy.\n- Kinetic energy.\n- Gravitational potential energy where modeled.\n- Thermal internal energy.\n- Chemical energy.\n- Phase-transition energy.\n- Molecular and atomic energy.\n- Stored energy in material polarization or magnetization where applicable.\n- Other domain-specific forms.\n\nEnergy can move between these forms and between subsystems.\n\nEnergy accounting must identify those transfers without double-counting them.\n\n## 1.2 Power\n\nPower is the rate of energy transfer.\n\nSupport power as a first-class physical quantity.\n\nExamples:\n\n- Electromagnetic power flow.\n- Mechanical power.\n- Thermal power transfer.\n- Acoustic power.\n- Electrical power.\n- Power dissipated through material losses.\n- Power transferred between coupled domains.\n\nPower must be capable of being represented as a function of time and, where appropriate, position.\n\n## 1.3 Momentum\n\nMomentum is a conserved quantity in appropriately defined isolated systems.\n\nIt can be carried by:\n\n- Moving matter.\n- Mechanical waves.\n- Electromagnetic fields.\n- Fluids.\n- Other physical systems supported by the model.\n\nMomentum may transfer between fields, matter, structures, and external environments.\n\nThe accounting framework must recognize that momentum can be transported through boundaries and that forces can change the momentum of an individual subsystem even when total system momentum is conserved.\n\n## 1.4 Force\n\nForce is not itself a conserved quantity.\n\nIt is an interaction that changes momentum.\n\nThe system must distinguish:\n\n- Applied forces.\n- Reaction forces.\n- Internal forces.\n- External forces.\n- Contact forces.\n- Field-mediated forces.\n- Distributed forces.\n- Body forces.\n- Surface tractions.\n- Constraint forces.\n\nForce calculations must retain their physical origin and direction.\n\n## 1.5 Angular Momentum and Torque\n\nAngular momentum must be treated as a first-class physical quantity where the modeled physics supports it.\n\nSupport:\n\n- Angular momentum.\n- Torque.\n- Rotational inertia.\n- Angular velocity.\n- Angular acceleration.\n- Angular momentum transfer.\n- External torque.\n- Angular momentum flux.\n\nDo not assume that linear momentum accounting alone is sufficient for systems involving rotation, torque, or field-mediated angular momentum transfer.\n\n---\n\n# 2. Audit the Existing Architecture Before Implementation\n\nPerform a comprehensive audit of the existing repository.\n\nInspect:\n\n- CEME energy and state accounting.\n- Electromagnetic field and power calculations.\n- Optical energy and momentum representations.\n- Acoustic energy and intensity calculations.\n- Mechanical force, stress, and momentum calculations.\n- Thermal energy and heat-transfer models.\n- Fluid and pressure calculations where supported.\n- Material constitutive models.\n- Dynamic material state and internal energy.\n- Resonance and stored-energy calculations.\n- Metamaterial effective-property calculations.\n- Multiscale property derivation.\n- Geometry and boundary representations.\n- Simulation time and spatial field infrastructure.\n- Numerical solvers and integration methods.\n- Existing energy-conservation checks.\n- Existing force and momentum calculations.\n- Serialization and result reporting.\n- Automation and GUI infrastructure.\n\nDetermine:\n\n1. Which physical quantities are already calculated.\n2. Which quantities are calculated independently in different subsystems.\n3. Which quantities are currently missing.\n4. Whether existing energy terms are duplicated.\n5. Whether energy transfers between domains are explicitly represented.\n6. Whether boundary fluxes are accounted for.\n7. Whether numerical conservation errors are measured.\n8. Whether forces and momentum transfers are traceable to their physical origins.\n\nProduce an architecture map.\n\nReuse existing systems where possible.\n\nDo not create a second energy engine, a competing physical state framework, or a parallel set of force calculations.\n\nThe new framework should coordinate and verify existing physical calculations.\n\n---\n\n# 3. Unified Physical Quantity Architecture\n\nImplement a common physical quantity representation.\n\nThe purpose is to give the accounting framework a consistent way to identify, describe, compare, and aggregate physical quantities.\n\nEach quantity must retain its physical meaning.\n\nA quantity record should support:\n\n- Quantity identity.\n- Quantity type.\n- Physical domain.\n- Numerical value or field reference.\n- SI units.\n- Spatial region.\n- Coordinate system.\n- Simulation time or time interval.\n- Source subsystem.\n- Associated material or object.\n- Direction where applicable.\n- Provenance.\n- Numerical uncertainty.\n- Validity information.\n\nSupport scalar, vector, tensor, field, and time-dependent quantities as appropriate.\n\n## 3.1 Units and Dimensional Consistency\n\nImplement or extend a robust dimensional analysis framework.\n\nAll physical accounting operations must respect units.\n\nAt minimum, support the dimensions needed for:\n\n- Energy.\n- Power.\n- Force.\n- Linear momentum.\n- Angular momentum.\n- Torque.\n- Mass.\n- Velocity.\n- Acceleration.\n- Pressure.\n- Stress.\n- Energy density.\n- Power density.\n- Momentum flux.\n- Energy flux.\n- Temperature.\n- Heat capacity.\n- Other quantities already used by supported physical domains.\n\nUse SI as the canonical internal system unless the existing architecture establishes a better compatible convention.\n\nSupport display conversion without changing the underlying physical value.\n\nReject or flag invalid dimensional operations.\n\nFor example:\n\n- Energy cannot be added directly to power.\n- Force cannot be added to momentum.\n- Torque and energy share dimensional units but are different physical quantities and must not be treated as interchangeable.\n- Angular momentum and energy must retain distinct identities.\n\nDimensional correctness is necessary but not sufficient. Physical quantity types must also be preserved.\n\n## 3.2 Typed Physical Quantities\n\nA quantity must carry semantic information beyond its numerical units.\n\nFor example, distinguish:\n\n- Stored energy.\n- Transferred energy.\n- Dissipated energy.\n- Radiated energy.\n- Kinetic energy.\n- Thermal energy.\n- Elastic strain energy.\n\nLikewise distinguish:\n\n- Applied force.\n- Reaction force.\n- Contact force.\n- Field-mediated force.\n- Internal force.\n- External force.\n\nDo not allow unrelated quantities to be combined simply because their dimensions happen to match.\n\n---\n\n# 4. Physical System Boundaries and Control Volumes\n\nEstablish a common architecture for defining the system being analyzed.\n\nEnergy and momentum accounting depend on what is included in the system.\n\nA simulation may represent:\n\n- A closed system.\n- An open system.\n- A control volume.\n- A single object.\n- Multiple interacting objects.\n- A physical field region.\n- A coupled multiphysics assembly.\n- A complete engineered device.\n- A subsystem embedded in a larger environment.\n\nImplement explicit system and control-volume definitions.\n\nEach accounting region must identify:\n\n- Included physical objects.\n- Included fields.\n- Included material regions.\n- Boundary geometry.\n- Boundary conditions.\n- External interactions.\n- Allowed boundary fluxes.\n- Relevant reference frames.\n- Accounting time interval.\n\n## 4.1 Internal and External Interactions\n\nDistinguish interactions internal to the selected system from interactions crossing its boundary.\n\nFor example:\n\nTwo coupled resonators may exchange energy internally.\n\nIf both resonators are inside the same accounting system, that exchange is internal and must not be counted as energy entering or leaving the combined system.\n\nIf only one resonator is included, the same exchange becomes a boundary transfer.\n\nThe accounting architecture must support both perspectives without changing the underlying physical event.\n\n## 4.2 Boundary Fluxes\n\nSupport boundary accounting for:\n\n- Electromagnetic energy flux.\n- Acoustic energy flux.\n- Heat flux.\n- Mechanical power flux.\n- Fluid energy transport.\n- Momentum flux.\n- Mass transport where the underlying model supports it.\n\nBoundary fluxes must be calculated using the appropriate domain-specific physics.\n\nDo not assume every solver provides all necessary flux information.\n\nIdentify missing information and expose it explicitly.\n\n---\n\n# 5. Unified Energy Accounting\n\nImplement an energy accounting framework that tracks physical energy through the system.\n\nFor a suitably defined system, establish a general accounting relationship:\n\n\\[\n\\Delta E_{\\mathrm{stored}}\n=\nE_{\\mathrm{in}}\n-\nE_{\\mathrm{out}}\n+\nE_{\\mathrm{generated}}\n-\nE_{\\mathrm{dissipated}}\n\\]\n\nThis is an accounting structure, not a universal constitutive equation.\n\nThe exact terms and their interpretation must be determined by the physical model and system boundary.\n\nIn particular, internal conversion between energy forms must not be counted as external energy generation or loss.\n\n## 5.1 Energy Categories\n\nImplement explicit categories for:\n\n### Input Energy\n\n- External excitation.\n- Applied mechanical work.\n- Electrical input.\n- Electromagnetic radiation entering the system.\n- Acoustic input.\n- Thermal input.\n- Chemical energy input.\n- Other supported sources.\n\n### Stored Energy\n\n- Field energy.\n- Kinetic energy.\n- Elastic energy.\n- Thermal internal energy.\n- Chemical energy.\n- Magnetic energy.\n- Dielectric energy.\n- Resonant stored energy.\n- Other physically supported storage mechanisms.\n\n### Transferred Energy\n\n- Energy exchanged between coupled physical domains.\n- Energy transferred between objects.\n- Energy transferred across interfaces.\n- Energy transferred between material regions.\n\n### Dissipated Energy\n\n- Resistive losses.\n- Dielectric losses.\n- Magnetic losses.\n- Viscous losses.\n- Mechanical damping.\n- Plastic dissipation.\n- Fracture energy.\n- Acoustic absorption.\n- Radiation losses where they leave the defined system.\n- Other supported irreversible processes.\n\n### Output Energy\n\n- Radiated energy.\n- Transmitted energy.\n- Reflected energy.\n- Extracted electrical energy.\n- Mechanical work delivered to an external load.\n- Heat leaving the system.\n- Other boundary outputs.\n\nDo not treat every loss term as energy destroyed.\n\nEnergy dissipated from an organized physical mode may become thermal energy within the system.\n\nThe accounting must follow that conversion.\n\n## 5.2 Energy Ledger\n\nImplement a persistent, traceable energy ledger.\n\nEvery accounting contribution should record:\n\n- Event identity.\n- Source domain.\n- Destination domain.\n- Energy category.\n- Amount.\n- Units.\n- Time interval.\n- Spatial region.\n- Associated object or material.\n- Calculation method.\n- Provenance.\n- Uncertainty.\n- Whether the contribution is internal or crosses the system boundary.\n\nThe ledger must make it possible to trace an energy contribution back to the physical calculation that produced it.\n\nAvoid storing only final totals.\n\n## 5.3 Stored Energy Versus Energy Flow\n\nMaintain a strict distinction between:\n\n- Energy stored at a particular time.\n- Energy transferred during an interval.\n- Instantaneous power.\n- Cumulative energy transfer.\n\nDo not confuse a high instantaneous power with a large accumulated energy.\n\nDo not confuse a resonator's stored energy with the power being supplied to it.\n\nThis distinction is especially important for resonant and pulsed systems.\n\n---\n\n# 6. Energy Transfer Between Physical Domains\n\nThis is a central requirement.\n\nRESONANT must be capable of tracking energy as it moves between different physical forms.\n\nEstablish explicit transfer interfaces between supported domains.\n\nExamples:\n\n### Electromagnetic to Thermal\n\nElectromagnetic absorption produces heat.\n\nTrack:\n\n1. Electromagnetic energy entering a material.\n2. Electromagnetic energy absorbed.\n3. Energy transferred into thermal internal energy.\n4. Remaining electromagnetic energy.\n5. Subsequent thermal evolution.\n\n### Electromagnetic to Mechanical\n\nElectromagnetic fields exert forces on matter.\n\nTrack field-to-matter momentum and energy transfer using the appropriate physical formulation.\n\n### Mechanical to Thermal\n\nMechanical deformation and friction may produce heat.\n\nTrack elastic storage, irreversible dissipation, and thermal energy generation.\n\n### Acoustic to Mechanical\n\nAcoustic waves transfer energy and momentum to structures.\n\nTrack incident, reflected, transmitted, and absorbed acoustic energy where supported.\n\n### Thermal to Mechanical\n\nTemperature changes can cause expansion and mechanical work.\n\nTrack thermal energy, resulting deformation, and associated mechanical energy changes.\n\n### Chemical to Thermal or Mechanical\n\nChemical reactions may release or absorb energy and alter material state.\n\nOnly implement where the relevant physical models exist.\n\n## 6.1 Transfer Contracts\n\nEvery inter-domain transfer must identify:\n\n- Source domain.\n- Destination domain.\n- Physical mechanism.\n- Transferred quantity.\n- Transfer rate or time-integrated amount.\n- Spatial location.\n- Relevant state variables.\n- Sign convention.\n- Associated uncertainty.\n- Whether the source calculation already includes the destination contribution.\n\nThe last item is essential to prevent double-counting.\n\n## 6.2 Internal Conversion\n\nAn internal transfer must appear consistently in both source and destination accounting.\n\nFor example:\n\nElectromagnetic energy absorbed by a material and converted into heat must reduce the appropriate electromagnetic energy contribution and increase thermal energy.\n\nIt must not be counted as both an external energy input and a new energy source.\n\n---\n\n# 7. Momentum Accounting\n\nEstablish a first-class momentum accounting framework.\n\nMomentum must be tracked across physical objects, material regions, and fields where supported.\n\nThe accounting must distinguish between:\n\n- Momentum stored in moving matter.\n- Momentum carried by fields.\n- Momentum transferred through boundaries.\n- Momentum exchanged between subsystems.\n- Momentum supplied or removed by external interactions.\n\nFor a system with appropriately defined boundaries, implement a general momentum balance:\n\n\\[\n\\Delta \\mathbf P\n=\n\\mathbf P_{\\mathrm{in}}\n-\n\\mathbf P_{\\mathrm{out}}\n+\n\\mathbf I_{\\mathrm{external}}\n\\]\n\nwhere the external impulse is the time integral of the appropriate external force.\n\nThis is a bookkeeping structure. Actual momentum density, flux, and force must be calculated using the relevant domain-specific physics.\n\n## 7.1 Mechanical Momentum\n\nSupport:\n\n- Linear momentum.\n- Angular momentum.\n- Momentum of rigid bodies.\n- Momentum of deformable bodies.\n- Momentum of fluid regions where supported.\n- Momentum transfer through contact and collision.\n- Momentum transfer through applied forces.\n\n## 7.2 Electromagnetic Momentum\n\nWhere supported, account for electromagnetic field momentum.\n\nInvestigate the appropriate formulation for the modeled physical system.\n\nPotential concepts include:\n\n- Electromagnetic momentum density.\n- Poynting vector.\n- Maxwell stress tensor.\n- Lorentz force density.\n- Electromagnetic momentum transfer to matter.\n\nDo not assume that electromagnetic momentum can always be represented by a simple mechanical particle-momentum expression.\n\nThe treatment of momentum in material media can depend on the physical formulation and assumptions.\n\nDocument the formulation selected by each solver.\n\nDo not silently mix incompatible conventions.\n\n## 7.3 Acoustic and Fluid Momentum\n\nWhere supported, account for momentum transfer associated with:\n\n- Acoustic radiation pressure.\n- Fluid pressure.\n- Fluid momentum transport.\n- Acoustic streaming.\n- Wave-mediated forces.\n- Boundary tractions.\n\nUse domain-specific equations.\n\n## 7.4 Momentum Flux\n\nImplement boundary momentum flux accounting where supported.\n\nA system may experience momentum transfer even when no material crosses its boundary.\n\nFor example, radiation can transfer momentum to an absorbing surface.\n\nThe framework must support this possibility.\n\n---\n\n# 8. Force and Torque Architecture\n\nEstablish a unified architecture for collecting, identifying, and accounting for forces and torques.\n\nDo not calculate every force through one universal mechanism.\n\nEach force must originate from an appropriate physical model.\n\n## 8.1 Force Categories\n\nSupport:\n\n- Applied mechanical forces.\n- Contact forces.\n- Constraint forces.\n- Elastic restoring forces.\n- Viscous forces.\n- Pressure forces.\n- Gravity where modeled.\n- Electromagnetic forces.\n- Magnetic forces.\n- Acoustic radiation forces.\n- Radiation pressure.\n- Other domain-specific forces.\n\n## 8.2 Force Provenance\n\nEvery force contribution should record:\n\n- Force identity.\n- Originating model.\n- Source object or field.\n- Target object or region.\n- Magnitude and direction.\n- Coordinate system.\n- Application location.\n- Time dependence.\n- Associated physical mechanism.\n- Numerical uncertainty.\n\n## 8.3 Distributed Forces and Stress\n\nSupport force distributions over surfaces and volumes.\n\nRepresent relevant quantities including:\n\n- Body force density.\n- Surface traction.\n- Stress tensors.\n- Pressure distributions.\n- Field force density.\n\nWhere possible, provide a way to integrate distributed force contributions into resultant force and torque.\n\nDo not discard spatial distribution information when calculating a total resultant.\n\n## 8.4 Newton's Laws and Momentum Balance\n\nWhere the underlying mechanical model supports it, verify the relationship between force, momentum, and acceleration.\n\nFor a simple constant-mass system:\n\n\\[\n\\mathbf F_{\\mathrm{net}} =\n\\frac{d\\mathbf p}{dt}\n\\]\n\nThe system must not assume constant mass for every physical system.\n\nFor variable-mass systems, fluids, and field-coupled systems, use the appropriate momentum balance and boundary terms.\n\n## 8.5 Action and Reaction\n\nSupport the identification of interacting force pairs where the underlying physical formulation provides them.\n\nDo not assume every force contribution can be paired locally without accounting for fields, boundaries, and momentum transport.\n\nFor field-mediated interactions, momentum carried by the field may be essential to a complete balance.\n\n---\n\n# 9. Angular Momentum and Rotational Energy\n\nExtend accounting to rotational systems.\n\nSupport:\n\n- Angular momentum.\n- Torque.\n- Rotational kinetic energy.\n- Rotational inertia.\n- Angular velocity.\n- Angular acceleration.\n- Angular momentum flux.\n- External torque.\n- Rotational energy transfer.\n\nDistinguish between torque and energy even though they have the same SI dimensions.\n\nSupport angular momentum exchange between:\n\n- Rotating structures.\n- Moving fluids.\n- Mechanical resonators.\n- Electromagnetic fields where supported.\n- Other modeled physical systems.\n\nInclude rotational examples in the validation suite.\n\n---\n\n# 10. Energy Storage and Resonant Systems\n\nIntegrate directly with Prompt 20.\n\nResonant systems require a particularly careful distinction between:\n\n- Energy supplied.\n- Energy stored.\n- Energy exchanged between modes or subsystems.\n- Energy dissipated.\n- Energy radiated.\n- Energy extracted.\n\nThe accounting framework must support resonant energy buildup and decay.\n\n## 10.1 Stored Energy\n\nWhere physically defined, track:\n\n- Electric field energy.\n- Magnetic field energy.\n- Mechanical strain energy.\n- Mechanical kinetic energy.\n- Acoustic energy.\n- Other domain-specific stored energy.\n\nDo not assume all resonators store energy in the same way.\n\n## 10.2 Resonant Energy Exchange\n\nFor coupled resonators, track energy exchange between the individual resonators.\n\nIf the combined system is isolated and lossless under the modeled assumptions, internal energy exchange must not appear as a net external energy loss.\n\n## 10.3 Q Factor and Loss Accounting\n\nConnect the ledger to resonance analysis.\n\nWhere applicable, relate stored energy and dissipated power to the appropriate quality-factor definitions.\n\nFor a suitable resonator under the relevant steady-state assumptions:\n\n\\[\nQ = \\omega_0\n\\frac{E_{\\mathrm{stored}}}{P_{\\mathrm{loss}}}\n\\]\n\nEnsure that the stored energy and power loss use compatible definitions.\n\nDistinguish internal, external, radiation, and material losses.\n\nDo not force this expression onto systems for which the required assumptions do not hold.\n\n## 10.4 Transient Energy\n\nSupport time-domain energy accounting for:\n\n- Resonator startup.\n- Energy buildup.\n- Steady-state operation.\n- Excitation removal.\n- Energy decay.\n- Coupled energy transfer.\n- Energy extraction.\n\n---\n\n# 11. Dynamic Material State and Energy Dissipation\n\nIntegrate with Prompt 23.\n\nMaterial state changes may store, transfer, or dissipate energy.\n\nExamples:\n\n- Elastic deformation stores recoverable energy.\n- Plastic deformation dissipates energy.\n- Viscous behavior dissipates mechanical energy.\n- Damage may consume fracture energy.\n- Phase transitions may absorb or release latent heat.\n- Thermal expansion may perform mechanical work.\n- Magnetic hysteresis dissipates energy.\n- Dielectric hysteresis may dissipate energy.\n\nEvery implemented dynamic material model must expose its relevant energy contributions to the accounting framework.\n\n## 11.1 Internal Energy Variables\n\nPreserve the distinction between:\n\n- Recoverable energy.\n- Irrecoverable energy.\n- Thermal internal energy.\n- Stored field energy.\n- Energy transferred to other domains.\n\nDo not assume all work performed on a material is stored as elastic energy.\n\n## 11.2 Hysteresis\n\nHysteretic models must expose their cycle energy and relevant dissipation.\n\nThe calculated hysteresis loss must be consistent with the constitutive response.\n\nDo not calculate hysteresis energy independently from a graphical plot.\n\n## 11.3 Material State Changes\n\nWhen a material changes phase, accumulates damage, or otherwise evolves, the energy accounting system must receive the relevant contributions from the physical model.\n\nDo not invent energy terms based on arbitrary property changes.\n\n---\n\n# 12. Thermodynamic Consistency and Entropy\n\nIntroduce an appropriate architecture for thermodynamic accounting.\n\nEnergy conservation alone is not sufficient to establish that every physical process is thermodynamically valid.\n\nWhere the underlying material and thermal models support it, track:\n\n- Internal energy.\n- Heat transfer.\n- Work.\n- Entropy.\n- Entropy production.\n- Temperature.\n- Relevant thermodynamic potentials.\n- Phase-transition contributions.\n\n## 12.1 First Law\n\nSupport appropriate first-law accounting for the selected system.\n\nThe system must distinguish heat transfer, work, and internal energy changes using consistent sign conventions.\n\n## 12.2 Second Law\n\nWhere thermodynamic models provide the necessary information, evaluate whether the modeled processes are consistent with the second law.\n\nFor irreversible processes, entropy production must satisfy the appropriate nonnegative constraint under the applicable formulation.\n\nDo not claim that a general-purpose entropy calculation is available if the underlying solver does not provide sufficient thermodynamic information.\n\n## 12.3 Open Systems\n\nWhere mass enters or leaves a control volume, account for relevant energy and entropy carried by the transported matter if the physical model supports it.\n\nDo not apply closed-system thermodynamic equations to open systems without the required flow terms.\n\n---\n\n# 13. Conservation Laws Across Physical Domains\n\nCreate a common conservation-law registry.\n\nThe registry should identify which conservation laws apply to each simulation and which quantities are available to verify them.\n\nPotential conservation relationships include:\n\n### Energy\n- Total energy.\n- Internal energy.\n- Mechanical energy.\n- Field energy.\n- Energy flux.\n- Work and heat transfer.\n\n### Linear Momentum\n- Mechanical momentum.\n- Field momentum.\n- Momentum flux.\n- External impulse.\n\n### Angular Momentum\n- Rotational momentum.\n- Torque.\n- Angular momentum flux.\n\n### Mass\n- Total mass.\n- Mass flux.\n- Sources and sinks where physically appropriate.\n\n### Charge\n- Charge density.\n- Current.\n- Charge flux.\n- Charge conservation.\n\n### Other Domain-Specific Quantities\n- Species concentration.\n- Chemical species conservation.\n- Other conserved quantities required by supported solvers.\n\nDo not assume that every quantity is conserved in every selected subsystem.\n\nFor example, charge or mass may cross a boundary.\n\nThe conservation framework must identify the relevant boundary terms.\n\n## 13.1 Conservation Model Registry\n\nEach conservation model should define:\n\n- Conserved quantity.\n- Relevant physical domain.\n- System boundary.\n- Source terms.\n- Sink terms.\n- Flux terms.\n- Applicable equations.\n- Required solver data.\n- Numerical evaluation method.\n- Validity assumptions.\n\nThe registry should make it possible to add future physical domains without rewriting the accounting architecture.\n\n---\n\n# 14. Numerical Conservation Monitoring\n\nThis is one of the most important implementation requirements.\n\nA simulation can execute successfully while violating conservation due to numerical error, incorrect coupling, missing terms, or implementation bugs.\n\nRESONANT must measure and report conservation residuals.\n\nFor an appropriately defined energy balance, calculate a residual such as:\n\n\\[\nR_E =\n\\Delta E_{\\mathrm{stored}}\n-\n\\left(\nE_{\\mathrm{in}}\n-\nE_{\\mathrm{out}}\n+\nE_{\\mathrm{generated}}\n-\nE_{\\mathrm{dissipated}}\n\\right)\n\\]\n\nUse the sign convention consistently throughout the implementation.\n\nFor momentum, calculate the corresponding vector residual using the applicable momentum balance.\n\n## 14.1 Residual Reporting\n\nFor each supported conservation check, report:\n\n- Initial quantity.\n- Final quantity.\n- Integrated input.\n- Integrated output.\n- Internal transfers.\n- Sources and sinks.\n- Absolute residual.\n- Relative residual where meaningful.\n- Numerical tolerance.\n- Time-step sensitivity.\n- Spatial discretization sensitivity where relevant.\n- Warning or failure status.\n\nA residual must be interpretable.\n\nDo not present a percentage error when the reference denominator is zero or too small to be meaningful.\n\n## 14.2 Conservation Status\n\nDistinguish between:\n\n- Verified within tolerance.\n- Within warning threshold.\n- Exceeds tolerance.\n- Not evaluated.\n- Insufficient data.\n- Not applicable.\n\nDo not display a green success state for an accounting check that was never performed.\n\n## 14.3 Local and Global Conservation\n\nSupport global system accounting.\n\nWhere the underlying solver permits, support local or spatial conservation diagnostics.\n\nA globally balanced result can conceal local numerical errors.\n\nThe system should not claim local conservation when only a global total has been checked.\n\n## 14.4 Numerical Error Versus Physical Loss\n\nDistinguish between:\n\n- Physical dissipation.\n- Energy transported out of the system.\n- Numerical dissipation.\n- Numerical instability.\n- Unaccounted residual.\n\nNumerical error must never be silently labeled as material loss or physical energy conversion.\n\n---\n\n# 15. Multiscale Conservation and Homogenization\n\nIntegrate with Prompt 22.\n\nMultiscale material models introduce additional accounting challenges.\n\nA microscopic model may calculate energy or momentum transfers that must be reflected in an effective material description.\n\nEstablish interfaces for preserving appropriate accounting information across scales.\n\nExamples:\n\n- Atomistic potential energy contributing to effective material behavior.\n- Microstructural deformation contributing to macroscopic strain energy.\n- Defect evolution contributing to stored or dissipated energy.\n- Microscale thermal transport contributing to effective conductivity.\n- Effective constitutive response contributing to macroscopic mechanical work.\n\nAvoid double-counting microscopic and macroscopic energy contributions.\n\nWhen an effective material replaces an explicitly modeled microstructure, the accounting framework must know which representation is active.\n\nIt must not simultaneously count the energy of both representations as independent physical systems unless the model explicitly represents both.\n\n## 15.1 Scale Transfer Contracts\n\nEach cross-scale accounting transfer must identify:\n\n- Source representation.\n- Target representation.\n- Physical quantity.\n- Transfer method.\n- Averaging or homogenization method.\n- Spatial and temporal resolution.\n- Conservation assumptions.\n- Uncertainty.\n- Whether the source-scale energy remains explicitly represented.\n\n## 15.2 Effective Material Accounting\n\nAn effective material may store and transfer energy differently from its individual constituents.\n\nThe framework must support the physical model's effective constitutive energy rather than assuming that all effective properties can be decomposed into simple constituent scalar quantities.\n\n---\n\n# 16. Geometry, Boundaries and Physical Interaction\n\nIntegrate with Prompt 19.\n\nGeometry determines where physical interactions occur and how energy, momentum, and forces are distributed.\n\nSupport accounting across:\n\n- Object boundaries.\n- Material interfaces.\n- Internal surfaces.\n- Contact regions.\n- Openings.\n- Waveguide boundaries.\n- Resonator boundaries.\n- Control-volume surfaces.\n- Other relevant physical interfaces.\n\nWhere appropriate, associate force, traction, energy flux, and momentum flux with the actual geometric surface.\n\nGeometry changes must update the corresponding accounting regions and boundary definitions.\n\nFor moving or deforming boundaries, use appropriate physical formulations.\n\nDo not assume a fixed control volume when the actual system boundary moves.\n\n---\n\n# 17. Metamaterial and Engineered Energy Transformation\n\nIntegrate with Prompt 21.\n\nMetamaterials and structured materials may redirect, confine, amplify local field intensity, alter momentum transfer, or change the distribution of energy.\n\nRESONANT must distinguish between:\n\n- Energy entering a unit cell.\n- Energy reflected.\n- Energy transmitted.\n- Energy absorbed.\n- Energy stored temporarily.\n- Energy transferred to other modes.\n- Energy leaving through other channels.\n\nA local field enhancement is not automatically an increase in total energy.\n\nThe system must distinguish between energy density, field amplitude, total stored energy, and power flow.\n\nFor passive systems, any apparent energy amplification must be explained through energy redistribution, resonance, or an explicitly modeled energy source.\n\nFor active or externally powered systems, include the supplied energy in the accounting.\n\nThis distinction is essential for scientifically credible engineered energy transformation.\n\n---\n\n# 18. Visualization and User Experience\n\nCreate a coherent physical accounting interface integrated with existing RESONANT workflows.\n\nThe accounting system should help users understand the physical behavior of their engineering system.\n\n## 18.1 Energy Flow Explorer\n\nProvide a visualization of energy movement through the modeled system.\n\nDisplay relevant nodes for:\n\n- Physical objects.\n- Material regions.\n- Physical domains.\n- Energy storage.\n- Energy transfer.\n- Dissipation.\n- External sources.\n- System outputs.\n\nConnect them with directional flows.\n\nUse actual calculated quantities.\n\nDo not use arbitrary decorative flow widths or percentages.\n\n## 18.2 Energy Breakdown\n\nProvide a breakdown of:\n\n- Input energy.\n- Stored energy.\n- Internal transfers.\n- Dissipated energy.\n- Output energy.\n- Unaccounted residual.\n\nAllow the user to drill into individual contributions.\n\n## 18.3 Momentum and Force Explorer\n\nProvide a way to inspect:\n\n- Forces acting on objects.\n- Force origins.\n- Force directions.\n- Resultant force.\n- Torque.\n- Linear momentum.\n- Angular momentum.\n- Momentum transfer.\n- Boundary momentum flux where available.\n\nUse existing vector and field visualization systems.\n\n## 18.4 Conservation Dashboard\n\nProvide a clear view of conservation status.\n\nDisplay:\n\n- Energy residual.\n- Momentum residual.\n- Other supported conservation residuals.\n- Tolerance.\n- Time evolution.\n- Numerical warnings.\n- Missing accounting contributions.\n\nUsers should be able to inspect why a balance is not satisfied.\n\n## 18.5 Time-Resolved Accounting\n\nSupport time-dependent accounting.\n\nUsers should be able to inspect:\n\n- Instantaneous power.\n- Cumulative energy.\n- Stored energy over time.\n- Energy exchange between domains.\n- Force over time.\n- Momentum evolution.\n- Conservation residual over time.\n\n## 18.6 Spatial Accounting\n\nWhere supported, visualize spatial distributions of:\n\n- Energy density.\n- Power density.\n- Force density.\n- Stress and traction.\n- Momentum density.\n- Energy flux.\n- Momentum flux.\n- Dissipation density.\n\nUse the appropriate physical definitions for each domain.\n\n## 18.7 Object and Subsystem Accounting\n\nAllow the user to select a subsystem and inspect its accounting separately from the larger system.\n\nThe same physical event must be correctly classified as internal or external depending on the selected boundary.\n\nThis is a particularly important usability and correctness requirement.\n\n---\n\n# 19. Automation and Programmatic Access\n\nExtend the existing automation architecture.\n\nDo not create a separate accounting automation subsystem.\n\nExpose supported operations including:\n\n- Define accounting system.\n- Define control volume.\n- Inspect physical quantities.\n- Query energy ledger.\n- Query power flow.\n- Query stored energy.\n- Query dissipated energy.\n- Query energy transfers.\n- Query force contributions.\n- Query momentum.\n- Query angular momentum.\n- Query torque.\n- Evaluate conservation.\n- Inspect conservation residuals.\n- Compare subsystem accounting.\n- Export accounting reports.\n- Identify missing accounting data.\n\nAutomation responses must include:\n\n- Quantity identity.\n- Value.\n- Units.\n- Physical domain.\n- Spatial and temporal context.\n- Provenance.\n- Accounting status.\n- Uncertainty where available.\n\nDo not return a bare numerical total without its physical meaning and context.\n\n---\n\n# 20. Persistence and Reproducibility\n\nPersist the accounting information necessary to reproduce and inspect a simulation.\n\nStore:\n\n- Accounting system definitions.\n- Control volumes.\n- Energy ledger entries.\n- Momentum ledger entries.\n- Force contributions.\n- Boundary fluxes.\n- Transfer records.\n- Conservation models.\n- Conservation residuals.\n- Numerical tolerances.\n- Solver provenance.\n- Time history.\n- Relevant spatial field references.\n\nSupport selective retention for large simulations.\n\nDo not require the full duplication of every underlying simulation field if the ledger can reference existing stored results.\n\nA saved project must preserve enough information to reconstruct the accounting interpretation.\n\nMaintain project compatibility and version migrations.\n\n---\n\n# 21. Performance and Numerical Robustness\n\nAccounting must not make ordinary simulations unnecessarily expensive.\n\nUse appropriate approaches for:\n\n- Incremental ledger updates.\n- Aggregation.\n- Spatial integration.\n- Time integration.\n- Boundary flux calculations.\n- Vector and tensor operations.\n- Conservation checks.\n- Result caching.\n- Selective history retention.\n\nAvoid repeatedly recalculating physical quantities already available from the solvers.\n\nAccounting must consume authoritative solver outputs where possible.\n\nDo not introduce a second, slightly different implementation of an existing physical calculation merely to populate the ledger.\n\nFor large simulations, allow users to select:\n\n- Global accounting.\n- Subsystem accounting.\n- Spatial accounting.\n- Time-resolved accounting.\n- Detailed provenance.\n\nWhere possible, provide configurable monitoring frequency.\n\nDo not sacrifice accounting correctness for visualization performance.\n\n---\n\n# 22. Scientific Validation and Benchmarking\n\nValidation is mandatory.\n\nUse simple analytical systems before attempting complicated coupled simulations.\n\n## 22.1 Closed Mechanical System\n\nCreate a simple isolated mechanical system.\n\nVerify that:\n\n- Initial and final momentum are consistent.\n- Energy exchanges between kinetic and potential forms are tracked.\n- Numerical residuals are reported.\n- External contributions are absent or explicitly accounted for.\n\n## 22.2 Mechanical Work and Dissipation\n\nCreate a mechanical system with a supported damping mechanism.\n\nVerify:\n\n- Applied work.\n- Stored mechanical energy.\n- Dissipated energy.\n- Resulting thermal contribution where modeled.\n- Total accounting consistency.\n\n## 22.3 Resonant Energy Buildup and Decay\n\nUse a supported resonator.\n\nVerify:\n\n- Input power.\n- Stored energy.\n- Internal loss.\n- External or radiation loss.\n- Energy buildup.\n- Energy decay after excitation removal.\n\nCompare the results against the expected analytical behavior under the chosen assumptions.\n\n## 22.4 Coupled Resonators\n\nCreate two coupled resonators.\n\nVerify:\n\n- Energy transfer between resonators.\n- Internal transfer classification.\n- Combined-system accounting.\n- Individual subsystem accounting.\n- Energy conservation under appropriate lossless conditions.\n\n## 22.5 Electromagnetic Absorption\n\nUse a supported electromagnetic material model.\n\nVerify:\n\n- Incident energy.\n- Reflected energy.\n- Transmitted energy.\n- Absorbed energy.\n- Thermal transfer where coupled.\n- Accounting residual.\n\n## 22.6 Momentum Transfer\n\nWhere the relevant solver supports it, implement a benchmark involving field-mediated momentum transfer.\n\nFor example, electromagnetic radiation acting on an absorbing surface.\n\nVerify the selected momentum formulation and boundary flux accounting.\n\n## 22.7 Dynamic Material Evolution\n\nUse a Prompt 23 material model.\n\nVerify that:\n\n- Reversible energy storage is represented.\n- Irreversible dissipation is accounted for.\n- Internal transfers are not counted twice.\n- State evolution remains physically consistent.\n\n## 22.8 Numerical Convergence\n\nRepeat selected tests with different:\n\n- Time steps.\n- Mesh resolutions.\n- Solver tolerances.\n- Spatial integration resolutions.\n\nDemonstrate how accounting residuals change with numerical refinement.\n\nDo not assume a small residual automatically proves that the physical model is correct.\n\n---\n\n# 23. Implementation Strategy\n\nImplement the capability in deliberate phases.\n\n## Phase 1 \u2014 Architecture Audit and Quantity Model\n\n- Audit existing energy, force, and momentum systems.\n- Establish physical quantity types.\n- Establish units and dimensional validation.\n- Establish system boundaries and control volumes.\n- Define accounting contracts.\n- Identify existing authoritative calculations.\n\n## Phase 2 \u2014 Energy Ledger\n\n- Implement energy categories.\n- Implement transfer records.\n- Implement boundary input and output.\n- Implement stored-energy tracking.\n- Implement dissipation tracking.\n- Implement provenance.\n- Add a simple validated energy balance.\n\nThis is the first major deliverable.\n\n## Phase 3 \u2014 Force and Momentum\n\n- Implement force provenance.\n- Implement force aggregation.\n- Implement linear momentum accounting.\n- Implement angular momentum and torque interfaces.\n- Integrate supported boundary momentum fluxes.\n- Add mechanical benchmark tests.\n\n## Phase 4 \u2014 Cross-Domain Transfers\n\n- Implement transfer contracts.\n- Integrate electromagnetic and thermal accounting where supported.\n- Integrate mechanical and thermal accounting where supported.\n- Integrate acoustic or other supported domains.\n- Verify internal transfer consistency.\n\n## Phase 5 \u2014 Conservation Monitoring\n\n- Implement residual calculations.\n- Implement numerical tolerances.\n- Implement global and supported local checks.\n- Implement warning and failure statuses.\n- Add time-resolved monitoring.\n- Validate numerical convergence.\n\n## Phase 6 \u2014 Resonance and Dynamic Material Integration\n\n- Connect stored-energy accounting to Prompt 20.\n- Connect dynamic material energy to Prompt 23.\n- Track energy exchange and dissipation.\n- Integrate state-dependent accounting.\n- Validate coupled physical examples.\n\n## Phase 7 \u2014 Multiscale and Metamaterial Integration\n\n- Connect accounting to Prompt 22.\n- Connect effective material representations to Prompt 21.\n- Implement appropriate scale-transfer contracts.\n- Prevent double-counting.\n- Validate structured-material examples.\n\n## Phase 8 \u2014 User Experience and Automation\n\n- Implement energy flow exploration.\n- Implement force and momentum inspection.\n- Implement conservation dashboards.\n- Add subsystem accounting.\n- Expose accounting APIs.\n- Add report export.\n\n## Phase 9 \u2014 Validation and Documentation\n\n- Run all physical benchmarks.\n- Run numerical convergence tests.\n- Run integration tests.\n- Evaluate performance.\n- Document supported accounting methods.\n- Document limitations.\n- Produce the final engineering report.\n\nPrioritize a small number of complete, validated accounting pathways over a large number of empty domain integrations.\n\n---\n\n# 24. Explicit Scientific Guardrails\n\nThese requirements are mandatory.\n\n1. Do not treat force as a conserved quantity.\n2. Do not confuse energy with power.\n3. Do not confuse torque with energy merely because they share dimensions.\n4. Do not confuse momentum with force.\n5. Do not assume that every subsystem conserves energy independently.\n6. Do not classify internal transfers as external energy inputs or losses.\n7. Do not double-count energy when converting between physical domains.\n8. Do not label numerical error as physical dissipation.\n9. Do not assume all energy leaving an organized mode leaves the complete system.\n10. Do not assume field momentum can always be ignored.\n11. Do not mix incompatible electromagnetic momentum formulations without explicitly identifying the assumptions.\n12. Do not infer force from a visual field representation without a valid physical calculation.\n13. Do not assume a global conservation check proves local conservation.\n14. Do not claim conservation has been verified when required boundary fluxes or source terms are missing.\n15. Do not use dimensionally valid but physically unrelated quantities interchangeably.\n16. Do not treat a high local field amplitude as proof of increased total energy.\n17. Do not create universal energy equations that replace domain-specific physics.\n18. Do not silently omit energy or momentum contributions that are unavailable.\n19. Do not claim thermodynamic consistency without the necessary physical state and entropy information.\n20. Do not compromise the existing physical solvers merely to make accounting totals appear balanced.\n\nThe accounting framework must be capable of reporting that a physical balance is incomplete or cannot currently be evaluated.\n\nThat is preferable to manufacturing a false result.\n\n---\n\n# 25. Acceptance Criteria\n\nPrompt 24 is complete when the following conditions are satisfied.\n\n### Physical Quantity Architecture\n\n- [ ] Physical quantities have consistent identities and units.\n- [ ] Dimensional validation is operational.\n- [ ] Energy, power, force, momentum, torque, and angular momentum remain distinct.\n- [ ] Quantity provenance is preserved.\n- [ ] Spatial and temporal context is supported.\n\n### Energy Accounting\n\n- [ ] An energy ledger exists.\n- [ ] Stored, transferred, dissipated, and exported energy are distinguishable.\n- [ ] Internal domain transfers are represented explicitly.\n- [ ] Boundary energy flows can be accounted for where supported.\n- [ ] At least one complete energy balance is validated.\n\n### Force and Momentum\n\n- [ ] Force contributions retain physical origin and direction.\n- [ ] Linear momentum accounting is operational for at least one supported physical system.\n- [ ] Angular momentum and torque interfaces are established.\n- [ ] Momentum transfer and external impulse are distinguished.\n- [ ] At least one relevant momentum benchmark is validated where supported.\n\n### Conservation Monitoring\n\n- [ ] Energy residuals can be calculated.\n- [ ] Momentum residuals can be calculated for supported models.\n- [ ] Numerical tolerances and warning states are implemented.\n- [ ] Physical dissipation is distinguished from numerical error.\n- [ ] Missing accounting contributions are reported honestly.\n- [ ] Time-resolved monitoring is supported.\n\n### Cross-Domain Integration\n\n- [ ] At least one genuine cross-domain energy transfer is operational.\n- [ ] Internal transfers are not double-counted.\n- [ ] CEME can access accounting results.\n- [ ] Prompt 20 resonance accounting is integrated where supported.\n- [ ] Prompt 22 and 23 interfaces preserve relevant energy and state information.\n- [ ] Prompt 21 effective material accounting is supported where applicable.\n\n### User Experience and Automation\n\n- [ ] Users can inspect energy flows.\n- [ ] Users can inspect force and momentum contributions.\n- [ ] Users can inspect conservation residuals.\n- [ ] Users can select and inspect subsystem accounting.\n- [ ] Supported accounting functions are available through existing automation.\n- [ ] Results can be persisted and reproduced.\n\n### Scientific Quality\n\n- [ ] Analytical benchmark tests pass.\n- [ ] Numerical convergence tests pass.\n- [ ] Regression tests pass.\n- [ ] Documentation identifies supported conservation laws and limitations.\n- [ ] No unsupported conservation claims are presented.\n\n**Completion does not require every physical domain to be fully integrated. It requires a common accounting architecture, validated energy accounting, working force and momentum interfaces, and at least one meaningful cross-domain transfer pathway.**\n\n---\n\n# 26. Final Engineering Report\n\nWhen implementation is complete, provide a detailed report containing:\n\n1. Existing architecture audit.\n2. Unified physical quantity architecture.\n3. Units and dimensional validation.\n4. System boundary and control-volume implementation.\n5. Energy ledger architecture.\n6. Energy storage and transfer implementation.\n7. Force and momentum architecture.\n8. Angular momentum and torque support.\n9. Cross-domain transfer integrations.\n10. Conservation monitoring and residual calculations.\n11. Numerical stability and convergence.\n12. Thermodynamic accounting capabilities.\n13. Resonance and dynamic material integration.\n14. Multiscale and metamaterial integration.\n15. GUI and automation changes.\n16. Scientific benchmark results.\n17. Test results.\n18. Performance observations.\n19. Known limitations.\n20. Deferred capabilities.\n21. Recommended next engineering steps.\n\nIdentify the relevant source files, modules, interfaces, and tests.\n\nClearly distinguish implemented accounting methods from planned interfaces.\n\n---\n\n# Final Directive\n\nRESONANT must be able to explain the physical accounting of an engineered system.\n\nWhen energy enters a structure, the system should be able to identify where it goes.\n\nWhen a material absorbs energy, the system should be able to identify what changes.\n\nWhen a resonator stores energy, the system should be able to quantify that storage and follow its subsequent transfer or dissipation.\n\nWhen fields exert forces on matter, the system should be able to account for the resulting momentum transfer.\n\nWhen a physical simulation produces an unexpected result, the system should be able to investigate whether the result comes from real physical behavior, an incomplete model, or numerical error.\n\nThis capability must connect all of the existing RESONANT architecture without erasing the distinctions between physical domains.\n\n**We are establishing the physical accounting system that makes every other capability measurable, explainable, and scientifically accountable.**\n\nImplement it as a cohesive extension of RESONANT, preserving existing solver physics and prioritizing genuine conservation verification over superficial numerical balance.",
+  "file": "requests/inbox/2026-11-26-prompt-24-unified-energy-momen-req-chat-20261126-022.md",
+  "attachments": [],
+  "context": "User: 'add and work in order' (queued after REQ-CHAT-20261126-021, Prompt 23)",
+  "text_sha256": "a5be937c7b985b2e0d05dda3c3746f4ecbc6ce18ff0508246c1b780ff62ce8aa",
+  "classification": {
+    "proposed_type": null,
+    "proposed_source": "heuristic",
+    "normalized_type": null,
+    "heuristic_type": "FEATURE",
+    "final_type": "FEATURE",
+    "confidence": "high",
+    "validation": "PASS",
+    "classifier_reason": "request statement is framed as feature: FRAMEWORK, Implement, capabilities, capability",
+    "correction_reason": null,
+    "normalization_note": null,
+    "evidence": [
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "FRAMEWORK",
+        "strength": "strong",
+        "note": "",
+        "sentence": "UNIFIED ENERGY, MOMENTUM, FORCE AND CONSERVATION FRAMEWORK"
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement the next major scientific foundation in RESONANT: **Unified Energy, Momentum, Force and Conservation Accounting**."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "framework",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The next requirement is to establish a rigorous physical accounting framework connecting these capabilities."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "capabilities",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The next requirement is to establish a rigorous physical accounting framework connecting these capabilities."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "must be able",
+        "strength": "strong",
+        "note": "",
+        "sentence": "RESONANT must be able to account for these processes consistently."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "first-class",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The goal is to make physical accounting a first-class capability of the architecture rather than leaving energy, force, momentum, and power calculations scattered across individual solvers."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "capability",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The goal is to make physical accounting a first-class capability of the architecture rather than leaving energy, force, momentum, and power calculations scattered across individual solvers."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "must be able",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The system must be able to determine whether its calculations are physically and numerically consistent, identify missing or duplicated contributions, and explain where quantities flow throughout a si"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "It is an attempt to create a common accounting and verification architecture that allows different physical domains to exchange information while retaining their correct governing physics."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "allows",
+        "strength": "strong",
+        "note": "",
+        "sentence": "It is an attempt to create a common accounting and verification architecture that allows different physical domains to exchange information while retaining their correct governing physics."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support power as a first-class physical quantity."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "first-class",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support power as a first-class physical quantity."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "framework",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The accounting framework must recognize that momentum can be transported through boundaries and that forces can change the momentum of an individual subsystem even when total system momentum is conser"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "first-class",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Angular momentum must be treated as a first-class physical quantity where the modeled physics supports it."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "integration",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Numerical solvers and integration methods."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Produce",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Produce an architecture map."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Reuse",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Reuse existing systems where possible."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not create a second energy engine, a competing physical state framework, or a parallel set of force calculations."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "framework",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not create a second energy engine, a competing physical state framework, or a parallel set of force calculations."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "new framework",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The new framework should coordinate and verify existing physical calculations."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement a common physical quantity representation."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "framework",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The purpose is to give the accounting framework a consistent way to identify, describe, compare, and aggregate physical quantities."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "should support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "A quantity record should support:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support scalar, vector, tensor, field, and time-dependent quantities as appropriate."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement or extend a robust dimensional analysis framework."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "extend",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement or extend a robust dimensional analysis framework."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "framework",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement or extend a robust dimensional analysis framework."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support display conversion without changing the underlying physical value."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "added",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Energy cannot be added directly to power."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "added",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Force cannot be added to momentum."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "allow",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not allow unrelated quantities to be combined simply because their dimensions happen to match."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement explicit system and control-volume definitions."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "must support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The accounting architecture must support both perspectives without changing the underlying physical event."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support boundary accounting for:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "provides",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not assume every solver provides all necessary flux information."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "expose",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Identify missing information and expose it explicitly."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement an energy accounting framework that tracks physical energy through the system."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "framework",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement an energy accounting framework that tracks physical energy through the system."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement explicit categories for:"
+      }
+    ],
+    "scores": {
+      "FEATURE": {
+        "head": 7,
+        "body": 162
+      },
+      "BUG": {
+        "head": 0,
+        "body": 18
+      },
+      "CRASH": {
+        "head": 0,
+        "body": 0
+      },
+      "REGRESSION": {
+        "head": 0,
+        "body": 0
+      },
+      "PERFORMANCE": {
+        "head": 0,
+        "body": 0
+      },
+      "REFACTOR": {
+        "head": 1,
+        "body": 41
+      },
+      "BUILD": {
+        "head": 0,
+        "body": 0
+      },
+      "DOCUMENTATION": {
+        "head": 0,
+        "body": 4
+      },
+      "INVESTIGATION": {
+        "head": 0,
+        "body": 19
+      },
+      "PROCESS-CHANGE": {
+        "head": 0,
+        "body": 0
+      }
+    },
+    "evidence_total": 252,
+    "validator": "scripts/request_classification.py"
+  },
+  "links": {
+    "work": [
+      "WORK-000023"
+    ]
+  },
+  "commits": [],
+  "resolution": {
+    "from": "processing",
+    "to": "completed",
+    "at": "2026-11-28T06:17:12.865957+00:00",
+    "by": "agent-dev-20261126151713-76f632",
+    "gates": [
+      {
+        "work": "WORK-000023",
+        "at": "2026-11-28T06:17:03.029779+00:00",
+        "verdict": "PASS",
+        "request_fingerprint": "2d327db9b455b1b11e09bd9d182b4fd815691bbc37893c237ae13964f7e1de56",
+        "test_runs": [
+          "20261128T011130-1098689"
+        ]
+      }
+    ]
+  }
+}

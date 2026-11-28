@@ -474,3 +474,24 @@ milestones below.)
 | MaterialStateService, Python, MCP, Material State panel, examples a–f | Tested | |
 | Crack propagation, fatigue, finite-strain plasticity, hyperelasticity | Missing | listed as not implemented |
 | Nonlinear dielectrics, nonlinear optics, nonlinear acoustics, reaction kinetics | Missing | listed as not implemented |
+
+## Unified accounting — `docs/requirements/accounting.md`, `docs/architecture/ACCOUNTING_ARCHITECTURE.md`
+
+| Capability | State | Notes |
+|---|---|---|
+| Dimensional analysis of unit expressions, checked conversions | Tested | `foundation/Dimensions`; affine temperature scales refused |
+| Quantity families with dimensions and a conserved flag; typed quantities with context | Tested | torque ≠ energy, entropy ≠ heat capacity, pressure ≠ momentum flux |
+| Ledger: entities, holdings, exchanges, generations, forces, missing data, numerical errors, scale contracts; JSON | Tested | rate and interval bases, per-volume normalization |
+| Systems and control volumes: an exchange classified internal, input, output or dissipated by membership | Tested | the same record for every boundary |
+| Conservation and consistency registry; checks with honest statuses, attribution to stated numerical errors, histories | Tested | `docs/physics/CONSERVATION_MONITORING.md` |
+| Coupled engine: terms and transfers as a ledger; every coupled result carries its accounting; evolutions step by step | Tested | momentum declared missing (the participants report none) |
+| Lumped networks: element work and impulses (the integrator's stages), momentum, forces with pairs; rotational networks with torques | Tested | |
+| Driven resonators: Q = ω E / P by mechanism against the modal Q; buildup and decay | Tested | light damping only |
+| Radiation force on layered bodies: vacuum Maxwell stress, Lorentz volume force, (1 + R − T) I / c; local and global absorption | Tested | vacuum half-spaces, non-magnetic layers |
+| Material-state energies and entropy (J2, damage, viscoelasticity, the damaged cantilever, phase change, Preisach against the hysterons) | Tested | |
+| Refinement studies; scale contracts of effective materials; double-counting detection | Tested | |
+| AccountingService, Python, MCP, Accounting panel, examples a–h | Tested | |
+| Momentum of the coupled participants, acoustic radiation force, full-wave Maxwell stress, MD momentum | Missing | reported as missing or not applicable |
+| Moving control volumes, mass and charge balances, open systems with mass flow | Missing | registered models without data |
+| 3D spatial accounting views | Missing | the layered profiles only |
+

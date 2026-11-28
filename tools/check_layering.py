@@ -121,10 +121,11 @@ def violations():
     # the participants that adapt the domains live in src/core/coupling. So are the
     # functional structures (ADR-000221): their analyses are registered in coupling. So is the
     # multiscale model (ADR-000224): its derivations and couplings are in coupling. So is the
-    # material state (ADR-000225): its constitutive models are in the domains.
+    # material state (ADR-000225): its constitutive models are in the domains. So is the
+    # accounting framework (ADR-000226): its adapters are in coupling.
     for path in sorted(sum((list((ROOT / "src" / "core" / d).glob("*")) for d in ("optimization", "automation", "help", "demo", "plugins",
                                                                                 "multiphysics", "functional", "oscillators", "multiscale",
-                                                                                "materialstate")), [])):
+                                                                                "materialstate", "accounting")), [])):
         if path.suffix not in (".h", ".cpp"):
             continue
         for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):

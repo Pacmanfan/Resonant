@@ -2,8 +2,16 @@
 
 **Status:** the definitions and the rule are normative (RES-SFE-007,
 ADR-000219). The coupled ledger and conservation audit are implemented
-(REQ-CHAT-20261126-016, RES-CEME-009, ADR-000220: `src/core/multiphysics/Ledger`);
-momentum and force accounting are planned.
+(REQ-CHAT-20261126-016, RES-CEME-009, ADR-000220: `src/core/multiphysics/Ledger`).
+The unified accounting framework is current (REQ-CHAT-20261126-022,
+RES-ACC-001..016, ADR-000226: `src/core/accounting`,
+[ACCOUNTING_ARCHITECTURE.md](../architecture/ACCOUNTING_ARCHITECTURE.md)). It covers:
+
+- energy for any system boundary;
+- linear and angular momentum and forces, for lumped networks and the
+  radiation force on layered bodies;
+- entropy, where a model provides it;
+- monitoring with honest statuses ([CONSERVATION_MONITORING.md](CONSERVATION_MONITORING.md)).
 
 ## The coupled ledger (implemented)
 
@@ -47,6 +55,28 @@ dissipation (dissipated terms), external work and boundary transfer (input
 and boundary-out terms), solver error (solver residuals), interpolation error
 (transfer records), coupling error (the last iteration's change), incomplete
 accounting (a residual left after these).
+
+## The unified ledger (current)
+
+The coupled ledger above is one source of the unified accounting ledger (`coupling/AccountingAdapters`):
+
+- **Participants become entities.** Inputs come from `outside:sources`,
+  boundary outputs go to `outside:environment`, and dissipation goes to
+  `outside:heat`.
+- **Transfer records become exchanges.** Each has its target integral as the
+  amount and its source integral as `sourceAmount`. An internal transfer is
+  counted once. The difference between the two integrals is a stated
+  numerical error, never a source.
+- **The audit's solver residuals** are the stated numerical errors.
+- **Momentum is declared missing.** The participants report none, so a
+  coupled system's momentum check is "insufficient data".
+
+Every stored coupled result carries this ledger and its whole-system report
+(`accounting` in `GetCoupledResult`). The same accounting is available for
+lumped networks, time-stepped evolutions, layered radiation and the
+material-state models. The definitions used by each are in
+[FORCE_AND_MOMENTUM.md](FORCE_AND_MOMENTUM.md) and
+[ACCOUNTING_VALIDATION.md](ACCOUNTING_VALIDATION.md).
 
 ## The rule
 
@@ -103,6 +133,13 @@ optical or electromagnetic forces), momentum is accounted for like energy:
 A force result states the surface it integrates over, the order of the
 approximation (radiation force is a second-order quantity computed from
 first-order fields) and the medium it assumes.
+
+Current: the vacuum Maxwell stress at the control surfaces of a layered body,
+and the volume Lorentz force on its induced currents
+(`electromagnetics/RadiationForce`, [FORCE_AND_MOMENTUM.md](FORCE_AND_MOMENTUM.md)).
+Lumped networks give their bodies' momentum and their elements' forces. The
+acoustic radiation force and the Maxwell stress of the full-wave solvers are
+not implemented.
 
 ## Reporting
 

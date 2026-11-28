@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>AccountingPanel</class>
+ <widget class="QWidget" name="AccountingPanel">
+  <layout class="QVBoxLayout" name="mainLayout">
+   <item>
+    <layout class="QHBoxLayout" name="studyRow">
+     <item><widget class="QLabel" name="studyLabel"><property name="text"><string>Study</string></property></widget></item>
+     <item><widget class="QComboBox" name="studyCombo"><property name="sizePolicy"><sizepolicy hsizetype="Expanding" vsizetype="Fixed"/></property></widget></item>
+     <item><widget class="QPushButton" name="runButton"><property name="text"><string>Run</string></property><property name="enabled"><bool>false</bool></property></widget></item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="systemRow">
+     <item><widget class="QLabel" name="systemLabel"><property name="text"><string>System</string></property></widget></item>
+     <item>
+      <widget class="QComboBox" name="systemCombo">
+       <property name="sizePolicy"><sizepolicy hsizetype="Expanding" vsizetype="Fixed"/></property>
+       <property name="toolTip"><string>The boundary: the same exchange is internal to a system that holds both its ends, and an input or output of one that holds only one.</string></property>
+      </widget>
+     </item>
+     <item><widget class="QLabel" name="familyLabel"><property name="text"><string>Quantity</string></property></widget></item>
+     <item><widget class="QComboBox" name="familyCombo"/></item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QListWidget" name="memberList">
+     <property name="maximumSize"><size><width>16777215</width><height>90</height></size></property>
+     <property name="toolTip"><string>Tick the members of a custom system, then Apply.</string></property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="memberRow">
+     <item><widget class="QPushButton" name="applyButton"><property name="text"><string>Apply boundary</string></property><property name="enabled"><bool>false</bool></property></widget></item>
+     <item><spacer name="spacer"><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer></item>
+     <item><widget class="QPushButton" name="saveButton"><property name="text"><string>Save record</string></property><property name="enabled"><bool>false</bool></property></widget></item>
+     <item><widget class="QPushButton" name="exportButton"><property name="text"><string>Export…</string></property><property name="enabled"><bool>false</bool></property></widget></item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QLabel" name="statusLabel">
+     <property name="wordWrap"><bool>true</bool></property>
+     <property name="text"><string/></property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTabWidget" name="tabs">
+     <widget class="QWidget" name="flowsTab">
+      <attribute name="title"><string>Flows</string></attribute>
+      <layout class="QVBoxLayout" name="flowsLayout"><item><widget class="EnergyFlowView" name="flowView"/></item></layout>
+     </widget>
+     <widget class="QWidget" name="checksTab">
+      <attribute name="title"><string>Conservation</string></attribute>
+      <layout class="QVBoxLayout" name="checksLayout"><item><widget class="QTableWidget" name="checksTable"/></item></layout>
+     </widget>
+     <widget class="QWidget" name="breakdownTab">
+      <attribute name="title"><string>Breakdown</string></attribute>
+      <layout class="QVBoxLayout" name="breakdownLayout"><item><widget class="QTreeWidget" name="breakdownTree"><column><property name="text"><string>Contribution</string></property></column><column><property name="text"><string>Amount</string></property></column><column><property name="text"><string>Role</string></property></column></widget></item></layout>
+     </widget>
+     <widget class="QWidget" name="forcesTab">
+      <attribute name="title"><string>Forces</string></attribute>
+      <layout class="QVBoxLayout" name="forcesLayout"><item><widget class="QTableWidget" name="forcesTable"/></item></layout>
+     </widget>
+     <widget class="QWidget" name="historyTab">
+      <attribute name="title"><string>Over time</string></attribute>
+      <layout class="QVBoxLayout" name="historyLayout">
+       <item><widget class="QComboBox" name="seriesCombo"/></item>
+       <item><widget class="PlotWidget" name="plot"><property name="minimumSize"><size><width>0</width><height>160</height></size></property></widget></item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget><class>EnergyFlowView</class><extends>QWidget</extends><header>EnergyFlowView.h</header><container>0</container></customwidget>
+  <customwidget><class>PlotWidget</class><extends>QWidget</extends><header>PlotWidget.h</header><container>0</container></customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

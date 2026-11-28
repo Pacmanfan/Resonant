@@ -35,8 +35,8 @@ discover is something you can trust.
 * **Real measurements** — experiments with microphones, accelerometers and
   radios (or simulated instruments), calibration, and measured fields set
   beside the simulation; outputs only ever start when you authorize them.
-* **Designing by goal** — say what you want (a focus, a resonance, a beam) and
-  Resonant compares designs, even materials derived from atoms, traced to source.
+* **Designing by goal** — say what you want (a focus, a resonance, a beam), compare
+  designs and materials traced to the atom, and see where every joule goes.
 * **Script it, extend it, connect it** — Python, workflows, plugins, and an
   automation API (gRPC, MCP) so other programs and AI assistants can build
   with you; an offline help with F1 everywhere, and Demo Studio.

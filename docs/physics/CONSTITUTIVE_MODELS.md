@@ -46,7 +46,8 @@ and thermal coupling.
 σ = (1 − D(κ)) E ε,   κ = max over the history of |ε|          (history, irreversible)
 exponential:  D = 1 − (κ0/κ) exp(−(κ − κ0)/κf)                  softening
 power:        D = 1 − (κ0/κ)^(1−m)  (stress ∝ κ^m, m < 1)        hardening, non-localizing
-dissipation:  ½ E ε² dD per increment;  secant unloading (no residual strain)
+dissipation:  ∫ ½ E κ² dD, trapezoidal in κ over each increment (second order, like the work);
+              secant unloading (no residual strain)
 ```
 
 **The damaged cantilever (Euler–Bernoulli, Hermite elements):**
@@ -98,8 +99,12 @@ diagonal relays weighted ½ (the trapezoidal rule)
 - **What the relays give:** the relay states are the memory. Return-point
   memory (wiping out) and congruent minor loops follow from them; neither
   is imposed.
-- **Loss:** the loss per cycle is the loop area `μ0 ∮ H dM`. The reversible
-  part adds none.
+- **Loss:** the loss per cycle is the loop area `μ0 ∮ H dM`, measured on the
+  second cycle at each amplitude. A minor loop entered from a larger
+  excursion is not closed on its first traversal; return-point memory closes
+  the second. The reversible part adds none. The area agrees with the sum
+  over the switched relays of `2 μ0 Ms w (α − β)` within `2 μ0 Ms ΔH`
+  (each switch falls inside one field increment).
 - **Core summary:** from the turns, mean radius, cross-section and
   frequency, the study gives the power at that frequency.
 

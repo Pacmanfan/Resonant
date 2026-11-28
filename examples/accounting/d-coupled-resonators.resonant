@@ -1,0 +1,200 @@
+{
+ "format": "resonant-project",
+ "schemaVersion": 1,
+ "application": {
+  "name": "Resonant",
+  "version": "0.1.0"
+ },
+ "project": {
+  "id": "ex-acc-coupled",
+  "name": "d-coupled-resonators",
+  "createdUtc": "2026-11-28T00:00:00Z",
+  "modifiedUtc": "2026-11-28T00:00:00Z"
+ },
+ "units": {
+  "angle": "rad",
+  "axes": "right-handed; X horizontal, Y depth, Z vertical (up)",
+  "frequency": "Hz",
+  "length": "m",
+  "mass": "kg",
+  "rotation": "intrinsic Z-Y-X Euler angles stored as [x, y, z]",
+  "time": "s"
+ },
+ "materials": [
+  {
+   "id": "mat-ex-acc-steel",
+   "name": "Steel (example)",
+   "description": "Illustrative.",
+   "domains": {
+    "mechanical": {
+     "density": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the accounting examples; not authoritative.",
+      "value": 7850.0
+     },
+     "youngsModulus": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the accounting examples; not authoritative.",
+      "value": 200000000000.0
+     },
+     "poissonsRatio": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the accounting examples; not authoritative.",
+      "value": 0.3
+     }
+    }
+   }
+  }
+ ],
+ "scene": {
+  "objects": [
+   {
+    "id": "ex-acc-r1",
+    "type": "geometry",
+    "name": "Pendulum 1",
+    "visible": true,
+    "transform": {
+     "position": [
+      -0.1,
+      0,
+      0
+     ],
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "children": [],
+    "geometry": {
+     "kind": "cylinder",
+     "parameters": {
+      "radius": 0.02,
+      "height": 0.3
+     }
+    },
+    "material": "mat-ex-acc-steel"
+   },
+   {
+    "id": "ex-acc-r2",
+    "type": "geometry",
+    "name": "Pendulum 2",
+    "visible": true,
+    "transform": {
+     "position": [
+      0.1,
+      0,
+      0
+     ],
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "children": [],
+    "geometry": {
+     "kind": "cylinder",
+     "parameters": {
+      "radius": 0.02,
+      "height": 0.3
+     }
+    },
+    "material": "mat-ex-acc-steel"
+   }
+  ]
+ },
+ "simulations": [],
+ "extensions": {
+  "accounting": {
+   "format": "resonant.accounting",
+   "version": 1,
+   "studies": [
+    {
+     "id": "st-beats",
+     "name": "Resonator 1 plucked: energy beats to resonator 2",
+     "source": {
+      "kind": "network",
+      "network": {
+       "names": [
+        "r1",
+        "r2"
+       ],
+       "masses": [
+        1.0,
+        1.0
+       ],
+       "springs": [
+        {
+         "name": "k1",
+         "i": 0,
+         "j": -1,
+         "k": 100.0
+        },
+        {
+         "name": "k2",
+         "i": 1,
+         "j": -1,
+         "k": 100.0
+        },
+        {
+         "name": "coupling",
+         "i": 0,
+         "j": 1,
+         "k": 5.0
+        }
+       ],
+       "objects": [
+        "ex-acc-r1",
+        "ex-acc-r2"
+       ]
+      },
+      "transient": {
+       "duration": 20.0,
+       "x0": [
+        0.01,
+        0.0
+       ],
+       "samples": 2000
+      }
+     },
+     "systems": [
+      {
+       "id": "r1",
+       "name": "Resonator 1",
+       "kind": "subsystem",
+       "members": [
+        "body:r1",
+        "element:k1"
+       ]
+      },
+      {
+       "id": "r2",
+       "name": "Resonator 2",
+       "kind": "subsystem",
+       "members": [
+        "body:r2",
+        "element:k2"
+       ]
+      }
+     ],
+     "tolerances": {
+      "relative": 1e-06,
+      "warning": 0.0001
+     }
+    }
+   ],
+   "records": []
+  }
+ }
+}

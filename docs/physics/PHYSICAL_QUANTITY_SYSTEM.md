@@ -47,3 +47,17 @@ with the unit in the key where it could be ambiguous (`frequencyHz`).
 
 A field with a value that is not finite is never passed on: the run ends
 with the stage that produced it (`Multiphysics.OrchestratorStopsOnFailureInvalidValuesAndCancellation`).
+
+## Dimensions and accounting families
+
+`foundation/Dimensions` turns a unit expression into SI dimension exponents
+(kg, m, s, K, A, mol, cd) and a factor; conversions between different
+dimensions, and of affine temperature scales, are refused. Every unit of the
+registry above parses (`Dimensions.EveryRegisteredQuantityHasAKnownUnit`).
+Dimension is not identity: the accounting framework's families
+(`accounting/Quantities`, REQ-CHAT-20261126-022, RES-ACC-002, -003) keep
+torque apart from energy, entropy from heat capacity and pressure from
+momentum flux, though their dimensions agree, and mark which are conserved
+(energy, linear and angular momentum, mass, charge; not force, torque or
+power).
+

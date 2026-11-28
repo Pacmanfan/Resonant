@@ -105,6 +105,7 @@ Result<json> evolveSystem(const PhysicalSystem& system, const MaterialLibrary& m
                       {"temperature", T},
                       {"regions", regions},
                       {"energy", r.audit.toJson()},
+                      {"ledger", r.ledger.toJson()},
                       {"convergence", {{"converged", true}, {"passes", r.passes}, {"status", r.status == multiphysics::RunStatus::Converged ? "converged" : "completed"}}}};
         if (mechanical)
             for (const auto& [name, f] : r.fields)

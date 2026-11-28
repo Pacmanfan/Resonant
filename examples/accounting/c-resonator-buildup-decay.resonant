@@ -1,0 +1,204 @@
+{
+ "format": "resonant-project",
+ "schemaVersion": 1,
+ "application": {
+  "name": "Resonant",
+  "version": "0.1.0"
+ },
+ "project": {
+  "id": "ex-acc-resonator",
+  "name": "c-resonator-buildup-decay",
+  "createdUtc": "2026-11-28T00:00:00Z",
+  "modifiedUtc": "2026-11-28T00:00:00Z"
+ },
+ "units": {
+  "angle": "rad",
+  "axes": "right-handed; X horizontal, Y depth, Z vertical (up)",
+  "frequency": "Hz",
+  "length": "m",
+  "mass": "kg",
+  "rotation": "intrinsic Z-Y-X Euler angles stored as [x, y, z]",
+  "time": "s"
+ },
+ "materials": [
+  {
+   "id": "mat-ex-acc-steel",
+   "name": "Steel (example)",
+   "description": "Illustrative.",
+   "domains": {
+    "mechanical": {
+     "density": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the accounting examples; not authoritative.",
+      "value": 7850.0
+     },
+     "youngsModulus": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the accounting examples; not authoritative.",
+      "value": 200000000000.0
+     },
+     "poissonsRatio": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the accounting examples; not authoritative.",
+      "value": 0.3
+     }
+    }
+   }
+  }
+ ],
+ "scene": {
+  "objects": [
+   {
+    "id": "ex-acc-resonator",
+    "type": "geometry",
+    "name": "Tuning-fork tine",
+    "visible": true,
+    "transform": {
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "children": [],
+    "geometry": {
+     "kind": "box",
+     "parameters": {
+      "width": 0.01,
+      "depth": 0.01,
+      "height": 0.1
+     }
+    },
+    "material": "mat-ex-acc-steel"
+   }
+  ]
+ },
+ "simulations": [],
+ "extensions": {
+  "accounting": {
+   "format": "resonant.accounting",
+   "version": 1,
+   "studies": [
+    {
+     "id": "st-q",
+     "name": "Steady state at the resonance: Q = w E / P",
+     "source": {
+      "kind": "network-driven",
+      "network": {
+       "names": [
+        "resonator"
+       ],
+       "masses": [
+        1.0
+       ],
+       "springs": [
+        {
+         "name": "spring",
+         "i": 0,
+         "j": -1,
+         "k": 3947.8417604357433
+        }
+       ],
+       "dampers": [
+        {
+         "mechanism": "viscous",
+         "i": 0,
+         "j": -1,
+         "c": 0.2
+        },
+        {
+         "mechanism": "radiation",
+         "i": 0,
+         "j": -1,
+         "c": 0.1
+        }
+       ],
+       "objects": [
+        "ex-acc-resonator"
+       ]
+      },
+      "force": [
+       1.0
+      ],
+      "mode": 0
+     },
+     "tolerances": {
+      "relative": 1e-06,
+      "warning": 0.0001
+     }
+    },
+    {
+     "id": "st-buildup",
+     "name": "Driven for 20 s, then free",
+     "source": {
+      "kind": "network",
+      "network": {
+       "names": [
+        "resonator"
+       ],
+       "masses": [
+        1.0
+       ],
+       "springs": [
+        {
+         "name": "spring",
+         "i": 0,
+         "j": -1,
+         "k": 3947.8417604357433
+        }
+       ],
+       "dampers": [
+        {
+         "mechanism": "viscous",
+         "i": 0,
+         "j": -1,
+         "c": 0.2
+        },
+        {
+         "mechanism": "radiation",
+         "i": 0,
+         "j": -1,
+         "c": 0.1
+        }
+       ],
+       "objects": [
+        "ex-acc-resonator"
+       ]
+      },
+      "transient": {
+       "duration": 30.0,
+       "samples": 30000,
+       "force": {
+        "kind": "harmonic",
+        "coordinate": 0,
+        "amplitude": 1.0,
+        "frequencyHz": 10.0,
+        "until": 20.0
+       }
+      },
+      "resonance": {
+       "frequencyHz": 10.0,
+       "driveOff": 20.0,
+       "tolerance": 0.02
+      }
+     },
+     "tolerances": {
+      "relative": 1e-06,
+      "warning": 0.0001
+     }
+    }
+   ],
+   "records": []
+  }
+ }
+}

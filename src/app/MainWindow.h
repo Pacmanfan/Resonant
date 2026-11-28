@@ -31,6 +31,8 @@ class FunctionalController;
 class FunctionalPanel;
 class MaterialScalesPanel;
 class MaterialStatePanel;
+class AccountingPanel;
+class AccountingController;
 class MaterialStateController;
 class MultiscaleController;
 class EmPanel;
@@ -96,6 +98,8 @@ public:
     MultiscaleController& multiscale() { return *multiscale_; }
     MaterialStatePanel& materialStatePanel();
     MaterialStateController& materialState() { return *materialState_; }
+    AccountingPanel& accountingPanel();
+    AccountingController& accounting() { return *accounting_; }
     FdtdPanel& fullWavePanel();
     TimeSignalPanel& timeSignals() { return *timeSignals_; }
     QAction* action(const QString& objectName) const;
@@ -166,6 +170,7 @@ private:
     void connectFunctional();
     void connectMultiscale();
     void connectMaterialState();
+    void connectAccounting();
     void connectAutomation();
     void connectHelp();
     void connectDemos();
@@ -186,6 +191,7 @@ private:
     FunctionalController* functional_ = nullptr;
     MultiscaleController* multiscale_ = nullptr;
     MaterialStateController* materialState_ = nullptr;
+    AccountingController* accounting_ = nullptr;
     AutomationServer* automationServer_ = nullptr;  // deleted before the document it serves
     AutomationServerDialog* automationDialog_ = nullptr;
     DisplayUnits* units_ = nullptr;

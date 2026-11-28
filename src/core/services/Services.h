@@ -487,6 +487,46 @@ private:
     Session& s_;
 };
 
+// Unified accounting (REQ-CHAT-20261126-022, RES-ACC-016, ADR-000226): quantity families and
+// unit conversion, the conservation and consistency models, accounting studies (stored in
+// the project extension "accounting") run as jobs, reports reclassified for any system,
+// comparisons, exports, and records kept in the project.
+class AccountingService {
+public:
+    explicit AccountingService(Session& s) : s_(s) {}
+    Outcome<nlohmann::json> families(const CallContext& c);
+    // {value, unit, from, dimension}
+    Outcome<nlohmann::json> convert(const CallContext& c, double value, const std::string& from, const std::string& to);
+    Outcome<nlohmann::json> checkModels(const CallContext& c);
+    Outcome<nlohmann::json> sourceKinds(const CallContext& c);
+    Outcome<nlohmann::json> studies(const CallContext& c);
+    Outcome<Mutation> setStudy(const CallContext& c, const nlohmann::json& study);
+    Outcome<Mutation> deleteStudy(const CallContext& c, const std::string& id);
+    // A stored study by id, or an inline study.
+    Outcome<JobView> run(const CallContext& c, const std::string& studyId, const nlohmann::json& study);
+    Outcome<nlohmann::json> result(const CallContext& c, const std::string& resultId);
+    // The report for another system: {"id", "name", "kind", "members"} (empty: the whole system).
+    Outcome<nlohmann::json> report(const CallContext& c, const std::string& resultId, const nlohmann::json& system);
+    Outcome<nlohmann::json> compare(const CallContext& c, const std::string& resultId, const nlohmann::json& systems);
+    Outcome<std::string> exportResult(const CallContext& c, const std::string& resultId, const std::string& format);
+    // One facet's quantities with their context: energy, momentum, angular-momentum, entropy, forces, torques, transfers, missing, residuals.
+    Outcome<nlohmann::json> query(const CallContext& c, const std::string& resultId, const nlohmann::json& system, const std::string& facet);
+    Outcome<Mutation> saveRecord(const CallContext& c, const std::string& resultId, const std::string& recordId, const std::string& name);
+    Outcome<std::vector<nlohmann::json>> records(const CallContext& c);
+    // The record with its reports evaluated from its ledger.
+    Outcome<nlohmann::json> record(const CallContext& c, const std::string& id);
+    Outcome<Mutation> deleteRecord(const CallContext& c, const std::string& id);
+
+    static constexpr const char* kRunKind = "accounting.run";
+    static constexpr const char* kExtension = "accounting";
+
+private:
+    Outcome<Mutation> change(const CallContext& c, const std::string& operation, const std::string& description,
+                             const std::function<Outcome<bool>(Project&)>& apply);
+    Outcome<const ResultEntry*> entry(const CallContext& c, const std::string& resultId);
+    Session& s_;
+};
+
 // Batches and transactions: operations run on a staging copy of the project
 // (with the same revisions), and are committed as one undoable step.
 class TransactionService {
@@ -571,6 +611,7 @@ public:
     ResonanceService resonance;
     MultiscaleService multiscale;
     MaterialStateService materialState;
+    AccountingService accounting;
     ApplicationService application;
 
 private:

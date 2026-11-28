@@ -18,6 +18,7 @@
 #include "resonant/v1/materials/material_service.pb.h"
 #include "resonant/v1/multiphysics/multiphysics_service.pb.h"
 #include "resonant/v1/functional/functional_service.pb.h"
+#include "resonant/v1/accounting/accounting_service.pb.h"
 #include "resonant/v1/materialstate/material_state_service.pb.h"
 #include "resonant/v1/multiscale/multiscale_service.pb.h"
 #include "resonant/v1/resonance/resonance_service.pb.h"
@@ -1976,6 +1977,180 @@ void Dispatcher::registerAutomation()
             if (!job)
                 return job.error();
             toProto(job.value(), out.mutable_job());
+            return std::nullopt;
+        });
+    // --- AccountingService (REQ-CHAT-20261126-022, RES-ACC-016) -----------------------------------
+    const auto accStructs = [](const nlohmann::json& list, auto* field) -> Failure {
+        for (const auto& item : list)
+            if (Failure f = structOf(item, field->Add()))
+                return f;
+        return std::nullopt;
+    };
+    const auto accChanged = [](v1::ResponseHeader* header, v1::ChangeSummary* changes, const services::Mutation& m) {
+        detail::mutated(header, m);
+        toProto(m.changes, changes);
+    };
+    unary<v1::ListQuantityFamiliesRequest, v1::ListQuantityFamiliesResponse>(
+        "AccountingService", "ListQuantityFamilies", Permission::Read, false, true,
+        [this, accStructs](const v1::ListQuantityFamiliesRequest&, v1::ListQuantityFamiliesResponse& out, const CallContext& c) -> Failure {
+            auto m = session_.services().accounting.families(c);
+            if (!m)
+                return m.error();
+            return accStructs(m.value(), out.mutable_families());
+        });
+    unary<v1::ConvertQuantityRequest, v1::ConvertQuantityResponse>(
+        "AccountingService", "ConvertQuantity", Permission::Read, false, true,
+        [this](const v1::ConvertQuantityRequest& in, v1::ConvertQuantityResponse& out, const CallContext& c) -> Failure {
+            auto m = session_.services().accounting.convert(c, in.value(), in.from_unit(), in.to_unit());
+            if (!m)
+                return m.error();
+            out.set_value(m.value()["value"].get<double>());
+            out.set_unit(m.value()["unit"].get<std::string>());
+            out.set_dimension(m.value()["dimension"].get<std::string>());
+            return std::nullopt;
+        });
+    unary<v1::ListConservationModelsRequest, v1::ListConservationModelsResponse>(
+        "AccountingService", "ListConservationModels", Permission::Read, false, true,
+        [this, accStructs](const v1::ListConservationModelsRequest&, v1::ListConservationModelsResponse& out, const CallContext& c) -> Failure {
+            auto m = session_.services().accounting.checkModels(c);
+            if (!m)
+                return m.error();
+            return accStructs(m.value(), out.mutable_models());
+        });
+    unary<v1::ListAccountingSourceKindsRequest, v1::ListAccountingSourceKindsResponse>(
+        "AccountingService", "ListAccountingSourceKinds", Permission::Read, false, true,
+        [this, accStructs](const v1::ListAccountingSourceKindsRequest&, v1::ListAccountingSourceKindsResponse& out, const CallContext& c) -> Failure {
+            auto m = session_.services().accounting.sourceKinds(c);
+            if (!m)
+                return m.error();
+            return accStructs(m.value(), out.mutable_kinds());
+        });
+    unary<v1::ListAccountingStudiesRequest, v1::ListAccountingStudiesResponse>(
+        "AccountingService", "ListAccountingStudies", Permission::Read, false, true,
+        [this, accStructs](const v1::ListAccountingStudiesRequest&, v1::ListAccountingStudiesResponse& out, const CallContext& c) -> Failure {
+            auto m = session_.services().accounting.studies(c);
+            if (!m)
+                return m.error();
+            return accStructs(m.value(), out.mutable_studies());
+        });
+    unary<v1::SetAccountingStudyRequest, v1::SetAccountingStudyResponse>(
+        "AccountingService", "SetAccountingStudy", Permission::Modify, true, false,
+        [this, accChanged](const v1::SetAccountingStudyRequest& in, v1::SetAccountingStudyResponse& out, const CallContext& c) -> Failure {
+            auto m = session_.services().accounting.setStudy(c, jsonOf(in.study()));
+            if (!m)
+                return m.error();
+            accChanged(out.mutable_header(), out.mutable_changes(), m.value());
+            return std::nullopt;
+        });
+    unary<v1::DeleteAccountingStudyRequest, v1::DeleteAccountingStudyResponse>(
+        "AccountingService", "DeleteAccountingStudy", Permission::Modify, true, false,
+        [this, accChanged](const v1::DeleteAccountingStudyRequest& in, v1::DeleteAccountingStudyResponse& out, const CallContext& c) -> Failure {
+            auto m = session_.services().accounting.deleteStudy(c, in.study_id());
+            if (!m)
+                return m.error();
+            accChanged(out.mutable_header(), out.mutable_changes(), m.value());
+            return std::nullopt;
+        });
+    unary<v1::RunAccountingRequest, v1::RunAccountingResponse>(
+        "AccountingService", "RunAccounting", Permission::Execute, false, false,
+        [this](const v1::RunAccountingRequest& in, v1::RunAccountingResponse& out, const CallContext& c) -> Failure {
+            auto job = session_.services().accounting.run(c, in.study_id(), in.has_study() ? jsonOf(in.study()) : nlohmann::json());
+            if (!job)
+                return job.error();
+            toProto(job.value(), out.mutable_job());
+            return std::nullopt;
+        });
+    unary<v1::GetAccountingResultRequest, v1::GetAccountingResultResponse>(
+        "AccountingService", "GetAccountingResult", Permission::Read, false, true,
+        [this](const v1::GetAccountingResultRequest& in, v1::GetAccountingResultResponse& out, const CallContext& c) -> Failure {
+            auto r = session_.services().accounting.result(c, in.result_id());
+            if (!r)
+                return r.error();
+            out.set_status(r.value().value("status", std::string()));
+            return structOf(r.value(), out.mutable_document());
+        });
+    unary<v1::GetAccountingReportRequest, v1::GetAccountingReportResponse>(
+        "AccountingService", "GetAccountingReport", Permission::Read, false, true,
+        [this](const v1::GetAccountingReportRequest& in, v1::GetAccountingReportResponse& out, const CallContext& c) -> Failure {
+            auto r = session_.services().accounting.report(c, in.result_id(), in.has_system() ? jsonOf(in.system()) : nlohmann::json());
+            if (!r)
+                return r.error();
+            out.set_status(r.value().value("status", std::string()));
+            return structOf(r.value(), out.mutable_report());
+        });
+    unary<v1::CompareAccountingSystemsRequest, v1::CompareAccountingSystemsResponse>(
+        "AccountingService", "CompareAccountingSystems", Permission::Read, false, true,
+        [this](const v1::CompareAccountingSystemsRequest& in, v1::CompareAccountingSystemsResponse& out, const CallContext& c) -> Failure {
+            nlohmann::json systems = nlohmann::json::array();
+            for (const auto& s : in.systems())
+                systems.push_back(jsonOf(s));
+            auto r = session_.services().accounting.compare(c, in.result_id(), systems);
+            if (!r)
+                return r.error();
+            return structOf(r.value(), out.mutable_comparison());
+        });
+    unary<v1::QueryAccountingRequest, v1::QueryAccountingResponse>(
+        "AccountingService", "QueryAccounting", Permission::Read, false, true,
+        [this](const v1::QueryAccountingRequest& in, v1::QueryAccountingResponse& out, const CallContext& c) -> Failure {
+            auto r = session_.services().accounting.query(c, in.result_id(), in.has_system() ? jsonOf(in.system()) : nlohmann::json(), in.facet());
+            if (!r)
+                return r.error();
+            return structOf(r.value(), out.mutable_result());
+        });
+    unary<v1::ExportAccountingRequest, v1::ExportAccountingResponse>(
+        "AccountingService", "ExportAccounting", Permission::Read, false, true,
+        [this](const v1::ExportAccountingRequest& in, v1::ExportAccountingResponse& out, const CallContext& c) -> Failure {
+            const std::string format = in.format().empty() ? std::string("json") : in.format();
+            auto r = session_.services().accounting.exportResult(c, in.result_id(), format);
+            if (!r)
+                return r.error();
+            out.set_text(r.value());
+            out.set_format(format);
+            return std::nullopt;
+        });
+    unary<v1::SaveAccountingRecordRequest, v1::SaveAccountingRecordResponse>(
+        "AccountingService", "SaveAccountingRecord", Permission::Modify, true, false,
+        [this, accChanged](const v1::SaveAccountingRecordRequest& in, v1::SaveAccountingRecordResponse& out, const CallContext& c) -> Failure {
+            const std::string id = in.record_id().empty() ? "acc-" + Id::generate().str().substr(0, 8) : in.record_id();
+            auto m = session_.services().accounting.saveRecord(c, in.result_id(), id, in.name());
+            if (!m)
+                return m.error();
+            accChanged(out.mutable_header(), out.mutable_changes(), m.value());
+            out.set_record_id(id);
+            return std::nullopt;
+        });
+    unary<v1::ListAccountingRecordsRequest, v1::ListAccountingRecordsResponse>(
+        "AccountingService", "ListAccountingRecords", Permission::Read, false, true,
+        [this](const v1::ListAccountingRecordsRequest&, v1::ListAccountingRecordsResponse& out, const CallContext& c) -> Failure {
+            auto list = session_.services().accounting.records(c);
+            if (!list)
+                return list.error();
+            for (const auto& r : list.value()) {
+                auto* x = out.add_records();
+                x->set_record_id(r.value("id", std::string()));
+                x->set_name(r.value("name", std::string()));
+                x->set_title(r.value("title", std::string()));
+                x->set_status(r.value("status", std::string()));
+                x->set_created(r.value("created", std::string()));
+                x->set_samples(static_cast<int>(r.value("samples", 0)));
+            }
+            return std::nullopt;
+        });
+    unary<v1::GetAccountingRecordRequest, v1::GetAccountingRecordResponse>(
+        "AccountingService", "GetAccountingRecord", Permission::Read, false, true,
+        [this](const v1::GetAccountingRecordRequest& in, v1::GetAccountingRecordResponse& out, const CallContext& c) -> Failure {
+            auto r = session_.services().accounting.record(c, in.record_id());
+            if (!r)
+                return r.error();
+            return structOf(r.value(), out.mutable_record());
+        });
+    unary<v1::DeleteAccountingRecordRequest, v1::DeleteAccountingRecordResponse>(
+        "AccountingService", "DeleteAccountingRecord", Permission::Modify, true, false,
+        [this, accChanged](const v1::DeleteAccountingRecordRequest& in, v1::DeleteAccountingRecordResponse& out, const CallContext& c) -> Failure {
+            auto m = session_.services().accounting.deleteRecord(c, in.record_id());
+            if (!m)
+                return m.error();
+            accChanged(out.mutable_header(), out.mutable_changes(), m.value());
             return std::nullopt;
         });
     // --- MaterialStateService (REQ-CHAT-20261126-021, RES-DMS-014) -------------------------------

@@ -40,7 +40,7 @@ own scope decides what each delivers.
 
 ## Stage 3 — Energy and momentum accounting
 
-- **Status:** energy partly current (REQ-CHAT-20261126-016): the coupled ledger, transfer records and audit; adapters from the FDTD and Yee energy records, intensity and Poynting results, momentum and force remain.
+- **Status:** current (REQ-CHAT-20261126-022, ADR-000226): the unified ledger for any system boundary, energy across domains, linear and angular momentum and forces for lumped networks, the radiation force on layered bodies by the vacuum Maxwell stress and the Lorentz volume force, conservation checks with honest statuses (`docs/architecture/ACCOUNTING_ARCHITECTURE.md`); adapters from the FDTD and Yee energy records, the acoustic radiation force and the full-wave Maxwell stress remain.
 
 - **Goals:** `EnergyLedger`; the definitions of [the accounting page](../physics/ENERGY_AND_MOMENTUM_ACCOUNTING.md) per domain; radiation force and Maxwell stress where force is a function.
 - **Work:** ledger type in the core; adapters from the existing FDTD, Yee and mechanical transient energy records; time-averaged intensity and Poynting results; display.
@@ -48,7 +48,6 @@ own scope decides what each delivers.
 - **Risks:** inconsistent definitions across discretizations (staggered grids); dispersive materials.
 - **Validation:** closed lossless domains conserve to rounding; analytical radiation pressure on a plane reflector; Poynting through a closed surface equals radiated power of a dipole.
 - **Acceptance:** each solver reports a ledger with a residual; force results state their surface and order.
-- **Queued:** REQ-CHAT-20261126-022 (Prompt 24, unified energy, momentum, force and conservation).
 
 ## Stage 4 — Coupled solver interfaces
 

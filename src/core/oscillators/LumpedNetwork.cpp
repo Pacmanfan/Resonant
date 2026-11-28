@@ -255,6 +255,50 @@ Result<TransientRecord> integrate(const Network& net, const TransientOptions& o,
             couplings.push_back(s);
     }
     const bool matrices = net.stiffnessMatrix.size() > 0;
+    if (o.elementFlows && (matrices || net.massMatrix.size() > 0 || !net.dampingByMechanism.empty()))
+        return R::failure("element flows need the network's elements (masses, springs, dampers), not full matrices");
+    // The elements whose flows are recorded.
+    struct Element {
+        bool spring;
+        int i, j;
+        double coefficient;
+    };
+    std::vector<Element> elements;
+    if (o.elementFlows) {
+        for (const Spring& sp : net.springs)
+            elements.push_back({true, sp.i, sp.j, sp.k});
+        for (const Damper& d : net.dampers)
+            elements.push_back({false, d.i, d.j, d.c});
+    }
+    const size_t ne = elements.size();
+    // Per element: work on i, work on j, impulse on i (rates at a stage, cumulative values).
+    std::vector<double> wI(ne, 0.0), wJ(ne, 0.0), jI(ne, 0.0);
+    std::vector<double> drive(static_cast<size_t>(n), 0.0), driveImpulse(static_cast<size_t>(n), 0.0);
+    const auto elementForce = [&](const Element& e, const Eigen::VectorXd& xx, const Eigen::VectorXd& vv) {
+        const double xi = xx(e.i), xj = e.j >= 0 ? xx(e.j) : 0.0, vi = vv(e.i), vj = e.j >= 0 ? vv(e.j) : 0.0;
+        return e.spring ? -e.coefficient * (xi - xj) : -e.coefficient * (vi - vj);  // on i
+    };
+    struct Rates {
+        std::vector<double> wI, wJ, jI, drive, driveImpulse;
+    };
+    const auto flowRates = [&](double t, const Eigen::VectorXd& xx, const Eigen::VectorXd& vv, Rates& r) {
+        r.wI.assign(ne, 0.0);
+        r.wJ.assign(ne, 0.0);
+        r.jI.assign(ne, 0.0);
+        for (size_t e = 0; e < ne; ++e) {
+            const double F = elementForce(elements[e], xx, vv);
+            r.wI[e] = F * vv(elements[e].i);
+            r.wJ[e] = elements[e].j >= 0 ? -F * vv(elements[e].j) : 0.0;
+            r.jI[e] = F;
+        }
+        const Eigen::VectorXd f = forceAt(t);
+        r.drive.assign(static_cast<size_t>(n), 0.0);
+        r.driveImpulse.assign(static_cast<size_t>(n), 0.0);
+        for (int i = 0; i < n; ++i) {
+            r.drive[static_cast<size_t>(i)] = f(i) * vv(i);
+            r.driveImpulse[static_cast<size_t>(i)] = f(i);
+        }
+    };
     const auto stored = [&](const Eigen::VectorXd& xx, const Eigen::VectorXd& vv) { return 0.5 * vv.dot(M * vv) + 0.5 * xx.dot(K * xx); };
     TransientRecord rec;
     rec.dt = dt;
@@ -262,6 +306,30 @@ Result<TransientRecord> integrate(const Network& net, const TransientOptions& o,
     rec.displacement.assign(static_cast<size_t>(n), {});
     rec.energy.assign(static_cast<size_t>(n), {});
     const long every = std::max<long>(1, steps / std::max(1, o.samples));
+    if (o.elementFlows) {
+        rec.elementFlows = true;
+        rec.velocity.assign(static_cast<size_t>(n), {});
+        rec.appliedWork.assign(static_cast<size_t>(n), {});
+        rec.appliedImpulse.assign(static_cast<size_t>(n), {});
+        rec.appliedForce.assign(static_cast<size_t>(n), {});
+        size_t springIndex = 0, damperIndex = 0;
+        for (const Element& e : elements) {
+            ElementFlow f;
+            f.kind = e.spring ? "spring" : "damper";
+            f.i = e.i;
+            f.j = e.j;
+            f.coefficient = e.coefficient;
+            if (e.spring) {
+                const Spring& sp = net.springs[springIndex++];
+                f.name = sp.name.empty() ? "spring " + std::to_string(springIndex) : sp.name;
+            } else {
+                const Damper& d = net.dampers[damperIndex++];
+                f.mechanism = d.mechanism;
+                f.name = (d.mechanism.empty() ? std::string("damper") : d.mechanism) + " " + std::to_string(damperIndex);
+            }
+            rec.elements.push_back(f);
+        }
+    }
     double supplied = 0.0;
     std::map<std::string, double> lost;
     for (const auto& [name, c] : damping)
@@ -285,6 +353,25 @@ Result<TransientRecord> integrate(const Network& net, const TransientOptions& o,
             d += value;
         rec.supplied.push_back(supplied);
         rec.dissipated.push_back(d);
+        if (rec.elementFlows) {
+            const Eigen::VectorXd f = forceAt(t);
+            for (int i = 0; i < n; ++i) {
+                const auto u = static_cast<size_t>(i);
+                rec.velocity[u].push_back(v(i));
+                rec.appliedWork[u].push_back(drive[u]);
+                rec.appliedImpulse[u].push_back(driveImpulse[u]);
+                rec.appliedForce[u].push_back(f(i));
+            }
+            for (size_t e = 0; e < ne; ++e) {
+                ElementFlow& ef = rec.elements[e];
+                ef.workOnI.push_back(wI[e]);
+                ef.workOnJ.push_back(wJ[e]);
+                ef.impulseOnI.push_back(jI[e]);
+                ef.force.push_back(elementForce(elements[e], x, v));
+                const double xi = x(elements[e].i), xj = elements[e].j >= 0 ? x(elements[e].j) : 0.0;
+                ef.stored.push_back(elements[e].spring ? 0.5 * elements[e].coefficient * (xi - xj) * (xi - xj) : 0.0);
+            }
+        }
     };
     record(0.0);
     // State derivative and the power densities (supply, dissipation per mechanism) at a state.
@@ -311,6 +398,24 @@ Result<TransientRecord> integrate(const Network& net, const TransientOptions& o,
         rhs(t + 0.5 * dt, x + 0.5 * dt * k1x, v + 0.5 * dt * k1v, k2x, k2v, p2, d2);
         rhs(t + 0.5 * dt, x + 0.5 * dt * k2x, v + 0.5 * dt * k2v, k3x, k3v, p3, d3);
         rhs(t + dt, x + dt * k3x, v + dt * k3v, k4x, k4v, p4, d4);
+        if (o.elementFlows) {
+            // The same stages as the state update.
+            Rates r1, r2, r3, r4;
+            flowRates(t, x, v, r1);
+            flowRates(t + 0.5 * dt, x + 0.5 * dt * k1x, v + 0.5 * dt * k1v, r2);
+            flowRates(t + 0.5 * dt, x + 0.5 * dt * k2x, v + 0.5 * dt * k2v, r3);
+            flowRates(t + dt, x + dt * k3x, v + dt * k3v, r4);
+            const auto rk = [&](std::vector<double>& acc, const std::vector<double>& a, const std::vector<double>& b, const std::vector<double>& c,
+                                const std::vector<double>& d) {
+                for (size_t q = 0; q < acc.size(); ++q)
+                    acc[q] += dt / 6.0 * (a[q] + 2.0 * b[q] + 2.0 * c[q] + d[q]);
+            };
+            rk(wI, r1.wI, r2.wI, r3.wI, r4.wI);
+            rk(wJ, r1.wJ, r2.wJ, r3.wJ, r4.wJ);
+            rk(jI, r1.jI, r2.jI, r3.jI, r4.jI);
+            rk(drive, r1.drive, r2.drive, r3.drive, r4.drive);
+            rk(driveImpulse, r1.driveImpulse, r2.driveImpulse, r3.driveImpulse, r4.driveImpulse);
+        }
         x += dt / 6.0 * (k1x + 2.0 * k2x + 2.0 * k3x + k4x);
         v += dt / 6.0 * (k1v + 2.0 * k2v + 2.0 * k3v + k4v);
         supplied += dt / 6.0 * (p1 + 2.0 * p2 + 2.0 * p3 + p4);
@@ -327,6 +432,7 @@ Result<TransientRecord> integrate(const Network& net, const TransientOptions& o,
     }
     rec.dissipatedByMechanism = lost;
     rec.residual = worst / std::max(peak, std::abs(supplied));
+    rec.residualAbsolute = worst;
     return rec;
 }
 

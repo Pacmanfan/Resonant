@@ -1,6 +1,8 @@
 // The multiphysics application services (REQ-CHAT-20261126-016, RES-CEME-015).
 #include "services/Services.h"
 
+#include "accounting/Conservation.h"
+#include "coupling/AccountingAdapters.h"
 #include "coupling/CoupledRun.h"
 #include "coupling/CouplingModels.h"
 #include "project/ProjectSerializer.h"
@@ -175,6 +177,11 @@ Outcome<JobView> MultiphysicsService::start(const CallContext& c, const std::str
         entry.jobId = info.id.str();
         entry.projectRevision = revision;
         nlohmann::json doc = result->toJson();
+        // The run's accounting (REQ-CHAT-20261126-022, RES-ACC-006): the whole system's checks from its own ledger.
+        if (auto l = coupling::coupledLedger(doc["ledger"], doc["audit"], entry.name)) {
+            const auto report = accounting::evaluate(l.value(), accounting::wholeSystem(l.value()), {});
+            doc["accounting"] = {{"ledger", l.value().toJson()}, {"report", report.toJson()}};
+        }
         doc["projectRevision"] = revision;
         doc["jobId"] = info.id.str();
         entry.document = std::make_shared<const nlohmann::json>(std::move(doc));

@@ -1,0 +1,113 @@
+syntax = "proto3";
+package resonant.v1;
+
+import "google/protobuf/struct.proto";
+import "resonant/v1/accounting/accounting.proto";
+import "resonant/v1/common/jobs.proto";
+import "resonant/v1/common/metadata.proto";
+import "resonant/v1/common/validation.proto";
+
+message ListQuantityFamiliesRequest { RequestHeader header = 1; }
+message ListQuantityFamiliesResponse { ResponseHeader header = 1; repeated google.protobuf.Struct families = 2; }
+
+message ConvertQuantityRequest { RequestHeader header = 1; double value = 2; string from_unit = 3; string to_unit = 4; }
+message ConvertQuantityResponse { ResponseHeader header = 1; double value = 2; string unit = 3; string dimension = 4; }
+
+message ListConservationModelsRequest { RequestHeader header = 1; }
+message ListConservationModelsResponse { ResponseHeader header = 1; repeated google.protobuf.Struct models = 2; }
+
+message ListAccountingSourceKindsRequest { RequestHeader header = 1; }
+message ListAccountingSourceKindsResponse { ResponseHeader header = 1; repeated google.protobuf.Struct kinds = 2; }
+
+message ListAccountingStudiesRequest { RequestHeader header = 1; }
+message ListAccountingStudiesResponse { ResponseHeader header = 1; repeated google.protobuf.Struct studies = 2; }
+
+message SetAccountingStudyRequest { RequestHeader header = 1; google.protobuf.Struct study = 2; }
+message SetAccountingStudyResponse { ResponseHeader header = 1; ChangeSummary changes = 2; }
+
+message DeleteAccountingStudyRequest { RequestHeader header = 1; string study_id = 2; }
+message DeleteAccountingStudyResponse { ResponseHeader header = 1; ChangeSummary changes = 2; }
+
+message RunAccountingRequest {
+  RequestHeader header = 1;
+  string study_id = 2;               // a stored study, or
+  google.protobuf.Struct study = 3;  // {"source": {...}, "systems": [...], "tolerances": {...}}
+}
+message RunAccountingResponse { ResponseHeader header = 1; Job job = 2; }
+
+message GetAccountingResultRequest { RequestHeader header = 1; string result_id = 2; }
+message GetAccountingResultResponse { ResponseHeader header = 1; google.protobuf.Struct document = 2; string status = 3; }
+
+message GetAccountingReportRequest {
+  RequestHeader header = 1;
+  string result_id = 2;
+  google.protobuf.Struct system = 3;  // {"id", "name", "kind", "members"}; empty: the whole system
+}
+message GetAccountingReportResponse { ResponseHeader header = 1; google.protobuf.Struct report = 2; string status = 3; }
+
+message CompareAccountingSystemsRequest { RequestHeader header = 1; string result_id = 2; repeated google.protobuf.Struct systems = 3; }
+message CompareAccountingSystemsResponse { ResponseHeader header = 1; google.protobuf.Struct comparison = 2; }
+
+message QueryAccountingRequest {
+  RequestHeader header = 1;
+  string result_id = 2;
+  google.protobuf.Struct system = 3;  // empty: the whole system
+  string facet = 4;  // energy, momentum, angular-momentum, entropy, forces, torques, transfers, missing, residuals
+}
+message QueryAccountingResponse { ResponseHeader header = 1; google.protobuf.Struct result = 2; }
+
+message ExportAccountingRequest { RequestHeader header = 1; string result_id = 2; string format = 3; }  // json, csv, markdown
+message ExportAccountingResponse { ResponseHeader header = 1; string text = 2; string format = 3; }
+
+message SaveAccountingRecordRequest { RequestHeader header = 1; string result_id = 2; string record_id = 3; string name = 4; }
+message SaveAccountingRecordResponse { ResponseHeader header = 1; ChangeSummary changes = 2; string record_id = 3; }
+
+message ListAccountingRecordsRequest { RequestHeader header = 1; }
+message ListAccountingRecordsResponse { ResponseHeader header = 1; repeated AccountingRecordSummary records = 2; }
+
+message GetAccountingRecordRequest { RequestHeader header = 1; string record_id = 2; }
+message GetAccountingRecordResponse { ResponseHeader header = 1; google.protobuf.Struct record = 2; }
+
+message DeleteAccountingRecordRequest { RequestHeader header = 1; string record_id = 2; }
+message DeleteAccountingRecordResponse { ResponseHeader header = 1; ChangeSummary changes = 2; }
+
+// Unified accounting: quantity families and units, the conservation laws and consistency
+// relations, accounting studies of networks, coupled systems, evolutions, radiation on
+// layered bodies and material-state models, reports for any system boundary, comparisons,
+// queries with full context, exports and records kept in the project.
+service AccountingService {
+  // The quantity families: unit, dimension, whether conserved (torque and energy are different families).
+  rpc ListQuantityFamilies(ListQuantityFamiliesRequest) returns (ListQuantityFamiliesResponse);
+  // Converts a value between units of the same dimension; refuses other dimensions and affine scales.
+  rpc ConvertQuantity(ConvertQuantityRequest) returns (ConvertQuantityResponse);
+  // The conservation laws and consistency relations: equation, required data, method, assumptions.
+  rpc ListConservationModels(ListConservationModelsRequest) returns (ListConservationModelsResponse);
+  // The sources a study can account, with what each needs and accounts.
+  rpc ListAccountingSourceKinds(ListAccountingSourceKindsRequest) returns (ListAccountingSourceKindsResponse);
+  // The accounting studies stored in the project.
+  rpc ListAccountingStudies(ListAccountingStudiesRequest) returns (ListAccountingStudiesResponse);
+  // Adds a study (its source, systems and tolerances), or replaces the one with its id; one undo step.
+  rpc SetAccountingStudy(SetAccountingStudyRequest) returns (SetAccountingStudyResponse);
+  // Removes a study; one undo step.
+  rpc DeleteAccountingStudy(DeleteAccountingStudyRequest) returns (DeleteAccountingStudyResponse);
+  // Runs a stored or inline study as a job; the result id is in the finished job's results.
+  rpc RunAccounting(RunAccountingRequest) returns (RunAccountingResponse);
+  // A result: the ledger, the systems' reports (checks, breakdown, flows, forces, histories) and the status.
+  rpc GetAccountingResult(GetAccountingResultRequest) returns (GetAccountingResultResponse);
+  // The report of a result for another system, without running again.
+  rpc GetAccountingReport(GetAccountingReportRequest) returns (GetAccountingReportResponse);
+  // Reports for several systems and the exchanges whose role differs between them.
+  rpc CompareAccountingSystems(CompareAccountingSystemsRequest) returns (CompareAccountingSystemsResponse);
+  // One facet's quantities (energy, momentum, forces, transfers, missing data, residuals) with their full context.
+  rpc QueryAccounting(QueryAccountingRequest) returns (QueryAccountingResponse);
+  // A result as JSON, CSV or Markdown.
+  rpc ExportAccounting(ExportAccountingRequest) returns (ExportAccountingResponse);
+  // Keeps a result in the project (histories thinned); one undo step.
+  rpc SaveAccountingRecord(SaveAccountingRecordRequest) returns (SaveAccountingRecordResponse);
+  // The stored records.
+  rpc ListAccountingRecords(ListAccountingRecordsRequest) returns (ListAccountingRecordsResponse);
+  // One record with its reports evaluated again from its ledger.
+  rpc GetAccountingRecord(GetAccountingRecordRequest) returns (GetAccountingRecordResponse);
+  // Removes a record; one undo step.
+  rpc DeleteAccountingRecord(DeleteAccountingRecordRequest) returns (DeleteAccountingRecordResponse);
+}

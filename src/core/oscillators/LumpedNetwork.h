@@ -94,6 +94,26 @@ struct TransientOptions {
     // f(t) per coordinate; empty = free vibration.
     std::function<std::vector<double>(double)> force;
     int samples = 400;               // stored samples (decimated)
+    // Record each element's work and impulse on each coordinate (needs the element
+    // structure: masses, springs, dampers; not available with full matrices).
+    bool elementFlows = false;
+};
+
+// The flows of one spring or damper (REQ-CHAT-20261126-022, RES-ACC-005, -007): the work it
+// does on each of its two coordinates and the impulse of its force on each, cumulative at
+// the samples, integrated with the same Runge-Kutta stages as the state. The forces on the
+// two ends are equal and opposite (an action-reaction pair); a grounded element's second
+// end is the ground (j = -1, no work, the reaction impulse only).
+struct ElementFlow {
+    std::string name;       // the spring's name, or the damper's mechanism and index
+    std::string kind;       // spring, damper
+    std::string mechanism;  // the damper's mechanism
+    int i = 0, j = -1;
+    double coefficient = 0.0;  // k or c
+    std::vector<double> workOnI, workOnJ;        // J (or the domain's analogue), cumulative
+    std::vector<double> impulseOnI;              // N s, cumulative (on j: the opposite)
+    std::vector<double> stored;                  // a spring's energy at the sample
+    std::vector<double> force;                   // the force on i at the sample
 };
 
 struct TransientRecord {
@@ -104,8 +124,16 @@ struct TransientRecord {
     std::vector<double> supplied, dissipated;       // cumulative, per sample
     std::map<std::string, double> dissipatedByMechanism;  // total
     double residual = 0.0;                          // max |supplied - stored - dissipated + stored(0)| / max energy
+    double residualAbsolute = 0.0;                  // the same maximum, not normalized
     double dt = 0.0;
     long steps = 0;
+    // With TransientOptions::elementFlows:
+    bool elementFlows = false;
+    std::vector<std::vector<double>> velocity;       // [coordinate][sample]
+    std::vector<std::vector<double>> appliedWork;    // [coordinate][sample], cumulative integral of f_i v_i
+    std::vector<std::vector<double>> appliedImpulse; // [coordinate][sample], cumulative integral of f_i
+    std::vector<std::vector<double>> appliedForce;   // [coordinate][sample]
+    std::vector<ElementFlow> elements;
 };
 // Fourth-order Runge-Kutta; energies accumulated with the same stages.
 Result<TransientRecord> integrate(const Network& network, const TransientOptions& options, JobContext* context = nullptr);

@@ -49,7 +49,10 @@ DamageResponse damageUpdate(const DamageParameters& p, const DamageState& c, dou
         r.loading = true;
         r.state.kappa = e;
         r.state.damage = std::max(c.damage, p.damage(e));
-        r.state.dissipated = c.dissipated + 0.5 * E * strain * strain * (r.state.damage - c.damage);
+        // The dissipation integral of Y = E kappa^2 / 2 over dD, by the trapezoidal rule in kappa (second order,
+        // like the work): from where damage starts growing in this step to the new largest strain.
+        const double from = std::max(c.kappa, p.thresholdStrain);
+        r.state.dissipated = c.dissipated + 0.25 * E * (from * from + e * e) * (r.state.damage - c.damage);
         r.tangent = (1.0 - r.state.damage) * E - E * strain * p.damageSlope(e) * (strain >= 0.0 ? 1.0 : -1.0);
     } else {
         r.state.kappa = std::max(c.kappa, e);

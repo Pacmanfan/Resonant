@@ -83,3 +83,33 @@ TEST(PhaseChange, AnUnstableStepIsRefused)
     ASSERT_FALSE(r);
     EXPECT_NE(r.message().find("stability limit"), std::string::npos);
 }
+
+TEST(PhaseChange, EntropyProductionIsNonNegative)
+{
+    // RES-ACC-013: the slab's entropy change from its states equals the inflow q/T plus the production of
+    // conduction (never negative), to the explicit step's first-order error.
+    resonant::thermal::PhaseChangeProblem p;
+    p.length = 0.05;
+    p.cells = 50;
+    p.material = {800.0, 2000.0, 2200.0, 0.25, 0.15, 310.0, 2.0e5};
+    p.initialTemperature = 300.0;
+    p.left = {resonant::thermal::SlabFace::Kind::Temperature, 330.0};
+    p.right = {resonant::thermal::SlabFace::Kind::Adiabatic, 0.0};
+    double previous = 0.0;
+    for (double fraction : {0.8, 0.4}) {
+        resonant::thermal::PhaseChangeSettings s;
+        s.duration = 1800.0;
+        const double limit = 800.0 * 2000.0 * std::pow(0.05 / 50, 2) / (4.0 * 0.25);
+        s.timeStep = fraction * limit;
+        auto r = resonant::thermal::solvePhaseChange(p, s);
+        ASSERT_TRUE(r) << r.message();
+        EXPECT_GT(r.value().entropyProduction, 0.0);
+        EXPECT_GT(r.value().entropyChange, 0.0);
+        const double residual = std::abs(r.value().entropyChange - r.value().entropyIn - r.value().entropyProduction);
+        EXPECT_LT(residual, 1e-2 * r.value().entropyChange);
+        if (previous > 0.0)
+            EXPECT_LT(residual, 0.7 * previous);  // first order in the step
+        previous = residual;
+    }
+}
+

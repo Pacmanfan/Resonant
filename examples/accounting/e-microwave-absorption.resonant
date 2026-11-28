@@ -1,0 +1,235 @@
+{
+ "format": "resonant-project",
+ "schemaVersion": 1,
+ "application": {
+  "name": "Resonant",
+  "version": "0.1.0"
+ },
+ "project": {
+  "id": "ex-acc-microwave",
+  "name": "e-microwave-absorption",
+  "createdUtc": "2026-11-28T00:00:00Z",
+  "modifiedUtc": "2026-11-28T00:00:00Z"
+ },
+ "units": {
+  "angle": "rad",
+  "axes": "right-handed; X horizontal, Y depth, Z vertical (up)",
+  "frequency": "Hz",
+  "length": "m",
+  "mass": "kg",
+  "rotation": "intrinsic Z-Y-X Euler angles stored as [x, y, z]",
+  "time": "s"
+ },
+ "materials": [
+  {
+   "id": "mat-ex-acc-food",
+   "name": "Food layer (example)",
+   "description": "Its permittivity is an effective (homogenized) value of a mixture.",
+   "domains": {
+    "electromagnetic": {
+     "relativePermittivity": {
+      "provenance": "homogenized",
+      "source": "Maxwell Garnett mixture of water in a starch matrix (example)",
+      "value": 40.0
+     },
+     "lossTangent": {
+      "provenance": "homogenized",
+      "source": "Maxwell Garnett mixture of water in a starch matrix (example)",
+      "value": 0.2
+     },
+     "conductivity": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the accounting examples; not authoritative.",
+      "value": 0.0
+     },
+     "relativePermeability": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the accounting examples; not authoritative.",
+      "value": 1.0
+     }
+    },
+    "thermal": {
+     "thermalConductivity": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the accounting examples; not authoritative.",
+      "value": 0.5
+     },
+     "density": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the accounting examples; not authoritative.",
+      "value": 1050.0
+     },
+     "specificHeat": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the accounting examples; not authoritative.",
+      "value": 3600.0
+     }
+    }
+   }
+  }
+ ],
+ "scene": {
+  "objects": [
+   {
+    "id": "ex-acc-food",
+    "type": "geometry",
+    "name": "Food layer",
+    "visible": true,
+    "transform": {
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "children": [],
+    "geometry": {
+     "kind": "box",
+     "parameters": {
+      "width": 0.2,
+      "depth": 0.1,
+      "height": 0.015
+     }
+    },
+    "material": "mat-ex-acc-food"
+   }
+  ]
+ },
+ "simulations": [],
+ "extensions": {
+  "accounting": {
+   "format": "resonant.accounting",
+   "version": 1,
+   "studies": [
+    {
+     "id": "st-steady",
+     "name": "Steady state: where the microwave power goes",
+     "source": {
+      "kind": "physical-system",
+      "system": "sys-microwave-food"
+     },
+     "systems": [
+      {
+       "id": "wave",
+       "name": "The wave alone",
+       "kind": "subsystem",
+       "members": [
+        "em"
+       ]
+      },
+      {
+       "id": "heat",
+       "name": "The heat alone",
+       "kind": "subsystem",
+       "members": [
+        "heat"
+       ]
+      }
+     ],
+     "tolerances": {
+      "relative": 1e-06,
+      "warning": 0.001
+     }
+    },
+    {
+     "id": "st-heating",
+     "name": "Heating for 5 minutes, step by step",
+     "source": {
+      "kind": "evolution",
+      "system": "sys-microwave-food",
+      "duration": 300.0,
+      "steps": 15,
+      "substeps": 4
+     },
+     "tolerances": {
+      "relative": 1e-06,
+      "warning": 0.001
+     }
+    }
+   ],
+   "records": []
+  },
+  "multiphysics": {
+   "format": "resonant.multiphysics",
+   "version": 1,
+   "systems": [
+    {
+     "format": "resonant.physical-system",
+     "version": 1,
+     "id": "sys-microwave-food",
+     "name": "Microwave-heated food layer",
+     "description": "A 15 mm food layer in a 2.45 GHz plane wave of 10 kW/m^2: the wave's absorbed power becomes heat, which leaves by convection.",
+     "geometry": {
+      "kind": "layered-slab",
+      "lateralArea": 0.02
+     },
+     "environment": {
+      "ambientTemperature": 293.15
+     },
+     "regions": [
+      {
+       "id": "food",
+       "name": "Food",
+       "materialId": "mat-ex-acc-food",
+       "thickness": 0.015,
+       "cells": 40,
+       "objectId": "ex-acc-food"
+      }
+     ],
+     "domains": [
+      {
+       "id": "em",
+       "kind": "electromagnetic",
+       "solver": "em.layered.transfer-matrix",
+       "settings": {
+        "frequencyHz": 2450000000.0,
+        "incidentIntensity": 10000.0
+       }
+      },
+      {
+       "id": "heat",
+       "kind": "thermal",
+       "solver": "thermal.conduction.fv",
+       "settings": {
+        "faces": {
+         "-z": {
+          "kind": "convective",
+          "h": 10.0
+         },
+         "+z": {
+          "kind": "convective",
+          "h": 10.0
+         }
+        }
+       }
+      }
+     ],
+     "couplings": [
+      {
+       "id": "absorb",
+       "model": "em.absorption-to-heat",
+       "from": "em",
+       "to": "heat"
+      }
+     ],
+     "materialLaws": [],
+     "scheme": {
+      "kind": "one-way",
+      "maxIterations": 20,
+      "temperatureTolerance": 1e-07
+     }
+    }
+   ]
+  }
+ }
+}

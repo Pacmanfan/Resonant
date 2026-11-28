@@ -109,6 +109,20 @@ Result<PhaseChangeResult> solvePhaseChange(const PhaseChangeProblem& p, const Ph
             const double G = 1.0 / (0.5 * dx / k[static_cast<size_t>(i - 1)] + 0.5 * dx / k[static_cast<size_t>(i)]);
             q[static_cast<size_t>(i)] = G * (T[static_cast<size_t>(i - 1)] - T[static_cast<size_t>(i)]);
         }
+        // Entropy carried in at the faces and produced by conduction, at the step's temperatures.
+        const auto faceTemperature = [&](const SlabFace& face, int cell) {
+            return face.kind == SlabFace::Kind::Temperature ? face.value : T[static_cast<size_t>(cell)];
+        };
+        const double qRight = -q[static_cast<size_t>(n)];  // into the slab at x = L
+        out.entropyIn += h * (q[0] / faceTemperature(p.left, 0) + qRight / faceTemperature(p.right, n - 1));
+        double produced = 0.0;
+        for (int i = 1; i < n; ++i)
+            produced += q[static_cast<size_t>(i)] * (1.0 / T[static_cast<size_t>(i)] - 1.0 / T[static_cast<size_t>(i - 1)]);
+        if (p.left.kind == SlabFace::Kind::Temperature)
+            produced += q[0] * (1.0 / T[0] - 1.0 / p.left.value);
+        if (p.right.kind == SlabFace::Kind::Temperature)
+            produced += qRight * (1.0 / T[static_cast<size_t>(n - 1)] - 1.0 / p.right.value);
+        out.entropyProduction += h * produced;
         for (int i = 0; i < n; ++i)
             H[static_cast<size_t>(i)] += h / dx * (q[static_cast<size_t>(i)] - q[static_cast<size_t>(i + 1)]);
         out.heatIn += h * (q[0] - q[static_cast<size_t>(n)]);
@@ -127,6 +141,16 @@ Result<PhaseChangeResult> solvePhaseChange(const PhaseChangeProblem& p, const Ph
     out.latentChange = latent;
     out.sensibleChange = total - latent;
     out.balanceResidual = out.heatIn - total;
+    // The entropy density of a state (relative to the solid at the melting temperature).
+    const auto entropy = [&](double Hc) {
+        if (Hc < 0.0)
+            return rho * m.solidSpecificHeat * std::log((Tm + Hc / (rho * m.solidSpecificHeat)) / Tm);
+        if (Hc <= rhoL)
+            return Hc / Tm;
+        return rhoL / Tm + rho * m.liquidSpecificHeat * std::log((Tm + (Hc - rhoL) / (rho * m.liquidSpecificHeat)) / Tm);
+    };
+    for (int i = 0; i < n; ++i)
+        out.entropyChange += (entropy(H[static_cast<size_t>(i)]) - entropy(H0[static_cast<size_t>(i)])) * dx;
     return out;
 }
 

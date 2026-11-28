@@ -1,0 +1,14 @@
+syntax = "proto3";
+package resonant.v1;
+
+// A stored accounting record (REQ-CHAT-20261126-022, RES-ACC-016): the study, the ledger with
+// its histories thinned, the systems and tolerances. The full record, with its reports
+// evaluated again from the ledger, is the JSON document of GetAccountingRecord.
+message AccountingRecordSummary {
+  string record_id = 1;
+  string name = 2;
+  string title = 3;
+  string status = 4;    // the worst check status of the run
+  string created = 5;   // UTC
+  int32 samples = 6;    // retained history samples
+}

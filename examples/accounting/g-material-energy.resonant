@@ -1,0 +1,225 @@
+{
+ "format": "resonant-project",
+ "schemaVersion": 1,
+ "application": {
+  "name": "Resonant",
+  "version": "0.1.0"
+ },
+ "project": {
+  "id": "ex-acc-materials",
+  "name": "g-material-energy",
+  "createdUtc": "2026-11-28T00:00:00Z",
+  "modifiedUtc": "2026-11-28T00:00:00Z"
+ },
+ "units": {
+  "angle": "rad",
+  "axes": "right-handed; X horizontal, Y depth, Z vertical (up)",
+  "frequency": "Hz",
+  "length": "m",
+  "mass": "kg",
+  "rotation": "intrinsic Z-Y-X Euler angles stored as [x, y, z]",
+  "time": "s"
+ },
+ "materials": [
+  {
+   "id": "mat-ex-acc-steel",
+   "name": "Steel (example)",
+   "description": "Illustrative.",
+   "domains": {
+    "mechanical": {
+     "density": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the accounting examples; not authoritative.",
+      "value": 7850.0
+     },
+     "youngsModulus": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the accounting examples; not authoritative.",
+      "value": 200000000000.0
+     },
+     "poissonsRatio": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the accounting examples; not authoritative.",
+      "value": 0.3
+     }
+    }
+   }
+  }
+ ],
+ "scene": {
+  "objects": [
+   {
+    "id": "ex-acc-bar",
+    "type": "geometry",
+    "name": "Steel bar",
+    "visible": true,
+    "transform": {
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "children": [],
+    "geometry": {
+     "kind": "box",
+     "parameters": {
+      "width": 1.0,
+      "depth": 0.01,
+      "height": 0.01
+     }
+    },
+    "material": "mat-ex-acc-steel"
+   },
+   {
+    "id": "ex-acc-core",
+    "type": "geometry",
+    "name": "Ferrite core",
+    "visible": true,
+    "transform": {
+     "position": [
+      0,
+      0.2,
+      0
+     ],
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "children": [],
+    "geometry": {
+     "kind": "cylinder",
+     "parameters": {
+      "radius": 0.025,
+      "height": 0.01
+     }
+    }
+   }
+  ]
+ },
+ "simulations": [],
+ "extensions": {
+  "accounting": {
+   "format": "resonant.accounting",
+   "version": 1,
+   "studies": [
+    {
+     "id": "st-acc-bar",
+     "name": "Plastic work of the bar",
+     "source": {
+      "kind": "material-state",
+      "study": "st-bar"
+     },
+     "tolerances": {
+      "relative": 0.0001,
+      "warning": 0.01
+     }
+    },
+    {
+     "id": "st-acc-core",
+     "name": "Hysteresis loss of the core",
+     "source": {
+      "kind": "material-state",
+      "study": "st-core"
+     },
+     "tolerances": {
+      "relative": 0.0001,
+      "warning": 0.01
+     }
+    },
+    {
+     "id": "st-acc-melt",
+     "name": "Energy and entropy of the melting wall",
+     "source": {
+      "kind": "material-state",
+      "study": "st-melt"
+     },
+     "tolerances": {
+      "relative": 1e-06,
+      "warning": 0.01
+     }
+    }
+   ],
+   "records": []
+  },
+  "material-state": {
+   "format": "resonant.material-state",
+   "version": 1,
+   "records": [],
+   "studies": [
+    {
+     "id": "st-bar",
+     "name": "A bar fixed at both ends, loaded past yield",
+     "model": "mechanics.j2.bar",
+     "parameters": {
+      "youngsModulus": 200000000000.0,
+      "poissonsRatio": 0.3,
+      "yieldStress": 250000000.0,
+      "isotropicHardening": 2000000000.0,
+      "kinematicHardening": 0.0,
+      "length": 1.0,
+      "loadPoint": 0.3,
+      "area": 0.0001
+     },
+     "loading": {
+      "peakLoadFraction": 0.95,
+      "increments": 60
+     }
+    },
+    {
+     "id": "st-core",
+     "name": "A ferrite core: one major and one minor loop",
+     "model": "em.preisach",
+     "parameters": {
+      "saturationMagnetization": 300000.0,
+      "saturationField": 400.0,
+      "reversibleSusceptibility": 100.0,
+      "levels": 200,
+      "density": "gaussian",
+      "coercivity": 40.0,
+      "coerciveSpread": 15.0,
+      "interactionSpread": 20.0
+     },
+     "loading": {
+      "amplitudes": [
+       300.0,
+       60.0
+      ],
+      "increments": 400
+     }
+    },
+    {
+     "id": "st-melt",
+     "name": "A paraffin wall melting for half an hour",
+     "model": "thermal.phase-change.slab",
+     "parameters": {
+      "length": 0.05,
+      "cells": 100,
+      "initialTemperature": 300.0
+     },
+     "loading": {
+      "duration": 1800.0,
+      "snapshots": 6
+     }
+    }
+   ]
+  }
+ }
+}

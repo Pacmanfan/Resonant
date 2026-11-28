@@ -56,6 +56,13 @@ struct PhaseChangeResult {
     double balanceResidual = 0.0; // heatIn - (sensible + latent)
     double timeStep = 0.0, stabilityLimit = 0.0;
     int steps = 0;
+    // Entropy (REQ-CHAT-20261126-022, RES-ACC-013), J/(m^2 K): the slab's change from its
+    // states (exactly: rho c ln(T/Tm) sensible, rho L f / Tm latent), the inflow with the heat
+    // through the faces (q / T at the face: a fixed-temperature face's value, a flux face's
+    // cell), and the production of the conduction between cell centres and from a
+    // fixed-temperature face to its cell (q (1/T_cold - 1/T_hot), never negative). The change
+    // minus inflow and production is the time discretization's error.
+    double entropyChange = 0.0, entropyIn = 0.0, entropyProduction = 0.0;
 };
 
 Result<PhaseChangeResult> solvePhaseChange(const PhaseChangeProblem& problem, const PhaseChangeSettings& settings,

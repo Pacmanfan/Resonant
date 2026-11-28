@@ -93,6 +93,26 @@ json base(const ModelCard& card, const json& study, std::string kind)
             {"committable", json::array()}, {"reliability", json::array()}, {"modelCard", card.toJson()}};
 }
 
+// The error of the trapezoidal work integral of y over x from (0, 0) through the points:
+// Richardson's estimate |W_h - W_2h| / 3 (every other point for W_2h).
+double workQuadratureError(const std::vector<double>& x, const std::vector<double>& y)
+{
+    std::vector<double> xs{0.0}, ys{0.0};
+    xs.insert(xs.end(), x.begin(), x.end());
+    ys.insert(ys.end(), y.begin(), y.end());
+    double fine = 0.0, coarse = 0.0;
+    for (size_t i = 1; i < xs.size(); ++i)
+        fine += 0.5 * (ys[i] + ys[i - 1]) * (xs[i] - xs[i - 1]);
+    size_t last = 0;
+    for (size_t i = 2; i < xs.size(); i += 2) {
+        coarse += 0.5 * (ys[i] + ys[i - 2]) * (xs[i] - xs[i - 2]);
+        last = i;
+    }
+    for (size_t i = last + 1; i < xs.size(); ++i)  // an odd remainder at the fine spacing
+        coarse += 0.5 * (ys[i] + ys[i - 1]) * (xs[i] - xs[i - 1]);
+    return std::abs(fine - coarse) / 3.0;
+}
+
 // --- J2 plasticity, a material point in uniaxial stress ----------------------------------------
 
 mechanics::J2Parameters j2(const json& study, const ModelCard& card)
@@ -148,7 +168,8 @@ R runJ2Point(const ModelCard& card, const json& study)
     d["final"] = {{"plasticStrain", c.plasticStrain(0)}, {"equivalentPlasticStrain", c.equivalentPlasticStrain}, {"backStress", c.backStress(0)},
                   {"stress", s.empty() ? 0.0 : s.back()}};
     d["energy"] = {{"work", work}, {"elastic", last.elasticEnergy}, {"hardening", last.hardeningEnergy}, {"dissipated", c.dissipated},
-                   {"residual", work - last.elasticEnergy - last.hardeningEnergy - c.dissipated}, {"unit", "J/m^3"}};
+                   {"residual", work - last.elasticEnergy - last.hardeningEnergy - c.dissipated}, {"workQuadratureError", workQuadratureError(e, s)},
+                   {"unit", "J/m^3"}};
     d["convergence"] = {{"maxIterations", maxIterations}};
     d["summary"] = {{"yieldStrain", p.yieldStress / p.youngsModulus},
                     {"plasticTangent", p.youngsModulus * (p.isotropicHardening + p.kinematicHardening) /
@@ -251,7 +272,8 @@ R runDamagePoint(const ModelCard& card, const json& study)
     d["curves"] = json::array({curve("stressStrain", "Stress against strain", "Strain", "", "Stress", "Pa", e, s),
                                curve("damage", "Damage against strain", "Strain", "", "Damage", "", e, D)});
     d["final"] = {{"damage", c.damage}, {"kappa", c.kappa}, {"secantModulus", (1.0 - c.damage) * p.youngsModulus}};
-    d["energy"] = {{"work", work}, {"stored", stored}, {"dissipated", c.dissipated}, {"residual", work - stored - c.dissipated}, {"unit", "J/m^3"}};
+    d["energy"] = {{"work", work}, {"stored", stored}, {"dissipated", c.dissipated}, {"residual", work - stored - c.dissipated},
+                   {"workQuadratureError", workQuadratureError(e, s)}, {"unit", "J/m^3"}};
     d["committable"].push_back({{"domain", "mechanical"}, {"key", "youngsModulus"}, {"value", (1.0 - c.damage) * p.youngsModulus},
                                 {"note", "the damaged (secant) modulus (1 - D) E after the loading"}});
     if (p.law == "exponential")
@@ -364,8 +386,11 @@ R runZener(const ModelCard& card, const json& study)
         return R::failure(r.message());
     json d = base(card, study, "material-point");
     std::vector<double> tt, ee, ss, qq;
+    double work = 0.0;  // the trapezoidal integral of stress over strain (exact on a strain jump)
     for (size_t i = 0; i < r.value().size(); ++i) {
         const auto& z = r.value()[i];
+        if (i > 0)
+            work += 0.5 * (z.stress + r.value()[i - 1].stress) * (z.strain - r.value()[i - 1].strain);
         tt.push_back(z.time);
         ee.push_back(z.strain);
         ss.push_back(z.stress);
@@ -377,7 +402,9 @@ R runZener(const ModelCard& card, const json& study)
     d["curves"] = json::array({curve("stressTime", "Stress against time", "Time", "s", "Stress", "Pa", tt, ss),
                                curve("stressStrain", "Stress against strain", "Strain", "", "Stress", "Pa", ee, ss)});
     const auto& end = r.value().back();
-    d["energy"] = {{"stored", end.storedEnergy}, {"dissipated", end.dissipated}, {"unit", "J/m^3"}};
+    d["energy"] = {{"work", work}, {"stored", end.storedEnergy}, {"dissipated", end.dissipated}, {"residual", work - end.storedEnergy - end.dissipated},
+                   {"workQuadratureError", workQuadratureError(ee, ss)}, {"unit", "J/m^3"},
+                   {"note", "the work is the trapezoidal integral of the stress over the strain path; its residual is that quadrature's error"}};
     if (kind == "harmonic") {
         const double f = loading.value("frequencyHz", 1.0 / (2 * kPi * p.relaxationTime)), w = 2 * kPi * f, a = loading.value("amplitude", 1e-3);
         const size_t perCycle = 200, last = r.value().size() - 1;
@@ -431,6 +458,9 @@ R runPhaseChange(const ModelCard& card, const json& study, JobContext* ctx)
     if (stefan)
         d["curves"].push_back(curve("stefan", "Stefan (Neumann) solution", "Time", "s", "Melted thickness", "m", v.times, reference));
     d["energy"] = {{"heatIn", v.heatIn}, {"sensible", v.sensibleChange}, {"latent", v.latentChange}, {"residual", v.balanceResidual}, {"unit", "J/m^2"}};
+    d["entropy"] = {{"change", v.entropyChange}, {"inflow", v.entropyIn}, {"production", v.entropyProduction},
+                    {"residual", v.entropyChange - v.entropyIn - v.entropyProduction}, {"unit", "J/(m^2 K)"},
+                    {"note", "the change from the cells' states; inflow q/T at the faces; production by conduction between cell centres"}};
     d["convergence"] = {{"timeStep", v.timeStep}, {"stabilityLimit", v.stabilityLimit}, {"steps", v.steps}};
     d["summary"] = {{"stefanNumber", stNumber}, {"lambda", lambda}, {"finalFront", v.front.back()},
                     {"stefanFront", stefan ? reference.back() : 0.0}};
@@ -476,12 +506,16 @@ R runPreisach(const ModelCard& card, const json& study)
         ++step;
         return mm;
     };
-    // From negative saturation: to each amplitude, then one closed loop +a -> -a -> +a, whose area is the loss.
+    // From negative saturation: to each amplitude, one cycle +a -> -a -> +a to close the loop (a minor loop entered
+    // from a larger excursion is not closed on its first traversal: relays with alpha > a switched down stay down),
+    // then the measured cycle, closed by return-point memory, whose area is the loss.
     double loss = 0.0;
     for (double a : amplitudes) {
         const double from = m.field();
         for (int i = 1; i <= n; ++i)
             apply(from + (a - from) * i / n);
+        for (int i = 1; i <= 4 * n; ++i)
+            apply(i <= 2 * n ? a - a * i / n : -a + a * (i - 2 * n) / n);
         double area = 0.0, h0 = a, m0 = m.magnetization();
         for (int i = 1; i <= 4 * n; ++i) {
             const double h = i <= 2 * n ? a - a * i / n : -a + a * (i - 2 * n) / n;
@@ -490,7 +524,10 @@ R runPreisach(const ModelCard& card, const json& study)
             h0 = h;
             m0 = mm;
         }
-        loops.push_back({{"amplitude", a}, {"lossPerCycle", area}});
+        loops.push_back({{"amplitude", a}, {"lossPerCycle", area}, {"hysteronLoss", m.hysteronLoopLoss(-a, a)}, {"fieldIncrement", a / n},
+                         // Each relay switches inside an increment where the trapezoid takes the increment's mid field: at most
+                         // dH / 2 off per switch, two switches per relay and cycle.
+                         {"errorBound", 2.0 * kMu0 * p.saturationMagnetization * (a / n)}});
         loss = area;
     }
     d["curves"] = json::array({curve("bh", "Flux density against field", "Field H", "A/m", "B", "T", H, B),

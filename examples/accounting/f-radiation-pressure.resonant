@@ -1,0 +1,120 @@
+{
+ "format": "resonant-project",
+ "schemaVersion": 1,
+ "application": {
+  "name": "Resonant",
+  "version": "0.1.0"
+ },
+ "project": {
+  "id": "ex-acc-radiation",
+  "name": "f-radiation-pressure",
+  "createdUtc": "2026-11-28T00:00:00Z",
+  "modifiedUtc": "2026-11-28T00:00:00Z"
+ },
+ "units": {
+  "angle": "rad",
+  "axes": "right-handed; X horizontal, Y depth, Z vertical (up)",
+  "frequency": "Hz",
+  "length": "m",
+  "mass": "kg",
+  "rotation": "intrinsic Z-Y-X Euler angles stored as [x, y, z]",
+  "time": "s"
+ },
+ "materials": [],
+ "scene": {
+  "objects": [
+   {
+    "id": "ex-acc-panel",
+    "type": "geometry",
+    "name": "Absorber panel",
+    "visible": true,
+    "transform": {
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "children": [],
+    "geometry": {
+     "kind": "box",
+     "parameters": {
+      "width": 0.5,
+      "depth": 0.5,
+      "height": 0.03
+     }
+    }
+   }
+  ]
+ },
+ "simulations": [],
+ "extensions": {
+  "accounting": {
+   "format": "resonant.accounting",
+   "version": 1,
+   "studies": [
+    {
+     "id": "st-absorber",
+     "name": "A lossy radar absorber at 10 GHz",
+     "source": {
+      "kind": "radiation",
+      "frequencyHz": 10000000000.0,
+      "intensity": 1000.0,
+      "area": 0.25,
+      "points": 4001,
+      "layers": [
+       {
+        "name": "lossy",
+        "thickness": 0.02,
+        "permittivity": 4.0,
+        "lossTangent": 0.3
+       },
+       {
+        "name": "backing",
+        "thickness": 0.01,
+        "permittivity": 6.0
+       }
+      ]
+     },
+     "tolerances": {
+      "relative": 1e-06,
+      "warning": 0.001
+     }
+    },
+    {
+     "id": "st-mirror",
+     "name": "A copper film: radiation pressure 2 I / c",
+     "source": {
+      "kind": "radiation",
+      "frequencyHz": 10000000000.0,
+      "intensity": 1000.0,
+      "area": 0.25,
+      "points": 4001,
+      "layers": [
+       {
+        "name": "copper",
+        "thickness": 2e-05,
+        "conductivity": 58000000.0
+       }
+      ]
+     },
+     "tolerances": {
+      "relative": 1e-06,
+      "warning": 0.001
+     }
+    }
+   ],
+   "records": []
+  }
+ }
+}

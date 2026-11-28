@@ -12,6 +12,7 @@ carries a `resonant.v1.Error` (see [errors](#errors)).
 
 ## Services
 
+- [AccountingService](#accountingservice) (17 methods)
 - [ApplicationService](#applicationservice) (3 methods)
 - [ArrayService](#arrayservice) (4 methods)
 - [AuditService](#auditservice) (1 method)
@@ -33,6 +34,30 @@ carries a `resonant.v1.Error` (see [errors](#errors)).
 - [SimulationService](#simulationservice) (4 methods)
 - [TransactionService](#transactionservice) (7 methods)
 - [WorkflowService](#workflowservice) (3 methods)
+
+## AccountingService
+
+Unified accounting: quantity families and units, the conservation laws and consistency relations, accounting studies of networks, coupled systems, evolutions, radiation on layered bodies and material-state models, reports for any system boundary, comparisons, queries with full context, exports and records kept in the project.
+
+| Method | Request | Response | Description |
+|---|---|---|---|
+| `CompareAccountingSystems` | `CompareAccountingSystemsRequest` | `CompareAccountingSystemsResponse` | Reports for several systems and the exchanges whose role differs between them. |
+| `ConvertQuantity` | `ConvertQuantityRequest` | `ConvertQuantityResponse` | Converts a value between units of the same dimension; refuses other dimensions and affine scales. |
+| `DeleteAccountingRecord` | `DeleteAccountingRecordRequest` | `DeleteAccountingRecordResponse` | Removes a record; one undo step. |
+| `DeleteAccountingStudy` | `DeleteAccountingStudyRequest` | `DeleteAccountingStudyResponse` | Removes a study; one undo step. |
+| `ExportAccounting` | `ExportAccountingRequest` | `ExportAccountingResponse` | A result as JSON, CSV or Markdown. |
+| `GetAccountingRecord` | `GetAccountingRecordRequest` | `GetAccountingRecordResponse` | One record with its reports evaluated again from its ledger. |
+| `GetAccountingReport` | `GetAccountingReportRequest` | `GetAccountingReportResponse` | The report of a result for another system, without running again. |
+| `GetAccountingResult` | `GetAccountingResultRequest` | `GetAccountingResultResponse` | A result: the ledger, the systems' reports (checks, breakdown, flows, forces, histories) and the status. |
+| `ListAccountingRecords` | `ListAccountingRecordsRequest` | `ListAccountingRecordsResponse` | The stored records. |
+| `ListAccountingSourceKinds` | `ListAccountingSourceKindsRequest` | `ListAccountingSourceKindsResponse` | The sources a study can account, with what each needs and accounts. |
+| `ListAccountingStudies` | `ListAccountingStudiesRequest` | `ListAccountingStudiesResponse` | The accounting studies stored in the project. |
+| `ListConservationModels` | `ListConservationModelsRequest` | `ListConservationModelsResponse` | The conservation laws and consistency relations: equation, required data, method, assumptions. |
+| `ListQuantityFamilies` | `ListQuantityFamiliesRequest` | `ListQuantityFamiliesResponse` | The quantity families: unit, dimension, whether conserved (torque and energy are different families). |
+| `QueryAccounting` | `QueryAccountingRequest` | `QueryAccountingResponse` | One facet's quantities (energy, momentum, forces, transfers, missing data, residuals) with their full context. |
+| `RunAccounting` | `RunAccountingRequest` | `RunAccountingResponse` | Runs a stored or inline study as a job; the result id is in the finished job's results. |
+| `SaveAccountingRecord` | `SaveAccountingRecordRequest` | `SaveAccountingRecordResponse` | Keeps a result in the project (histories thinned); one undo step. |
+| `SetAccountingStudy` | `SetAccountingStudyRequest` | `SetAccountingStudyResponse` | Adds a study (its source, systems and tolerances), or replaces the one with its id; one undo step. |
 
 ## ApplicationService
 
@@ -317,6 +342,19 @@ resonant.workflow templates run as jobs.
 |---|---|---|
 | `header` | `ResponseHeader` |  |
 | `transaction` | `Transaction` |  |
+
+### AccountingRecordSummary
+
+A stored accounting record (REQ-CHAT-20261126-022, RES-ACC-016): the study, the ledger with its histories thinned, the systems and tolerances. The full record, with its reports evaluated again from the ledger, is the JSON document of GetAccountingRecord.
+
+| Field | Type | Description |
+|---|---|---|
+| `record_id` | `string` |  |
+| `name` | `string` |  |
+| `title` | `string` |  |
+| `status` | `string` | the worst check status of the run |
+| `created` | `string` | UTC |
+| `samples` | `int32` | retained history samples |
 
 ### AcousticArray
 
@@ -612,6 +650,21 @@ What a mutation changed, or would change in a dry run.
 | `results` | repeated `OperationResult` |  |
 | `changes` | `ChangeSummary` |  |
 
+### CompareAccountingSystemsRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `result_id` | `string` |  |
+| `systems` | repeated `google.protobuf.Struct` |  |
+
+### CompareAccountingSystemsResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `comparison` | `google.protobuf.Struct` |  |
+
 ### Complex
 
 A complex value (peak amplitude, phase convention exp(+j omega t)).
@@ -656,6 +709,24 @@ The conservation audit of a coupled run.
 | `balanced` | `bool` |  |
 | `attribution` | repeated `string` |  |
 | `participants` | repeated `ParticipantBalance` |  |
+
+### ConvertQuantityRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `value` | `double` |  |
+| `from_unit` | `string` |  |
+| `to_unit` | `string` |  |
+
+### ConvertQuantityResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `value` | `double` |  |
+| `unit` | `string` |  |
+| `dimension` | `string` |  |
 
 ### CoupledResult
 
@@ -888,6 +959,34 @@ Replaces the open project with a new, empty one. Refused (FAILED_PRECONDITION) w
 |---|---|---|
 | `header` | `ResponseHeader` |  |
 | `project` | `Project` |  |
+
+### DeleteAccountingRecordRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `record_id` | `string` |  |
+
+### DeleteAccountingRecordResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `changes` | `ChangeSummary` |  |
+
+### DeleteAccountingStudyRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `study_id` | `string` |  |
+
+### DeleteAccountingStudyResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `changes` | `ChangeSummary` |  |
 
 ### DeleteFunctionalStructureRequest
 
@@ -1240,6 +1339,22 @@ Runs a template (or a definition) on a copy of the project as a job; when it com
 | `structure_id` | `string` |  |
 | `candidates` | repeated `CandidateExplanation` |  |
 
+### ExportAccountingRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `result_id` | `string` |  |
+| `format` | `string` |  |
+
+### ExportAccountingResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `text` | `string` |  |
+| `format` | `string` |  |
+
 ### ExportProjectJsonRequest
 
 The open project's export as the project file's JSON (for inspection, copies and diffs).
@@ -1421,6 +1536,51 @@ Geometry of an object: a kind of the geometry registry with its parameters (SI u
 | `min_value` | `double` |  |
 | `max_value` | `double` |  |
 | `integer` | `bool` |  |
+
+### GetAccountingRecordRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `record_id` | `string` |  |
+
+### GetAccountingRecordResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `record` | `google.protobuf.Struct` |  |
+
+### GetAccountingReportRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `result_id` | `string` |  |
+| `system` | `google.protobuf.Struct` | {"id", "name", "kind", "members"}; empty: the whole system |
+
+### GetAccountingReportResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `report` | `google.protobuf.Struct` |  |
+| `status` | `string` |  |
+
+### GetAccountingResultRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `result_id` | `string` |  |
+
+### GetAccountingResultResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `document` | `google.protobuf.Struct` |  |
+| `status` | `string` |  |
 
 ### GetApplicationInfoRequest
 
@@ -1866,6 +2026,45 @@ job.updated (state or progress; progress events are throttled)
 |---|---|---|
 | `job` | `Job` |  |
 
+### ListAccountingRecordsRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+
+### ListAccountingRecordsResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `records` | repeated `AccountingRecordSummary` |  |
+
+### ListAccountingSourceKindsRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+
+### ListAccountingSourceKindsResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `kinds` | repeated `google.protobuf.Struct` |  |
+
+### ListAccountingStudiesRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+
+### ListAccountingStudiesResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `studies` | repeated `google.protobuf.Struct` |  |
+
 ### ListAnalysisKindsRequest
 
 | Field | Type | Description |
@@ -1878,6 +2077,19 @@ job.updated (state or progress; progress events are throttled)
 |---|---|---|
 | `header` | `ResponseHeader` |  |
 | `kinds` | repeated `AnalysisKind` |  |
+
+### ListConservationModelsRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+
+### ListConservationModelsResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `models` | repeated `google.protobuf.Struct` |  |
 
 ### ListCouplingModelsRequest
 
@@ -2124,6 +2336,19 @@ job.updated (state or progress; progress events are throttled)
 |---|---|---|
 | `header` | `ResponseHeader` |  |
 | `systems` | repeated `PhysicalSystem` |  |
+
+### ListQuantityFamiliesRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+
+### ListQuantityFamiliesResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `families` | repeated `google.protobuf.Struct` |  |
 
 ### ListRepresentationsRequest
 
@@ -2440,6 +2665,22 @@ project.opened, project.saved, project.replaced, project.changed (any committed 
 | `project_name` | `string` |  |
 | `description` | `string` |  |
 
+### QueryAccountingRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `result_id` | `string` |  |
+| `system` | `google.protobuf.Struct` | empty: the whole system |
+| `facet` | `string` | energy, momentum, angular-momentum, entropy, forces, torques, transfers, missing, residuals |
+
+### QueryAccountingResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `result` | `google.protobuf.Struct` |  |
+
 ### QueryAuditRequest
 
 | Field | Type | Description |
@@ -2617,6 +2858,21 @@ How a result was produced (docs/reference/PROTOBUF_API.md "Provenance").
 | `max_magnitude` | `double` | in `unit` |
 | `provenance` | `ResultProvenance` |  |
 
+### RunAccountingRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `study_id` | `string` | a stored study, or |
+| `study` | `google.protobuf.Struct` | {"source": {...}, "systems": [...], "tolerances": {...}} |
+
+### RunAccountingResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `job` | `Job` |  |
+
 ### RunMaterialStateStudyRequest
 
 | Field | Type | Description |
@@ -2631,6 +2887,23 @@ How a result was produced (docs/reference/PROTOBUF_API.md "Provenance").
 |---|---|---|
 | `header` | `ResponseHeader` |  |
 | `job` | `Job` |  |
+
+### SaveAccountingRecordRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `result_id` | `string` |  |
+| `record_id` | `string` |  |
+| `name` | `string` |  |
+
+### SaveAccountingRecordResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `changes` | `ChangeSummary` |  |
+| `record_id` | `string` |  |
 
 ### SaveMaterialStateRecordRequest
 
@@ -2720,6 +2993,20 @@ session.opened / closed
 |---|---|---|
 | `session_id` | `string` |  |
 | `client_name` | `string` |  |
+
+### SetAccountingStudyRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `study` | `google.protobuf.Struct` |  |
+
+### SetAccountingStudyResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `changes` | `ChangeSummary` |  |
 
 ### SetArrayExcitationRequest
 
@@ -3240,14 +3527,6 @@ Waits until the job finishes or the timeout passes (at most 30 s), then returns 
 
 ## Enums
 
-### Maturity
-
-`MATURITY_UNSPECIFIED` = 0, `MATURITY_STABLE` = 1, `MATURITY_EXPERIMENTAL` = 2, `MATURITY_PLANNED` = 3, `MATURITY_UNAVAILABLE` = 4
-
-### Permission
-
-`PERMISSION_UNSPECIFIED` = 0, `PERMISSION_READ` = 1, `PERMISSION_MODIFY` = 2, `PERMISSION_EXECUTE` = 3, `PERMISSION_FILES` = 4, `PERMISSION_ADMIN` = 5
-
 ### ResourceType
 
 `RESOURCE_TYPE_UNSPECIFIED` = 0, `RESOURCE_TYPE_PROJECT` = 1, `RESOURCE_TYPE_SCENE_OBJECT` = 2, `RESOURCE_TYPE_MATERIAL` = 3, `RESOURCE_TYPE_JOB` = 4, `RESOURCE_TYPE_RESULT` = 5, `RESOURCE_TYPE_TRANSACTION` = 6, `RESOURCE_TYPE_SESSION` = 7, `RESOURCE_TYPE_OPTIMIZATION_PROBLEM` = 8, `RESOURCE_TYPE_OPTIMIZATION_RUN` = 9, `RESOURCE_TYPE_WORKFLOW` = 10
@@ -3255,6 +3534,22 @@ Waits until the job finishes or the timeout passes (at most 30 s), then returns 
 ### ErrorCode
 
 `ERROR_CODE_UNSPECIFIED` = 0, `ERROR_CODE_INVALID_ARGUMENT` = 1, `ERROR_CODE_NOT_FOUND` = 2, `ERROR_CODE_ALREADY_EXISTS` = 3, `ERROR_CODE_CONFLICT` = 4, `ERROR_CODE_FAILED_PRECONDITION` = 5, `ERROR_CODE_PERMISSION_DENIED` = 6, `ERROR_CODE_RESOURCE_EXHAUSTED` = 7, `ERROR_CODE_UNIMPLEMENTED` = 8, `ERROR_CODE_UNAVAILABLE` = 9, `ERROR_CODE_CANCELLED` = 10, `ERROR_CODE_INTERNAL` = 11
+
+### JobState
+
+`JOB_STATE_UNSPECIFIED` = 0, `JOB_STATE_CREATED` = 1, `JOB_STATE_QUEUED` = 2, `JOB_STATE_RUNNING` = 3, `JOB_STATE_CANCELLING` = 4, `JOB_STATE_CANCELLED` = 5, `JOB_STATE_COMPLETED` = 6, `JOB_STATE_FAILED` = 7
+
+### Severity
+
+`SEVERITY_UNSPECIFIED` = 0, `SEVERITY_INFO` = 1, `SEVERITY_WARNING` = 2, `SEVERITY_ERROR` = 3
+
+### Maturity
+
+`MATURITY_UNSPECIFIED` = 0, `MATURITY_STABLE` = 1, `MATURITY_EXPERIMENTAL` = 2, `MATURITY_PLANNED` = 3, `MATURITY_UNAVAILABLE` = 4
+
+### Permission
+
+`PERMISSION_UNSPECIFIED` = 0, `PERMISSION_READ` = 1, `PERMISSION_MODIFY` = 2, `PERMISSION_EXECUTE` = 3, `PERMISSION_FILES` = 4, `PERMISSION_ADMIN` = 5
 
 ### CoordinateFrame
 
@@ -3268,17 +3563,9 @@ Waits until the job finishes or the timeout passes (at most 30 s), then returns 
 
 `ARRAY_LAYOUT_UNSPECIFIED` = 0, `ARRAY_LAYOUT_LINEAR` = 1, `ARRAY_LAYOUT_RECTANGULAR_PLANAR` = 2, `ARRAY_LAYOUT_CIRCULAR` = 3, `ARRAY_LAYOUT_CYLINDRICAL` = 4, `ARRAY_LAYOUT_SPHERICAL` = 5, `ARRAY_LAYOUT_CUSTOM` = 6
 
-### Severity
-
-`SEVERITY_UNSPECIFIED` = 0, `SEVERITY_INFO` = 1, `SEVERITY_WARNING` = 2, `SEVERITY_ERROR` = 3
-
 ### FocusControl
 
 `FOCUS_CONTROL_UNSPECIFIED` = 0, `FOCUS_CONTROL_PHASE` = 1, `FOCUS_CONTROL_TIME_DELAY` = 2
-
-### JobState
-
-`JOB_STATE_UNSPECIFIED` = 0, `JOB_STATE_CREATED` = 1, `JOB_STATE_QUEUED` = 2, `JOB_STATE_RUNNING` = 3, `JOB_STATE_CANCELLING` = 4, `JOB_STATE_CANCELLED` = 5, `JOB_STATE_COMPLETED` = 6, `JOB_STATE_FAILED` = 7
 
 ### EventCategory
 

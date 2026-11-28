@@ -78,6 +78,16 @@ double PreisachModel::apply(double H)
     return magnetization();
 }
 
+double PreisachModel::hysteronLoopLoss(double low, double high) const
+{
+    constexpr double mu0 = 1.25663706212e-6;
+    double loss = 0.0;
+    for (size_t r = 0; r < state_.size(); ++r)
+        if (alpha_[r] <= high && beta_[r] >= low)
+            loss += 2.0 * weight_[r] * (alpha_[r] - beta_[r]);
+    return mu0 * p_.saturationMagnetization * loss;
+}
+
 double PreisachModel::irreversibleFraction() const
 {
     double s = 0.0;

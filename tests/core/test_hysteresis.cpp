@@ -127,3 +127,36 @@ TEST(Hysteresis, TheReversiblePartAddsNoLossAndGaussianLoopsHaveACoercivity)
     }
     EXPECT_NEAR(crossing, -300.0, 30.0);
 }
+
+TEST(Hysteresis, LoopLossEqualsTheHysteronSum)
+{
+    // RES-ACC-014: the loop integral against the relays' own dissipation, converging with the increment.
+    resonant::em::PreisachParameters p;
+    p.saturationMagnetization = 1e6;
+    p.saturationField = 1000.0;
+    p.levels = 100;
+    double previous = 0.0;
+    for (int n : {100, 1000}) {
+        auto m = resonant::em::PreisachModel::create(p);
+        ASSERT_TRUE(m);
+        m.value().reset();
+        const double a = 700.0, mu0 = 1.25663706212e-6;
+        for (int i = 1; i <= n; ++i)
+            m.value().apply(-1000.0 + 1700.0 * i / n);
+        double area = 0.0, h0 = a, m0 = m.value().magnetization();
+        for (int i = 1; i <= 4 * n; ++i) {
+            const double h = i <= 2 * n ? a - a * i / n : -a + a * (i - 2 * n) / n;
+            const double mm = m.value().apply(h);
+            area += mu0 * 0.5 * (h + h0) * (mm - m0);
+            h0 = h;
+            m0 = mm;
+        }
+        const double relays = m.value().hysteronLoopLoss(-a, a);
+        EXPECT_GT(relays, 0.0);
+        EXPECT_LE(std::abs(area - relays), 2.0 * mu0 * p.saturationMagnetization * a / n);  // the increment bound
+        if (previous > 0.0)
+            EXPECT_LT(std::abs(area - relays), previous);
+        previous = std::abs(area - relays);
+    }
+}
+
