@@ -81,7 +81,7 @@
 
 | Item | Now | Gap | Phase |
 |---|---|---|---|
-| Jobs/RunningJobIsCancelledPromptly | L | flaky under load | -003 |
+| Jobs/RunningJobIsCancelledPromptly | L | flaky under load; fixed: the race was wait() returning before listeners heard the final state, plus out-of-order notifications (ADR-000231) | -003 |
 | C++ gRPC transport | X | `libgrpc++-dev` and `protobuf-compiler-grpc` are not installed (checked 2026-11-28 with dpkg); gRPC is served by the grpcio bridge (ADR-000216) | -003 (needs the owner's system install) |
 | GPU comparisons | X | skipped (the GPU's memory) | - |
 | Hardware (ALSA, SDR) | L | null device; discovery only | - |

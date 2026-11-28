@@ -69,9 +69,14 @@ struct JobInfo {
 
 class JobManager {
 public:
-    // Called whenever a job's state, progress or message changes. Runs on
-    // the thread that caused the change (usually a worker thread); a user
-    // interface must forward it to its own thread.
+    // Called whenever a job's state, progress or message changes, one call at
+    // a time and in the order the changes happened: every job's "queued"
+    // before its "running" before its final state. It runs on the thread
+    // that caused the change (usually a worker thread), or, when another
+    // thread is delivering notifications at that moment, on that thread
+    // after the earlier ones; a user interface must forward it to its own
+    // thread. A listener may submit and cancel jobs; it must not wait() for
+    // one, since the job's final notification is delivered after it returns.
     using Listener = std::function<void(const JobInfo&)>;
 
     explicit JobManager(unsigned workerCount = 1);
@@ -89,8 +94,9 @@ public:
     std::vector<JobInfo> jobs() const;  // in submission order
     bool hasUnfinishedJobs() const;
 
-    // Blocks until the job is finished (or the timeout passes). Returns the
-    // job's information, or nullopt for an unknown job.
+    // Blocks until the job is finished and every listener has been told so
+    // (or the timeout passes). Returns the job's information, or nullopt for
+    // an unknown job.
     std::optional<JobInfo> wait(const Id& id, std::chrono::milliseconds timeout = std::chrono::milliseconds::max());
 
     int addListener(Listener listener);
@@ -100,8 +106,15 @@ private:
     struct Entry;
     class Context;
 
+    // A change for the listeners, recorded under mutex_ in the order changes happen.
+    struct Notification {
+        JobInfo info;
+        std::shared_ptr<Entry> entry;
+    };
+
     void workerLoop();
-    void publish(const JobInfo& info);
+    void notifyLocked(const std::shared_ptr<Entry>& entry);  // mutex_ held
+    void deliver();  // delivers recorded notifications in order; mutex_ not held
     static JobInfo snapshot(const Entry& entry);
 
     mutable std::mutex mutex_;
@@ -111,6 +124,8 @@ private:
     std::deque<std::shared_ptr<Entry>> queue_;
     std::vector<std::thread> workers_;
     bool stopping_ = false;
+    std::deque<Notification> outbox_;  // guarded by mutex_
+    bool delivering_ = false;          // guarded by mutex_: one thread delivers at a time
 
     std::mutex listenerMutex_;
     std::vector<std::pair<int, Listener>> listeners_;

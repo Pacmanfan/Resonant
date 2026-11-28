@@ -163,7 +163,16 @@ abstraction with states queued, running, completed, failed and cancelled,
 progress reporting, cancellation and result metadata exist. Jobs run off
 the user-interface thread. The only job in this milestone is a
 demonstrator that performs no calculation and says so.
-*Verification:* `Jobs.*`, `Simulation.*`,
+
+Listeners hear a job's changes one at a time, in the order they happened:
+`queued` before `running` before the final state. Waiting for a job returns
+only after every listener has been told it finished. A listener that fails
+stops neither the other listeners nor the waiters, and a listener may
+submit or cancel jobs (REQ-CHAT-20261128-003, ADR-000231).
+*Verification:* `Jobs.*` (among them
+`Jobs.WaitReturnsOnlyAfterTheListenersWereToldTheJobFinished`,
+`Jobs.ListenersHearEachJobsStatesInTheOrderTheyHappened`,
+`Jobs.CancellationIsAnnouncedBeforeWaitReturnsEveryTime`), `Simulation.*`,
 `MainWindowTest.DemonstratorJobRunsReportsProgressAndCancels`.
 
 ### RES-APP-018 — Logging and diagnostics

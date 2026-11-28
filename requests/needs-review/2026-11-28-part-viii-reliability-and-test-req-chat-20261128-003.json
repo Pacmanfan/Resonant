@@ -1,0 +1,127 @@
+{
+  "request_id": "REQ-CHAT-20261128-003",
+  "source": "chat",
+  "type": "BUG",
+  "priority": "NORMAL",
+  "created": "2026-11-28T11:25:49-05:00",
+  "created_utc": "2026-11-28T16:25:49+00:00",
+  "id_date": "2026-11-28",
+  "timezone": "EST (UTC-05:00)",
+  "status": "needs-review",
+  "original_text": "# PART VIII \u2014 RELIABILITY AND TESTING\n\nAddress the outstanding reliability issues.\n\n## 8.1 Flaky cancellation test\n\nInvestigate and eliminate the flakiness in:\n\nJobs/RunningJobIsCancelledPromptly\n\nIdentify the actual race condition or synchronization defect.\n\nDo not merely increase timeouts or disable the test.\n\nAdd deterministic regression coverage.\n\n## 8.2 C++ gRPC transport\n\nResolve the outstanding dependency requirement:\n\nlibgrpc++-dev  \nprotobuf-compiler-grpc\n\nCheck whether the packages are installed.\n\nIf not, document the required system installation and request appropriate authorization rather than silently skipping the integration.\n\nBuild and test the C++ transport.\n\nVerify interoperability with existing services and MCP tools.",
+  "file": "requests/inbox/2026-11-28-part-viii-reliability-and-test-req-chat-20261128-003.md",
+  "attachments": [],
+  "context": "Phase 2 of REQ-CHAT-20261128-001 (Prompt 27): reliability and dependency resolution - the flaky cancellation test and the C++ gRPC transport (the gRPC packages need a system install by the owner).",
+  "text_sha256": "53df740f812e23f67d3f99e0675b289fab9f9bba31eff08e62ed905666e0377f",
+  "classification": {
+    "proposed_type": "BUG",
+    "proposed_source": "override",
+    "normalized_type": "BUG",
+    "heuristic_type": "FEATURE",
+    "final_type": "BUG",
+    "confidence": "low",
+    "validation": "PASS",
+    "classifier_reason": "override BUG accepted (text alone suggests FEATURE: no framing in the request statement; body suggests feature: Add, Build, integration)",
+    "correction_reason": null,
+    "normalization_note": null,
+    "evidence": [
+      {
+        "category": "BUG",
+        "where": "body",
+        "phrase": "race condition",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Identify the actual race condition or synchronization defect."
+      },
+      {
+        "category": "BUG",
+        "where": "body",
+        "phrase": "defect",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Identify the actual race condition or synchronization defect."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Add",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Add deterministic regression coverage."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "integration",
+        "strength": "strong",
+        "note": "",
+        "sentence": "If not, document the required system installation and request appropriate authorization rather than silently skipping the integration."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Build",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Build and test the C++ transport."
+      }
+    ],
+    "scores": {
+      "FEATURE": {
+        "head": 0,
+        "body": 3
+      },
+      "BUG": {
+        "head": 0,
+        "body": 2
+      },
+      "CRASH": {
+        "head": 0,
+        "body": 0
+      },
+      "REGRESSION": {
+        "head": 0,
+        "body": 0
+      },
+      "PERFORMANCE": {
+        "head": 0,
+        "body": 0
+      },
+      "REFACTOR": {
+        "head": 0,
+        "body": 0
+      },
+      "BUILD": {
+        "head": 0,
+        "body": 0
+      },
+      "DOCUMENTATION": {
+        "head": 0,
+        "body": 1
+      },
+      "INVESTIGATION": {
+        "head": 0,
+        "body": 2
+      },
+      "PROCESS-CHANGE": {
+        "head": 0,
+        "body": 0
+      }
+    },
+    "evidence_total": 8,
+    "validator": "scripts/request_classification.py"
+  },
+  "links": {
+    "work": [
+      "WORK-000028"
+    ]
+  },
+  "commits": [],
+  "resolution": {
+    "from": "processing",
+    "to": "needs-review",
+    "at": "2026-11-28T17:14:09.978518+00:00",
+    "by": "agent-dev-20261126151713-76f632",
+    "reason": "owner action: sudo apt install libgrpc++-dev protobuf-compiler-grpc, to build and test the C++ gRPC transport (Part VIII.2); Part VIII.1 done, gate PASS"
+  }
+}

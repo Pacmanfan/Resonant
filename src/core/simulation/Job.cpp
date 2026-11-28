@@ -34,6 +34,8 @@ struct JobManager::Entry {
     std::atomic<bool> cancelRequested{false};
     std::chrono::steady_clock::time_point started{};
     double elapsedSeconds = 0.0;
+    // Set once the listeners have been told the job finished; wait() returns only then.
+    bool finishDelivered = false;
 };
 
 class JobManager::Context final : public JobContext {
@@ -44,15 +46,14 @@ public:
 
     void reportProgress(double fraction, std::string_view message) override
     {
-        JobInfo info;
         {
             std::lock_guard lock(manager_.mutex_);
             entry_->progress = std::clamp(fraction, 0.0, 1.0);
             if (!message.empty())
                 entry_->message = std::string(message);
-            info = snapshot(*entry_);
+            manager_.notifyLocked(entry_);
         }
-        manager_.publish(info);
+        manager_.deliver();
     }
 
 private:
@@ -101,22 +102,23 @@ Id JobManager::submit(std::shared_ptr<Job> job)
     entry->id = Id::generate();
     entry->name = job->name();
     entry->job = std::move(job);
-    JobInfo info;
     {
+        // The queued notification is recorded before any worker can see the job, so
+        // listeners always hear "queued" before "running".
         std::lock_guard lock(mutex_);
         entries_.push_back(entry);
         queue_.push_back(entry);
-        info = snapshot(*entry);
+        notifyLocked(entry);
     }
-    logInfo("simulation", "job queued: " + info.name);
-    publish(info);
+    logInfo("simulation", "job queued: " + entry->name);
     wake_.notify_one();
-    return info.id;
+    deliver();
+    return entry->id;
 }
 
 bool JobManager::cancel(const Id& id)
 {
-    JobInfo info;
+    std::string name;
     bool cancelledWhileQueued = false;
     {
         std::lock_guard lock(mutex_);
@@ -129,15 +131,14 @@ bool JobManager::cancel(const Id& id)
             std::erase(queue_, *it);
             (*it)->state = JobState::Cancelled;
             (*it)->message = "cancelled before it started";
+            notifyLocked(*it);
             cancelledWhileQueued = true;
         }
-        info = snapshot(**it);
+        name = (*it)->name;
     }
-    logInfo("simulation", "cancellation requested: " + info.name);
-    if (cancelledWhileQueued) {
-        publish(info);
-        finished_.notify_all();
-    }
+    logInfo("simulation", "cancellation requested: " + name);
+    if (cancelledWhileQueued)
+        deliver();
     return true;
 }
 
@@ -176,7 +177,9 @@ std::optional<JobInfo> JobManager::wait(const Id& id, std::chrono::milliseconds 
     if (it == entries_.end())
         return std::nullopt;
     const std::shared_ptr<Entry> entry = *it;
-    const auto done = [&entry] { return isFinished(entry->state); };
+    // Finished *and* announced: a caller that returns from wait() can rely on every
+    // listener having seen the final state (REQ-CHAT-20261128-003).
+    const auto done = [&entry] { return entry->finishDelivered; };
     if (timeout == std::chrono::milliseconds::max())
         finished_.wait(lock, done);
     else
@@ -198,16 +201,56 @@ void JobManager::removeListener(int handle)
     std::erase_if(listeners_, [handle](const auto& entry) { return entry.first == handle; });
 }
 
-void JobManager::publish(const JobInfo& info)
+void JobManager::notifyLocked(const std::shared_ptr<Entry>& entry)
 {
-    std::vector<Listener> listeners;
+    outbox_.push_back({snapshot(*entry), entry});
+}
+
+void JobManager::deliver()
+{
     {
-        std::lock_guard lock(listenerMutex_);
-        for (const auto& [handle, listener] : listeners_)
-            listeners.push_back(listener);
+        std::lock_guard lock(mutex_);
+        // Another thread (or this one, further up the stack in a listener) is
+        // delivering: it delivers this notification too, after the earlier ones.
+        if (delivering_ || outbox_.empty())
+            return;
+        delivering_ = true;
     }
-    for (const auto& listener : listeners)
-        listener(info);
+    for (;;) {
+        Notification next;
+        {
+            std::lock_guard lock(mutex_);
+            if (outbox_.empty()) {
+                delivering_ = false;
+                return;
+            }
+            next = std::move(outbox_.front());
+            outbox_.pop_front();
+        }
+        std::vector<Listener> listeners;
+        {
+            std::lock_guard lock(listenerMutex_);
+            for (const auto& [handle, listener] : listeners_)
+                listeners.push_back(listener);
+        }
+        for (const auto& listener : listeners) {
+            // A failing listener must not stop the others, nor leave waiters blocked.
+            try {
+                listener(next.info);
+            } catch (const std::exception& error) {
+                logError("simulation", std::string("a job listener failed: ") + error.what());
+            } catch (...) {
+                logError("simulation", "a job listener failed with an error of unknown type");
+            }
+        }
+        if (isFinished(next.info.state)) {
+            {
+                std::lock_guard lock(mutex_);
+                next.entry->finishDelivered = true;
+            }
+            finished_.notify_all();
+        }
+    }
 }
 
 void JobManager::workerLoop()
@@ -224,10 +267,10 @@ void JobManager::workerLoop()
             queue_.pop_front();
             entry->state = JobState::Running;
             entry->started = std::chrono::steady_clock::now();
-            info = snapshot(*entry);
+            notifyLocked(entry);
         }
-        logInfo("simulation", "job started: " + info.name);
-        publish(info);
+        logInfo("simulation", "job started: " + entry->name);
+        deliver();
 
         JobEnd end;
         try {
@@ -254,6 +297,7 @@ void JobManager::workerLoop()
             if (!end.message.empty())
                 entry->message = end.message;
             info = snapshot(*entry);
+            notifyLocked(entry);
         }
         const std::string summary = "job " + std::string(toString(info.state)) + ": " + info.name
                                     + (info.message.empty() ? "" : " (" + info.message + ")");
@@ -261,8 +305,7 @@ void JobManager::workerLoop()
             logError("simulation", summary);
         else
             logInfo("simulation", summary);
-        publish(info);
-        finished_.notify_all();
+        deliver();  // wakes the waiters once the listeners have been told
     }
 }
 

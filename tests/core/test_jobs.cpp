@@ -4,7 +4,9 @@
 #include <gtest/gtest.h>
 
 #include <atomic>
+#include <optional>
 #include <stdexcept>
+#include <thread>
 
 using namespace resonant;
 using namespace std::chrono_literals;
@@ -57,6 +59,28 @@ private:
     std::atomic<bool>& started_;
 };
 
+// Runs for a fixed time under a given name; optionally signals when it has started.
+class TimedJob final : public Job {
+public:
+    TimedJob(std::string name, std::chrono::milliseconds duration, std::atomic<bool>* started = nullptr)
+        : name_(std::move(name)), duration_(duration), started_(started)
+    {
+    }
+    std::string name() const override { return name_; }
+    JobEnd run(JobContext&) override
+    {
+        if (started_)
+            started_->store(true);
+        std::this_thread::sleep_for(duration_);
+        return JobEnd::completed("timed job finished; no calculation was performed");
+    }
+
+private:
+    std::string name_;
+    std::chrono::milliseconds duration_;
+    std::atomic<bool>* started_;
+};
+
 }  // namespace
 
 TEST(Jobs, CompletedJobPassesThroughQueuedRunningCompleted)
@@ -107,6 +131,108 @@ TEST(Jobs, RunningJobIsCancelledPromptly)
     EXPECT_EQ(info->state, JobState::Cancelled);
     EXPECT_EQ(recorder.statesOf(id), (std::vector<JobState>{JobState::Queued, JobState::Running, JobState::Cancelled}));
     EXPECT_FALSE(manager.cancel(id));  // already finished
+}
+
+// --- Notification order and wait() (REQ-CHAT-20261128-003) ------------------
+//
+// RunningJobIsCancelledPromptly was flaky because wait() returned as soon as the
+// job's state changed, before the listeners were told: under load the test read
+// the recorder in between. These tests hold a listener on purpose, so they fail
+// every time against that defect rather than now and then.
+
+TEST(Jobs, WaitReturnsOnlyAfterTheListenersWereToldTheJobFinished)
+{
+    JobManager manager;
+    std::atomic<bool> listenerEntered{false};
+    std::atomic<bool> listenerDone{false};
+    manager.addListener([&](const JobInfo& info) {
+        if (!isFinished(info.state))
+            return;
+        listenerEntered.store(true);
+        std::this_thread::sleep_for(200ms);  // a slow listener, still being told
+        listenerDone.store(true);
+    });
+    const Id id = manager.submit(std::make_shared<DemonstratorJob>(1, 1ms));
+    while (!listenerEntered.load())
+        std::this_thread::sleep_for(1ms);
+    EXPECT_EQ(manager.info(id)->state, JobState::Completed);  // the state itself is visible at once
+
+    const auto info = manager.wait(id, 5s);
+    ASSERT_TRUE(info.has_value());
+    EXPECT_EQ(info->state, JobState::Completed);
+    EXPECT_TRUE(listenerDone.load()) << "wait() returned while a listener was still being told";
+}
+
+TEST(Jobs, ListenersHearEachJobsStatesInTheOrderTheyHappened)
+{
+    JobManager manager(1);
+    // Registered before the recorder, so the recorder hears "queued" only after the delay.
+    manager.addListener([](const JobInfo& info) {
+        if (info.name == "second" && info.state == JobState::Queued)
+            std::this_thread::sleep_for(200ms);
+    });
+    StateRecorder recorder(manager);
+
+    std::atomic<bool> firstStarted{false};
+    const Id first = manager.submit(std::make_shared<TimedJob>("first", 50ms, &firstStarted));
+    while (!firstStarted.load())
+        std::this_thread::sleep_for(1ms);
+    // While "second"'s queued notification is held, the worker finishes "first" and
+    // takes "second" without being woken: before the fix it announced "running" first.
+    const Id second = manager.submit(std::make_shared<TimedJob>("second", 1ms));
+
+    ASSERT_TRUE(manager.wait(second, 5s).has_value());
+    ASSERT_TRUE(manager.wait(first, 5s).has_value());
+    EXPECT_EQ(recorder.statesOf(second), (std::vector<JobState>{JobState::Queued, JobState::Running, JobState::Completed}));
+    EXPECT_EQ(recorder.statesOf(first), (std::vector<JobState>{JobState::Queued, JobState::Running, JobState::Completed}));
+}
+
+TEST(Jobs, CancellationIsAnnouncedBeforeWaitReturnsEveryTime)
+{
+    // The flaky scenario, repeated: each round must see the full history.
+    JobManager manager;
+    StateRecorder recorder(manager);
+    for (int round = 0; round < 50; ++round) {
+        std::atomic<bool> started{false};
+        const Id id = manager.submit(std::make_shared<BlockingJob>(started));
+        while (!started.load())
+            std::this_thread::sleep_for(1ms);
+        ASSERT_TRUE(manager.cancel(id));
+        const auto info = manager.wait(id, 5s);
+        ASSERT_TRUE(info.has_value());
+        ASSERT_EQ(info->state, JobState::Cancelled);
+        ASSERT_EQ(recorder.statesOf(id), (std::vector<JobState>{JobState::Queued, JobState::Running, JobState::Cancelled}))
+            << "round " << round;
+    }
+}
+
+TEST(Jobs, AListenerMaySubmitAJobAndAFailingListenerStopsNothing)
+{
+    JobManager manager;
+    std::mutex mutex;
+    std::optional<Id> followUp;
+    manager.addListener([](const JobInfo&) { throw std::runtime_error("listener failure"); });
+    manager.addListener([&](const JobInfo& info) {
+        if (info.name == "first" && info.state == JobState::Completed) {
+            const Id id = manager.submit(std::make_shared<TimedJob>("follow-up", 1ms));  // re-entrant
+            std::lock_guard lock(mutex);
+            followUp = id;
+        }
+    });
+    StateRecorder recorder(manager);
+
+    const Id first = manager.submit(std::make_shared<TimedJob>("first", 1ms));
+    ASSERT_TRUE(manager.wait(first, 5s).has_value());
+    std::optional<Id> next;
+    {
+        std::lock_guard lock(mutex);
+        next = followUp;
+    }
+    ASSERT_TRUE(next.has_value()) << "the follow-up is submitted before wait(first) returns";
+    const auto info = manager.wait(*next, 5s);
+    ASSERT_TRUE(info.has_value());
+    EXPECT_EQ(info->state, JobState::Completed);
+    EXPECT_EQ(recorder.statesOf(*next), (std::vector<JobState>{JobState::Queued, JobState::Running, JobState::Completed}));
 }
 
 TEST(Jobs, QueuedJobIsCancelledWithoutRunning)

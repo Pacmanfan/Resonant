@@ -46,7 +46,7 @@ Milestones and the requests that deliver them are in
 | Schema version check, migration chain, refusal of newer files | Tested | no migration step exists yet because format 1 is the first |
 | External / binary assets beside the project file | Deferred | no large data exists before the simulation milestones; the format reserves `extensions` and a later version adds referenced binary files |
 | Simulation configuration and result-metadata records | Tested | data structures only; no solver uses them yet |
-| Background jobs: states, progress, cancellation | Tested | |
+| Background jobs: states, progress, cancellation | Tested | listeners hear each job's changes in order; waiting returns after they were told (ADR-000231; the flaky cancellation test fixed) |
 | Demonstrator job | Tested | performs no calculation; it only exercises the job system |
 | Structured logging, Console panel, Diagnostics panel | Tested | |
 | Example project `examples/foundation/primitives.resonant` | Tested | loaded by a test |
@@ -327,6 +327,7 @@ milestones below.)
 | proto3 contract `proto/resonant/v1` (16 services, 68 methods), generated at build time in qmake and CMake, descriptor set, compatibility check against a baseline, generated reference | Tested | optional: builds without protoc / libprotobuf |
 | Local endpoint (Unix socket, same user, token) in the GUI and in the headless host `resonant-automation` | Tested | |
 | gRPC transport | Tested | a grpcio bridge process (`python3 -m resonant_api.bridge`), loopback by default; C++ gRPC is not linked (libgrpc++ not installed here) |
+| C++ gRPC transport | Not implemented | waits for the owner to install `libgrpc++-dev` and `protobuf-compiler-grpc` (REQ-CHAT-20261128-003, parked; `AUTOMATION_ARCHITECTURE.md`) |
 | The GUI's operations through the services (create, rename, move, show / hide, reparent, parameters, materials, library, delete, duplicate, undo, redo, save, field runs); Tools > Automation Server (permissions, token, bridge, sessions) | Tested | domain panels that set a whole component state still push one command (counted like any change) |
 | Python client `resonant_api` (socket, gRPC, in process) and in-process dispatch in the native module | Tested | `SubscribeEvents` needs a socket or gRPC |
 | MCP adapter: tools from the contract by permission level, dry runs, its own MCP session | Tested | tested without an MCP client; `serve_stdio` uses the `mcp` package |

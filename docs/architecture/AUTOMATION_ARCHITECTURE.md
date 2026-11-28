@@ -67,6 +67,27 @@ is the local endpoint's framing, not part of the public contract.
 - **gRPC** (`python3 -m resonant_api.bridge`): grpcio generic handlers relay each method's bytes to the socket; server streaming for events and slices; errors as gRPC status plus `resonant-error-bin`.
 - **In process**: `resonant_api.connect(project=...)` uses the native module's dispatcher.
 
+### The C++ gRPC transport: waiting for the system packages
+
+A C++ gRPC server in the application would replace the bridge process. It
+would serve the same contract (`AUTOMATION_DECISIONS.md`).
+
+- **Missing packages.** It needs `libgrpc++-dev` and
+  `protobuf-compiler-grpc` (`grpc_cpp_plugin`). They are not installed on the
+  development machine (checked with `dpkg -s`, 2026-11-28; the Ubuntu 24.04
+  archive has 1.51.1). Installing them needs administrator rights, so it is
+  the owner's decision:
+
+  ```bash
+  sudo apt install libgrpc++-dev protobuf-compiler-grpc
+  ```
+
+- **Request parked.** REQ-CHAT-20261128-003 is parked until the packages are
+  installed. Then the C++ transport will be built and tested against the
+  Python client and the MCP tools.
+- **Until then,** the grpcio bridge serves gRPC (RES-API-SEC-002), and
+  nothing reports a C++ transport that does not exist.
+
 ## Where the GUI uses the services
 
 `DocumentController` creates primitives, renames, moves, shows and hides,
