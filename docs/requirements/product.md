@@ -28,7 +28,9 @@ RES-FUNC-001..016), resonance engineering across the domains
 with engineered effective properties (REQ-CHAT-20261126-019, `metamaterials.md`
 RES-META-001..012), multiscale material modeling (REQ-CHAT-20261126-020,
 `multiscale.md` RES-MSC-001..014), and dynamic material state
-(REQ-CHAT-20261126-021, `material_state.md` RES-DMS-001..014).
+(REQ-CHAT-20261126-021, `material_state.md` RES-DMS-001..014), and unified
+accounting of energy, momentum and force (REQ-CHAT-20261126-022,
+`accounting.md` RES-ACC-001..016).
 
 Each requirement below names the release in which it must first hold:
 **V1** (the initial release, a complete acoustic workflow), or **LATER**

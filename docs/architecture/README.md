@@ -17,6 +17,7 @@ paths these documents name exist.
 * `FUNCTIONAL_STRUCTURE_ARCHITECTURE.md` — functional structures: geometry as a physical design variable, analyses, studies, services, the panel; `FUNCTIONAL_STRUCTURE_AUDIT.md` (the audit before them).
 * Resonance engineering (ADR-000222): `docs/physics/RESONANCE_ARCHITECTURE.md`, `docs/physics/COUPLED_RESONATORS.md`, `docs/physics/RESONANCE_SPECTROSCOPY.md`.
 * Metamaterials (ADR-000223): `docs/materials/METAMATERIAL_ARCHITECTURE.md`, `docs/materials/EFFECTIVE_PROPERTIES.md`, `docs/physics/HOMOGENIZATION_AND_VALIDITY.md`.
+* Unified accounting (ADR-000226): `docs/architecture/ACCOUNTING_ARCHITECTURE.md`, `docs/architecture/ACCOUNTING_AUDIT.md`, `docs/physics/FORCE_AND_MOMENTUM.md`, `docs/physics/CONSERVATION_MONITORING.md`, `docs/physics/ACCOUNTING_VALIDATION.md`.
 * Dynamic material state (ADR-000225): `docs/materials/DYNAMIC_MATERIAL_STATE.md`, `docs/physics/CONSTITUTIVE_MODELS.md`, `docs/physics/STATE_EVOLUTION.md`, `docs/physics/MATERIAL_STATE_VALIDATION.md`.
 * Multiscale materials (ADR-000224): `docs/materials/MULTISCALE_ARCHITECTURE.md`, `docs/materials/MATERIAL_LINEAGE.md`, `docs/physics/RVE_HOMOGENIZATION.md`, `docs/physics/ATOMISTIC_MODELS.md`.
 * `AUTOMATION_ARCHITECTURE.md` — the application services, the protobuf contract, transports, threads; `AUTOMATION_DECISIONS.md` (the choices and alternatives); `MCP_INTEGRATION.md` (AI assistants).

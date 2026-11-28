@@ -47,6 +47,8 @@ FEATURES = [
      "resonant_api (FunctionalStructureService.CreateEffectiveMaterial)"),
     ("Multiscale materials and lineage", "concepts.multiscale", ["multiscale/a-crystalline-argon.resonant", "multiscale/c-porous-composite.resonant"], [],
      "resonant_api (MultiscaleService)"),
+    ("Energy, momentum and force accounting", "concepts.accounting", ["accounting/d-coupled-resonators.resonant", "accounting/e-microwave-absorption.resonant"], [],
+     "resonant_api (AccountingService)"),
     ("Dynamic material state", "concepts.material-state", ["materialstate/c-plastic-bar.resonant", "materialstate/d-damage-resonance.resonant"], [],
      "resonant_api (MaterialStateService)"),
     ("Topology optimization", "opt.topology", [], [], "-"),
