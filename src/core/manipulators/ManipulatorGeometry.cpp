@@ -5,6 +5,7 @@
 
 #include "foundation/Units.h"
 #include "manipulators/Analytics.h"
+#include "manipulators/Helmholtz.h"
 #include "manipulators/Horn.h"
 
 #include <cmath>
@@ -556,6 +557,30 @@ void registerManipulatorGeometry(GeometryRegistry& registry)
                           },
                           [](const Geometry& g) { return hornSpecOf(g).validate(); }));
     }
+    // A Helmholtz resonator: a closed cylindrical cavity centred on the origin, its neck along +Z.
+    registry.add(kind("resonator.helmholtz", "Helmholtz resonator", "cavity",
+                      {length("cavityRadius", "Cavity radius", 0.025), length("cavityLength", "Cavity length (Z)", 0.05),
+                       length("neckRadius", "Neck radius", 0.005), length("neckLength", "Neck length", 0.01),
+                       length("wallThickness", "Wall thickness", 0.002)},
+                      [](const Geometry& g, const TessellationOptions& o) {
+                          const double R = g.parameter("cavityRadius"), h = 0.5 * g.parameter("cavityLength"), a = g.parameter("neckRadius"),
+                                       L = g.parameter("neckLength"), t = g.parameter("wallThickness");
+                          TriangleMesh mesh;
+                          const auto segment = [&](double r0, double z0, double r1, double z1, double nr, double nz) {
+                              revolveProfile(mesh, {{r0, z0, nr, nz}, {r1, z1, nr, nz}}, o.segments);
+                          };
+                          segment(0.0, -h - t, R + t, -h - t, 0.0, -1.0);  // outer bottom
+                          segment(R + t, -h - t, R + t, h + t, 1.0, 0.0);  // outer side
+                          segment(R + t, h + t, a + t, h + t, 0.0, 1.0);   // outer top
+                          segment(a + t, h + t, a + t, h + L, 1.0, 0.0);   // neck outside
+                          segment(a + t, h + L, a, h + L, 0.0, 1.0);       // neck rim
+                          segment(a, h + L, a, h, -1.0, 0.0);              // neck bore
+                          segment(a, h, R, h, 0.0, -1.0);                  // inner top
+                          segment(R, h, R, -h, -1.0, 0.0);                 // inner side
+                          segment(R, -h, 0.0, -h, 0.0, 1.0);               // inner bottom
+                          return mesh;
+                      },
+                      [](const Geometry& g) { return helmholtzSpecOf(g).validate(); }));
     registry.add(kind("waveguide.rectangular", "Rectangular waveguide", "waveguide",
                       {length("width", "Inner width (X)", 0.04), length("height", "Inner height (Y)", 0.02),
                        length("length", "Length (Z)", 0.3), length("wallThickness", "Wall thickness", 0.002)},

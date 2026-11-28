@@ -41,6 +41,8 @@ FEATURES = [
     ("Optimization Studio", "opt.studio", ["optimization/a-acoustic-focal-array.resonant", "optimization/f-sidelobe-reduction.resonant"], ["demo-f-inverse-design"], "resonant.optimization"),
     ("Functional structures", "opt.functional-structures", ["functional/a-microwave-cavity.resonant", "functional/c-acoustic-horn.resonant"], [],
      "resonant_api (FunctionalStructureService)"),
+    ("Resonance engineering", "opt.functional-structures", ["resonance/a-helmholtz-resonator.resonant", "resonance/b-coupled-cantilevers.resonant"], [],
+     "resonant_api (FunctionalStructureService, ResonanceService)"),
     ("Topology optimization", "opt.topology", [], [], "-"),
     ("Experiments and acquisition", "exp.acquisition", ["experiments/acoustic_experiments.resonant", "experiments/mechanical_experiments.resonant"], [], "resonant.experiments"),
     ("Measurement correlation", "exp.correlation", ["experiments/rf_experiments.resonant"], ["demo-g-experimental-correlation"], "resonant.measurements.compare"),

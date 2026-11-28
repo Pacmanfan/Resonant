@@ -1,0 +1,19 @@
+syntax = "proto3";
+package resonant.v1;
+
+// Resonance spectroscopy (REQ-CHAT-20261126-018, docs/physics/RESONANCE_SPECTROSCOPY.md).
+
+// A resonance identified from a signal (complex poles) or a spectrum (a Lorentzian fit).
+message IdentifiedResonance {
+  double frequency_hz = 1;
+  double decay_rate = 2;               // 1/s, amplitude e^{-alpha t}
+  double quality = 3;                  // w / (2 alpha); +infinity when the decay is not resolved
+  double bandwidth_hz = 4;             // half-power full width
+  double amplitude = 5;
+  double phase = 6;                    // rad (signals)
+  double frequency_uncertainty_hz = 7;
+  double quality_uncertainty = 8;
+  bool overlapping = 9;                // another resonance within a few bandwidths
+  bool asymmetric = 10;                // not a Lorentzian line (spectra)
+  double fit_quality = 11;             // 1 - relative residual energy
+}

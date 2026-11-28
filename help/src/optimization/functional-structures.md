@@ -17,7 +17,9 @@ physical model, and the model is named with every result.
 
 Open one of the example projects in `examples/functional` (a microwave
 cavity, a two-mirror optical resonator, an acoustic horn, a mechanical
-resonator, a photonic unit cell, a coupled slab) and choose
+resonator, a photonic unit cell, a coupled slab) or `examples/resonance` (a
+Helmholtz resonator, coupled cantilevers, coupled Helmholtz resonators, a
+heated cavity) and choose
 **Panels > Functional Structures**.
 
 ## The panel
@@ -28,7 +30,7 @@ resonator, a photonic unit cell, a coupled slab) and choose
 | **Parameters** | name, value, unit, range and kind. Type a new value to change the design: a bound parameter changes its scene object (one step you can undo), a free one the structure; derived values are computed and cannot be typed |
 | **Model**, **Analyze** | the analysis's models (closed form, full-wave, finite elements, ...) with their fidelity; Analyze runs the chosen model in the background |
 | **Metrics** | every metric with its unit; hover a name for its definition |
-| **Modes** | resonances with their labels (TE101, TEM00 q, ...) where the model labels them, frequencies and Q (∞ for a lossless model) |
+| **Modes** | resonances with their labels (TE101, TEM00 q, in-phase, ...) where the model labels them; their **nature** (a natural mode, a peak of a driven response, or a resonance identified from a simulated signal), frequency, Q (∞ for a lossless model) and the Q of each loss mechanism |
 | **Curves and sweep** | the result's curves (a port response, a beam radius, a horn's resistance, a stack's transmission) - choosing one only redraws; **Sweep** evaluates a parameter range in the background and plots the chosen metric against it |
 | **Model and assumptions** | the model, the behavior it established (resonant, broadband, mixed), the mechanism, validity, assumptions, warnings, constraints and objectives |
 

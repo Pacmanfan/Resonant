@@ -66,6 +66,9 @@ TEST_F(FunctionalPanelTest, ShowsAStructureAnalyzesItAndMarksTheResultStaleAfter
     EXPECT_TRUE(panel().metricText("cavity.f1").endsWith(" Hz")) << panel().metricText("cavity.f1").toStdString();
     EXPECT_GE(panel().modeRowCount(), 3);
     EXPECT_EQ(panel().modeLabel(0), "TE101");
+    EXPECT_EQ(panel().modeCell(0, 1), "natural");
+    EXPECT_TRUE(panel().modeCell(0, 4).contains("wall conduction")) << panel().modeCell(0, 4).toStdString();
+    EXPECT_TRUE(panel().modeCell(0, 4).contains("port"));
     EXPECT_TRUE(panel().statusText().contains("current")) << panel().statusText().toStdString();
     EXPECT_TRUE(panel().detailsText().contains("Closed-form modes")) << panel().detailsText().toStdString();
     // Editing a parameter changes the scene object (undoably) and makes the shown result stale.

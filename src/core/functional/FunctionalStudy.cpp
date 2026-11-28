@@ -590,7 +590,23 @@ json trackModes(const std::vector<std::vector<Mode>>& points, double tolerance)
             f.push_back(number(v));
         tracks.push_back({{"label", t.label}, {"frequencyHz", f}, {"ambiguousAt", t.ambiguousAt}, {"matchedBy", labelled(points[0]) ? "label" : "continuity"}});
     }
-    return {{"tracks", tracks}, {"crossings", crossings}};
+    // Avoided crossings: two tracks whose gap has an interior minimum well below its ends (coupled modes
+    // repelling instead of crossing); the minimum gap is the coupling splitting.
+    json avoided = json::array();
+    for (size_t a = 0; a < list.size(); ++a)
+        for (size_t b = a + 1; b < list.size(); ++b) {
+            std::vector<double> gap;
+            for (size_t p = 0; p < points.size(); ++p)
+                gap.push_back(std::abs(list[b].frequency[p] - list[a].frequency[p]));
+            if (gap.size() < 3 || std::any_of(gap.begin(), gap.end(), [](double g) { return !std::isfinite(g); }))
+                continue;
+            const size_t k = static_cast<size_t>(std::min_element(gap.begin(), gap.end()) - gap.begin());
+            if (k == 0 || k + 1 == gap.size())
+                continue;
+            if (gap.front() > 1.5 * gap[k] && gap.back() > 1.5 * gap[k])
+                avoided.push_back({{"modes", {list[a].label, list[b].label}}, {"at", k}, {"minimumGapHz", gap[k]}});
+        }
+    return {{"tracks", tracks}, {"crossings", crossings}, {"avoidedCrossings", avoided}};
 }
 
 json explainCandidate(const FunctionalStructure& s, const Project& project, const AnalysisKind& kind, const Values& baseP, const Values& baseM,

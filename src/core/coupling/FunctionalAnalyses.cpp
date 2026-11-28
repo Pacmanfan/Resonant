@@ -1,6 +1,8 @@
 #include "coupling/FunctionalAnalyses.h"
 
 #include "coupling/CoupledRun.h"
+#include "coupling/ResonanceAnalyses.h"
+#include "dsp/Resonance.h"
 #include "electromagnetics/CavityResonator.h"
 #include "electromagnetics/Conventions.h"
 #include "electromagnetics/EmMaterial.h"
@@ -201,6 +203,14 @@ Result<AnalysisOutcome> evaluateCavity(const FunctionalStructure& s, const Proje
                         {"fillQ", std::isfinite(r.fillQ) ? json(r.fillQ) : json("inf")},
                         {"electricEnergyJ", r.electricEnergy},
                         {"magneticEnergyJ", r.magneticEnergy}};
+        mode.nature = "natural";
+        mode.lossQ = {{"wall conduction", r.wallQ}, {"fill (dielectric and conduction)", r.fillQ}};
+        if (r.coupling > 0.0) {
+            mode.lossQ["port"] = r.externalQ;
+            mode.quality = r.loadedQ;
+        }
+        mode.bandwidthHz = r.bandwidthHz;
+        mode.decayRate = std::isfinite(r.loadedQ) ? 2.0 * em::kPi * r.frequencyHz / (2.0 * r.loadedQ) : 0.0;
         out.modes.push_back(mode);
     }
     Values& x = out.metrics;
@@ -228,6 +238,9 @@ Result<AnalysisOutcome> evaluateCavity(const FunctionalStructure& s, const Proje
     }
     if (first.coupling > 0.0) {
         x["cavity.coupling"] = first.coupling;
+        // The fraction of the energy lost that leaves through the port: the useful extraction, which
+        // grows with the coupling while the loaded Q falls (a tradeoff, not an optimum).
+        x["cavity.extractionEfficiency"] = first.coupling / (1.0 + first.coupling);
         x["cavity.portReflection"] = std::abs(em::portReflection(first, first.frequencyHz));
         Curve c = curve("port", "Port reflection near " + first.label, "Frequency", "Hz", "|S11|", "");
         for (double f : linSpace(first.frequencyHz - 5 * first.bandwidthHz, first.frequencyHz + 5 * first.bandwidthHz, 201)) {
@@ -276,6 +289,42 @@ Result<AnalysisOutcome> evaluateCavity(const FunctionalStructure& s, const Proje
             x.erase(k);
         x["cavity.fillQ"] = y.energyDecayRate > 0.0 ? 2.0 * em::kPi * out.modes[0].frequencyHz / y.energyDecayRate : kInf;
         x["cavity.decayRate"] = y.energyDecayRate;
+        // Ring-down identification: the complex poles of the probe record after the pulse.
+        dsp::PencilOptions po;
+        po.minHz = 0.5 * first.frequencyHz;
+        po.maxHz = 1.15 * list.back().frequencyHz;
+        po.skipSamples = y.pulseSteps;
+        po.singularValueThreshold = 1e-4;
+        po.maxModes = 40;  // a broadband pulse excites many modes: each needs its pair of poles
+        if (auto id = dsp::identifyByMatrixPencil(y.probeSignal, y.dt, po)) {
+            for (const auto& r : id.value().resonances) {
+                Mode identified;
+                identified.nature = "identified";
+                identified.frequencyHz = r.frequencyHz;
+                identified.quality = r.quality;
+                identified.decayRate = r.decayRate;
+                identified.bandwidthHz = r.bandwidthHz;
+                identified.details = {{"method", r.method}, {"amplitude", r.amplitude}, {"frequencyUncertaintyHz", r.frequencyUncertainty},
+                                      {"qualityUncertainty", r.qualityUncertainty}, {"overlapping", r.overlapping}};
+                // Label it by the nearest analytical mode within 3 %.
+                for (const auto& a : list)
+                    if (std::abs(r.frequencyHz / a.frequencyHz - 1.0) < 0.03)
+                        identified.label = a.label + " (ring-down)";
+                out.modes.push_back(identified);
+            }
+            const double target = out.modes[0].frequencyHz;
+            const auto best = std::min_element(id.value().resonances.begin(), id.value().resonances.end(), [target](const auto& u, const auto& v) {
+                return std::abs(u.frequencyHz - target) < std::abs(v.frequencyHz - target);
+            });
+            if (best != id.value().resonances.end()) {
+                x["cavity.ringDownF1"] = best->frequencyHz;
+                x["cavity.ringDownQ"] = best->quality;
+            }
+            for (const std::string& w : id.value().warnings)
+                out.warnings.push_back("ring-down: " + w);
+        } else {
+            out.warnings.push_back("ring-down identification: " + id.message());
+        }
         out.curves.erase(std::remove_if(out.curves.begin(), out.curves.end(), [](const Curve& c) { return c.id == "port"; }), out.curves.end());
         out.discretization = {{"model", "Yee grid"}, {"cell", y.cell}, {"cells", y.cells}, {"simulatedSize", y.simulatedSize}, {"steps", y.steps},
                               {"dt", y.dt}, {"backend", y.backend}};
@@ -681,12 +730,17 @@ Result<AnalysisOutcome> evaluateCoupled(const FunctionalStructure& s, const Proj
         if (region.objectId.empty())
             continue;
         const SceneObject* o = p.scene.find(Id(region.objectId));
-        if (!o || !o->state.geometry || o->state.geometry->kindId() != "box") {
-            out.warnings.push_back("region '" + region.id + "' is linked to an object that is not a box; its stored thickness is used");
-            continue;
+        const std::string kind = o && o->state.geometry ? o->state.geometry->kindId() : "";
+        if (kind == "box") {
+            region.thickness = o->state.geometry->parameter("height");
+            linked.push_back({{"region", region.id}, {"object", o->state.name}, {"thickness", region.thickness}});
+        } else if (kind == "cavity.rectangular.em" && !region.dimensions.empty()) {
+            for (const char* dim : {"a", "b", "d"})
+                region.dimensions[dim] = o->state.geometry->parameter(dim);
+            linked.push_back({{"region", region.id}, {"object", o->state.name}, {"dimensions", region.dimensions}});
+        } else {
+            out.warnings.push_back("region '" + region.id + "' is linked to an object that is not a box or a cavity; its stored size is used");
         }
-        region.thickness = o->state.geometry->parameter("height");
-        linked.push_back({{"region", region.id}, {"object", o->state.name}, {"thickness", region.thickness}});
     }
     multiphysics::RunContext rc;
     if (context) {
@@ -724,6 +778,17 @@ Result<AnalysisOutcome> evaluateCoupled(const FunctionalStructure& s, const Proj
                 x["coupled.maxVonMises"] = values["maxVonMisesPa"].get<double>();
             if (values.contains("topDisplacementZM"))
                 x["coupled.topDisplacement"] = values["topDisplacementZM"].get<double>();
+            // A resonant participant: its resonance now and at the first pass (the shift the coupling caused).
+            if (values.contains("resonanceHz")) {
+                x["coupled.resonanceHz"] = values["resonanceHz"].get<double>();
+                x["coupled.loadedQ"] = values.value("loadedQ", 0.0);
+                x["coupled.deliveredPower"] = values.value("deliveredW", 0.0);
+                const auto& first = r.history.front().monitored;
+                if (first.contains(participant) && first[participant].contains("resonanceHz"))
+                    x["coupled.resonanceShift"] = values["resonanceHz"].get<double>() - first[participant]["resonanceHz"].get<double>();
+            }
+            if (values.contains("temperatureK"))
+                x["coupled.peakTemperature"] = values["temperatureK"].get<double>();
         }
     out.solver = m.id;
     out.assumptions = m.assumptions;
@@ -778,6 +843,9 @@ void registerFunctionalAnalyses(AnalysisRegistry& registry)
                      {"cavity.dfdd", "Sensitivity of f1 to d", "Hz/m", "d f1 / d d"},
                      {"cavity.thermalShift", "Shift of f1 at the operating temperature", "Hz",
                       "f1(T) - f1(293.15 K) for walls expanding uniformly with their linear expansion coefficient"},
+                     {"cavity.extractionEfficiency", "Extraction efficiency", "", "beta / (1 + beta): the share of the loss leaving through the port"},
+                     {"cavity.ringDownF1", "Ring-down frequency of the lowest mode", "Hz", "complex pole of the Yee probe record (matrix pencil)"},
+                     {"cavity.ringDownQ", "Ring-down Q of the lowest mode", "", "w / (2 alpha) of that pole"},
                      {"cavity.f1Deviation", "Full-wave deviation of f1", "", "f1(Yee) / f1(closed form) - 1"},
                      {"cavity.decayRate", "Energy decay rate", "1/s", "-d ln W / dt of the full-wave run"}};
         k.roles = {{"cavity", "body", "a cavity.rectangular.em object", true},
@@ -931,8 +999,9 @@ void registerFunctionalAnalyses(AnalysisRegistry& registry)
     {
         AnalysisKind k;
         k.id = kCoupledSlabAnalysis;
-        k.title = "Coupled energy-matter slab";
-        k.description = "Runs the structure's physical system in the Coupled Energy-Matter Engine with region thicknesses from the linked objects";
+        k.title = "Coupled energy-matter system";
+        k.description = "Runs the structure's physical system in the Coupled Energy-Matter Engine with region sizes from the linked objects "
+                        "(slab thicknesses from boxes, cavity dimensions from cavities)";
         k.domains = {"electromagnetic", "thermal", "mechanical"};
         k.category = Category::Coupled;
         k.mechanism = "the slab's thickness sets its electromagnetic standing-wave pattern and so the absorbed power; the heat raises the "
@@ -947,11 +1016,16 @@ void registerFunctionalAnalyses(AnalysisRegistry& registry)
                      {"coupled.absorptance", "Absorptance", "", "absorbed / incident power"},
                      {"coupled.absorbedPower", "Absorbed power", "W", ""},
                      {"coupled.maxVonMises", "Largest von Mises stress", "Pa", ""},
-                     {"coupled.topDisplacement", "Expansion of the slab", "m", "displacement of its top face"}};
+                     {"coupled.topDisplacement", "Expansion of the slab", "m", "displacement of its top face"},
+                     {"coupled.resonanceHz", "Resonance of the coupled state", "Hz", "a resonant participant's frequency at the converged state"},
+                     {"coupled.resonanceShift", "Resonance shift by the coupling", "Hz", "converged minus first-pass resonance"},
+                     {"coupled.loadedQ", "Loaded Q of the coupled state", "", ""},
+                     {"coupled.deliveredPower", "Power delivered into the resonator", "W", "incident minus reflected"}};
         k.roles = {};
         k.evaluate = evaluateCoupled;
         registry.add(std::move(k));
     }
+    registerResonanceAnalyses(registry);
     // Every evaluation turns exceptions (an invalid setting) into a failure.
     for (const AnalysisKind& k : registry.kinds()) {
         AnalysisKind copy = k;

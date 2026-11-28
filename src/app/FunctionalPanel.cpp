@@ -237,8 +237,14 @@ void FunctionalPanel::showResult(const QString& resultId)
         const int row = ui_->modeTable->rowCount();
         ui_->modeTable->insertRow(row);
         ui_->modeTable->setItem(row, 0, new QTableWidgetItem(text(m, "label").isEmpty() ? tr("mode %1").arg(row + 1) : text(m, "label")));
-        ui_->modeTable->setItem(row, 1, new QTableWidgetItem(number(m["frequencyHz"])));
-        ui_->modeTable->setItem(row, 2, new QTableWidgetItem(number(m["quality"])));
+        ui_->modeTable->setItem(row, 1, new QTableWidgetItem(text(m, "nature")));
+        ui_->modeTable->setItem(row, 2, new QTableWidgetItem(number(m["frequencyHz"])));
+        ui_->modeTable->setItem(row, 3, new QTableWidgetItem(number(m["quality"])));
+        QStringList losses;
+        const json lossQ = m.value("lossQ", json::object());  // items() must not outlive its object
+        for (const auto& [mechanism, q] : lossQ.items())
+            losses << QStringLiteral("%1 %2").arg(QString::fromStdString(mechanism), number(q));
+        ui_->modeTable->setItem(row, 4, new QTableWidgetItem(losses.join(QStringLiteral("; "))));
     }
     QStringList details;
     const json info = analysis_.value("analysis", json::object());
@@ -365,6 +371,11 @@ int FunctionalPanel::modeRowCount() const
 QString FunctionalPanel::modeLabel(int row) const
 {
     return ui_->modeTable->item(row, 0)->text();
+}
+
+QString FunctionalPanel::modeCell(int row, int column) const
+{
+    return ui_->modeTable->item(row, column)->text();
 }
 
 QString FunctionalPanel::statusText() const

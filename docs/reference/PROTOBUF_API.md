@@ -24,6 +24,7 @@ carries a `resonant.v1.Error` (see [errors](#errors)).
 - [MultiphysicsService](#multiphysicsservice) (8 methods)
 - [OptimizationService](#optimizationservice) (3 methods)
 - [ProjectService](#projectservice) (8 methods)
+- [ResonanceService](#resonanceservice) (1 method)
 - [ResultsService](#resultsservice) (4 methods)
 - [SceneService](#sceneservice) (8 methods)
 - [SessionService](#sessionservice) (3 methods)
@@ -175,6 +176,14 @@ The open project: create, open, save, validate, undo and redo.
 | `SaveProject` | `SaveProjectRequest` | `SaveProjectResponse` | Saves the project, to its file or to a name in the project directory (files permission). |
 | `Undo` | `UndoRequest` | `UndoResponse` | Undoes the last change (whoever made it: GUI, script or client). |
 | `ValidateProject` | `ValidateProjectRequest` | `ValidateProjectResponse` | Checks geometry, material references, transforms and materials, and reports the issues. |
+
+## ResonanceService
+
+Resonance spectroscopy of user data: nothing of the project is read or changed. Records too short or too coarse for the requested band or linewidth are refused with the reason.
+
+| Method | Request | Response | Description |
+|---|---|---|---|
+| `IdentifyResonances` | `IdentifyResonancesRequest` | `IdentifyResonancesResponse` | The resonances of a sampled signal (matrix pencil: frequency, decay, Q, amplitude, phase, uncertainty) or of a power spectrum (Lorentzian fits with overlap and asymmetry flags). |
 
 ## ResultsService
 
@@ -1134,6 +1143,7 @@ An analysis, sweep or sensitivity result.
 | `behaviour` | `string` | resonant, broadband, non-resonant, mixed, coupled |
 | `warnings` | repeated `string` |  |
 | `document` | `google.protobuf.Struct` | the full resonant.functional-result document, when requested |
+| `modes` | repeated `ResonanceMode` | analysis: its resonances |
 
 ### FunctionalStructure
 
@@ -1436,6 +1446,49 @@ Geometry of an object: a kind of the geometry registry with its parameters (SI u
 | `header` | `ResponseHeader` |  |
 | `run` | `google.protobuf.Struct` |  |
 | `finished` | `bool` |  |
+
+### IdentifiedResonance
+
+A resonance identified from a signal (complex poles) or a spectrum (a Lorentzian fit).
+
+| Field | Type | Description |
+|---|---|---|
+| `frequency_hz` | `double` |  |
+| `decay_rate` | `double` | 1/s, amplitude e^{-alpha t} |
+| `quality` | `double` | w / (2 alpha); +infinity when the decay is not resolved |
+| `bandwidth_hz` | `double` | half-power full width |
+| `amplitude` | `double` |  |
+| `phase` | `double` | rad (signals) |
+| `frequency_uncertainty_hz` | `double` |  |
+| `quality_uncertainty` | `double` |  |
+| `overlapping` | `bool` | another resonance within a few bandwidths |
+| `asymmetric` | `bool` | not a Lorentzian line (spectra) |
+| `fit_quality` | `double` | 1 - relative residual energy |
+
+### IdentifyResonancesRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `samples` | repeated `double` | A time signal ... |
+| `sample_interval` | `double` | s |
+| `min_frequency_hz` | `double` | the band of interest (0 / 0: everything) |
+| `max_frequency_hz` | `double` |  |
+| `max_modes` | `int32` | 0: 12 |
+| `skip_samples` | `uint64` | e.g. the excitation |
+| `frequencies_hz` | repeated `double` | ... or a power spectrum. |
+| `values` | repeated `double` |  |
+| `count` | `int32` | peaks to fit (0: 4) |
+
+### IdentifyResonancesResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `method` | `string` | "matrix-pencil" or "lorentzian-fit" |
+| `resonances` | repeated `IdentifiedResonance` |  |
+| `relative_residual` | `double` | signals |
+| `warnings` | repeated `string` |  |
 
 ### Job
 
@@ -1988,6 +2041,20 @@ Sent with every request.
 | `idempotency_key` | `string` | For mutations: the same key on a retry returns the first response instead of repeating the change. |
 | `expected_project_revision` | optional `uint64` | For mutations: refused with CONFLICT when the project revision differs (optimistic concurrency). |
 | `dry_run` | `bool` | Validate and plan only: nothing is changed. |
+
+### ResonanceMode
+
+A resonance of an analysis result, as every analysis reports it.
+
+| Field | Type | Description |
+|---|---|---|
+| `label` | `string` |  |
+| `nature` | `string` | natural, driven-peak, identified |
+| `frequency_hz` | `double` |  |
+| `quality` | `double` | 0: not computed; +infinity: lossless |
+| `decay_rate` | `double` | 1/s |
+| `bandwidth_hz` | `double` |  |
+| `loss_quality` | repeated `ResonanceMode.LossQualityEntry` | Q of each loss mechanism |
 
 ### ResourceMetadata
 

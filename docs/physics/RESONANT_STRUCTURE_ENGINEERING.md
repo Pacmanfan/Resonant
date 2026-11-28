@@ -1,6 +1,10 @@
 # Resonant Structure Engineering
 
-**Status:** implemented for the analyses below (RES-FUNC-006, -007, -009, -010, -011).
+**Status:** implemented for the analyses below (RES-FUNC-006, -007, -009, -010, -011), extended by
+REQ-CHAT-20261126-018 ([resonance architecture](RESONANCE_ARCHITECTURE.md)): every mode now states
+its nature (natural, driven-peak, identified), its decay, bandwidth and Q by loss mechanism; Helmholtz
+resonators, cantilevers as resonators, coupled resonators, spectroscopy and a resonator in the coupled
+engine were added.
 
 Resonance is computed per domain and reported in one form: modes with a
 label (when the model can label them), a frequency and a Q (0 when not
@@ -38,7 +42,8 @@ depends on its standing-wave pattern (`f-coupled-slab`).
 
 ## Not covered
 
-Coupled resonators and mode splitting as an analysis, Q from radiation of
+(Coupled resonators and mode splitting are now analyses: [coupled resonators](COUPLED_RESONATORS.md).)
+Q from radiation of
 open structures, cylindrical and spherical cavities in the cavity analysis
 (their closed-form frequencies exist in `manipulators/Analytics` for
 acoustics), Q of mechanical modes from material loss factors.

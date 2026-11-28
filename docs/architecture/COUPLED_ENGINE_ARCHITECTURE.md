@@ -88,6 +88,17 @@ to the reference grids is exact.
 (read, modify, execute). Capabilities list the engine, its participants and
 every coupling model with its real maturity. There is no GUI panel yet.
 
+## Resonant cavities (REQ-CHAT-20261126-018)
+
+Physical systems of geometry kind `rectangular-cavity`: one region with
+dimensions a, b, d (the cavity and its fill) and a region `walls`;
+participants `em.cavity.mode` (the lowest mode of the current cavity with the
+fill's present permittivity, a port of fixed external Q, a drive of fixed
+frequency and power; the delivered power passed on as heat) and
+`thermal.lumped` (T = T_amb + P/G); the coupling model
+`thermal.uniform-expansion` scales a, b, d with the walls' expansion
+coefficient. The orchestrator is unchanged (`CavityHeating.*`).
+
 ## Used by functional structures
 
 A functional structure that names a physical system (`physicalSystem`) is

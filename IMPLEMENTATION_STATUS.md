@@ -405,3 +405,19 @@ milestones below.)
 | Functional Structures panel (parameters, analysis, metrics, modes, staleness, curves, sweep) | Tested | `tests/app/test_functional_panel.cpp`; no structure editor, no viewport overlays of functional results |
 | CAD import, OpenCASCADE | Missing | no CAD kernel in Resonant (open V1 item RES-PRODUCT-015) |
 | Force and momentum metrics, coupled resonators, cylindrical cavities, 2D/3D lattices | Missing | planned (`docs/architecture/ENERGY_MATTER_RESEARCH_ROADMAP.md`) |
+
+## Resonance engineering — `docs/requirements/resonance.md`, `docs/physics/RESONANCE_ARCHITECTURE.md`
+
+| Capability | State | Notes |
+|---|---|---|
+| One resonance description: nature (natural, driven-peak, identified), decay, bandwidth, Q by loss mechanism | Tested | every functional analysis; in the contract (`FunctionalResult.modes`) and the panel |
+| Spectroscopy: matrix-pencil poles of signals, Lorentzian fits of spectra, uncertainty, overlap and asymmetry flags, refusals | Tested | `src/core/dsp/Resonance`; `ResonanceService.IdentifyResonances` |
+| Lumped oscillator networks: complex modes, driven response, transient integration with an energy ledger, coupled-mode theory as an approximation | Tested | `src/core/oscillators` |
+| Coupled cantilevers and coupled Helmholtz resonators: splitting, hybrid modes, localization, avoided crossings, energy exchange | Tested | lumped; individual resonators from their domain models |
+| Helmholtz resonator: end corrections, radiation and viscous Q, impedance, pressure gain; plane-wave stepped duct; `resonator.helmholtz` | Tested | no thermal loss in the cavity |
+| Cantilever as a resonator: modes, tip modal mass and stiffness, Q, frequency response, ring-down | Tested | Euler–Bernoulli |
+| Cavity ring-down: complex poles of the Yee record | Tested | |
+| Duffing (backbone, bistability, hysteresis) and Mathieu (Floquet tongue) | Tested | single lumped oscillators |
+| Resonant cavity in the Coupled Energy–Matter Engine (`rectangular-cavity`, `em.cavity.mode`, `thermal.lumped`, `thermal.uniform-expansion`) | Tested | lumped thermal model |
+| Q against extraction (β/(1+β)) as a tradeoff | Tested | through sweeps and objectives |
+| Coupled resonators as one finite-element model, Q of open radiating structures, fluid resonances beyond lumped acoustics, nonlinear field solvers | Missing | planned |

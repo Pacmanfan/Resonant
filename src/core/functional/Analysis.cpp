@@ -69,8 +69,13 @@ json toJson(const AnalysisOutcome& o)
     for (const auto& [key, value] : o.metrics)
         metrics[key] = number(value);
     json modes = json::array();
-    for (const Mode& m : o.modes)
-        modes.push_back({{"label", m.label}, {"frequencyHz", m.frequencyHz}, {"quality", number(m.quality)}, {"details", m.details}});
+    for (const Mode& m : o.modes) {
+        json losses = json::object();
+        for (const auto& [mechanism, q] : m.lossQ)
+            losses[mechanism] = number(q);
+        modes.push_back({{"label", m.label},         {"frequencyHz", m.frequencyHz}, {"quality", number(m.quality)}, {"details", m.details},
+                         {"nature", m.nature},       {"decayRate", m.decayRate},     {"bandwidthHz", m.bandwidthHz}, {"lossQ", losses}});
+    }
     json curves = json::array();
     for (const Curve& c : o.curves)
         curves.push_back({{"id", c.id}, {"title", c.title}, {"xLabel", c.xLabel}, {"xUnit", c.xUnit}, {"yLabel", c.yLabel}, {"yUnit", c.yUnit},

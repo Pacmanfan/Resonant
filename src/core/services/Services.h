@@ -387,6 +387,20 @@ private:
     Session& s_;
 };
 
+// Resonance spectroscopy of user data (REQ-CHAT-20261126-018, RES-RSN-003, RES-RSN-013): the
+// resonances of a time signal (complex poles) or of a power spectrum (Lorentzian fits). Nothing of
+// the project is read or changed.
+class ResonanceService {
+public:
+    explicit ResonanceService(Session& s) : s_(s) {}
+    // request: {"samples": [...], "sampleInterval": s, "minHz", "maxHz", "maxModes", "skipSamples"}
+    //       or {"frequenciesHz": [...], "values": [...], "count"}
+    Outcome<nlohmann::json> identify(const CallContext& c, const nlohmann::json& request);
+
+private:
+    Session& s_;
+};
+
 // Batches and transactions: operations run on a staging copy of the project
 // (with the same revisions), and are committed as one undoable step.
 class TransactionService {
@@ -468,6 +482,7 @@ public:
     TransactionService transactions;
     MultiphysicsService multiphysics;
     FunctionalStructureService functional;
+    ResonanceService resonance;
     ApplicationService application;
 
 private:

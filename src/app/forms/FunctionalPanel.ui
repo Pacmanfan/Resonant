@@ -67,11 +67,14 @@
       <layout class="QVBoxLayout" name="modesLayout">
        <item>
         <widget class="QTableWidget" name="modeTable">
-         <property name="columnCount"><number>3</number></property>
+         <property name="columnCount"><number>5</number></property>
          <property name="editTriggers"><set>QAbstractItemView::NoEditTriggers</set></property>
+         <property name="toolTip"><string>Natural modes, driven-response peaks and resonances identified from signals are listed apart; Losses gives the Q of each mechanism.</string></property>
          <column><property name="text"><string>Mode</string></property></column>
+         <column><property name="text"><string>Nature</string></property></column>
          <column><property name="text"><string>Frequency (Hz)</string></property></column>
          <column><property name="text"><string>Q</string></property></column>
+         <column><property name="text"><string>Losses (Q by mechanism)</string></property></column>
         </widget>
        </item>
       </layout>

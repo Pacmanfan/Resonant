@@ -103,6 +103,8 @@ struct CavityYeeResult {
     double seconds = 0.0;
     std::string backend;
     std::vector<std::string> notes;
+    std::vector<double> probeSignal;  // E_x + E_y + E_z at the probe, every step (for ring-down identification)
+    size_t pulseSteps = 0;            // steps while the source pulse still drives
 };
 
 // Runs the Yee solver on a box of PEC walls with the fill, excited by a

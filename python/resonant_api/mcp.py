@@ -97,6 +97,7 @@ TOOLS: Dict[str, ToolSpec] = {
     "sweep_structure": ToolSpec("FunctionalStructureService.SweepStructure", "execute"),
     "compute_structure_sensitivity": ToolSpec("FunctionalStructureService.ComputeStructureSensitivity", "execute"),
     "optimize_structure": ToolSpec("FunctionalStructureService.OptimizeStructure", "execute"),
+    "identify_resonances": ToolSpec("ResonanceService.IdentifyResonances", "read"),
     "create_primitive": ToolSpec("GeometryService.CreatePrimitive", "modify"),
     "update_geometry_parameters": ToolSpec("GeometryService.UpdateGeometryParameters", "modify"),
     "update_object": ToolSpec("SceneService.UpdateObject", "modify"),

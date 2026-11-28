@@ -76,7 +76,7 @@ own scope decides what each delivers.
 
 ## Stage 6 — Geometry-driven resonant systems
 
-- **Status:** partly current (REQ-CHAT-20261126-017): functional structures with resonance across the cavity, optical, mechanical and periodic analyses (modes, Q, bandwidth, mode tracking, geometric sensitivity); coupled resonators and mode splitting remain.
+- **Status:** current for lumped and closed-form models (REQ-CHAT-20261126-017, REQ-CHAT-20261126-018): one resonance description (nature, Q by mechanism), spectroscopy, Helmholtz resonators, coupled resonators with splitting, energy exchange and avoided crossings, ring-down of the cavity's Yee model; resonances of 3D finite-element and full-wave coupled structures remain.
 
 - **Goals:** `ResonanceDescriptor` across domains; Q from losses; mode extraction from time-domain runs; coupled resonators and mode splitting; boundary and region objects; conversion fidelity records.
 - **Depends on:** stages 3–4. **Reuses:** every domain's mode types, spectra, modal analysis.
@@ -115,6 +115,8 @@ own scope decides what each delivers.
 - **Queued:** REQ-CHAT-20261126-020.
 
 ## Stage 10 — Dynamic material response
+
+- **Status:** lumped nonlinear and parametric resonance (Duffing, Mathieu) current (REQ-CHAT-20261126-018); nonlinear materials remain.
 
 - **Goals:** nonlinear, viscoelastic, plastic, damaging and phase-changing materials; state fields evolving during coupled runs.
 - **Depends on:** stages 2, 5.

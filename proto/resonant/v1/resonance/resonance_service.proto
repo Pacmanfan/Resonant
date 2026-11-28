@@ -1,0 +1,35 @@
+syntax = "proto3";
+package resonant.v1;
+
+import "resonant/v1/common/metadata.proto";
+import "resonant/v1/resonance/resonance.proto";
+
+message IdentifyResonancesRequest {
+  RequestHeader header = 1;
+  // A time signal ...
+  repeated double samples = 2;
+  double sample_interval = 3;          // s
+  double min_frequency_hz = 4;         // the band of interest (0 / 0: everything)
+  double max_frequency_hz = 5;
+  int32 max_modes = 6;                 // 0: 12
+  uint64 skip_samples = 7;             // e.g. the excitation
+  // ... or a power spectrum.
+  repeated double frequencies_hz = 8;
+  repeated double values = 9;
+  int32 count = 10;                    // peaks to fit (0: 4)
+}
+message IdentifyResonancesResponse {
+  ResponseHeader header = 1;
+  string method = 2;                   // "matrix-pencil" or "lorentzian-fit"
+  repeated IdentifiedResonance resonances = 3;
+  double relative_residual = 4;        // signals
+  repeated string warnings = 5;
+}
+
+// Resonance spectroscopy of user data: nothing of the project is read or changed. Records too short
+// or too coarse for the requested band or linewidth are refused with the reason.
+service ResonanceService {
+  // The resonances of a sampled signal (matrix pencil: frequency, decay, Q, amplitude, phase, uncertainty)
+  // or of a power spectrum (Lorentzian fits with overlap and asymmetry flags).
+  rpc IdentifyResonances(IdentifyResonancesRequest) returns (IdentifyResonancesResponse);
+}

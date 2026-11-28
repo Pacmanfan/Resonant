@@ -30,6 +30,10 @@ const std::vector<multiphysics::CouplingModelDescriptor>& couplingModels()
          "displacement", "interpolating", "the deformed layer thicknesses become the current geometry of the wave solution",
          "d_i = d_i,ref + u_z(top of i) - u_z(bottom of i); the electromagnetic solution is rebuilt for the new geometry revision",
          "validated", "CoupledValidation.ExpansionFeedsBackIntoTheElectromagneticSolution", "layer thicknesses only (layered-slab geometry); no remeshing of general shapes"},
+        {"thermal.uniform-expansion", "Uniform heating expands a cavity", "thermal", "electromagnetic", "geometry-update", "temperature", "temperature",
+         "interpolating", "the walls' linear expansion scales every dimension of the cavity",
+         "a = a_ref (1 + alpha (T - T_ref)), likewise b and d, alpha of the wall material; the cavity's modes are recomputed",
+         "validated", "CavityHeating.FeedbackConvergesToTheLumpedFixedPoint", "uniform temperature (lumped thermal model); free expansion, no stress"},
         {"mechanics.structure-to-acoustic.rayleigh", "Vibrating plate radiates sound", "mechanical", "acoustic", "field-transfer", "surface_normal_velocity",
          "acoustic_pressure", "interpolating", "a vibrating plate drives the surrounding fluid",
          "p(x) = (j omega rho / 2 pi) sum_e v_e A_e exp(-j k R_e) / R_e (Rayleigh integral, infinite rigid baffle)",
@@ -73,6 +77,8 @@ const std::vector<std::pair<std::string, std::string>>& participantSolvers()
         {"electromagnetic", "em.layered.transfer-matrix"},
         {"thermal", "thermal.conduction.fv"},
         {"mechanical", "mechanics.fe.solid-column"},
+        {"electromagnetic", "em.cavity.mode"},
+        {"thermal", "thermal.lumped"},
     };
     return solvers;
 }

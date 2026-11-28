@@ -11,9 +11,9 @@ validated before every run.
 
 ```text
 PhysicalSystem
-├── geometry       kind ("layered-slab"), lateral area
+├── geometry       kind ("layered-slab" or "rectangular-cavity"), lateral area (slabs)
 ├── environment    ambient (reference, stress-free) temperature, half-space materials
-├── regions[]      id, name, materialId, thickness, cells, objectId (optional scene object)
+├── regions[]      id, name, materialId, thickness (slabs), dimensions a, b, d (cavities), cells, objectId (optional scene object)
 ├── domains[]      id, kind, solver, settings
 ├── couplings[]    id, model, from (domain id), to (domain id), transfer (optional)
 ├── materialLaws[] region, property, law (constant / linear / table), validity, provenance

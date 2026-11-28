@@ -195,7 +195,7 @@ TEST(Multiphysics, PhysicalSystemRoundTripsAndValidates)
     PhysicalSystem s;
     s.id = "sys-1";
     s.name = "test";
-    s.regions = {{"r1", "Layer", "mat-a", 0.01, 10, ""}};
+    s.regions = {{"r1", "Layer", "mat-a", 0.01, 10, "", {}}};
     s.domains = {{"d1", "thermal", "thermal.conduction.fv", {{"faces", {{"-z", {{"kind", "temperature"}}}}}}}};
     s.couplings = {};
     PropertyLaw constant;
@@ -328,7 +328,7 @@ PhysicalSystem twoDomains(const std::string& scheme)
     PhysicalSystem s;
     s.id = "synthetic";
     s.ambientTemperature = 300.0;
-    s.regions = {{"r", "r", "m", 0.01, 2, ""}};
+    s.regions = {{"r", "r", "m", 0.01, 2, "", {}}};
     s.domains = {{"src", "source", "synthetic", {}}, {"sink", "thermal", "synthetic", {}}};
     s.couplings = {{"c-heat", "heat", "src", "sink", ""}};
     if (scheme != "one-way")

@@ -1,5 +1,7 @@
 #include "coupling/MultiphysicsParticipants.h"
 
+#include "coupling/CavityParticipants.h"
+
 #include "electromagnetics/LayeredMedia.h"
 #include "mechanics/Analyses.h"
 #include "mechanics/ElasticMaterial.h"
@@ -688,6 +690,8 @@ Result<std::unique_ptr<Participant>> makeParticipant(const PhysicalSystem& syste
         return R(std::make_unique<ThermalColumnParticipant>(system, domain, materials));
     if (domain.kind == "mechanical" && domain.solver == "mechanics.fe.solid-column")
         return R(std::make_unique<SolidColumnParticipant>(system, domain, materials));
+    if (auto cavity = makeCavityParticipant(system, domain, materials))
+        return R(std::move(cavity));
     return R::failure("no participant for domain kind '" + domain.kind + "' with solver '" + domain.solver + "'");
 }
 

@@ -51,6 +51,15 @@ multirate coupling is planned.
 | Benchmark | `CoupledValidation.ExpansionFeedsBackIntoTheElectromagneticSolution` (the final wave solution equals a standalone solution of the deformed slab to 1e-9) |
 | Limitations | layer thicknesses only; no remeshing of general shapes |
 
+## Thermal → electromagnetic cavity (geometry)
+
+| | |
+|---|---|
+| Model | `thermal.uniform-expansion` (**validated**) |
+| Equation | a = a_ref(1 + α(T − T_ref)), likewise b and d; the cavity's modes recomputed |
+| Benchmark | `CavityHeating.FeedbackConvergesToTheLumpedFixedPoint` (against an independent scalar fixed point, 1e-5 K) |
+| Limitations | uniform temperature (lumped thermal model); free expansion |
+
 ## Acoustic ↔ mechanical
 
 | | |

@@ -167,6 +167,17 @@ std::optional<SolidModel> solidModelOf(const Geometry& g, double minThickness)
             return r >= inner && r <= inner + wall;
         };
         model.boundingRadius = std::hypot(std::max(rt, profile == 3 ? rt : rm) + wall, 0.5 * length);
+    } else if (kind == "resonator.helmholtz") {
+        // The resonator's walls: a closed cylindrical cavity centred on the origin and its neck along +Z.
+        const double R = p("cavityRadius"), h = 0.5 * p("cavityLength"), a = p("neckRadius"), L = p("neckLength");
+        const double t = shellThickness("wallThickness");
+        model.contains = [R, h, a, L, t](const Vec3& q) {
+            const double r = std::hypot(q.x(), q.y()), z = q.z();
+            const bool cavityWall = std::abs(z) <= h + t && r <= R + t && !(std::abs(z) < h && r < R) && !(z >= h && r < a);
+            const bool neckWall = r >= a && r <= a + t && z >= h && z <= h + L;
+            return cavityWall || neckWall;
+        };
+        model.boundingRadius = std::hypot(R + t, h + std::max(L, t));
     } else if (kind == "waveguide.rectangular") {
         const double w = 0.5 * p("width"), h = 0.5 * p("height"), l = 0.5 * p("length"), wall = shellThickness("wallThickness");
         model.contains = [w, h, l, wall](const Vec3& q) {

@@ -1,0 +1,417 @@
+{
+  "request_id": "REQ-CHAT-20261126-018",
+  "source": "chat",
+  "type": "FEATURE",
+  "priority": "NORMAL",
+  "created": "2026-11-26T23:35:33-05:00",
+  "created_utc": "2026-11-27T04:35:33+00:00",
+  "id_date": "2026-11-26",
+  "timezone": "EST (UTC-05:00)",
+  "status": "completed",
+  "original_text": "# PROMPT 20 \u2014 RESONANT STRUCTURES, ENERGY STORAGE AND COUPLED OSCILLATORY SYSTEMS\n\n## Project: RESONANT \u2014 Wave Field Engineering Studio\n\n## Mission\n\nImplement the next major scientific and engineering capability in RESONANT: **Resonant Structures and Energy Storage**.\n\nThis capability establishes resonance as a fundamental, cross-domain physical engineering discipline.\n\nRESONANT must be able to investigate how physical structures and systems respond to excitation, develop oscillatory behavior, support natural modes, exchange energy between modes, store energy, dissipate energy, and interact with their environment.\n\nThe objective is to move beyond identifying resonant frequencies and plotting frequency-response curves.\n\nRESONANT should progressively become an environment in which users can:\n\n- Discover natural modes of physical structures.\n- Predict resonant behavior from geometry and material properties.\n- Understand where and how energy is stored.\n- Investigate energy exchange between resonant modes.\n- Study coupling between multiple resonators.\n- Control resonance through geometric and material modifications.\n- Investigate damping, leakage, and quality factor.\n- Understand transient buildup and decay.\n- Study nonlinear resonance and frequency-dependent behavior where supported.\n- Engineer structures for particular resonant characteristics.\n- Investigate how resonance changes when physical conditions evolve.\n\nThe governing engineering concept is:\n\n**Structure + Material Properties + Excitation + Environment + Boundary Conditions**\n\n\u2193\n\n**Natural Modes + Resonant Response + Coupling + Energy Exchange**\n\n\u2193\n\n**Energy Storage + Dissipation + Transmission + Physical Response**\n\n\u2193\n\n**Measurable Functional Behavior**\n\nResonance must emerge from the underlying physical model. It must never be assigned to a structure merely because a user identifies it as resonant.\n\nThis work extends:\n\n- Prompt 17 \u2014 Shape\u2013Function\u2013Energy Architecture.\n- Prompt 18 \u2014 Coupled Energy\u2013Matter Engine (CEME).\n- Prompt 19 \u2014 Geometry-Driven Energy Transformation and Functional Structures.\n\nDo not duplicate these systems. Extend their capabilities through well-defined interfaces.\n\n---\n\n# 1. AUDIT FIRST\n\nBefore implementation, inspect the existing repository.\n\nRead AGENTS.md and all applicable development instructions.\n\nEstablish the actual state of:\n\n- Existing resonance and modal analysis.\n- Electromagnetic solvers.\n- Acoustic solvers.\n- Optical modeling.\n- Mechanical and elastic solvers.\n- Frequency-domain analysis.\n- Time-domain analysis.\n- Eigenvalue and eigenmode solvers.\n- Frequency sweeps.\n- Transient excitation and response.\n- Geometry parameterization.\n- Material constitutive models.\n- Damping and loss models.\n- Energy accounting.\n- CEME coupling interfaces.\n- Functional structures from Prompt 19.\n- Field visualization.\n- Solver orchestration.\n- Optimization infrastructure.\n- Project serialization.\n- GUI workspaces.\n- Automation and gRPC interfaces.\n- Existing validation benchmarks.\n\nIdentify:\n\n1. What is already implemented.\n2. What is partially implemented.\n3. What can be reused.\n4. What is missing.\n5. What existing functionality needs extension.\n6. What external scientific dependencies might be appropriate.\n\nProduce an implementation plan based on actual repository evidence.\n\nDo not invent existing capabilities.\n\nDo not create parallel modal, resonance, energy-accounting, or solver infrastructure.\n\nPreserve existing project compatibility.\n\n---\n\n# 2. UNIFIED RESONANCE ARCHITECTURE\n\nEstablish a reusable resonance-analysis architecture that can coordinate different physical domains.\n\nResonance must not be implemented as one universal physical equation.\n\nInstead, introduce a common analysis and data architecture with domain-specific physics.\n\nThe architecture should distinguish:\n\n## 2.1 Natural modes\n\nNatural modes describe the characteristic spatial and temporal behavior of a physical system under its defined boundary conditions.\n\nSupport, where the underlying solver permits:\n\n- Eigenfrequencies.\n- Complex eigenfrequencies.\n- Eigenvalues.\n- Eigenvectors.\n- Mode shapes.\n- Modal field distributions.\n- Modal energy.\n- Modal participation.\n- Degenerate modes.\n- Mode symmetry.\n- Mode localization.\n- Mode coupling.\n- Mode sensitivity.\n\nDistinguish natural frequencies from driven-response peaks.\n\nA driven response may peak away from a natural frequency depending on damping, coupling, excitation, and system characteristics.\n\n## 2.2 Resonant response\n\nSupport analysis of the response of a system to external excitation.\n\nExpose relevant quantities:\n\n- Excitation frequency.\n- Response amplitude.\n- Phase response.\n- Impedance.\n- Admittance.\n- Transmission.\n- Reflection.\n- Absorption.\n- Resonance bandwidth.\n- Peak response.\n- Damping.\n- Quality factor.\n- Stored energy.\n- Dissipated power.\n\nUse the appropriate domain-specific quantities and units.\n\n## 2.3 Resonant energy storage\n\nA resonator can temporarily store energy while continuously exchanging energy with its surroundings.\n\nThe system must distinguish:\n\n- Energy supplied by an excitation source.\n- Energy stored within the resonator.\n- Energy transferred between modes.\n- Energy dissipated internally.\n- Energy radiated or transmitted externally.\n- Energy returned to the source.\n- Energy remaining after excitation stops.\n\nSupport time-dependent energy accounting where the underlying solver allows it.\n\nDo not equate high field amplitude with high total stored energy.\n\nDo not confuse energy density with total stored energy.\n\n## 2.4 Damping and losses\n\nModel the physical mechanisms responsible for energy loss.\n\nExamples include:\n\n- Electrical resistance.\n- Conductive losses.\n- Dielectric losses.\n- Magnetic losses.\n- Acoustic absorption.\n- Viscous losses.\n- Mechanical damping.\n- Radiation losses.\n- Scattering losses.\n- Material hysteresis where supported.\n- Thermoelastic losses where supported.\n\nDifferent loss mechanisms must remain identifiable.\n\nDo not use a single arbitrary damping parameter to conceal distinct physical mechanisms.\n\n---\n\n# 3. CROSS-DOMAIN RESONANCE\n\nEstablish a consistent conceptual framework for resonance across physical domains.\n\nThe following domains should be supported according to available solver capabilities.\n\n## 3.1 Electromagnetic resonance\n\nSupport:\n\n- Microwave cavity modes.\n- Waveguide resonances.\n- Transmission-line resonances.\n- Lumped and distributed resonant structures.\n- Coupled electromagnetic cavities.\n- Dielectric resonators.\n- Conductive resonators.\n- Antenna resonance.\n- Surface and localized electromagnetic resonances where supported.\n\nExpose:\n\n- Electric and magnetic field distributions.\n- Resonant frequencies.\n- Modal energy.\n- Surface currents.\n- Impedance.\n- Reflection and transmission.\n- Radiation losses.\n- Quality factor.\n- Coupling strength.\n\nDistinguish lumped-element approximations from distributed electromagnetic models.\n\n## 3.2 Optical resonance\n\nSupport:\n\n- Fabry\u2013P\u00e9rot resonators.\n- Two-mirror optical cavities.\n- Ring resonators.\n- Whispering-gallery resonators.\n- Distributed optical resonators.\n- Coupled optical cavities.\n- Photonic resonances.\n\nExpose:\n\n- Longitudinal modes.\n- Transverse modes.\n- Free spectral range.\n- Finesse.\n- Linewidth.\n- Quality factor.\n- Beam waist.\n- Mode overlap.\n- Coupling efficiency.\n- Optical losses.\n\nIdentify whether each calculation uses geometric optics, paraxial optics, coupled-mode theory, or a full-wave electromagnetic model.\n\nDo not present approximations as full-wave solutions.\n\n## 3.3 Acoustic resonance\n\nSupport:\n\n- Enclosed acoustic cavities.\n- Helmholtz resonators.\n- Quarter-wave resonators.\n- Half-wave resonators.\n- Acoustic ducts.\n- Horn structures.\n- Coupled acoustic cavities.\n- Structural-acoustic resonances.\n- Distributed acoustic resonators.\n\nExpose:\n\n- Pressure modes.\n- Particle velocity.\n- Acoustic energy density.\n- Acoustic intensity.\n- Resonant frequencies.\n- Damping.\n- Acoustic impedance.\n- Transmission.\n- Radiation behavior.\n\n## 3.4 Mechanical resonance\n\nSupport:\n\n- Mass-spring systems.\n- Cantilevers.\n- Beams.\n- Plates.\n- Membranes.\n- Shells.\n- Mechanical cavities and structures.\n- Elastic wave resonators.\n- Coupled mechanical oscillators.\n- Flexible structures.\n\nExpose:\n\n- Natural frequencies.\n- Displacement.\n- Velocity.\n- Acceleration.\n- Stress.\n- Strain.\n- Modal mass.\n- Modal stiffness.\n- Modal damping.\n- Stored elastic energy.\n- Kinetic energy.\n- Frequency response.\n\n## 3.5 Fluid and hydrodynamic resonance\n\nWhere appropriate solvers exist, support:\n\n- Fluid-column resonance.\n- Acoustic-fluid interaction.\n- Helmholtz-type fluid systems.\n- Fluid-structure interaction.\n- Hydrodynamic oscillations.\n- Sloshing modes.\n- Pressure-wave resonance.\n\nClearly distinguish acoustic pressure modes from hydrodynamic instability and other fluid phenomena.\n\nDo not introduce unsupported fluid-resonance models simply to claim cross-domain coverage.\n\n---\n\n# 4. ENERGY STORAGE AND EXCHANGE\n\nMake energy storage a first-class engineering quantity.\n\nThe system must identify where energy exists, how it moves, and how it changes over time.\n\n## 4.1 Energy storage mechanisms\n\nSupport domain-appropriate storage calculations.\n\nExamples:\n\nElectromagnetic:\n- Electric-field energy.\n- Magnetic-field energy.\n- Stored energy in resonant cavities.\n- Energy associated with reactive fields.\n\nMechanical:\n- Elastic potential energy.\n- Kinetic energy.\n- Strain energy.\n- Energy in oscillating structures.\n\nAcoustic:\n- Potential energy associated with compressibility.\n- Kinetic energy associated with particle motion.\n- Total acoustic energy.\n\nOptical:\n- Stored electromagnetic energy.\n- Cavity energy.\n- Energy associated with circulating optical fields.\n\nThermal:\n- Internal energy.\n- Thermal storage.\n- Temperature-dependent energy changes.\n\nUse the correct physical equations for each domain.\n\nClearly document assumptions, including dispersive materials, lossy materials, nonlinear materials, and frequency-dependent constitutive properties.\n\n## 4.2 Energy exchange\n\nSupport the investigation of energy transfer between:\n\n- Different resonant modes.\n- Coupled cavities.\n- Different physical components.\n- Different physical domains.\n- A resonator and an external source.\n- A resonator and its environment.\n\nRepresent energy transfer through existing CEME mechanisms.\n\nDo not count the same energy transfer twice.\n\n## 4.3 Energy buildup\n\nInvestigate how resonant energy accumulates under continuous excitation.\n\nSupport:\n\n- Transient buildup.\n- Steady-state response.\n- Time to reach steady state.\n- Energy accumulation.\n- Source coupling.\n- Internal losses.\n- Radiation and leakage.\n\n## 4.4 Energy decay\n\nInvestigate what happens after excitation is removed.\n\nSupport:\n\n- Free decay.\n- Ring-down.\n- Decay constants.\n- Amplitude decay.\n- Energy decay.\n- Frequency-domain linewidth.\n- Damping estimation.\n\nDistinguish amplitude decay from energy decay.\n\nWhere a simple exponential decay model is appropriate, expose the fitted decay constant and the assumptions behind it.\n\n## 4.5 Energy extraction\n\nInvestigate how energy can be transferred out of a resonant system.\n\nExamples:\n\n- Output coupling from an electromagnetic cavity.\n- Acoustic energy extraction.\n- Mechanical energy harvesting models.\n- Optical cavity output coupling.\n- Coupled-resonator energy transfer.\n\nExpose the tradeoff between internal energy storage and useful external coupling.\n\nDo not imply that a resonator generates energy.\n\nAll energy supplied, stored, transferred, dissipated, and extracted must remain consistent with physical conservation.\n\n---\n\n# 5. QUALITY FACTOR, BANDWIDTH AND RESONATOR CHARACTERIZATION\n\nImplement a consistent analysis interface for resonator characterization.\n\nSupport the appropriate definitions of quality factor for each physical model.\n\nWhere applicable:\n\nQ = 2\u03c0 \u00d7 (energy stored / energy dissipated per cycle)\n\nFor a suitably characterized resonance, support the relationship between resonant frequency and bandwidth:\n\nQ \u2248 f\u2080 / \u0394f\n\nClearly identify the conditions under which these relationships apply.\n\nExpose:\n\n- Unloaded Q.\n- Loaded Q.\n- External Q.\n- Internal Q.\n- Radiation Q where applicable.\n- Material-loss Q where applicable.\n- Resonance bandwidth.\n- Resonance linewidth.\n- Finesse where appropriate.\n- Coupling coefficient.\n- Critical coupling.\n- Overcoupling.\n- Undercoupling.\n\nFor systems with multiple loss mechanisms, calculate the combined loss behavior using the appropriate physical relationship.\n\nDo not assume that every resonance has a simple Lorentzian response.\n\nIdentify overlapping modes, asymmetric line shapes, nonlinear behavior, and other cases where simple resonance fitting is insufficient.\n\nProvide fitting quality and uncertainty where possible.\n\n---\n\n# 6. COUPLED RESONATORS\n\nThis is a particularly important capability.\n\nImplement a reusable architecture for investigating multiple interacting resonant structures.\n\nA coupled system may contain two or more resonators with individual natural modes and a physical coupling mechanism.\n\nSupport:\n\n- Two-resonator systems.\n- Multiple coupled resonators.\n- Identical resonators.\n- Detuned resonators.\n- Weak coupling.\n- Strong coupling.\n- Near-field coupling.\n- Distributed coupling.\n- Shared structural coupling.\n- Shared acoustic volumes.\n- Electromagnetic coupling.\n- Mechanical coupling.\n- Optical coupling.\n\nAnalyze:\n\n- Individual resonant frequencies.\n- Coupled-system eigenfrequencies.\n- Mode splitting.\n- Hybridized modes.\n- Energy exchange.\n- Coupling strength.\n- Mode localization.\n- Frequency detuning.\n- Transfer efficiency.\n- Damping.\n- Transient response.\n\n## 6.1 Coupled-mode analysis\n\nIntroduce an extensible coupled-mode analysis interface.\n\nUse appropriate domain-specific coupled-mode formulations.\n\nFor models where a coupled-mode approximation is appropriate, support:\n\n- Resonator amplitudes.\n- Resonator frequencies.\n- Coupling coefficients.\n- Intrinsic losses.\n- External coupling.\n- Detuning.\n- Time-dependent energy exchange.\n\nClearly document normalization and units.\n\nDistinguish approximate coupled-mode calculations from solutions of the full underlying physical system.\n\n## 6.2 Mode splitting\n\nInvestigate how coupled resonators produce distinct eigenmodes.\n\nAllow users to visualize:\n\n- Symmetric modes.\n- Antisymmetric modes.\n- Hybridized modes.\n- Frequency splitting.\n- Relative modal participation.\n\nDo not hardcode expected mode splitting.\n\nCalculate it from the model.\n\n## 6.3 Energy transfer\n\nAllow users to investigate how energy moves between coupled resonators.\n\nWhere supported, calculate:\n\n- Energy transfer rate.\n- Transfer efficiency.\n- Maximum transferred energy.\n- Energy remaining in each resonator.\n- Effects of detuning.\n- Effects of unequal damping.\n- Effects of coupling strength.\n\nSupport time-domain visualization.\n\n---\n\n# 7. RESONANCE CONTROL AND TUNING\n\nIntroduce a resonance-tuning architecture that integrates with the geometry parameterization established in Prompt 19.\n\nSupport tuning through:\n\n## 7.1 Geometric modification\n\nExamples:\n\n- Cavity dimensions.\n- Resonator spacing.\n- Mirror separation.\n- Mirror curvature.\n- Mechanical dimensions.\n- Acoustic cavity volume.\n- Neck dimensions.\n- Wall thickness.\n- Resonator placement.\n- Structural supports.\n\n## 7.2 Material modification\n\nExamples:\n\n- Permittivity.\n- Permeability.\n- Conductivity.\n- Elastic modulus.\n- Density.\n- Acoustic impedance.\n- Dielectric loss.\n- Mechanical damping.\n- Refractive index.\n\nSupport temperature-dependent and state-dependent properties where available.\n\n## 7.3 Environmental modification\n\nExamples:\n\n- Temperature.\n- Pressure.\n- External loading.\n- Ambient medium.\n- Fluid density.\n- Boundary conditions.\n\n## 7.4 Active tuning\n\nEstablish an architecture for investigating tunable resonators.\n\nPotential mechanisms include:\n\n- Variable cavity dimensions.\n- Adjustable mirror positions.\n- Mechanical actuators.\n- Variable capacitance.\n- Electrically controlled material properties.\n- Thermally controlled resonant structures.\n- Pressure-controlled resonators.\n- Tunable dielectric or mechanical components.\n\nDistinguish simulated tunability from actual physical actuator implementation.\n\nDo not implement arbitrary tuning effects without a physical model.\n\n## 7.5 Tuning sensitivity\n\nCalculate:\n\n- Frequency shift per parameter change.\n- Sensitivity to geometry.\n- Sensitivity to material properties.\n- Sensitivity to environmental changes.\n- Mode stability.\n- Frequency drift.\n\nUse actual solver results or valid analytical models.\n\n---\n\n# 8. NONLINEAR RESONANCE AND DYNAMIC RESPONSE\n\nEstablish the architecture for investigating nonlinear resonant systems.\n\nThis is an important extension beyond conventional linear modal analysis.\n\nSupport where physically modeled:\n\n- Amplitude-dependent resonance.\n- Nonlinear stiffness.\n- Nonlinear elasticity.\n- Nonlinear acoustic response.\n- Nonlinear electromagnetic materials.\n- Duffing-type oscillators.\n- Parametric excitation.\n- Harmonic generation.\n- Subharmonic response.\n- Frequency mixing.\n- Bistability.\n- Hysteresis.\n- Mode coupling.\n- Nonlinear damping.\n- Frequency pulling.\n\nDistinguish:\n\n1. Linear eigenmode analysis.\n2. Nonlinear steady-state response.\n3. Nonlinear transient simulation.\n4. Parametric stability analysis.\n\nDo not infer nonlinear behavior from a linear frequency sweep.\n\nDo not attempt to implement a universal nonlinear solver.\n\nUse the existing domain solvers and CEME infrastructure.\n\nWhere a nonlinear capability is missing, define the appropriate interface and document the limitation.\n\n## 8.1 Parametric resonance\n\nWhere supported, investigate systems whose parameters vary periodically in time.\n\nExamples:\n\n- Time-varying stiffness.\n- Modulated electromagnetic properties.\n- Modulated boundary conditions.\n- Periodically driven mechanical systems.\n\nAnalyze stability regions and excitation conditions using appropriate mathematical models.\n\nClearly distinguish parametric resonance from ordinary externally driven resonance.\n\n---\n\n# 9. RESONANCE SPECTROSCOPY AND MODE DISCOVERY\n\nIntroduce tools for identifying resonant behavior from simulated or measured responses.\n\nSupport:\n\n- Frequency sweeps.\n- Impulse responses.\n- Ring-down measurements.\n- Transfer functions.\n- Impedance spectra.\n- Reflection spectra.\n- Transmission spectra.\n- Modal decomposition.\n- Peak detection.\n- Resonance fitting.\n- Mode identification.\n\nWhere appropriate, support:\n\n- FFT analysis.\n- Spectral estimation.\n- Eigenmode extraction.\n- Complex pole analysis.\n- System identification.\n\nFor every identified resonance, expose:\n\n- Estimated frequency.\n- Amplitude.\n- Phase.\n- Bandwidth.\n- Quality factor.\n- Confidence or uncertainty.\n- Identification method.\n- Data source.\n- Physical model.\n- Geometry and material revisions.\n\nDo not mistake every spectral peak for a physical natural mode.\n\nDistinguish true resonances from:\n\n- Source-spectrum features.\n- Measurement artifacts.\n- Numerical artifacts.\n- Interference effects.\n- Overlapping modes.\n- Broadband responses.\n\n---\n\n# 10. MODE TRACKING AND MODE EVOLUTION\n\nExtend the mode-tracking capabilities introduced in Prompt 19.\n\nThe system must be able to follow physical modes as geometry, materials, or operating conditions change.\n\nSupport:\n\n- Mode correspondence.\n- Modal overlap.\n- Mode shape correlation.\n- Frequency continuity.\n- Symmetry classification.\n- Mode splitting.\n- Mode crossing.\n- Avoided crossings.\n- Mode hybridization.\n- Mode localization.\n\nDo not identify a mode solely by its position in a sorted frequency list.\n\nUse appropriate modal correlation methods.\n\nWhen mode identity is ambiguous, report the ambiguity rather than silently assigning an incorrect correspondence.\n\nProvide visualizations showing how modes evolve across parameter sweeps.\n\n---\n\n# 11. REFERENCE ENGINEERING EXAMPLES\n\nImplement these as actual engineering models using the underlying physical equations.\n\nThey must be functional, parameterized, and scientifically validated.\n\nPrioritize the following examples.\n\n## 11.1 Microwave cavity resonator\n\nExtend the reference microwave cavity from Prompt 19.\n\nSupport:\n\n- Multiple cavity geometries.\n- Configurable dimensions.\n- Conducting materials.\n- Dielectric inserts.\n- Excitation ports.\n- Coupling arrangements.\n- Frequency sweeps.\n- Eigenmode analysis.\n- Transient excitation where supported.\n\nAnalyze:\n\n- Resonant frequencies.\n- Electric-field modes.\n- Magnetic-field modes.\n- Stored energy.\n- Surface losses.\n- Volume losses.\n- Loaded and unloaded Q.\n- Bandwidth.\n- Coupling.\n- Mode splitting.\n- Ring-down.\n- Frequency sensitivity.\n\nInclude analytical benchmark comparisons for geometries with known solutions.\n\n## 11.2 Fabry\u2013P\u00e9rot optical resonator\n\nImplement a functional two-mirror optical cavity.\n\nSupport:\n\n- Mirror separation.\n- Mirror curvature.\n- Mirror reflectivity.\n- Optical wavelength.\n- Aperture.\n- Alignment.\n- Cavity stability.\n- Longitudinal modes.\n- Transverse modes where supported.\n\nAnalyze:\n\n- Free spectral range.\n- Finesse.\n- Linewidth.\n- Beam waist.\n- Mode spacing.\n- Mode overlap.\n- Cavity losses.\n- Coupling.\n- Energy buildup.\n\nCompare against analytical resonator theory.\n\n## 11.3 Helmholtz resonator\n\nImplement a parameterized acoustic Helmholtz resonator.\n\nSupport:\n\n- Cavity volume.\n- Neck area.\n- Neck length.\n- End corrections.\n- Material properties.\n- Excitation.\n- Environmental conditions.\n\nAnalyze:\n\n- Resonant frequency.\n- Pressure distribution.\n- Particle velocity.\n- Acoustic impedance.\n- Energy storage.\n- Acoustic damping.\n- Bandwidth.\n- Radiation losses.\n\nCompare against the appropriate analytical approximation.\n\nIdentify the approximation's validity range.\n\n## 11.4 Mechanical cantilever resonator\n\nImplement a parameterized mechanical cantilever.\n\nSupport:\n\n- Length.\n- Width.\n- Thickness.\n- Material.\n- Density.\n- Elastic modulus.\n- Boundary conditions.\n- Excitation.\n- Damping.\n\nAnalyze:\n\n- Natural frequencies.\n- Mode shapes.\n- Displacement.\n- Velocity.\n- Stress.\n- Strain.\n- Stored elastic energy.\n- Kinetic energy.\n- Frequency response.\n- Ring-down.\n\nCompare against analytical beam theory.\n\nInclude mesh convergence testing where applicable.\n\n## 11.5 Coupled resonator system\n\nImplement at least one physically meaningful two-resonator example.\n\nPrefer a configuration that can be investigated in more than one domain.\n\nSupport:\n\n- Individual resonator tuning.\n- Coupling adjustment.\n- Detuning.\n- Damping.\n- Transient excitation.\n\nAnalyze:\n\n- Coupled modes.\n- Mode splitting.\n- Energy exchange.\n- Transfer efficiency.\n- Frequency response.\n- Ring-down.\n\nValidate against an appropriate analytical coupled-oscillator model.\n\n## 11.6 Coupled multiphysics resonator\n\nEstablish at least one reference workflow demonstrating resonance interacting with another physical domain through CEME.\n\nA preferred example is an electromagnetic cavity whose absorbed energy produces heating, changing material properties or geometry and consequently shifting its resonance.\n\nWhere supported, demonstrate:\n\n1. Initial resonant response.\n2. Energy absorption.\n3. Thermal response.\n4. Material or dimensional change.\n5. Updated resonant behavior.\n6. Feedback into the electromagnetic response.\n\nA simpler validated one-way coupling is acceptable if full feedback is not supported.\n\nClearly identify which coupling steps are implemented and which remain future work.\n\n---\n\n# 12. RESONANCE EXPLORATION AND DESIGN OBJECTIVES\n\nExtend the function-driven design architecture established in Prompt 19.\n\nSupport measurable resonance-related objectives.\n\nExamples:\n\n- Target a resonant frequency.\n- Maximize quality factor.\n- Minimize bandwidth.\n- Maximize energy storage.\n- Maximize useful external coupling.\n- Minimize internal losses.\n- Control mode spacing.\n- Maximize separation between unwanted modes.\n- Produce a particular mode shape.\n- Maximize energy transfer between resonators.\n- Minimize sensitivity to manufacturing tolerances.\n- Maintain resonance over a temperature range.\n\nEvery objective must identify:\n\n- Physical quantity.\n- Units.\n- Target.\n- Operating conditions.\n- Solver.\n- Geometry dependencies.\n- Material dependencies.\n- Constraints.\n- Validity conditions.\n\nSupport multi-objective tradeoffs.\n\nFor example, maximizing unloaded Q may conflict with maximizing useful energy extraction.\n\nThe software must expose this tradeoff rather than presenting one as universally optimal.\n\nUse the existing optimization infrastructure.\n\nDo not implement a second optimization engine.\n\n---\n\n# 13. TRANSIENT AND FREQUENCY-DOMAIN ANALYSIS\n\nProvide a coherent workflow for comparing frequency-domain and time-domain behavior.\n\nSupport, where appropriate:\n\nFrequency domain:\n- Eigenmode analysis.\n- Harmonic response.\n- Frequency sweeps.\n- Impedance response.\n- Transfer functions.\n- Modal response.\n\nTime domain:\n- Transient excitation.\n- Energy buildup.\n- Free oscillation.\n- Ring-down.\n- Mode beating.\n- Energy exchange.\n- Nonlinear response.\n\nAllow the user to investigate the same resonant structure using different analysis methods when supported.\n\nExplain differences between the results.\n\nDo not silently substitute one analysis type for another.\n\nEnsure that simulation duration, frequency resolution, time step, and numerical convergence are appropriate for the phenomenon being investigated.\n\n---\n\n# 14. VISUALIZATION AND ENGINEERING INSPECTION\n\nExtend the existing RESONANT viewport and dockable panel architecture.\n\nDo not create a separate application or duplicate the visualization framework.\n\nSupport synchronized inspection of geometry, modes, fields, and energy.\n\n## 14.1 Mode visualization\n\nDisplay:\n\n- Mode shapes.\n- Electric-field modes.\n- Magnetic-field modes.\n- Acoustic pressure modes.\n- Mechanical displacement modes.\n- Optical intensity distributions.\n- Coupled mode shapes.\n\nSupport animation of oscillatory modes.\n\nClearly distinguish visualization scaling from actual physical displacement or field amplitude.\n\n## 14.2 Energy visualization\n\nWhere supported, visualize:\n\n- Stored energy.\n- Energy density.\n- Energy flux.\n- Dissipation.\n- Leakage.\n- Inter-resonator energy transfer.\n- Time-dependent energy distribution.\n\nUse physically appropriate representations.\n\n## 14.3 Resonance plots\n\nProvide:\n\n- Frequency response.\n- Phase response.\n- Impedance plots.\n- Reflection and transmission.\n- Resonance linewidth.\n- Q-factor comparison.\n- Mode splitting.\n- Mode evolution.\n- Ring-down plots.\n- Energy buildup and decay.\n\n## 14.4 Coupled system visualization\n\nAllow users to inspect multiple resonators simultaneously.\n\nShow:\n\n- Individual resonator properties.\n- Coupling connections.\n- Mode participation.\n- Energy exchange.\n- Detuning.\n- Coupled-system behavior.\n\n## 14.5 Measurement and probing\n\nSupport:\n\n- Probe points.\n- Probe regions.\n- Frequency-dependent probes.\n- Time-dependent probes.\n- Modal participation measurements.\n- Energy measurements.\n\nEvery visualization must identify:\n\n- Physical quantity.\n- Units.\n- Normalization.\n- Analysis method.\n- Solver.\n- Geometry revision.\n- Material revision.\n- Simulation time or frequency.\n\nChanging visualization settings must not trigger unnecessary physics recalculation.\n\n---\n\n# 15. USER WORKFLOW\n\nIntegrate the functionality into the existing RESONANT workspace.\n\nProvide a coherent resonant-engineering workflow:\n\n1. Create or import a structure.\n2. Define geometric parameters.\n3. Assign materials.\n4. Configure physical domains.\n5. Define boundaries and interfaces.\n6. Configure excitation.\n7. Select resonance analysis.\n8. Validate the physical configuration.\n9. Run modal or frequency-domain analysis.\n10. Identify resonant modes.\n11. Inspect field and energy distributions.\n12. Characterize damping and Q.\n13. Investigate transient behavior.\n14. Configure coupled resonators where applicable.\n15. Investigate energy exchange.\n16. Modify geometry, materials, or environment.\n17. Compare resonance behavior.\n18. Optimize against measurable objectives.\n19. Save and document the engineering results.\n\nAllow transitions between ordinary functional-structure analysis and specialized resonant analysis without rebuilding the physical system.\n\n---\n\n# 16. CEME INTEGRATION\n\nUse CEME as the authoritative framework for multiphysics interactions.\n\nDo not duplicate:\n\n- Physical quantity registry.\n- Material state management.\n- Geometry state management.\n- Coupling manager.\n- Energy transfer records.\n- Conservation auditing.\n- Time coordination.\n- Solver orchestration.\n- Provenance.\n\nResonance analysis must integrate with these systems.\n\nExamples:\n\n- Electromagnetic resonance produces dielectric and conductive heating.\n- Heating changes material properties.\n- Material changes shift resonant frequencies.\n- Mechanical deformation changes cavity geometry.\n- Acoustic resonance excites mechanical structures.\n- Mechanical vibration radiates acoustic energy.\n- Optical absorption produces thermal effects.\n- Temperature changes optical refractive index.\n- Coupled resonators exchange energy across physical components.\n\nUse appropriate coupling strategies.\n\nDo not force multiphysics simulation where independent analysis is sufficient.\n\nWhere energy is exchanged between domains, record the transfer through CEME.\n\nPreserve conservation and provenance.\n\n---\n\n# 17. AUTOMATION AND PROGRAMMATIC ACCESS\n\nExpose meaningful resonance-engineering capabilities through existing application services.\n\nThe existing Protobuf contract remains authoritative.\n\nPotential operations include:\n\n- Create resonant analysis.\n- Configure resonator.\n- Run eigenmode analysis.\n- Run frequency sweep.\n- Run transient response.\n- Identify resonances.\n- Calculate Q factors.\n- Inspect mode shapes.\n- Inspect stored energy.\n- Inspect energy decay.\n- Configure coupled resonators.\n- Calculate coupling.\n- Compare resonator configurations.\n- Run parameter sweeps.\n- Track modes.\n- Define resonance objectives.\n- Run resonance optimization.\n- Retrieve energy accounting.\n- Export resonance results.\n\nFollow established patterns for:\n\n- Asynchronous jobs.\n- Progress reporting.\n- Cancellation.\n- Idempotency.\n- Optimistic concurrency.\n- Project revision tracking.\n- Capability discovery.\n- Error handling.\n- Provenance.\n\nDo not transfer large field arrays through ordinary control-plane messages.\n\nUse established scientific-data and bulk-transfer mechanisms.\n\nGUI, Python, and automation must use the same underlying application services.\n\n---\n\n# 18. DATA MODEL AND SERIALIZATION\n\nPersist durable resonance-engineering definitions and results using existing project serialization conventions.\n\nUse stable UUIDs.\n\nPersist:\n\n- Resonator identity.\n- Geometry references.\n- Geometry revisions.\n- Material references and revisions.\n- Physical domain.\n- Boundary conditions.\n- Excitation configuration.\n- Analysis configuration.\n- Modal definitions.\n- Resonance characterization.\n- Coupling definitions.\n- Loss models.\n- Tuning parameters.\n- Functional objectives.\n- Optimization configuration.\n- Result references.\n- Solver provenance.\n- Validation information.\n\nDistinguish durable engineering definitions from transient solver state.\n\nResults must identify the exact geometry, material, boundary, and analysis revisions used.\n\nEnsure backward compatibility with existing projects.\n\n---\n\n# 19. SCIENTIFIC VALIDATION\n\nScientific correctness is a release requirement.\n\nEach reference model must include automated validation.\n\n## Microwave cavity\n\n- Analytical eigenfrequency comparison.\n- Mesh convergence.\n- Boundary-condition verification.\n- Q-factor behavior.\n- Energy balance.\n- Frequency-response consistency.\n\n## Optical resonator\n\n- Free spectral range.\n- Stability conditions.\n- Finesse and linewidth.\n- Beam parameter consistency.\n- Comparison with analytical resonator theory.\n\n## Helmholtz resonator\n\n- Analytical resonance comparison.\n- End-correction verification.\n- Impedance behavior.\n- Damping behavior.\n- Mesh convergence.\n\n## Mechanical cantilever\n\n- Analytical beam-theory comparison.\n- Mode-shape verification.\n- Mesh convergence.\n- Modal energy consistency.\n- Boundary-condition verification.\n\n## Coupled resonators\n\n- Analytical eigenfrequency comparison.\n- Mode splitting.\n- Energy exchange.\n- Detuning behavior.\n- Damping behavior.\n- Conservation.\n\n## Multiphysics resonator\n\n- Energy transfer verification.\n- Material-state update.\n- Geometry or property revision tracking.\n- Resonance shift.\n- Coupling consistency.\n- Conservation audit.\n\nFor every analysis:\n\n- Record solver and model versions.\n- Record physical assumptions.\n- Record geometry and material revisions.\n- Record numerical resolution.\n- Record convergence information.\n- Record excitation and boundary conditions.\n- Record uncertainty where available.\n- Report unsupported effects.\n\nNever silently substitute an approximate model for a more complete one.\n\nDo not claim scientific validation solely because a result looks plausible.\n\n---\n\n# 20. TESTING REQUIREMENTS\n\nAdd automated tests covering:\n\n- Natural-mode analysis.\n- Resonant frequency extraction.\n- Frequency response.\n- Transient response.\n- Energy storage.\n- Energy decay.\n- Q-factor calculation.\n- Damping models.\n- Multiple loss mechanisms.\n- Mode tracking.\n- Mode splitting.\n- Coupled resonator analysis.\n- Energy exchange.\n- Detuning.\n- Parameter sensitivity.\n- Resonance tuning.\n- Nonlinear model interfaces.\n- CEME integration.\n- Serialization.\n- Project compatibility.\n- Automation operations.\n- Result provenance.\n\nAdd failure tests for:\n\n- Invalid geometry.\n- Missing material properties.\n- Unsupported physical models.\n- Invalid excitation.\n- Invalid boundary conditions.\n- Solver failure.\n- Non-convergence.\n- Insufficient frequency resolution.\n- Insufficient simulation duration.\n- Invalid damping configuration.\n- Stale geometry during a job.\n- Stale material properties.\n- Cancellation.\n- Invalid coupling configuration.\n\nTest that energy accounting does not double-count transfers between resonators or physical domains.\n\nRun existing geometry and physics regression suites.\n\nDo not mark a capability complete merely because its GUI or data structures exist.\n\n---\n\n# 21. IMPLEMENTATION PHASES\n\nImplement in carefully scoped phases.\n\n## Phase A \u2014 Audit and architecture\n\n- Audit existing resonance capabilities.\n- Identify reusable solvers.\n- Define common resonance-analysis contracts.\n- Define energy-storage and coupling interfaces.\n- Document domain-specific physical requirements.\n\n## Phase B \u2014 Resonance foundation\n\n- Natural-mode analysis integration.\n- Resonance identification.\n- Frequency response.\n- Damping and loss characterization.\n- Q-factor calculation.\n- Energy storage and decay interfaces.\n\n## Phase C \u2014 Reference resonators\n\nImplement in priority order:\n\n1. Microwave cavity.\n2. Fabry\u2013P\u00e9rot optical resonator.\n3. Helmholtz acoustic resonator.\n4. Mechanical cantilever.\n5. Coupled resonator system.\n\n## Phase D \u2014 Coupled resonator engineering\n\n- Coupled-mode analysis.\n- Mode splitting.\n- Energy exchange.\n- Detuning.\n- Transient coupling behavior.\n\n## Phase E \u2014 Dynamic and nonlinear resonance\n\n- Transient analysis.\n- Ring-down.\n- Amplitude-dependent behavior.\n- Parametric resonance interfaces.\n- Nonlinear solver integration where available.\n\n## Phase F \u2014 Resonance tuning and exploration\n\n- Geometry-driven tuning.\n- Material-driven tuning.\n- Environmental sensitivity.\n- Mode tracking.\n- Parameter sweeps.\n- Resonance objectives.\n\n## Phase G \u2014 GUI and automation\n\n- Integrate resonance workflows.\n- Implement synchronized visualizations.\n- Expose application services.\n- Persist engineering definitions and results.\n\n## Phase H \u2014 Validation and release readiness\n\n- Execute analytical benchmarks.\n- Run numerical convergence tests.\n- Verify energy conservation.\n- Test multiphysics coupling.\n- Run regression tests.\n- Update documentation.\n\nIf an implementation phase depends on missing capabilities, report the dependency explicitly.\n\nDo not fabricate results to make the phase appear complete.\n\n---\n\n# 22. PERFORMANCE AND ARCHITECTURAL REQUIREMENTS\n\n- Preserve modular solver architecture.\n- Keep domain-specific physical equations separate.\n- Keep physics independent of rendering.\n- Reuse geometry and meshes when dependencies remain unchanged.\n- Track result validity through revisions.\n- Keep expensive operations asynchronous.\n- Support cancellation and progress reporting.\n- Avoid unnecessary data copying.\n- Preserve CPU reference implementations.\n- Use existing CUDA acceleration where appropriate.\n- Support frequency and transient analyses without unnecessary recomputation.\n- Keep external scientific dependencies optional where practical.\n- Document dependency licenses.\n- Avoid monolithic resonance-management classes.\n- Do not put physics calculations in the GUI.\n\n---\n\n# 23. DOCUMENTATION\n\nCreate or update documentation covering:\n\n- Resonance architecture.\n- Natural modes and eigenmode analysis.\n- Driven resonance.\n- Energy storage and exchange.\n- Damping and losses.\n- Quality factor.\n- Coupled resonators.\n- Mode splitting.\n- Resonance tuning.\n- Nonlinear resonance.\n- Transient response.\n- Mode tracking.\n- Reference engineering examples.\n- CEME integration.\n- Automation API.\n- Scientific assumptions.\n- Validation methodology.\n\nUpdate the documentation established by Prompts 17, 18, and 19.\n\nInclude architecture diagrams and representative workflows.\n\nKeep documentation synchronized with actual implementation.\n\nClearly distinguish implemented functionality, partial functionality, and future roadmap items.\n\n---\n\n# 24. ACCEPTANCE CRITERIA\n\nThis work is complete only when:\n\n1. The resonance architecture integrates with existing geometry and physics systems.\n2. The system can calculate natural modes for at least one validated physical model.\n3. The system can calculate driven resonant response.\n4. The system can identify and characterize resonances.\n5. The system can calculate stored energy using appropriate physical models.\n6. The system can distinguish stored, supplied, dissipated, transferred, and extracted energy.\n7. The system can calculate and validate Q factor.\n8. At least the microwave cavity, optical resonator, Helmholtz resonator, and mechanical cantilever have real model implementations or explicitly documented solver-backed limitations.\n9. A two-resonator coupled system is implemented and validated.\n10. Mode splitting and energy exchange are demonstrated.\n11. Geometry-driven resonance tuning works.\n12. Parameter sweeps and mode tracking work.\n13. Transient buildup and decay are supported for at least one validated model.\n14. CEME integration works where physical energy transfer requires it.\n15. Results contain sufficient provenance to reproduce the analysis.\n16. GUI, Python, and automation use the same underlying application services.\n17. Existing projects remain compatible.\n18. Existing regression tests pass.\n19. Scientific validation tests pass within documented tolerances.\n20. Documentation accurately describes actual capabilities and limitations.\n\n---\n\n# 25. FINAL ENGINEERING REPORT\n\nAt completion, provide a detailed engineering report containing:\n\n- Repository audit findings.\n- Existing capabilities reused.\n- Architecture changes.\n- Files and modules changed.\n- Resonance models implemented.\n- Physical equations and assumptions.\n- Solvers and external packages integrated.\n- Energy-storage and accounting implementation.\n- Coupled resonator implementation.\n- Validation results and tolerances.\n- Test results.\n- Performance observations.\n- GUI workflow changes.\n- Automation API additions.\n- Serialization changes.\n- Known limitations.\n- Incomplete work and reasons.\n- Dependency and licensing implications.\n- Recommended next development prompt.\n\nDo not claim a capability is implemented unless it is present, integrated, and tested.\n\nDo not conceal failed tests or unsupported physics.\n\n---\n\n# FINAL DIRECTIVE\n\nThe objective is to make resonance a genuine engineering discipline within RESONANT.\n\nThe software should progressively allow a user to ask:\n\n- What natural modes does this structure support?\n- At which frequencies does it resonate?\n- How much energy can it store?\n- Where is that energy physically located?\n- How does energy move between different modes?\n- How quickly does energy accumulate?\n- How quickly does it decay?\n- What mechanisms cause energy loss?\n- How does coupling change the behavior of multiple resonators?\n- Can I control the resonance through geometry or material changes?\n- How does temperature or mechanical deformation shift the resonance?\n- What happens when the system is driven beyond its linear operating range?\n- How can I extract useful energy without destroying the resonant behavior I want?\n- What are the physical limitations and engineering tradeoffs?\n\nRESONANT must treat resonance as an emergent physical property of structures and materials, governed by real physical laws.\n\n**Build an engineering environment that understands resonant behavior, energy storage, and physical coupling\u2014not simply a collection of frequency-response plots.**",
+  "file": "requests/inbox/2026-11-26-prompt-20-resonant-structures--req-chat-20261126-018.md",
+  "attachments": [],
+  "context": "User: 'add this ticket. process in order' (queued after REQ-CHAT-20261126-017)",
+  "text_sha256": "e2906271d946ad832d728d8dba0755b5e0ab988c2b5cda4d986962bf9dc18386",
+  "classification": {
+    "proposed_type": null,
+    "proposed_source": "heuristic",
+    "normalized_type": null,
+    "heuristic_type": "FEATURE",
+    "final_type": "FEATURE",
+    "confidence": "high",
+    "validation": "PASS",
+    "classifier_reason": "request statement is framed as feature: Implement, capability, must be able, objective",
+    "correction_reason": null,
+    "normalization_note": null,
+    "evidence": [
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement the next major scientific and engineering capability in RESONANT: **Resonant Structures and Energy Storage**."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "capability",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement the next major scientific and engineering capability in RESONANT: **Resonant Structures and Energy Storage**."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "capability",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This capability establishes resonance as a fundamental, cross-domain physical engineering discipline."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "must be able",
+        "strength": "strong",
+        "note": "",
+        "sentence": "RESONANT must be able to investigate how physical structures and systems respond to excitation, develop oscillatory behavior, support natural modes, exchange energy between modes, store energy, dissip"
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "objective",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The objective is to move beyond identifying resonant frequencies and plotting frequency-response curves."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "users can",
+        "strength": "strong",
+        "note": "",
+        "sentence": "RESONANT should progressively become an environment in which users can:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "evolve",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Investigate how resonance changes when physical conditions evolve."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "extends",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This work extends:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Extend",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Extend their capabilities through well-defined interfaces."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capabilities",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Extend their capabilities through well-defined interfaces."
+      },
+      {
+        "category": "PERFORMANCE",
+        "where": "body",
+        "phrase": "Optimization",
+        "strength": "weak",
+        "note": "bullet",
+        "sentence": "Optimization infrastructure."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Produce",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Produce an implementation plan based on actual repository evidence."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capabilities",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not invent existing capabilities."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not create parallel modal, resonance, energy-accounting, or solver infrastructure."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "reusable",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Establish a reusable resonance-analysis architecture that can coordinate different physical domains."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "introduce",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Instead, introduce a common analysis and data architecture with domain-specific physics."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support, where the underlying solver permits:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support analysis of the response of a system to external excitation."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Expose",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Expose relevant quantities:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support time-dependent energy accounting where the underlying solver allows it."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "allows",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support time-dependent energy accounting where the underlying solver allows it."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "framework",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Establish a consistent conceptual framework for resonance across physical domains."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capabilities",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The following domains should be supported according to available solver capabilities."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Expose",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Expose:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Expose",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Expose:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Expose",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Expose:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Expose",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Expose:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "introduce",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not introduce unsupported fluid-resonance models simply to claim cross-domain coverage."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Make ",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Make energy storage a first-class engineering quantity."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "first-class",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Make energy storage a first-class engineering quantity."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support domain-appropriate storage calculations."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support the investigation of energy transfer between:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "expose",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Where a simple exponential decay model is appropriate, expose the fitted decay constant and the assumptions behind it."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Expose",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Expose the tradeoff between internal energy storage and useful external coupling."
+      }
+    ],
+    "scores": {
+      "FEATURE": {
+        "head": 6,
+        "body": 137
+      },
+      "BUG": {
+        "head": 0,
+        "body": 14
+      },
+      "CRASH": {
+        "head": 0,
+        "body": 0
+      },
+      "REGRESSION": {
+        "head": 0,
+        "body": 0
+      },
+      "PERFORMANCE": {
+        "head": 0,
+        "body": 5
+      },
+      "REFACTOR": {
+        "head": 0,
+        "body": 10
+      },
+      "BUILD": {
+        "head": 0,
+        "body": 0
+      },
+      "DOCUMENTATION": {
+        "head": 0,
+        "body": 10
+      },
+      "INVESTIGATION": {
+        "head": 7,
+        "body": 50
+      },
+      "PROCESS-CHANGE": {
+        "head": 0,
+        "body": 1
+      }
+    },
+    "evidence_total": 240,
+    "validator": "scripts/request_classification.py"
+  },
+  "links": {
+    "work": [
+      "WORK-000019"
+    ]
+  },
+  "commits": [],
+  "resolution": {
+    "from": "processing",
+    "to": "completed",
+    "at": "2026-11-28T02:46:05.534280+00:00",
+    "by": "agent-dev-20261126151713-76f632",
+    "gates": [
+      {
+        "work": "WORK-000019",
+        "at": "2026-11-28T02:45:59.162094+00:00",
+        "verdict": "PASS",
+        "request_fingerprint": "42e53846ff1dab76916cae871a9d4e18f5e04ac0d776c876907063523074a244",
+        "test_runs": [
+          "20261127T214044-358952"
+        ]
+      }
+    ]
+  }
+}

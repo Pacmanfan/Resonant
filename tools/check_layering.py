@@ -24,7 +24,9 @@ src/core/multiphysics, the Coupled Energy-Matter Engine, includes no physics
 domain - thermal included - and no coupling; the thermal domain is a domain
 like the others; and of ADR-000221: src/core/functional, the functional
 structures, includes no physics domain and no coupling - its analyses are
-registered in src/core/coupling):
+registered in src/core/coupling; and of ADR-000222: src/core/oscillators,
+lumped oscillator networks, includes no physics domain and no coupling -
+the domains assemble their networks):
 
     src/core/optimization includes no physics domain (no acoustics, manipulators,
                       fdtd, solvers, mechanics, electromagnetics, coupling,
@@ -119,7 +121,7 @@ def violations():
     # the participants that adapt the domains live in src/core/coupling. So are the
     # functional structures (ADR-000221): their analyses are registered in coupling.
     for path in sorted(sum((list((ROOT / "src" / "core" / d).glob("*")) for d in ("optimization", "automation", "help", "demo", "plugins",
-                                                                                "multiphysics", "functional")), [])):
+                                                                                "multiphysics", "functional", "oscillators")), [])):
         if path.suffix not in (".h", ".cpp"):
             continue
         for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):

@@ -35,6 +35,7 @@ public:
     QString metricText(const QString& key) const;
     int modeRowCount() const;
     QString modeLabel(int row) const;
+    QString modeCell(int row, int column) const;  // 1 nature, 2 frequency, 3 Q, 4 losses
     QString statusText() const;
     QString detailsText() const;
     QStringList curveChoices() const;

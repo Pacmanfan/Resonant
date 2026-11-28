@@ -23,7 +23,8 @@ models (`docs/vision/SHAPE_FUNCTION_ENERGY.md`,
 the Coupled Energy–Matter Engine (REQ-CHAT-20261126-016,
 `coupled_engine.md` RES-CEME-001..016); functional structures make geometry
 a physical design variable (REQ-CHAT-20261126-017, `functional_structures.md`
-RES-FUNC-001..016).
+RES-FUNC-001..016), and resonance engineering across the domains
+(REQ-CHAT-20261126-018, `resonance.md` RES-RSN-001..014).
 
 Each requirement below names the release in which it must first hold:
 **V1** (the initial release, a complete acoustic workflow), or **LATER**

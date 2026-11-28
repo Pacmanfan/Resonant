@@ -61,8 +61,12 @@ Orchestrator::Orchestrator(const PhysicalSystem& system, std::vector<std::unique
     state_.materials.setReferenceTemperature(system_.ambientTemperature);
     for (const PropertyLaw& l : system_.laws)
         state_.materials.addLaw(l);
-    for (const RegionDef& r : system_.regions)
-        state_.geometry.setReference(r.id, "thickness", r.thickness);
+    for (const RegionDef& r : system_.regions) {
+        if (r.thickness > 0.0)
+            state_.geometry.setReference(r.id, "thickness", r.thickness);
+        for (const auto& [dimension, value] : r.dimensions)
+            state_.geometry.setReference(r.id, dimension, value);
+    }
 }
 
 Participant* Orchestrator::participant(const std::string& id) const

@@ -73,6 +73,17 @@ message StaleReason {
   string detail = 2;
 }
 
+// A resonance of an analysis result, as every analysis reports it.
+message ResonanceMode {
+  string label = 1;
+  string nature = 2;                   // natural, driven-peak, identified
+  double frequency_hz = 3;
+  double quality = 4;                  // 0: not computed; +infinity: lossless
+  double decay_rate = 5;               // 1/s
+  double bandwidth_hz = 6;
+  map<string, double> loss_quality = 7;  // Q of each loss mechanism
+}
+
 // An analysis, sweep or sensitivity result.
 message FunctionalResult {
   string result_id = 1;
@@ -87,6 +98,7 @@ message FunctionalResult {
   string behaviour = 10;            // resonant, broadband, non-resonant, mixed, coupled
   repeated string warnings = 11;
   google.protobuf.Struct document = 12;  // the full resonant.functional-result document, when requested
+  repeated ResonanceMode modes = 13;   // analysis: its resonances
 }
 
 // An optimization candidate and why it differs from the present design.

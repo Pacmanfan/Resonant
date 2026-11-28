@@ -57,6 +57,8 @@ nlohmann::json PhysicalSystem::toJson() const
         nlohmann::json rj{{"id", r.id}, {"name", r.name}, {"materialId", r.materialId}, {"thickness", r.thickness}, {"cells", r.cells}};
         if (!r.objectId.empty())
             rj["objectId"] = r.objectId;
+        if (!r.dimensions.empty())
+            rj["dimensions"] = r.dimensions;
         j["regions"].push_back(rj);
     }
     j["domains"] = nlohmann::json::array();
@@ -108,7 +110,7 @@ Result<PhysicalSystem> PhysicalSystem::fromJson(const nlohmann::json& j)
         }
         for (const auto& r : j.value("regions", nlohmann::json::array()))
             s.regions.push_back({r.value("id", ""), r.value("name", ""), r.value("materialId", ""), r.value("thickness", 0.0), r.value("cells", 20),
-                                 r.value("objectId", "")});
+                                 r.value("objectId", ""), r.value("dimensions", std::map<std::string, double>{})});
         for (const auto& d : j.value("domains", nlohmann::json::array()))
             s.domains.push_back({d.value("id", ""), d.value("kind", ""), d.value("solver", ""), d.value("settings", nlohmann::json::object())});
         for (const auto& c : j.value("couplings", nlohmann::json::array()))
@@ -164,10 +166,28 @@ std::vector<SystemIssue> validateSystem(const PhysicalSystem& s, const std::vect
     const auto warn = [&out](std::string field, std::string message) { out.push_back({2, std::move(field), std::move(message)}); };
     if (s.id.empty())
         error("id", "the system needs an id");
-    if (s.geometryKind != "layered-slab")
-        error("geometry.kind", "unsupported geometry kind '" + s.geometryKind + "' (this build supports \"layered-slab\")");
-    if (!(s.lateralArea > 0.0))
+    const bool layered = s.geometryKind == "layered-slab", cavity = s.geometryKind == "rectangular-cavity";
+    if (!layered && !cavity)
+        error("geometry.kind", "unsupported geometry kind '" + s.geometryKind + "' (this build supports \"layered-slab\" and \"rectangular-cavity\")");
+    if (layered && !(s.lateralArea > 0.0))
         error("geometry.lateralArea", "the lateral area must be positive");
+    if (cavity) {
+        int boxes = 0;
+        bool walls = false;
+        for (const RegionDef& r : s.regions) {
+            walls = walls || r.id == "walls";
+            if (r.dimensions.empty())
+                continue;
+            ++boxes;
+            for (const char* dim : {"a", "b", "d"})
+                if (!r.dimensions.count(dim) || !(r.dimensions.at(dim) > 0.0))
+                    error("regions." + r.id + ".dimensions", std::string("the cavity needs a positive dimension '") + dim + "'");
+        }
+        if (boxes != 1)
+            error("regions", "a rectangular-cavity system needs exactly one region with dimensions a, b, d (the cavity and its fill)");
+        if (!walls)
+            error("regions", "a rectangular-cavity system needs a region 'walls' naming the wall material");
+    }
     if (!(s.ambientTemperature > 0.0))
         error("environment.ambientTemperature", "the ambient temperature must be positive (kelvin)");
     for (const std::string* m : {&s.incidenceMaterial, &s.exitMaterial})
@@ -179,7 +199,7 @@ std::vector<SystemIssue> validateSystem(const PhysicalSystem& s, const std::vect
         error("regions", "region ids must be present and unique");
     for (const RegionDef& r : s.regions) {
         const std::string f = "regions." + r.id;
-        if (!(r.thickness > 0.0))
+        if (layered && !(r.thickness > 0.0))
             error(f + ".thickness", "the region needs a positive thickness");
         if (r.cells < 1 || r.cells > 20000)
             error(f + ".cells", "cells must be between 1 and 20000");

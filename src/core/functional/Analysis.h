@@ -52,11 +52,21 @@ struct RoleInfo {
     bool required = true;
 };
 
+// One resonance, as every analysis reports it (RES-RSN-001).
 struct Mode {
+    Mode(std::string label_ = {}, double frequency = 0.0, double q = 0.0, nlohmann::json details_ = nlohmann::json::object())
+        : label(std::move(label_)), frequencyHz(frequency), quality(q), details(std::move(details_))
+    {
+    }
     std::string label;          // empty when the model cannot label its modes
     double frequencyHz = 0.0;
     double quality = 0.0;       // 0: not computed; +inf: lossless
     nlohmann::json details = nlohmann::json::object();
+    // "natural" (an eigenmode), "driven-peak" (a maximum of a response) or "identified" (from a signal).
+    std::string nature = "natural";
+    double decayRate = 0.0;     // 1/s (amplitude), 0 when not computed
+    double bandwidthHz = 0.0;   // half-power, 0 when not computed
+    std::map<std::string, double> lossQ;  // Q of each loss mechanism the model includes
 };
 
 struct Curve {

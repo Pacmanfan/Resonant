@@ -18,6 +18,7 @@
 #include "resonant/v1/materials/material_service.pb.h"
 #include "resonant/v1/multiphysics/multiphysics_service.pb.h"
 #include "resonant/v1/functional/functional_service.pb.h"
+#include "resonant/v1/resonance/resonance_service.pb.h"
 #include "resonant/v1/optimization/optimization_service.pb.h"
 #include "resonant/v1/project/project_service.pb.h"
 #include "resonant/v1/results/results_service.pb.h"
@@ -395,6 +396,19 @@ Failure functionalResultToProto(const nlohmann::json& d, bool includeDocument, v
     out->set_stale_on_completion(d.value("staleOnCompletion", false));
     out->set_feasible(d.value("feasible", true));
     out->set_behaviour(d.value("behaviour", std::string()));
+    if (d.value("kind", std::string()) == "analysis")
+        for (const auto& m : d.value("modes", nlohmann::json::array())) {
+            auto* x = out->add_modes();
+            x->set_label(m.value("label", std::string()));
+            x->set_nature(m.value("nature", std::string()));
+            x->set_frequency_hz(numberOf(m["frequencyHz"]));
+            x->set_quality(numberOf(m["quality"]));
+            x->set_decay_rate(m.value("decayRate", 0.0));
+            x->set_bandwidth_hz(m.value("bandwidthHz", 0.0));
+            const nlohmann::json losses = m.value("lossQ", nlohmann::json::object());  // items() must not outlive its object
+            for (const auto& [mechanism, q] : losses.items())
+                (*x->mutable_loss_quality())[mechanism] = numberOf(q);
+        }
     for (const auto& w : d.value("warnings", nlohmann::json::array()))
         if (w.is_string())
             out->add_warnings(w.get<std::string>());
@@ -1662,6 +1676,49 @@ void Dispatcher::registerAutomation()
             if (!job)
                 return job.error();
             toProto(job.value(), out.mutable_job());
+            return std::nullopt;
+        });
+    unary<v1::IdentifyResonancesRequest, v1::IdentifyResonancesResponse>(
+        "ResonanceService", "IdentifyResonances", Permission::Read, false, true,
+        [this](const v1::IdentifyResonancesRequest& in, v1::IdentifyResonancesResponse& out, const CallContext& c) -> Failure {
+            nlohmann::json request = nlohmann::json::object();
+            if (in.samples_size() > 0) {
+                request["samples"] = std::vector<double>(in.samples().begin(), in.samples().end());
+                request["sampleInterval"] = in.sample_interval();
+                if (in.min_frequency_hz() > 0.0)
+                    request["minHz"] = in.min_frequency_hz();
+                if (in.max_frequency_hz() > 0.0)
+                    request["maxHz"] = in.max_frequency_hz();
+                if (in.max_modes() > 0)
+                    request["maxModes"] = in.max_modes();
+                request["skipSamples"] = in.skip_samples();
+            } else {
+                request["frequenciesHz"] = std::vector<double>(in.frequencies_hz().begin(), in.frequencies_hz().end());
+                request["values"] = std::vector<double>(in.values().begin(), in.values().end());
+                if (in.count() > 0)
+                    request["count"] = in.count();
+            }
+            auto r = session_.services().resonance.identify(c, request);
+            if (!r)
+                return r.error();
+            out.set_method(r.value().value("method", std::string()));
+            out.set_relative_residual(r.value().value("relativeResidual", 0.0));
+            for (const auto& w : r.value().value("warnings", nlohmann::json::array()))
+                out.add_warnings(w.get<std::string>());
+            for (const auto& m : r.value()["resonances"]) {
+                auto* x = out.add_resonances();
+                x->set_frequency_hz(m.value("frequencyHz", 0.0));
+                x->set_decay_rate(m.value("decayRate", 0.0));
+                x->set_quality(numberOf(m["quality"]));
+                x->set_bandwidth_hz(m.value("bandwidthHz", 0.0));
+                x->set_amplitude(m.value("amplitude", 0.0));
+                x->set_phase(m.value("phase", 0.0));
+                x->set_frequency_uncertainty_hz(m.value("frequencyUncertaintyHz", 0.0));
+                x->set_quality_uncertainty(numberOf(m["qualityUncertainty"]));
+                x->set_overlapping(m.value("overlapping", false));
+                x->set_asymmetric(m.value("asymmetric", false));
+                x->set_fit_quality(m.value("fitQuality", 0.0));
+            }
             return std::nullopt;
         });
     unary<v1::ExplainCandidatesRequest, v1::ExplainCandidatesResponse>(

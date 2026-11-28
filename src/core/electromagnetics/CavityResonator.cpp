@@ -303,6 +303,14 @@ Result<CavityYeeResult> simulateRectangularCavity(const CavityResonatorSpec& s, 
         return R::failure("the full-wave run failed: " + end.message);
     out.dt = y.dt;
     out.seconds = y.elapsedSeconds;
+    // The sum of the three components: every mode (TE101 has only E_y) appears in it.
+    if (!y.probes.empty()) {
+        out.probeSignal.assign(y.probes[0].size(), 0.0);
+        for (const auto& component : y.probes)
+            for (size_t i = 0; i < component.size() && i < out.probeSignal.size(); ++i)
+                out.probeSignal[i] += component[i];
+    }
+    out.pulseSteps = static_cast<size_t>(std::ceil(3.0 / pulse.frequencyHz / y.dt));  // the Ricker pulse lasts about 2.5 periods
     out.backend = y.backend;
     // Peaks of the summed power spectra of the three components.
     dsp::Spectrum sum;

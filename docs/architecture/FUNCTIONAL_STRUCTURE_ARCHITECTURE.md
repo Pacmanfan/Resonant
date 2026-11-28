@@ -67,7 +67,11 @@ src/app                 FunctionalController, FunctionalPanel (dock "Functional 
 | `mechanics.modal` | confinement | finite elements; closed-form beams and plates | `mechanics/Study`, `MechanicalOptimization` |
 | `em.periodic.layers` | reflection | exact Bloch dispersion and transfer matrices | `electromagnetics/PeriodicLayers` ([page](../electromagnetics/PERIODIC_LAYERS.md)) |
 | `mechanics.periodic-rod` | reflection | exact longitudinal dispersion | `mechanics/Bloch` |
-| `multiphysics.coupled-slab` | coupled | the Coupled Energy–Matter Engine | `coupling/CoupledRun` |
+| `multiphysics.coupled-slab` | coupled | the Coupled Energy–Matter Engine (slabs from boxes, cavities from cavity objects) | `coupling/CoupledRun` |
+| `acoustic.helmholtz` | confinement | lumped with end corrections; plane-wave stepped duct | `manipulators/Helmholtz` ([page](../manipulators/HELMHOLTZ_RESONATORS.md)) |
+| `mechanics.cantilever-resonator` | confinement | Euler–Bernoulli modes, first mode as an oscillator (ring-down) | `mechanics/LumpedResonators` |
+| `mechanics.coupled-cantilevers` | confinement | two tip-referred oscillators and a spring | `mechanics/LumpedResonators`, `oscillators` ([page](../physics/COUPLED_RESONATORS.md)) |
+| `acoustic.coupled-helmholtz` | confinement | lumped acoustic network | `manipulators/Helmholtz`, `oscillators` |
 
 Each kind declares its mechanism (used in explanations), its models with
 fidelity, assumptions and validity, its metrics with units and definitions,

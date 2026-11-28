@@ -19,6 +19,7 @@
 #include <nlohmann/json.hpp>
 
 #include <functional>
+#include <map>
 #include <string>
 #include <vector>
 
@@ -29,6 +30,7 @@ struct RegionDef {
     double thickness = 0.0;  // m (layered-slab)
     int cells = 20;          // cells across the region for the participants' grids
     std::string objectId;    // optional scene object this region stands for
+    std::map<std::string, double> dimensions;  // rectangular-cavity: "a", "b", "d" (m)
 };
 
 struct DomainDef {
