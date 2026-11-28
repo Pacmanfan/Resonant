@@ -1,0 +1,153 @@
+syntax = "proto3";
+package resonant.v1;
+
+import "google/protobuf/struct.proto";
+import "resonant/v1/common/jobs.proto";
+import "resonant/v1/common/metadata.proto";
+import "resonant/v1/common/validation.proto";
+import "resonant/v1/materials/material.proto";
+import "resonant/v1/multiscale/multiscale.proto";
+
+message GetMultiscaleModelRequest { RequestHeader header = 1; }
+message GetMultiscaleModelResponse { ResponseHeader header = 1; google.protobuf.Struct model = 2; }
+
+message ListRepresentationsRequest { RequestHeader header = 1; }
+message ListRepresentationsResponse { ResponseHeader header = 1; repeated MaterialRepresentation representations = 2; }
+
+message GetRepresentationRequest { RequestHeader header = 1; string representation_id = 2; }
+message GetRepresentationResponse {
+  ResponseHeader header = 1;
+  MaterialRepresentation representation = 2;
+  google.protobuf.Struct document = 3;  // the definition with its model card, relationships and applicable methods
+}
+
+message SetRepresentationRequest { RequestHeader header = 1; google.protobuf.Struct definition = 2; }
+message SetRepresentationResponse { ResponseHeader header = 1; ChangeSummary changes = 2; }
+
+message DeleteRepresentationRequest { RequestHeader header = 1; string representation_id = 2; }
+message DeleteRepresentationResponse { ResponseHeader header = 1; ChangeSummary changes = 2; }
+
+message GenerateMicrostructureRequest {
+  RequestHeader header = 1;
+  // {"id", "name", "rve": {generator specification}, "phaseMaterials": [...], "temperatureLaws": [...], "materialId"}
+  google.protobuf.Struct request = 2;
+}
+message GenerateMicrostructureResponse { ResponseHeader header = 1; ChangeSummary changes = 2; }
+
+message CreateAtomisticStructureRequest {
+  RequestHeader header = 1;
+  string representation_id = 2;
+  string name = 3;
+  string format = 4;            // xyz or poscar, with text; or empty for a built structure
+  string text = 5;
+  string structure = 6;         // sc, bcc, fcc, diamond
+  double lattice_parameter = 7; // m
+  string species = 8;
+  string force_field = 9;       // lj.argon, lj.reduced
+  bool allow_incompatible = 10; // store a structure the force field does not cover
+  string material_id = 11;      // the library material it describes
+}
+message CreateAtomisticStructureResponse { ResponseHeader header = 1; ChangeSummary changes = 2; }
+
+message ListDerivationMethodsRequest { RequestHeader header = 1; string representation_id = 2; }
+message ListDerivationMethodsResponse { ResponseHeader header = 1; repeated google.protobuf.Struct methods = 2; }
+
+message ListModelCardsRequest { RequestHeader header = 1; }
+message ListModelCardsResponse { ResponseHeader header = 1; repeated google.protobuf.Struct cards = 2; }
+
+message ListMultiscaleCouplingsRequest { RequestHeader header = 1; }
+message ListMultiscaleCouplingsResponse { ResponseHeader header = 1; repeated google.protobuf.Struct couplings = 2; }
+
+message ListExternalSolversRequest { RequestHeader header = 1; }
+message ListExternalSolversResponse { ResponseHeader header = 1; repeated ExternalSolver solvers = 2; }
+
+message DeriveMaterialPropertiesRequest {
+  RequestHeader header = 1;
+  string representation_id = 2;
+  string method_id = 3;
+  google.protobuf.Struct settings = 4;
+}
+message DeriveMaterialPropertiesResponse { ResponseHeader header = 1; Job job = 2; }
+
+message GetMultiscaleResultRequest { RequestHeader header = 1; string result_id = 2; }
+message GetMultiscaleResultResponse {
+  ResponseHeader header = 1;
+  google.protobuf.Struct document = 2;  // resonant.multiscale-derivation or resonant.multiscale-coupling
+  bool stale = 3;
+  repeated string stale_reasons = 4;
+  bool reliable = 5;
+}
+
+message AssignDerivedPropertiesRequest {
+  RequestHeader header = 1;
+  string result_id = 2;
+  string material_id = 3;         // an existing material to update, or
+  string new_material_id = 4;     // a new material (empty id: generated)
+  string new_material_name = 5;
+  repeated string properties = 6; // "domain.key"; empty: all
+  map<string, string> components = 7;
+}
+message AssignDerivedPropertiesResponse { ResponseHeader header = 1; Material material = 2; ChangeSummary changes = 3; }
+
+message GetMaterialLineageRequest { RequestHeader header = 1; string material_id = 2; }
+message GetMaterialLineageResponse { ResponseHeader header = 1; google.protobuf.Struct lineage = 2; }
+
+message GetLocalStateRequest {
+  RequestHeader header = 1;
+  string system_id = 2;
+  string region_id = 3;
+  string result_id = 4;  // a stored coupled result; empty: run the system now (needs execute)
+}
+message GetLocalStateResponse { ResponseHeader header = 1; google.protobuf.Struct state = 2; }
+
+message IterateRegionCouplingRequest {
+  RequestHeader header = 1;
+  string system_id = 2;
+  string region_id = 3;
+  string representation_id = 4;
+  double tolerance = 5;          // 0: 1e-4
+  int32 max_iterations = 6;      // 0: 20
+  google.protobuf.Struct derive_settings = 7;
+}
+message IterateRegionCouplingResponse { ResponseHeader header = 1; Job job = 2; }
+
+// Multiscale material modeling: representations of materials at their scales, derivations of
+// higher-scale properties assigned to library materials with lineage, local states of coupled
+// results and iterative region-RVE coupling. External atomistic and electronic-structure engines
+// are listed with their status; none is integrated.
+service MultiscaleService {
+  // The whole model: representations, relationships, derivations, validation issues and stale properties.
+  rpc GetMultiscaleModel(GetMultiscaleModelRequest) returns (GetMultiscaleModelResponse);
+  // Every representation with its scale, kind, provenance, validation, revision and constituents.
+  rpc ListRepresentations(ListRepresentationsRequest) returns (ListRepresentationsResponse);
+  // One representation's definition with its model card, relationships and the methods that apply to it.
+  rpc GetRepresentation(GetRepresentationRequest) returns (GetRepresentationResponse);
+  // Adds a representation, or replaces the one with its id, after validation; one undo step.
+  rpc SetRepresentation(SetRepresentationRequest) returns (SetRepresentationResponse);
+  // Removes a representation (properties derived from it become stale); one undo step.
+  rpc DeleteRepresentation(DeleteRepresentationRequest) returns (DeleteRepresentationResponse);
+  // A voxel RVE from a seeded generator (labelled synthetic) or imported voxel data; one undo step.
+  rpc GenerateMicrostructure(GenerateMicrostructureRequest) returns (GenerateMicrostructureResponse);
+  // A crystal or atomic structure, built or imported (XYZ, POSCAR); one undo step.
+  rpc CreateAtomisticStructure(CreateAtomisticStructureRequest) returns (CreateAtomisticStructureResponse);
+  // The derivation methods, with their applicability to a representation when one is named.
+  rpc ListDerivationMethods(ListDerivationMethodsRequest) returns (ListDerivationMethodsResponse);
+  // The model cards of the representation kinds and methods: assumptions, methods, validity, interpretation.
+  rpc ListModelCards(ListModelCardsRequest) returns (ListModelCardsResponse);
+  // The coupling strategies' contracts, implemented or planned.
+  rpc ListMultiscaleCouplings(ListMultiscaleCouplingsRequest) returns (ListMultiscaleCouplingsResponse);
+  // The external atomistic, molecular and electronic-structure engines with their status (none integrated).
+  rpc ListExternalSolvers(ListExternalSolversRequest) returns (ListExternalSolversResponse);
+  // Runs a derivation as a job; the result id is in the finished job's results.
+  rpc DeriveMaterialProperties(DeriveMaterialPropertiesRequest) returns (DeriveMaterialPropertiesResponse);
+  // A derivation or coupling result with its staleness against the current project.
+  rpc GetMultiscaleResult(GetMultiscaleResultRequest) returns (GetMultiscaleResultResponse);
+  // Assigns a current result's properties to a library material with a derivation record; one undo step.
+  rpc AssignDerivedProperties(AssignDerivedPropertiesRequest) returns (AssignDerivedPropertiesResponse);
+  // Every property of a material with its provenance, uncertainty, derivation, source representation and chain.
+  rpc GetMaterialLineage(GetMaterialLineageRequest) returns (GetMaterialLineageResponse);
+  // The local state (temperature mean, range, gradient) of a region of a layered-slab system.
+  rpc GetLocalState(GetLocalStateRequest) returns (GetLocalStateResponse);
+  // Iterates a region's RVE at the region's temperature to a fixed point, as a job.
+  rpc IterateRegionCoupling(IterateRegionCouplingRequest) returns (IterateRegionCouplingResponse);
+}

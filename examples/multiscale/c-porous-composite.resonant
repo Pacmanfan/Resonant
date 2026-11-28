@@ -1,0 +1,262 @@
+{
+ "format": "resonant-project",
+ "schemaVersion": 1,
+ "application": {
+  "name": "Resonant",
+  "version": "0.1.0"
+ },
+ "project": {
+  "id": "ex-ms-porous",
+  "name": "c-porous-composite",
+  "createdUtc": "2026-11-27T00:00:00Z",
+  "modifiedUtc": "2026-11-27T00:00:00Z"
+ },
+ "units": {
+  "angle": "rad",
+  "axes": "right-handed; X horizontal, Y depth, Z vertical (up)",
+  "frequency": "Hz",
+  "length": "m",
+  "mass": "kg",
+  "rotation": "intrinsic Z-Y-X Euler angles stored as [x, y, z]",
+  "time": "s"
+ },
+ "materials": [
+  {
+   "id": "mat-ex-alumina-dense",
+   "name": "Dense alumina (example)",
+   "description": "Illustrative thermal values of dense alumina.",
+   "domains": {
+    "thermal": {
+     "thermalConductivity": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the multiscale examples; not authoritative.",
+      "value": 30.0
+     },
+     "density": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the multiscale examples; not authoritative.",
+      "value": 3950.0
+     },
+     "specificHeat": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the multiscale examples; not authoritative.",
+      "value": 880.0
+     }
+    }
+   }
+  },
+  {
+   "id": "mat-ex-pore-air",
+   "name": "Air in pores (example)",
+   "description": "Still air; no convection or radiation in the pores.",
+   "domains": {
+    "thermal": {
+     "thermalConductivity": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the multiscale examples; not authoritative.",
+      "value": 0.026
+     },
+     "density": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the multiscale examples; not authoritative.",
+      "value": 1.2
+     },
+     "specificHeat": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the multiscale examples; not authoritative.",
+      "value": 1005.0
+     }
+    }
+   }
+  },
+  {
+   "id": "mat-ex-porous-alumina",
+   "name": "Porous alumina (derived)",
+   "description": "Derived from the pore RVE: Derive, then Assign.",
+   "domains": {}
+  }
+ ],
+ "scene": {
+  "objects": [
+   {
+    "id": "ex-ms-porous-tile",
+    "type": "geometry",
+    "name": "Porous alumina tile",
+    "visible": true,
+    "transform": {
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "children": [],
+    "geometry": {
+     "kind": "box",
+     "parameters": {
+      "width": 0.05,
+      "depth": 0.05,
+      "height": 0.005
+     }
+    },
+    "material": "mat-ex-porous-alumina"
+   }
+  ]
+ },
+ "simulations": [],
+ "extensions": {
+  "multiscale": {
+   "format": "resonant.multiscale",
+   "version": 1,
+   "representations": [
+    {
+     "id": "rve-porous-alumina",
+     "name": "Alumina with 20 % spherical pores",
+     "description": "Non-overlapping 0.24 mm pores at 20 % porosity in a 1 mm cube.",
+     "scale": "microstructure",
+     "kind": "rve.voxel",
+     "materialId": "mat-ex-porous-alumina",
+     "data": {
+      "rve": {
+       "generator": "spheres",
+       "voxels": [
+        24,
+        24,
+        24
+       ],
+       "size": [
+        0.001,
+        0.001,
+        0.001
+       ],
+       "phases": [
+        "alumina",
+        "pore"
+       ],
+       "matrix": 0,
+       "inclusion": 1,
+       "radius": 0.00012,
+       "volumeFraction": 0.2,
+       "seed": 1
+      },
+      "phaseMaterials": [
+       "mat-ex-alumina-dense",
+       "mat-ex-pore-air"
+      ],
+      "temperatureLaws": []
+     },
+     "constituents": [
+      "mat-ex-alumina-dense",
+      "mat-ex-pore-air"
+     ],
+     "state": {},
+     "assumptions": [
+      "each voxel holds one phase",
+      "phases are continua with their library properties",
+      "perfect contact between phases"
+     ],
+     "boundaryConditions": {},
+     "provenance": "synthetic",
+     "source": "procedural (spheres, seed 1): not a measured microstructure",
+     "validation": "unvalidated",
+     "validationNote": "",
+     "uncertainty": "",
+     "modelCard": "representation.rve.voxel"
+    },
+    {
+     "id": "rve-layered-pores",
+     "name": "Alumina with 20 % pores in layers",
+     "description": "The same porosity as flat cracks normal to z: the arrangement, not the fraction, sets the conductivity.",
+     "scale": "microstructure",
+     "kind": "rve.voxel",
+     "materialId": "",
+     "data": {
+      "rve": {
+       "generator": "layered",
+       "voxels": [
+        4,
+        4,
+        40
+       ],
+       "size": [
+        0.001,
+        0.001,
+        0.001
+       ],
+       "phases": [
+        "alumina",
+        "pore"
+       ],
+       "axis": 2,
+       "fractions": [
+        0.8,
+        0.2
+       ],
+       "periods": 4
+      },
+      "phaseMaterials": [
+       "mat-ex-alumina-dense",
+       "mat-ex-pore-air"
+      ],
+      "temperatureLaws": []
+     },
+     "constituents": [
+      "mat-ex-alumina-dense",
+      "mat-ex-pore-air"
+     ],
+     "state": {},
+     "assumptions": [
+      "each voxel holds one phase",
+      "phases are continua with their library properties",
+      "perfect contact between phases"
+     ],
+     "boundaryConditions": {},
+     "provenance": "synthetic",
+     "source": "procedural (layered): not a measured microstructure",
+     "validation": "unvalidated",
+     "validationNote": "",
+     "uncertainty": "",
+     "modelCard": "representation.rve.voxel"
+    }
+   ],
+   "relationships": [
+    {
+     "from": "representation:rve-porous-alumina",
+     "to": "material:mat-ex-porous-alumina",
+     "kind": "describes"
+    },
+    {
+     "from": "material:mat-ex-alumina-dense",
+     "to": "representation:rve-porous-alumina",
+     "kind": "constituent-of"
+    },
+    {
+     "from": "material:mat-ex-pore-air",
+     "to": "representation:rve-porous-alumina",
+     "kind": "constituent-of"
+    },
+    {
+     "from": "material:mat-ex-alumina-dense",
+     "to": "representation:rve-layered-pores",
+     "kind": "constituent-of"
+    },
+    {
+     "from": "material:mat-ex-pore-air",
+     "to": "representation:rve-layered-pores",
+     "kind": "constituent-of"
+    }
+   ],
+   "derivations": []
+  }
+ }
+}

@@ -20,6 +20,8 @@
 #include "OptimizationPanel.h"
 #include "FunctionalController.h"
 #include "FunctionalPanel.h"
+#include "MaterialScalesPanel.h"
+#include "MultiscaleController.h"
 #include "MechanicsController.h"
 #include "MechanicsMarkers.h"
 #include "MechanicsPanel.h"
@@ -102,6 +104,7 @@ MainWindow::MainWindow(QWidget* parent)
     ui_->menuPanels->addAction(ui_->experimentsDock->toggleViewAction());
     ui_->menuPanels->addAction(ui_->optimizationDock->toggleViewAction());
     ui_->menuPanels->addAction(ui_->functionalDock->toggleViewAction());
+    ui_->menuPanels->addAction(ui_->materialScalesDock->toggleViewAction());
     ui_->menuPanels->addAction(ui_->pythonConsoleDock->toggleViewAction());
     ui_->menuPanels->addAction(ui_->demoStudioDock->toggleViewAction());
     ui_->menuPanels->addSeparator();
@@ -148,6 +151,7 @@ MainWindow::MainWindow(QWidget* parent)
     connectExperiments();
     connectOptimization();
     connectFunctional();
+    connectMultiscale();
     connectAutomation();
     connectHelp();
     connectDemos();
@@ -174,7 +178,8 @@ MainWindow::MainWindow(QWidget* parent)
     tabifyDockWidget(ui_->emDock, ui_->experimentsDock);
     tabifyDockWidget(ui_->experimentsDock, ui_->optimizationDock);
     tabifyDockWidget(ui_->optimizationDock, ui_->functionalDock);
-    tabifyDockWidget(ui_->functionalDock, ui_->demoStudioDock);
+    tabifyDockWidget(ui_->functionalDock, ui_->materialScalesDock);
+    tabifyDockWidget(ui_->materialScalesDock, ui_->demoStudioDock);
     tabifyDockWidget(ui_->analysisDock, ui_->pythonConsoleDock);
     ui_->demoStudioDock->hide();
     ui_->presenterDock->hide();
@@ -579,6 +584,19 @@ void MainWindow::connectExperiments()
 OptimizationPanel& MainWindow::optimizationPanel()
 {
     return *ui_->optimizationPanel;
+}
+
+MaterialScalesPanel& MainWindow::materialScalesPanel()
+{
+    return *ui_->materialScalesPanel;
+}
+
+void MainWindow::connectMultiscale()
+{
+    multiscale_ = new MultiscaleController(controller_, this);
+    ui_->materialScalesPanel->setController(multiscale_);
+    connect(multiscale_, &MultiscaleController::derivationFailed, this,
+            [this](const QString& message) { statusBar()->showMessage(tr("Multiscale derivation: %1").arg(message), 8000); });
 }
 
 FunctionalPanel& MainWindow::functionalPanel()

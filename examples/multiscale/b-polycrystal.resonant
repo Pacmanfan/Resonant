@@ -1,0 +1,265 @@
+{
+ "format": "resonant-project",
+ "schemaVersion": 1,
+ "application": {
+  "name": "Resonant",
+  "version": "0.1.0"
+ },
+ "project": {
+  "id": "ex-ms-polycrystal",
+  "name": "b-polycrystal",
+  "createdUtc": "2026-11-27T00:00:00Z",
+  "modifiedUtc": "2026-11-27T00:00:00Z"
+ },
+ "units": {
+  "angle": "rad",
+  "axes": "right-handed; X horizontal, Y depth, Z vertical (up)",
+  "frequency": "Hz",
+  "length": "m",
+  "mass": "kg",
+  "rotation": "intrinsic Z-Y-X Euler angles stored as [x, y, z]",
+  "time": "s"
+ },
+ "materials": [
+  {
+   "id": "mat-ex-graphite-basal",
+   "name": "Graphite, basal plane (example)",
+   "description": "Conductivity along the graphene planes of pyrolytic graphite; illustrative.",
+   "domains": {
+    "thermal": {
+     "thermalConductivity": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the multiscale examples; not authoritative.",
+      "value": 1700.0
+     },
+     "density": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the multiscale examples; not authoritative.",
+      "value": 2200.0
+     },
+     "specificHeat": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the multiscale examples; not authoritative.",
+      "value": 710.0
+     }
+    }
+   }
+  },
+  {
+   "id": "mat-ex-graphite-axial",
+   "name": "Graphite, c axis (example)",
+   "description": "Conductivity across the planes; illustrative.",
+   "domains": {
+    "thermal": {
+     "thermalConductivity": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the multiscale examples; not authoritative.",
+      "value": 8.0
+     },
+     "density": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the multiscale examples; not authoritative.",
+      "value": 2200.0
+     },
+     "specificHeat": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the multiscale examples; not authoritative.",
+      "value": 710.0
+     }
+    }
+   }
+  },
+  {
+   "id": "mat-ex-polygraphite",
+   "name": "Polycrystalline graphite (derived)",
+   "description": "Derived from the grain RVE: Derive (thermal conductivity), then Assign.",
+   "domains": {}
+  }
+ ],
+ "scene": {
+  "objects": [
+   {
+    "id": "ex-ms-graphite-block",
+    "type": "geometry",
+    "name": "Polycrystalline graphite block",
+    "visible": true,
+    "transform": {
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "children": [],
+    "geometry": {
+     "kind": "box",
+     "parameters": {
+      "width": 0.02,
+      "depth": 0.02,
+      "height": 0.005
+     }
+    },
+    "material": "mat-ex-polygraphite"
+   }
+  ]
+ },
+ "simulations": [],
+ "extensions": {
+  "multiscale": {
+   "format": "resonant.multiscale",
+   "version": 1,
+   "representations": [
+    {
+     "id": "rve-graphite-random",
+     "name": "Graphite polycrystal, random texture",
+     "description": "40 Voronoi grains of uniaxial graphite with random c axes (10 um grains).",
+     "scale": "microstructure",
+     "kind": "rve.voxel",
+     "materialId": "mat-ex-polygraphite",
+     "data": {
+      "rve": {
+       "generator": "voronoi",
+       "voxels": [
+        20,
+        20,
+        20
+       ],
+       "size": [
+        0.0002,
+        0.0002,
+        0.0002
+       ],
+       "phases": [
+        "graphite grain"
+       ],
+       "grains": 40,
+       "texture": "random",
+       "seed": 1
+      },
+      "phaseMaterials": [
+       {
+        "axial": "mat-ex-graphite-axial",
+        "transverse": "mat-ex-graphite-basal"
+       }
+      ],
+      "temperatureLaws": []
+     },
+     "constituents": [
+      "mat-ex-graphite-axial",
+      "mat-ex-graphite-basal"
+     ],
+     "state": {},
+     "assumptions": [
+      "each voxel holds one phase",
+      "phases are continua with their library properties",
+      "perfect contact between phases"
+     ],
+     "boundaryConditions": {},
+     "provenance": "synthetic",
+     "source": "procedural (voronoi, seed 1): not a measured microstructure",
+     "validation": "unvalidated",
+     "validationNote": "",
+     "uncertainty": "",
+     "modelCard": "representation.rve.voxel"
+    },
+    {
+     "id": "rve-graphite-textured",
+     "name": "Graphite polycrystal, c axes near z",
+     "description": "The same grains with their c axes within about 15 degrees of z: a textured, anisotropic polycrystal.",
+     "scale": "microstructure",
+     "kind": "rve.voxel",
+     "materialId": "",
+     "data": {
+      "rve": {
+       "generator": "voronoi",
+       "voxels": [
+        20,
+        20,
+        20
+       ],
+       "size": [
+        0.0002,
+        0.0002,
+        0.0002
+       ],
+       "phases": [
+        "graphite grain"
+       ],
+       "grains": 40,
+       "texture": "aligned",
+       "seed": 1,
+       "axis": [
+        0,
+        0,
+        1
+       ],
+       "spreadDeg": 15.0
+      },
+      "phaseMaterials": [
+       {
+        "axial": "mat-ex-graphite-axial",
+        "transverse": "mat-ex-graphite-basal"
+       }
+      ],
+      "temperatureLaws": []
+     },
+     "constituents": [
+      "mat-ex-graphite-axial",
+      "mat-ex-graphite-basal"
+     ],
+     "state": {},
+     "assumptions": [
+      "each voxel holds one phase",
+      "phases are continua with their library properties",
+      "perfect contact between phases"
+     ],
+     "boundaryConditions": {},
+     "provenance": "synthetic",
+     "source": "procedural (voronoi, aligned texture, seed 1): not a measured microstructure",
+     "validation": "unvalidated",
+     "validationNote": "",
+     "uncertainty": "",
+     "modelCard": "representation.rve.voxel"
+    }
+   ],
+   "relationships": [
+    {
+     "from": "representation:rve-graphite-random",
+     "to": "material:mat-ex-polygraphite",
+     "kind": "describes"
+    },
+    {
+     "from": "material:mat-ex-graphite-axial",
+     "to": "representation:rve-graphite-random",
+     "kind": "constituent-of"
+    },
+    {
+     "from": "material:mat-ex-graphite-basal",
+     "to": "representation:rve-graphite-random",
+     "kind": "constituent-of"
+    },
+    {
+     "from": "material:mat-ex-graphite-axial",
+     "to": "representation:rve-graphite-textured",
+     "kind": "constituent-of"
+    },
+    {
+     "from": "material:mat-ex-graphite-basal",
+     "to": "representation:rve-graphite-textured",
+     "kind": "constituent-of"
+    }
+   ],
+   "derivations": []
+  }
+ }
+}

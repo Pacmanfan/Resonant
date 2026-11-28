@@ -18,6 +18,7 @@
 #include "resonant/v1/materials/material_service.pb.h"
 #include "resonant/v1/multiphysics/multiphysics_service.pb.h"
 #include "resonant/v1/functional/functional_service.pb.h"
+#include "resonant/v1/multiscale/multiscale_service.pb.h"
 #include "resonant/v1/resonance/resonance_service.pb.h"
 #include "resonant/v1/optimization/optimization_service.pb.h"
 #include "resonant/v1/project/project_service.pb.h"
@@ -906,11 +907,15 @@ void Dispatcher::registerProjectAndScene()
                                                                       {v1::MATERIAL_PROVENANCE_LITERATURE, "literature"},
                                                                       {v1::MATERIAL_PROVENANCE_THEORETICAL, "theoretical"},
                                                                       {v1::MATERIAL_PROVENANCE_ILLUSTRATIVE, "illustrative"},
-                                                                      {v1::MATERIAL_PROVENANCE_HOMOGENIZED, "homogenized"}};
+                                                                      {v1::MATERIAL_PROVENANCE_HOMOGENIZED, "homogenized"},
+                                                                      {v1::MATERIAL_PROVENANCE_COMPUTED, "computed"},
+                                                                      {v1::MATERIAL_PROVENANCE_DATABASE, "database"},
+                                                                      {v1::MATERIAL_PROVENANCE_FITTED, "fitted"},
+                                                                      {v1::MATERIAL_PROVENANCE_SURROGATE, "surrogate"}};
                 for (const v1::MaterialProperty& p : in.properties()) {
                     const auto it = provenance.find(p.provenance());
                     if (it == provenance.end())
-                        return services::invalid("every property needs its provenance (measured, manufacturer, literature, theoretical, illustrative, homogenized)",
+                        return services::invalid("every property needs its provenance (measured, manufacturer, literature, theoretical, illustrative, homogenized, computed, database, fitted, surrogate)",
                                                  "properties.provenance");
                     material["domains"][p.domain()][p.key()] = {{"value", p.value_si()}, {"provenance", it->second}, {"source", p.source()}};
                 }
@@ -1740,6 +1745,236 @@ void Dispatcher::registerAutomation()
             if (!m.value().dryRun)
                 if (auto created = session_.services().materials.get(c, Id(id)))
                     toProto(created.value(), out.mutable_material());
+            return std::nullopt;
+        });
+    // --- MultiscaleService (REQ-CHAT-20261126-020, RES-MSC-014) ---------------------------------
+    const auto representationToProto = [](const nlohmann::json& r, v1::MaterialRepresentation* out) {
+        out->set_representation_id(r.value("id", std::string()));
+        out->set_name(r.value("name", std::string()));
+        out->set_scale(r.value("scale", std::string()));
+        out->set_kind(r.value("kind", std::string()));
+        out->set_material_id(r.value("materialId", std::string()));
+        out->set_provenance(r.value("provenance", std::string()));
+        out->set_validation(r.value("validation", std::string()));
+        out->set_revision(r.value("revision", std::string()));
+        out->set_model_card(r.value("modelCard", std::string()));
+        for (const auto& c : r.value("constituents", nlohmann::json::array()))
+            out->add_constituents(c.get<std::string>());
+    };
+    const auto mutation = [](v1::ResponseHeader* header, v1::ChangeSummary* changes, const services::Mutation& m) {
+        detail::mutated(header, m);
+        toProto(m.changes, changes);
+    };
+    unary<v1::GetMultiscaleModelRequest, v1::GetMultiscaleModelResponse>(
+        "MultiscaleService", "GetMultiscaleModel", Permission::Read, false, true,
+        [this](const v1::GetMultiscaleModelRequest&, v1::GetMultiscaleModelResponse& out, const CallContext& c) -> Failure {
+            auto m = session_.services().multiscale.model(c);
+            if (!m)
+                return m.error();
+            return structOf(m.value(), out.mutable_model());
+        });
+    unary<v1::ListRepresentationsRequest, v1::ListRepresentationsResponse>(
+        "MultiscaleService", "ListRepresentations", Permission::Read, false, true,
+        [this, representationToProto](const v1::ListRepresentationsRequest&, v1::ListRepresentationsResponse& out, const CallContext& c) -> Failure {
+            auto list = session_.services().multiscale.representations(c);
+            if (!list)
+                return list.error();
+            for (const auto& r : list.value())
+                representationToProto(r, out.add_representations());
+            return std::nullopt;
+        });
+    unary<v1::GetRepresentationRequest, v1::GetRepresentationResponse>(
+        "MultiscaleService", "GetRepresentation", Permission::Read, false, true,
+        [this, representationToProto](const v1::GetRepresentationRequest& in, v1::GetRepresentationResponse& out, const CallContext& c) -> Failure {
+            auto r = session_.services().multiscale.representation(c, in.representation_id());
+            if (!r)
+                return r.error();
+            representationToProto(r.value(), out.mutable_representation());
+            return structOf(r.value(), out.mutable_document());
+        });
+    unary<v1::SetRepresentationRequest, v1::SetRepresentationResponse>(
+        "MultiscaleService", "SetRepresentation", Permission::Modify, true, false,
+        [this, mutation](const v1::SetRepresentationRequest& in, v1::SetRepresentationResponse& out, const CallContext& c) -> Failure {
+            auto m = session_.services().multiscale.setRepresentation(c, jsonOf(in.definition()));
+            if (!m)
+                return m.error();
+            mutation(out.mutable_header(), out.mutable_changes(), m.value());
+            return std::nullopt;
+        });
+    unary<v1::DeleteRepresentationRequest, v1::DeleteRepresentationResponse>(
+        "MultiscaleService", "DeleteRepresentation", Permission::Modify, true, false,
+        [this, mutation](const v1::DeleteRepresentationRequest& in, v1::DeleteRepresentationResponse& out, const CallContext& c) -> Failure {
+            auto m = session_.services().multiscale.deleteRepresentation(c, in.representation_id());
+            if (!m)
+                return m.error();
+            mutation(out.mutable_header(), out.mutable_changes(), m.value());
+            return std::nullopt;
+        });
+    unary<v1::GenerateMicrostructureRequest, v1::GenerateMicrostructureResponse>(
+        "MultiscaleService", "GenerateMicrostructure", Permission::Modify, true, false,
+        [this, mutation](const v1::GenerateMicrostructureRequest& in, v1::GenerateMicrostructureResponse& out, const CallContext& c) -> Failure {
+            auto m = session_.services().multiscale.generateMicrostructure(c, jsonOf(in.request()));
+            if (!m)
+                return m.error();
+            mutation(out.mutable_header(), out.mutable_changes(), m.value());
+            return std::nullopt;
+        });
+    unary<v1::CreateAtomisticStructureRequest, v1::CreateAtomisticStructureResponse>(
+        "MultiscaleService", "CreateAtomisticStructure", Permission::Modify, true, false,
+        [this, mutation](const v1::CreateAtomisticStructureRequest& in, v1::CreateAtomisticStructureResponse& out, const CallContext& c) -> Failure {
+            nlohmann::json request = nlohmann::json::object();
+            if (!in.representation_id().empty())
+                request["id"] = in.representation_id();
+            if (!in.name().empty())
+                request["name"] = in.name();
+            if (!in.text().empty()) {
+                request["text"] = in.text();
+                request["format"] = in.format();
+            } else {
+                request["structure"] = in.structure();
+                request["latticeParameter"] = in.lattice_parameter();
+                request["species"] = in.species();
+            }
+            request["forceField"] = in.force_field();
+            request["allowIncompatible"] = in.allow_incompatible();
+            if (!in.material_id().empty())
+                request["materialId"] = in.material_id();
+            auto m = session_.services().multiscale.createAtomisticStructure(c, request);
+            if (!m)
+                return m.error();
+            mutation(out.mutable_header(), out.mutable_changes(), m.value());
+            return std::nullopt;
+        });
+    const auto structList = [](const nlohmann::json& list, auto* field) -> Failure {
+        for (const auto& item : list)
+            if (Failure f = structOf(item, field->Add()))
+                return f;
+        return std::nullopt;
+    };
+    unary<v1::ListDerivationMethodsRequest, v1::ListDerivationMethodsResponse>(
+        "MultiscaleService", "ListDerivationMethods", Permission::Read, false, true,
+        [this, structList](const v1::ListDerivationMethodsRequest& in, v1::ListDerivationMethodsResponse& out, const CallContext& c) -> Failure {
+            auto m = session_.services().multiscale.methods(c, in.representation_id());
+            if (!m)
+                return m.error();
+            return structList(m.value(), out.mutable_methods());
+        });
+    unary<v1::ListModelCardsRequest, v1::ListModelCardsResponse>(
+        "MultiscaleService", "ListModelCards", Permission::Read, false, true,
+        [this, structList](const v1::ListModelCardsRequest&, v1::ListModelCardsResponse& out, const CallContext& c) -> Failure {
+            auto m = session_.services().multiscale.modelCards(c);
+            if (!m)
+                return m.error();
+            return structList(m.value(), out.mutable_cards());
+        });
+    unary<v1::ListMultiscaleCouplingsRequest, v1::ListMultiscaleCouplingsResponse>(
+        "MultiscaleService", "ListMultiscaleCouplings", Permission::Read, false, true,
+        [this, structList](const v1::ListMultiscaleCouplingsRequest&, v1::ListMultiscaleCouplingsResponse& out, const CallContext& c) -> Failure {
+            auto m = session_.services().multiscale.couplings(c);
+            if (!m)
+                return m.error();
+            return structList(m.value(), out.mutable_couplings());
+        });
+    unary<v1::ListExternalSolversRequest, v1::ListExternalSolversResponse>(
+        "MultiscaleService", "ListExternalSolvers", Permission::Read, false, true,
+        [this](const v1::ListExternalSolversRequest&, v1::ListExternalSolversResponse& out, const CallContext& c) -> Failure {
+            auto m = session_.services().multiscale.externalSolvers(c);
+            if (!m)
+                return m.error();
+            for (const auto& x : m.value()) {
+                auto* s = out.add_solvers();
+                s->set_solver_id(x.value("id", std::string()));
+                s->set_name(x.value("name", std::string()));
+                s->set_scale(x.value("scale", std::string()));
+                s->set_license(x.value("license", std::string()));
+                s->set_status(x.value("status", std::string()));
+                s->set_found(x.value("found", false));
+                s->set_install(x.value("install", std::string()));
+                for (const auto& p : x.value("provides", nlohmann::json::array()))
+                    s->add_provides(p.get<std::string>());
+            }
+            return std::nullopt;
+        });
+    unary<v1::DeriveMaterialPropertiesRequest, v1::DeriveMaterialPropertiesResponse>(
+        "MultiscaleService", "DeriveMaterialProperties", Permission::Execute, false, false,
+        [this](const v1::DeriveMaterialPropertiesRequest& in, v1::DeriveMaterialPropertiesResponse& out, const CallContext& c) -> Failure {
+            auto job = session_.services().multiscale.derive(c, in.representation_id(), in.method_id(),
+                                                             in.has_settings() ? jsonOf(in.settings()) : nlohmann::json::object());
+            if (!job)
+                return job.error();
+            toProto(job.value(), out.mutable_job());
+            return std::nullopt;
+        });
+    unary<v1::GetMultiscaleResultRequest, v1::GetMultiscaleResultResponse>(
+        "MultiscaleService", "GetMultiscaleResult", Permission::Read, false, true,
+        [this](const v1::GetMultiscaleResultRequest& in, v1::GetMultiscaleResultResponse& out, const CallContext& c) -> Failure {
+            auto r = session_.services().multiscale.result(c, in.result_id());
+            if (!r)
+                return r.error();
+            out.set_stale(r.value().value("stale", false));
+            for (const auto& s : r.value().value("staleReasons", nlohmann::json::array()))
+                out.add_stale_reasons(s.get<std::string>());
+            const nlohmann::json& d = r.value();
+            out.set_reliable(d.contains("derivation") ? d["derivation"].value("reliable", false) : d.value("reliable", false));
+            return structOf(r.value(), out.mutable_document());
+        });
+    unary<v1::AssignDerivedPropertiesRequest, v1::AssignDerivedPropertiesResponse>(
+        "MultiscaleService", "AssignDerivedProperties", Permission::Modify, true, false,
+        [this, mutation](const v1::AssignDerivedPropertiesRequest& in, v1::AssignDerivedPropertiesResponse& out, const CallContext& c) -> Failure {
+            nlohmann::json options = nlohmann::json::object();
+            std::string id = in.material_id();
+            if (!id.empty()) {
+                options["materialId"] = id;
+            } else {
+                id = in.new_material_id().empty() ? Id::generate().str() : in.new_material_id();
+                options["newMaterial"] = {{"id", id}};
+                if (!in.new_material_name().empty())
+                    options["newMaterial"]["name"] = in.new_material_name();
+            }
+            if (in.properties_size() > 0)
+                options["properties"] = std::vector<std::string>(in.properties().begin(), in.properties().end());
+            for (const auto& [key, component] : in.components())
+                options["components"][key] = component;
+            auto m = session_.services().multiscale.assign(c, in.result_id(), options);
+            if (!m)
+                return m.error();
+            mutation(out.mutable_header(), out.mutable_changes(), m.value());
+            addMaterialRef(in.material_id().empty() ? out.mutable_changes()->mutable_created() : out.mutable_changes()->mutable_updated(), id);
+            if (!m.value().dryRun)
+                if (auto material = session_.services().materials.get(c, Id(id)))
+                    toProto(material.value(), out.mutable_material());
+            return std::nullopt;
+        });
+    unary<v1::GetMaterialLineageRequest, v1::GetMaterialLineageResponse>(
+        "MultiscaleService", "GetMaterialLineage", Permission::Read, false, true,
+        [this](const v1::GetMaterialLineageRequest& in, v1::GetMaterialLineageResponse& out, const CallContext& c) -> Failure {
+            auto l = session_.services().multiscale.lineage(c, in.material_id());
+            if (!l)
+                return l.error();
+            return structOf(l.value(), out.mutable_lineage());
+        });
+    unary<v1::GetLocalStateRequest, v1::GetLocalStateResponse>(
+        "MultiscaleService", "GetLocalState", Permission::Read, false, true,
+        [this](const v1::GetLocalStateRequest& in, v1::GetLocalStateResponse& out, const CallContext& c) -> Failure {
+            auto s = session_.services().multiscale.localState(c, in.system_id(), in.region_id(), in.result_id());
+            if (!s)
+                return s.error();
+            return structOf(s.value(), out.mutable_state());
+        });
+    unary<v1::IterateRegionCouplingRequest, v1::IterateRegionCouplingResponse>(
+        "MultiscaleService", "IterateRegionCoupling", Permission::Execute, false, false,
+        [this](const v1::IterateRegionCouplingRequest& in, v1::IterateRegionCouplingResponse& out, const CallContext& c) -> Failure {
+            nlohmann::json spec{{"system", in.system_id()}, {"region", in.region_id()}, {"representation", in.representation_id()}};
+            if (in.tolerance() > 0.0)
+                spec["tolerance"] = in.tolerance();
+            if (in.max_iterations() > 0)
+                spec["maxIterations"] = in.max_iterations();
+            if (in.has_derive_settings())
+                spec["derive"] = jsonOf(in.derive_settings());
+            auto job = session_.services().multiscale.iterate(c, spec);
+            if (!job)
+                return job.error();
+            toProto(job.value(), out.mutable_job());
             return std::nullopt;
         });
     unary<v1::ExplainCandidatesRequest, v1::ExplainCandidatesResponse>(

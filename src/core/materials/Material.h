@@ -28,6 +28,10 @@ enum class Provenance {
     Theoretical,           // calculated from a model
     Illustrative,          // a nominal value for demonstration; not authoritative
     Homogenized,           // derived from an organized structure by an effective-medium analysis (RES-META-011)
+    Computed,              // calculated here from a lower-scale representation (RES-MSC-003): see the derivation
+    Database,              // taken from a materials database (named in the source)
+    Fitted,                // fitted or calibrated to data (named in the source)
+    Surrogate,             // predicted by a surrogate model (named in the source)
 };
 
 std::string_view toString(Provenance provenance);
@@ -56,6 +60,10 @@ struct PropertyValue {
     // Optional frequency dependence, ascending in frequency. When present,
     // `value` is the nominal value and valueAt() interpolates the table.
     std::vector<FrequencySample> frequencyTable;
+    // Lineage (RES-MSC-003): the multiscale derivation record that produced the value
+    // (empty: none), and its standard uncertainty in the property's units (unset: unknown).
+    std::string derivation;
+    std::optional<double> uncertainty;
 
     // The value at a frequency: linear interpolation in the table, clamped
     // to its ends; `value` when there is no table.

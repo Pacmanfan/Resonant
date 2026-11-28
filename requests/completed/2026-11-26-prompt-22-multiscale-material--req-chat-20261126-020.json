@@ -1,0 +1,417 @@
+{
+  "request_id": "REQ-CHAT-20261126-020",
+  "source": "chat",
+  "type": "FEATURE",
+  "priority": "NORMAL",
+  "created": "2026-11-26T23:43:16-05:00",
+  "created_utc": "2026-11-27T04:43:16+00:00",
+  "id_date": "2026-11-26",
+  "timezone": "EST (UTC-05:00)",
+  "status": "completed",
+  "original_text": "# PROMPT 22 \u2014 MULTISCALE MATERIAL MODELING: FROM MACROSCOPIC BEHAVIOR TO MICROSTRUCTURE, MOLECULAR, ATOMIC AND QUANTUM PHYSICS\n\n## Project: RESONANT \u2014 Wave Field Engineering Studio\n\n## Mission\n\nImplement the next major scientific capability in RESONANT: **Multiscale Material Modeling**.\n\nRESONANT must gain the architectural ability to investigate, derive, and connect material behavior across multiple physical scales.\n\nThe objective is to establish a traceable modeling hierarchy that connects macroscopic engineering properties to the physical structures and interactions that produce them.\n\nA material's macroscopic behavior is not independent of its internal organization. Elasticity, conductivity, thermal transport, optical response, magnetic behavior, damping, phase stability, strength, and other properties can emerge from structures and interactions at smaller scales.\n\nRESONANT must be able to represent those relationships and, where computational capabilities and validated dependencies permit, calculate them.\n\nThis is not a request to build an entire quantum chemistry or molecular dynamics package from scratch. It is a request to establish the architecture, scientific interfaces, data models, coupling mechanisms, and at least one meaningful validated multiscale workflow that can expand over time.\n\nThe result must integrate with the existing Shape\u2013Function\u2013Energy architecture, Coupled Energy\u2013Matter Engine, geometry-driven engineering, resonant structures, and metamaterial systems.\n\n---\n\n# 1. Governing Concept\n\nEstablish the following physical relationship as a central architectural principle:\n\n**Atomic and Molecular Structure \u2192 Microstructure \u2192 Effective Material Properties \u2192 Macroscopic Physical Behavior \u2192 Functional Engineering Performance**\n\nThe reverse direction must also be supported:\n\n**Macroscopic Conditions \u2192 Local Physical State \u2192 Microstructural Response \u2192 Molecular or Atomic Investigation**\n\nThis creates a two-way relationship between engineering-scale behavior and the physical mechanisms responsible for it.\n\nFor example:\n\nA structure exhibits an unexpected thermal response.\n\nRESONANT should eventually be able to:\n1. Identify the region responsible for the behavior.\n2. Extract its local temperature, stress, strain, field, or other relevant physical state.\n3. Construct or identify an appropriate representative material region.\n4. Investigate the material at a smaller scale.\n5. Determine which physical mechanisms may explain the observed behavior.\n6. Derive updated or alternative material properties.\n7. Propagate those properties back into the engineering-scale model.\n8. Recalculate the system and compare the resulting behavior.\n\nThis is the foundation of genuine multiscale engineering.\n\nDo not assume that every engineering problem requires every scale. The system must select the appropriate physical model and scale for the question being investigated.\n\n---\n\n# 2. Audit the Existing Architecture Before Implementation\n\nBefore modifying the repository, perform a comprehensive audit.\n\nInspect:\n\n- Material definitions and constitutive models.\n- Material property databases and import mechanisms.\n- Geometry and microstructure representations.\n- Mesh generation and simulation domains.\n- CEME architecture and physical state management.\n- Existing electromagnetic, optical, acoustic, thermal, mechanical, and other supported solvers.\n- Resonance and metamaterial systems.\n- Existing numerical methods and optimization infrastructure.\n- External solver integrations and dependencies.\n- Serialization, project persistence, and versioning.\n- GUI material editors and engineering workflows.\n- Automation APIs and scripting interfaces.\n- Existing scientific validation and benchmark tests.\n\nIdentify which capabilities already exist and which are missing.\n\nProduce an architecture map showing where multiscale modeling should connect to the current system.\n\nDo not create parallel material databases, duplicate geometry systems, or independent simulation frameworks when existing systems can be extended.\n\nPreserve backward compatibility with existing projects.\n\nDo not begin by installing a large collection of scientific packages. First determine what the environment already supports and which integrations provide meaningful capabilities.\n\n---\n\n# 3. Establish the Multiscale Modeling Hierarchy\n\nImplement a formal hierarchy of material representations.\n\nThese must be distinct modeling levels, not merely different visualization resolutions.\n\n## 3.1 Continuum and Macroscopic Scale\n\nThis is the conventional engineering material representation.\n\nExamples:\n\n- Elastic solids.\n- Conductive materials.\n- Dielectrics.\n- Magnetic materials.\n- Fluids.\n- Thermal materials.\n- Optical media.\n- Composite engineering materials.\n\nProperties may include:\n\n- Density.\n- Elastic modulus.\n- Full stiffness and compliance tensors.\n- Poisson's ratio.\n- Thermal conductivity.\n- Electrical conductivity.\n- Heat capacity.\n- Thermal expansion.\n- Permittivity and permeability.\n- Optical refractive index.\n- Magnetic susceptibility.\n- Viscosity.\n- Diffusion coefficients.\n- Damping and loss parameters.\n- Strength and failure parameters.\n\nSupport isotropic, orthotropic, anisotropic, and other appropriate constitutive descriptions.\n\nProperties must be capable of depending on temperature, pressure, composition, direction, frequency, deformation, and material state where the governing physics requires it.\n\n## 3.2 Effective and Homogenized Material Scale\n\nThis level represents the averaged or emergent behavior of structured material.\n\nIt is particularly important for metamaterials, composites, porous structures, and engineered materials.\n\nExamples:\n\n- Effective permittivity.\n- Effective permeability.\n- Effective acoustic density.\n- Effective bulk modulus.\n- Effective elastic stiffness.\n- Effective thermal conductivity.\n- Effective electrical conductivity.\n- Effective optical response.\n\nMaintain a traceable relationship to the underlying microstructure.\n\nA homogenized material must not become an unrelated material definition that loses its physical origin.\n\nIntegrate directly with Prompt 21.\n\n## 3.3 Microstructure and Mesoscale\n\nRepresent the internal organization of materials.\n\nSupport appropriate combinations of:\n\n- Grains and grain boundaries.\n- Crystalline and amorphous phases.\n- Inclusions.\n- Precipitates.\n- Voids and pores.\n- Cracks.\n- Dislocations.\n- Defects.\n- Interfaces.\n- Domains and domain boundaries.\n- Crystallographic orientation and texture.\n- Layered structures.\n- Composite phases.\n- Fiber and particle reinforcement.\n- Hierarchical structures.\n\nMicrostructure must be capable of having its own geometry, material constituents, spatial distribution, orientation, and physical properties.\n\nSupport imported microstructure data where practical.\n\nProvide procedural generation for simple representative structures, without presenting synthetic structures as measured microstructures.\n\n## 3.4 Molecular Scale\n\nEstablish the data model and integration interfaces for molecular representations.\n\nSupport the concepts required by molecular simulation:\n\n- Molecular topology.\n- Atoms and molecular species.\n- Bonds.\n- Bond angles.\n- Dihedral and torsional interactions.\n- Partial charges.\n- Molecular geometry.\n- Force fields.\n- Intermolecular interactions.\n- Periodic simulation cells.\n- Molecular conformations.\n- Molecular configuration and state.\n\nMolecular models must distinguish between geometry, topology, interaction parameters, and simulation conditions.\n\n## 3.5 Atomistic Scale\n\nEstablish atomistic material representations.\n\nSupport:\n\n- Atomic positions.\n- Chemical species.\n- Atomic masses.\n- Crystal structures.\n- Lattice vectors.\n- Unit cells.\n- Supercells.\n- Atomic bonds and coordination.\n- Vacancies.\n- Interstitial defects.\n- Dislocations where supported.\n- Grain boundaries.\n- Surfaces and interfaces.\n- Atomic substitutions and impurities.\n- Periodic and non-periodic boundaries.\n\nThe system should be able to represent crystalline and non-crystalline structures.\n\nAtomic models must be compatible with the material and geometry lineage system.\n\n## 3.6 Electronic and Quantum Scale\n\nEstablish an architecture for electronic-structure and quantum-mechanical material calculations.\n\nWhere an actual supported solver is available, this level should eventually support calculations involving:\n\n- Electronic structure.\n- Band structures.\n- Density of states.\n- Charge density.\n- Cohesive and binding energies.\n- Dielectric response.\n- Optical response.\n- Magnetic properties.\n- Phonon properties.\n- Electronic and thermal transport inputs.\n- Material stability and structural energetics.\n\nDo not implement fake quantum calculations.\n\nIf a quantum solver is unavailable, establish the integration interface and explicitly identify the capability as unavailable rather than simulating results with arbitrary formulas or database values.\n\n---\n\n# 4. Multiscale Data Architecture\n\nCreate a unified architecture for managing relationships between scales.\n\nEvery representation must have:\n\n- A unique identity.\n- A material or structure identity.\n- A defined physical scale.\n- A representation type.\n- Geometry or structural data.\n- Constituent materials.\n- Relevant physical state.\n- Model assumptions.\n- Boundary conditions.\n- Source and provenance.\n- Revision information.\n- Validation status.\n- Uncertainty information where available.\n\nEstablish explicit relationships between representations.\n\nFor example:\n\nA macroscopic material may reference an effective material.\n\nThat effective material may reference an RVE.\n\nThe RVE may reference a microstructure containing several constituent phases.\n\nThose phases may reference atomistic structures.\n\nThe atomistic structures may reference molecular or electronic-structure calculations.\n\nThe complete chain must remain navigable.\n\n## 4.1 Material Lineage\n\nImplement material lineage as a first-class system.\n\nA derived property must retain its origin.\n\nFor every calculated or imported material property, record as applicable:\n\n- Source material.\n- Source structural representation.\n- Scale at which it was calculated.\n- Solver or calculation method.\n- Solver version.\n- Input parameters.\n- Boundary conditions.\n- Temperature and pressure.\n- Composition.\n- Material state.\n- Convergence information.\n- Numerical resolution.\n- Statistical sampling information.\n- Uncertainty.\n- Date and calculation identity.\n- Parent and derived revisions.\n\nA property calculated from an atomistic model must remain linked to that model.\n\nA property obtained from a database must be identified as database-sourced.\n\nA fitted or calibrated property must be identified as fitted or calibrated.\n\nA surrogate prediction must be identified as a surrogate prediction.\n\nDo not present all material properties as equally authoritative.\n\n## 4.2 Model Cards\n\nEach material representation and calculation should have an associated model card.\n\nThe model card must explain:\n\n- What physical system is represented.\n- What scale is being modeled.\n- What assumptions are made.\n- Which equations or methods are used.\n- Which parameters are required.\n- Which effects are excluded.\n- Which physical conditions are valid.\n- How results should be interpreted.\n\nThis is essential to scientific transparency.\n\n---\n\n# 5. Representative Volume Elements and Microstructure Modeling\n\nImplement the Representative Volume Element (RVE) as a central engineering concept.\n\nAn RVE is a sufficiently representative portion of a material from which effective macroscopic behavior can be estimated under appropriate assumptions.\n\nSupport:\n\n- RVE geometry.\n- Multiple material phases.\n- Spatial distributions.\n- Grain structures.\n- Orientation distributions.\n- Inclusions and pores.\n- Periodic and non-periodic arrangements.\n- Boundary conditions.\n- Meshing.\n- Property calculations.\n- Homogenization.\n\nThe system should support multiple RVE sizes and configurations.\n\nIt must be possible to investigate whether the calculated effective properties converge as the RVE becomes larger or more representative.\n\nDo not assume that one small region is representative of every material.\n\n## 5.1 RVE Boundary Conditions\n\nSupport the appropriate boundary-condition families where the solver permits:\n\n- Periodic boundary conditions.\n- Kinematic uniform boundary conditions.\n- Static uniform boundary conditions.\n- Other physically appropriate boundary conditions.\n\nDocument the assumptions and limitations of each.\n\nPeriodic boundary conditions must not be applied automatically to arbitrary non-periodic structures.\n\n## 5.2 Computational Homogenization\n\nEstablish a pathway for deriving macroscopic properties from microscale simulations.\n\nWhere appropriate, support:\n\n- Volume averaging.\n- Field averaging.\n- Energy-based homogenization.\n- Effective tensor calculation.\n- Constitutive response extraction.\n- Statistical averaging.\n- Sensitivity to RVE size and configuration.\n\nFor example, derive an effective elastic stiffness tensor from a heterogeneous microstructure rather than assigning an arbitrary effective modulus.\n\nWhere feasible, compare homogenized predictions against an explicitly modeled larger structure.\n\n## 5.3 FE\u00b2 and Hierarchical Methods\n\nInvestigate an architecture that could eventually support FE\u00b2 or similar computational homogenization methods.\n\nFE\u00b2 conceptually couples a macroscopic finite-element calculation to microscale calculations at integration points.\n\nDo not implement a superficial FE\u00b2 label without actual two-scale coupling.\n\nIf the current numerical architecture cannot support this efficiently, implement the interfaces and document the future requirements.\n\nThe architecture should not prevent this capability from being introduced later.\n\n---\n\n# 6. Molecular and Atomistic Simulation Integration\n\nEstablish real scientific integrations where supported.\n\nDo not reinvent mature scientific simulation packages unnecessarily.\n\nInvestigate appropriate options such as:\n\n- LAMMPS for atomistic and molecular dynamics.\n- OpenMM for molecular simulation.\n- Other suitable molecular or atomistic engines already available or justified by the environment.\n\nThese are candidate integrations, not mandatory dependencies.\n\nSelect integrations based on:\n\n- Existing repository architecture.\n- Platform compatibility.\n- Licensing.\n- Installation complexity.\n- Performance.\n- Supported physical models.\n- Data interoperability.\n- Long-term maintainability.\n\n## 6.1 Molecular Dynamics\n\nWhere a genuine molecular dynamics engine is available, support a meaningful configuration and execution workflow.\n\nRelevant concepts include:\n\n- Force fields.\n- Interaction potentials.\n- Initial atomic or molecular configurations.\n- Integration time steps.\n- Simulation duration.\n- Temperature control.\n- Pressure control.\n- Ensembles.\n- Equilibration.\n- Statistical sampling.\n- Periodic boundaries.\n- Energy monitoring.\n\nSupport appropriate physical observables, potentially including:\n\n- Radial distribution functions.\n- Mean squared displacement.\n- Diffusion coefficients.\n- Atomic or molecular trajectories.\n- Structural ordering.\n- Temperature and pressure behavior.\n- Elastic response.\n- Thermal transport where the method and calculation support it.\n\nDo not assume that every property can be reliably derived from a short simulation.\n\n## 6.2 Force Fields and Potentials\n\nForce fields and interaction potentials are scientific models, not generic tuning parameters.\n\nRecord:\n\n- Force-field identity.\n- Version.\n- Parameter source.\n- Chemical and material applicability.\n- Known limitations.\n- Validity range.\n- Calibration provenance.\n\nPrevent users from applying a force field to an incompatible chemical system without an explicit warning.\n\n## 6.3 Atomistic Validation\n\nSupport appropriate validation checks:\n\n- Energy minimization.\n- Structural stability.\n- Time-step sensitivity.\n- Simulation-size sensitivity.\n- Temperature equilibration.\n- Energy conservation where applicable.\n- Statistical convergence.\n- Finite-size effects.\n\nThe system must distinguish between a simulation that executed successfully and a simulation that produced scientifically reliable results.\n\n---\n\n# 7. Electronic Structure and Quantum Integration\n\nEstablish a modular interface for quantum and electronic-structure calculations.\n\nInvestigate suitable existing packages where appropriate, including:\n\n- Quantum ESPRESSO.\n- CP2K.\n- GPAW.\n- Other compatible electronic-structure packages.\n\nDo not require all of these.\n\nSelect a realistic integration path based on the actual environment, architecture, licensing, and available computational resources.\n\n## 7.1 Calculation Configuration\n\nWhere supported, expose relevant calculation parameters:\n\n- Atomic structure.\n- Crystal lattice.\n- Chemical composition.\n- Electronic configuration.\n- Exchange-correlation functional.\n- Basis or plane-wave cutoff.\n- Pseudopotentials.\n- k-point sampling.\n- Spin configuration.\n- Convergence thresholds.\n- Occupation and smearing methods.\n- Relevant relativistic treatment.\n- Boundary conditions.\n\nAvoid exposing meaningless or unsupported parameters.\n\n## 7.2 Derived Quantities\n\nWhere the selected solver supports them, extract:\n\n- Total energy.\n- Cohesive energy.\n- Band structure.\n- Density of states.\n- Charge density.\n- Electronic properties.\n- Dielectric response.\n- Optical response.\n- Magnetic properties.\n- Phonon information.\n\nRecord all calculation settings and convergence evidence.\n\n## 7.3 Quantum Scientific Guardrails\n\nExplicitly account for the limitations of quantum calculations.\n\nThese may include:\n\n- Functional approximations.\n- Pseudopotential limitations.\n- Basis-set convergence.\n- Plane-wave cutoff convergence.\n- k-point convergence.\n- Spin treatment.\n- Relativistic effects.\n- Finite-size effects.\n- Structural relaxation.\n- Temperature approximations.\n- Missing many-body effects.\n\nDo not imply that a DFT calculation automatically produces experimentally accurate properties.\n\nThe calculation must communicate its assumptions and limitations.\n\n---\n\n# 8. Property Derivation and Upscaling\n\nThis is one of the most important functions of Prompt 22.\n\nRESONANT must be able to derive higher-level material properties from lower-level representations.\n\nEstablish a consistent property derivation framework.\n\nPotential derived properties include:\n\n### Mechanical\n\n- Elastic stiffness tensors.\n- Compliance tensors.\n- Elastic moduli.\n- Poisson's ratio.\n- Anisotropic mechanical response.\n- Thermal expansion.\n- Material density.\n- Damping parameters where physically supported.\n\n### Thermal\n\n- Thermal conductivity.\n- Thermal diffusivity.\n- Heat capacity.\n- Thermal expansion.\n- Directional thermal transport.\n\n### Electrical and Electromagnetic\n\n- Electrical conductivity.\n- Effective permittivity.\n- Effective permeability.\n- Dielectric response.\n- Frequency-dependent constitutive properties.\n\n### Optical\n\n- Refractive index.\n- Optical dispersion.\n- Absorption-related properties.\n- Anisotropic optical response.\n\n### Molecular and Transport\n\n- Diffusion coefficients.\n- Viscosity.\n- Molecular mobility.\n- Other transport properties supported by the selected simulation method.\n\n### Structural and Material Stability\n\n- Cohesive energy.\n- Phase stability indicators.\n- Defect energetics.\n- Structural response.\n- Other validated material descriptors.\n\nNot every property must be available for every scale or material.\n\nThe system must identify which methods can legitimately derive each property.\n\n## 8.1 Property Derivation Pipeline\n\nImplement a pipeline:\n\n1. Select source material representation.\n2. Select the target property.\n3. Select an appropriate physical method.\n4. Validate model applicability.\n5. Configure calculation conditions.\n6. Execute calculation.\n7. Assess numerical convergence.\n8. Calculate the resulting property.\n9. Estimate uncertainty where possible.\n10. Record provenance and validity.\n11. Make the derived property available to higher-scale models.\n\nDerived properties must be versioned.\n\nChanging the underlying microstructure or atomic structure must mark dependent properties as potentially stale.\n\n## 8.2 State-Dependent Properties\n\nProperties may depend on:\n\n- Temperature.\n- Pressure.\n- Composition.\n- Frequency.\n- Direction.\n- Strain.\n- Defect concentration.\n- Phase.\n- Material history.\n- Other relevant physical conditions.\n\nDo not collapse these relationships into a single scalar when the physics requires a tensor, function, or state-dependent constitutive model.\n\n---\n\n# 9. Downscaling and Local Material Investigation\n\nThe architecture must support the opposite direction as well.\n\nA macroscopic simulation may reveal a local region with unusual physical behavior.\n\nRESONANT should eventually be able to use the local state to configure a smaller-scale investigation.\n\nExamples:\n\n- A localized thermal hot spot.\n- A stress concentration.\n- A region with unusual deformation.\n- An electromagnetic field concentration.\n- A region of high mechanical dissipation.\n- A material interface with unusual energy transfer.\n- A region exhibiting unexpected resonance behavior.\n\nThe system should be capable of extracting relevant local conditions and transferring them to a smaller-scale model.\n\nExamples include:\n\n- Local temperature.\n- Stress and strain.\n- Electric and magnetic fields.\n- Local composition.\n- Pressure.\n- Deformation.\n- Relevant boundary conditions.\n\nDo not assume every macroscopic field can be transferred directly to every atomistic or molecular model.\n\nThe transfer must be physically appropriate and clearly documented.\n\nSupport mapping between coordinate systems, meshes, and representations where required.\n\n---\n\n# 10. Multiscale Coupling Strategies\n\nImplement a modular coupling architecture.\n\nDifferent physical problems require different coupling strategies.\n\nDo not force every simulation into one universal coupling method.\n\nSupport the following architectural categories.\n\n## 10.1 Sequential or Offline Coupling\n\nOne scale produces parameters consumed by another scale.\n\nExample:\n\nAtomistic simulation \u2192 elastic constants \u2192 continuum material model.\n\nThis should be the initial implementation priority because it provides a practical and verifiable multiscale pathway.\n\n## 10.2 Iterative Coupling\n\nA higher-scale model provides local conditions to a lower-scale model.\n\nThe lower-scale model calculates a response.\n\nThe higher-scale model is updated using that response.\n\nRepeat until an appropriate convergence condition is satisfied.\n\n## 10.3 Hierarchical Coupling\n\nA sequence of models operates at different scales.\n\nFor example:\n\nQuantum calculation \u2192 atomistic model \u2192 microstructure model \u2192 effective material \u2192 macroscopic engineering model.\n\nEach transition must preserve provenance and uncertainty.\n\n## 10.4 Concurrent Coupling\n\nInvestigate future support for concurrent atomistic-continuum or other concurrent multiscale approaches.\n\nDo not implement this as a placeholder that claims actual coupling.\n\nOnly implement when the numerical methods, solver integrations, and physical interfaces genuinely support it.\n\n## 10.5 Coupling Contracts\n\nEvery coupling method must define:\n\n- Source scale.\n- Target scale.\n- Transferred quantities.\n- Coordinate transformations.\n- Physical assumptions.\n- Boundary conditions.\n- Update frequency.\n- Convergence criteria.\n- Failure handling.\n- Uncertainty propagation.\n- Provenance.\n\n---\n\n# 11. Connection to Dynamic Material State \u2014 Prompt 23\n\nPrepare the architecture for evolving material properties.\n\nMaterials do not always remain static during operation.\n\nExamples include:\n\n- Phase transformations.\n- Thermal expansion.\n- Plastic deformation.\n- Damage accumulation.\n- Fatigue.\n- Aging.\n- Diffusion.\n- Chemical reactions.\n- Microstructural evolution.\n- Defect formation.\n- Grain growth.\n- Changes in molecular configuration.\n\nPrompt 22 must establish the state and lineage interfaces required for these future capabilities.\n\nA material representation must be capable of distinguishing:\n\n- Initial state.\n- Current state.\n- Derived state.\n- Historical state.\n- Predicted future state.\n\nPreserve the relationship between material state and its derived properties.\n\nDo not implement an incomplete dynamic material engine here. Prompt 23 will address that directly.\n\n---\n\n# 12. Integration With the Existing RESONANT Architecture\n\nThis capability must be integrated into the existing engineering architecture.\n\n## 12.1 Prompt 17 \u2014 Shape\u2013Function\u2013Energy\n\nMaterial structure must be connected to functional behavior.\n\nThe material model should help explain why a geometry produces a particular physical response.\n\n## 12.2 Prompt 18 \u2014 Coupled Energy\u2013Matter Engine\n\nMaterial properties must be available to CEME.\n\nCEME must be able to consume derived material properties and appropriate state-dependent constitutive models.\n\nMaterial calculations must not become disconnected from the central physical simulation framework.\n\n## 12.3 Prompt 19 \u2014 Geometry-Driven Energy Transformation\n\nGeometry and material properties must remain linked.\n\nThe material's internal structure may influence how the larger geometry transforms, confines, transfers, or dissipates energy.\n\n## 12.4 Prompt 20 \u2014 Resonant Structures and Energy Storage\n\nMultiscale-derived properties must be available to resonance and modal analysis.\n\nExamples:\n\n- Atomic structure influences elastic stiffness.\n- Microstructure influences mechanical damping.\n- Material composition influences dielectric response.\n- Temperature influences resonant frequency.\n- Microstructural losses influence quality factor.\n\nThese relationships must be physically derived or supplied by validated models.\n\n## 12.5 Prompt 21 \u2014 Metamaterials\n\nThis integration is particularly important.\n\nA metamaterial's effective properties must remain connected to its underlying structure and constituents.\n\nFor example:\n\n1. Define the constituent material.\n2. Obtain or derive its physical properties.\n3. Construct the metamaterial unit cell.\n4. Model the internal geometry and arrangement.\n5. Calculate the emergent response.\n6. Derive effective material properties.\n7. Analyze wave propagation and resonance.\n8. Compare the effective model against an explicitly modeled structure.\n\nThe system must retain the complete derivation chain.\n\n---\n\n# 13. Reference Engineering Workflows\n\nImplement at least one complete, scientifically defensible multiscale workflow. Prefer multiple examples where the existing solver infrastructure makes them practical.\n\n## Example A \u2014 Crystalline Material\n\nConstruct or import a simple crystalline structure.\n\nWhere a supported atomistic or electronic-structure solver exists:\n\n1. Define the crystal lattice and atomic positions.\n2. Configure the calculation.\n3. Establish structural stability.\n4. Calculate a relevant physical property.\n5. Derive a higher-level material parameter.\n6. Import that parameter into a continuum material definition.\n7. Run a macroscopic engineering calculation.\n8. Preserve the full lineage.\n\nIf a genuine atomistic or quantum calculation cannot be executed in the current environment, do not claim this workflow is complete.\n\n## Example B \u2014 Polycrystalline Material\n\nConstruct an RVE containing multiple grains.\n\nAllow variation in:\n\n- Grain size.\n- Grain shape.\n- Crystallographic orientation.\n- Phase distribution.\n- Grain-boundary properties.\n\nCalculate an effective property, such as elastic stiffness or thermal conductivity, using an appropriate numerical method.\n\nInvestigate sensitivity to RVE size and orientation distribution.\n\n## Example C \u2014 Composite or Porous Material\n\nConstruct a heterogeneous RVE containing multiple phases, inclusions, or pores.\n\nCalculate effective thermal or mechanical properties.\n\nCompare against a simplified homogeneous approximation.\n\nDemonstrate that microstructure can materially influence the derived properties.\n\n## Example D \u2014 Multiscale Metamaterial\n\nConnect a constituent material to a structured unit cell.\n\nDerive or import constituent properties.\n\nCalculate the unit-cell response.\n\nExtract effective properties.\n\nUse those properties in a larger-scale model.\n\nConnect the result to Prompt 21's metamaterial and band-structure systems.\n\n## Example E \u2014 Cross-Scale Engineering Investigation\n\nProvide a demonstration in which a macroscopic model uses a derived material property and allows the user to navigate back to the underlying representation and calculation.\n\nThis example should demonstrate the value of the complete architecture, not merely display several disconnected simulation results.\n\n---\n\n# 14. Material Database and External Data\n\nExtend material import and data management to support multiscale representations.\n\nPotential sources include:\n\n- Crystallographic structure databases.\n- Materials property databases.\n- Molecular structure files.\n- Atomistic structure files.\n- Experimental microstructure data.\n- User-generated material definitions.\n- Existing simulation outputs.\n\nSupport appropriate file formats where practical, such as:\n\n- CIF.\n- XYZ.\n- PDB.\n- POSCAR.\n- Other formats justified by the selected solver integrations.\n\nDo not assume every format contains all necessary physical information.\n\nImported data must be validated and accompanied by source information.\n\nDo not silently convert missing information into fabricated defaults.\n\nImported material properties must be distinguished from calculated properties.\n\n---\n\n# 15. Uncertainty and Scientific Confidence\n\nMultiscale modeling introduces uncertainty at every transition.\n\nThe system must not treat calculated material properties as exact merely because a solver returned a number.\n\nTrack uncertainty arising from:\n\n- Model assumptions.\n- Incomplete microstructure information.\n- Limited sampling.\n- RVE size.\n- Statistical variation.\n- Force-field limitations.\n- Quantum approximations.\n- Numerical convergence.\n- Measurement uncertainty.\n- Property-fitting procedures.\n- Scale-transfer assumptions.\n\nWhere feasible, propagate uncertainty through property derivation and homogenization.\n\nAt minimum, the architecture must preserve uncertainty information and avoid discarding it when transferring a property between scales.\n\nDistinguish:\n\n- Numerically converged.\n- Statistically converged.\n- Experimentally validated.\n- Model-calibrated.\n- Database-sourced.\n- Predicted but unvalidated.\n\nThese are not interchangeable statuses.\n\n---\n\n# 16. Visualization and User Experience\n\nMultiscale modeling must be accessible without making RESONANT feel like a collection of unrelated scientific applications.\n\nCreate a coherent workflow around the material itself.\n\n## 16.1 Material Scale Explorer\n\nProvide a way to navigate between material representations.\n\nFor example:\n\nMacroscopic material \u2192 Effective material \u2192 Microstructure \u2192 Grain \u2192 Atomic structure \u2192 Electronic structure.\n\nThe interface should make it clear which scale is currently active.\n\nShow relationships between parent and derived representations.\n\n## 16.2 Structural Visualization\n\nWhere appropriate, visualize:\n\n- Microstructure.\n- Grain boundaries.\n- Phase distributions.\n- Inclusions.\n- Porosity.\n- Atomic positions.\n- Molecular structures.\n- Crystal lattices.\n- Defects.\n- Simulation cells.\n\nUse existing geometry and rendering systems wherever possible.\n\nDo not build an unrelated visualization framework.\n\n## 16.3 Property Comparison\n\nProvide comparison tools for:\n\n- Constituent versus effective properties.\n- Different microstructures.\n- Different RVE sizes.\n- Different temperatures.\n- Different compositions.\n- Different structural configurations.\n- Different calculation methods.\n\nClearly identify calculated, imported, fitted, and estimated results.\n\n## 16.4 Provenance Navigation\n\nUsers should be able to select a material property and discover:\n\n- Where it came from.\n- Which model produced it.\n- Which source structure was used.\n- Which calculation conditions applied.\n- Whether the result is still current.\n- What uncertainty and limitations apply.\n\n## 16.5 Engineering Workflow\n\nThe user should be able to:\n\n1. Select or create a material.\n2. Choose the relevant modeling scale.\n3. Import or construct the representation.\n4. Configure a physical model.\n5. Execute an analysis.\n6. Inspect the results.\n7. Derive a property.\n8. Promote that property to a higher-scale material.\n9. Assign the material to an engineering geometry.\n10. Run a CEME or other supported simulation.\n11. Navigate back to the underlying material calculation.\n\nThe workflow must preserve existing RESONANT usability and visual consistency.\n\n---\n\n# 17. Automation and Programmatic Access\n\nExpose multiscale functionality through the existing automation architecture.\n\nDo not create a separate automation subsystem.\n\nProvide programmatic access to relevant operations, including:\n\n- Create material representation.\n- Import structure.\n- Create microstructure.\n- Configure RVE.\n- Configure atomistic or molecular calculation.\n- Configure electronic-structure calculation where available.\n- Execute supported calculations.\n- Inspect convergence.\n- Extract properties.\n- Perform homogenization.\n- Create derived material.\n- Inspect lineage.\n- Compare properties.\n- Validate model applicability.\n- Export results.\n\nAutomation operations must return structured results.\n\nFailures must identify the stage and cause.\n\nDo not report a calculation as successful if it only created a configuration or submitted an incomplete job.\n\n---\n\n# 18. Performance and Resource Management\n\nMultiscale calculations can be computationally expensive.\n\nThe architecture must account for:\n\n- CPU and GPU availability.\n- Memory requirements.\n- Simulation cell size.\n- Atom count.\n- Mesh resolution.\n- Solver execution time.\n- Parallel execution.\n- Calculation cancellation.\n- Checkpointing.\n- Result caching.\n- Intermediate data storage.\n\nUse existing job management and resource infrastructure where possible.\n\nProvide resource estimates when a calculation's approximate cost can be determined.\n\nDo not start large calculations without making their expected resource requirements reasonably clear.\n\nAllow calculations to be interrupted and resumed where the underlying solver supports it.\n\nKeep external solver processes isolated and manage their lifecycle safely.\n\n---\n\n# 19. Persistence and Project Integrity\n\nPersist all multiscale entities and relationships.\n\nA saved project must retain:\n\n- Material representations.\n- Microstructures.\n- RVE configurations.\n- Atomic and molecular structures.\n- Calculation configurations.\n- Calculation results.\n- Derived properties.\n- Provenance.\n- Uncertainty.\n- Validation state.\n- Parent-child relationships.\n- Revision dependencies.\n\nImplement dependency tracking.\n\nIf a source representation changes, identify downstream results that may be invalidated.\n\nDo not silently reuse stale properties.\n\nPreserve existing project files and migration compatibility.\n\nA project should remain understandable even when an optional external solver is unavailable on another machine.\n\n---\n\n# 20. Scientific Validation and Benchmarking\n\nScientific validation is mandatory.\n\nBuild tests that verify the calculations, not merely that the software executes.\n\n## 20.1 Architecture Tests\n\nVerify:\n\n- Each scale has a distinct representation.\n- Relationships between scales are preserved.\n- Material lineage survives save and reload.\n- Derived properties retain provenance.\n- Source revisions invalidate dependent results appropriately.\n- Unsupported scale transitions are rejected or clearly identified.\n\n## 20.2 Microstructure and Homogenization Tests\n\nUse simple benchmark structures with known or independently verified behavior.\n\nExamples:\n\n- A homogeneous RVE should recover the constituent property under appropriate conditions.\n- A simple layered composite should reproduce the expected directional difference in effective response.\n- A porous material should demonstrate the expected influence of porosity under a defined model.\n- RVE results should be examined for convergence with increasing size where appropriate.\n\nUse analytical solutions or independently verified reference results where possible.\n\n## 20.3 Atomistic Tests\n\nWhere an atomistic engine is integrated, include a small benchmark that validates:\n\n- Structure import.\n- Energy minimization.\n- Stability.\n- Energy behavior.\n- A selected physical observable.\n- Sensitivity to relevant numerical parameters.\n\n## 20.4 Quantum Tests\n\nOnly where a genuine quantum solver is integrated, include a small benchmark with documented reference results.\n\nVerify calculation configuration, convergence, and extracted quantities.\n\nDo not make quantum benchmarks mandatory for an environment that does not support quantum calculations.\n\n## 20.5 Integration Tests\n\nVerify that derived material properties can be consumed by existing engineering and CEME systems.\n\nAt least one end-to-end test must demonstrate:\n\n**Source representation \u2192 Calculation \u2192 Derived property \u2192 Higher-scale material \u2192 Engineering simulation**\n\n---\n\n# 21. Implementation Strategy\n\nImplement this capability in deliberate phases.\n\nDo not attempt to build every scale and every solver integration simultaneously.\n\n## Phase 1 \u2014 Architecture Audit and Data Model\n\n- Audit the existing architecture.\n- Establish the multiscale representation hierarchy.\n- Define material lineage.\n- Define model cards.\n- Define derived-property records.\n- Define uncertainty and validation metadata.\n- Establish revision and dependency tracking.\n\n## Phase 2 \u2014 Microstructure and RVE\n\n- Implement microstructure representations.\n- Implement RVE geometry and configuration.\n- Support multiple constituent phases.\n- Implement an appropriate homogenization pathway.\n- Validate against simple reference cases.\n\nThis phase should deliver the first substantial new scientific capability.\n\n## Phase 3 \u2014 Atomistic and Molecular Integration\n\n- Evaluate available scientific engines.\n- Select a practical integration.\n- Implement structure import and validation.\n- Implement solver configuration and execution.\n- Extract at least one useful physical property.\n- Preserve full calculation provenance.\n\nIf no suitable solver is available, implement the integration contract and clearly document the limitation rather than creating a fake simulation.\n\n## Phase 4 \u2014 Electronic and Quantum Integration\n\n- Evaluate the available environment.\n- Select a suitable electronic-structure integration if justified.\n- Implement configuration, execution, and result extraction.\n- Establish convergence reporting.\n- Preserve scientific assumptions and limitations.\n\nThis phase may be deferred if the environment cannot support it.\n\n## Phase 5 \u2014 Property Upscaling and Downscaling\n\n- Implement property derivation.\n- Implement scale-transfer contracts.\n- Implement uncertainty preservation.\n- Implement local-state extraction and mapping interfaces.\n- Connect derived properties to higher-scale materials.\n\n## Phase 6 \u2014 CEME and Engineering Integration\n\n- Make derived properties available to CEME.\n- Integrate with existing material assignments.\n- Connect to geometry-driven engineering.\n- Connect to resonance and metamaterial analysis.\n- Verify that changes in material lineage are reflected in dependent engineering models.\n\n## Phase 7 \u2014 User Experience and Automation\n\n- Implement material scale navigation.\n- Implement structural visualization.\n- Implement property comparison.\n- Implement provenance navigation.\n- Expose supported operations through existing automation.\n- Add example projects and guided workflows.\n\n## Phase 8 \u2014 Validation and Documentation\n\n- Run the complete test suite.\n- Validate all implemented scientific pathways.\n- Benchmark performance.\n- Document supported scales and limitations.\n- Produce an engineering completion report.\n\n---\n\n# 22. Explicit Scientific Guardrails\n\nThese rules are mandatory.\n\n1. Do not describe a continuum material calculation as atomistic simulation.\n2. Do not describe a molecular dynamics calculation as quantum simulation.\n3. Do not describe database retrieval as a first-principles calculation.\n4. Do not fabricate atomic structures, force-field parameters, quantum results, or material properties.\n5. Do not claim a solver integration is functional until it has executed a real calculation.\n6. Do not treat numerical convergence as proof of experimental accuracy.\n7. Do not assume that effective material properties are independent of frequency, temperature, direction, or microstructure.\n8. Do not assume that every material can be represented by a single isotropic scalar property.\n9. Do not transfer properties between scales without documenting the physical assumptions.\n10. Do not discard source lineage when creating an effective or derived material.\n11. Do not silently substitute an approximate calculation when the requested method is unavailable.\n12. Do not create an artificial universal multiscale equation that replaces domain-specific physics.\n13. Do not require all modeling scales to be active for every engineering simulation.\n14. Do not allow stale derived properties to appear current.\n15. Do not claim scientific validation without a documented benchmark or experimental comparison.\n\nA calculation may be useful without being definitive. RESONANT must communicate that distinction honestly.\n\n---\n\n# 23. Acceptance Criteria\n\nPrompt 22 is complete when the following conditions are satisfied.\n\n### Architecture\n\n- [ ] Multiscale material representations exist as distinct, connected entities.\n- [ ] Material lineage is preserved across all implemented scales.\n- [ ] Derived properties retain their calculation provenance.\n- [ ] Model assumptions and validity information are stored.\n- [ ] Revision and dependency tracking work.\n\n### Microstructure\n\n- [ ] Microstructure can represent multiple constituent phases.\n- [ ] An RVE can be constructed or imported.\n- [ ] At least one effective property can be calculated through a genuine numerical or analytical method.\n- [ ] At least one result is compared against a reference or independently verified expectation.\n- [ ] RVE sensitivity or convergence is investigated.\n\n### Lower-Scale Integration\n\n- [ ] At least one genuine atomistic or molecular integration is operational, if supported by the environment.\n- [ ] If unavailable, the missing capability and its integration requirements are explicitly documented.\n- [ ] No unsupported simulation capability is presented as implemented.\n- [ ] Electronic or quantum integration is operational only if a real solver has been integrated and validated.\n\n### Property Derivation\n\n- [ ] At least one complete property derivation pathway exists.\n- [ ] Derived properties can be assigned to higher-scale material representations.\n- [ ] Provenance and uncertainty are preserved.\n- [ ] Stale dependencies can be identified.\n\n### RESONANT Integration\n\n- [ ] Derived materials can be used by existing engineering workflows.\n- [ ] CEME can consume the implemented material properties.\n- [ ] Integration with geometry, resonance, and metamaterial systems is established where relevant.\n- [ ] Existing projects remain compatible.\n\n### User Experience and Automation\n\n- [ ] Users can inspect material representations and their relationships.\n- [ ] Users can identify the origin of a derived property.\n- [ ] Supported multiscale operations are accessible through the existing automation architecture.\n- [ ] Example projects demonstrate the implemented workflow.\n\n### Quality\n\n- [ ] Scientific benchmark tests pass.\n- [ ] Existing regression tests pass.\n- [ ] Documentation identifies supported capabilities and limitations.\n- [ ] No fabricated scientific capabilities or results are present.\n\n**Important:** Acceptance does not require every scale to be fully implemented. It requires a genuine, validated multiscale architecture and at least one complete cross-scale pathway. Unsupported scales must be explicitly identified as future integrations.\n\n---\n\n# 24. Final Engineering Report\n\nWhen implementation is complete, provide a detailed report containing:\n\n1. Architecture audit findings.\n2. Existing systems reused.\n3. New data structures and interfaces.\n4. Implemented modeling scales.\n5. External solvers integrated.\n6. Scientific methods implemented.\n7. Property derivation pathways.\n8. Homogenization and RVE capabilities.\n9. Lineage and uncertainty implementation.\n10. CEME and engineering integration.\n11. GUI and automation changes.\n12. Scientific benchmarks and results.\n13. Performance and resource observations.\n14. Test results.\n15. Known limitations.\n16. Deferred capabilities.\n17. Recommended next steps.\n\nClearly distinguish completed implementation from planned architecture.\n\nInclude relevant source files, modules, APIs, and tests.\n\n---\n\n# Final Directive\n\nThe purpose of this work is to make RESONANT capable of connecting engineering behavior to the physical organization of matter.\n\nA material should no longer be treated merely as a collection of engineering constants.\n\nIt should be possible to investigate how those properties emerge from its structure, how that structure influences energy and matter interactions, and how the resulting behavior manifests in an engineered system.\n\nThe architecture must allow an engineer to move between scales without losing physical meaning, calculation provenance, or scientific accountability.\n\n**We are building a system that can investigate not only how a material behaves, but why it behaves that way.**\n\nImplement this as a cohesive extension of RESONANT, not as a separate scientific application.",
+  "file": "requests/inbox/2026-11-26-prompt-22-multiscale-material--req-chat-20261126-020.md",
+  "attachments": [],
+  "context": "User: 'add this prompt and perform it in order' (queued after REQ-CHAT-20261126-019)",
+  "text_sha256": "ff68479f67e846d4e88a80fb251e38ea0cf2c7725833d4e725dc9bfe249414b9",
+  "classification": {
+    "proposed_type": null,
+    "proposed_source": "heuristic",
+    "normalized_type": null,
+    "heuristic_type": "FEATURE",
+    "final_type": "FEATURE",
+    "confidence": "high",
+    "validation": "PASS",
+    "classifier_reason": "request statement is framed as feature: Implement, ability to, build an , capabilities",
+    "correction_reason": null,
+    "normalization_note": null,
+    "evidence": [
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement the next major scientific capability in RESONANT: **Multiscale Material Modeling**."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "capability",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement the next major scientific capability in RESONANT: **Multiscale Material Modeling**."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "ability to",
+        "strength": "strong",
+        "note": "",
+        "sentence": "RESONANT must gain the architectural ability to investigate, derive, and connect material behavior across multiple physical scales."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "objective",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The objective is to establish a traceable modeling hierarchy that connects macroscopic engineering properties to the physical structures and interactions that produce them."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "must be able",
+        "strength": "strong",
+        "note": "",
+        "sentence": "RESONANT must be able to represent those relationships and, where computational capabilities and validated dependencies permit, calculate them."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "capabilities",
+        "strength": "strong",
+        "note": "",
+        "sentence": "RESONANT must be able to represent those relationships and, where computational capabilities and validated dependencies permit, calculate them."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "build an ",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This is not a request to build an entire quantum chemistry or molecular dynamics package from scratch."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "integrate",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The result must integrate with the existing Shape\u2013Function\u2013Energy architecture, Coupled Energy\u2013Matter Engine, geometry-driven engineering, resonant structures, and metamaterial systems."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "creates",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This creates a two-way relationship between engineering-scale behavior and the physical mechanisms responsible for it."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "be able to",
+        "strength": "strong",
+        "note": "",
+        "sentence": "RESONANT should eventually be able to:"
+      },
+      {
+        "category": "PERFORMANCE",
+        "where": "body",
+        "phrase": "optimization",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Existing numerical methods and optimization infrastructure."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "integrations",
+        "strength": "strong",
+        "note": "",
+        "sentence": "External solver integrations and dependencies."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capabilities",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Identify which capabilities already exist and which are missing."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Produce",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Produce an architecture map showing where multiscale modeling should connect to the current system."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not create parallel material databases, duplicate geometry systems, or independent simulation frameworks when existing systems can be extended."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "integrations",
+        "strength": "strong",
+        "note": "",
+        "sentence": "First determine what the environment already supports and which integrations provide meaningful capabilities."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "provide",
+        "strength": "strong",
+        "note": "",
+        "sentence": "First determine what the environment already supports and which integrations provide meaningful capabilities."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capabilities",
+        "strength": "strong",
+        "note": "",
+        "sentence": "First determine what the environment already supports and which integrations provide meaningful capabilities."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement a formal hierarchy of material representations."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support isotropic, orthotropic, anisotropic, and other appropriate constitutive descriptions."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Integrate",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Integrate directly with Prompt 21."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support appropriate combinations of:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support imported microstructure data where practical."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Provide",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Provide procedural generation for simple representative structures, without presenting synthetic structures as measured microstructures."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "integration",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Establish the data model and integration interfaces for molecular representations."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support the concepts required by molecular simulation:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "should be able to",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The system should be able to represent crystalline and non-crystalline structures."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not implement fake quantum calculations."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "integration",
+        "strength": "strong",
+        "note": "",
+        "sentence": "If a quantum solver is unavailable, establish the integration interface and explicitly identify the capability as unavailable rather than simulating results with arbitrary formulas or database values."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capability",
+        "strength": "strong",
+        "note": "",
+        "sentence": "If a quantum solver is unavailable, establish the integration interface and explicitly identify the capability as unavailable rather than simulating results with arbitrary formulas or database values."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Create a unified architecture for managing relationships between scales."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement material lineage as a first-class system."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "first-class",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement material lineage as a first-class system."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement the Representative Volume Element (RVE) as a central engineering concept."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "should support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The system should support multiple RVE sizes and configurations."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support the appropriate boundary-condition families where the solver permits:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "integration",
+        "strength": "strong",
+        "note": "",
+        "sentence": "FE\u00b2 conceptually couples a macroscopic finite-element calculation to microscale calculations at integration points."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not implement a superficial FE\u00b2 label without actual two-scale coupling."
+      }
+    ],
+    "scores": {
+      "FEATURE": {
+        "head": 7,
+        "body": 145
+      },
+      "BUG": {
+        "head": 2,
+        "body": 16
+      },
+      "CRASH": {
+        "head": 0,
+        "body": 0
+      },
+      "REGRESSION": {
+        "head": 0,
+        "body": 0
+      },
+      "PERFORMANCE": {
+        "head": 0,
+        "body": 1
+      },
+      "REFACTOR": {
+        "head": 0,
+        "body": 18
+      },
+      "BUILD": {
+        "head": 0,
+        "body": 1
+      },
+      "DOCUMENTATION": {
+        "head": 0,
+        "body": 10
+      },
+      "INVESTIGATION": {
+        "head": 1,
+        "body": 33
+      },
+      "PROCESS-CHANGE": {
+        "head": 0,
+        "body": 1
+      }
+    },
+    "evidence_total": 235,
+    "validator": "scripts/request_classification.py"
+  },
+  "links": {
+    "work": [
+      "WORK-000021"
+    ]
+  },
+  "commits": [],
+  "resolution": {
+    "from": "processing",
+    "to": "completed",
+    "at": "2026-11-28T04:37:49.413398+00:00",
+    "by": "agent-dev-20261126151713-76f632",
+    "gates": [
+      {
+        "work": "WORK-000021",
+        "at": "2026-11-28T04:37:42.757269+00:00",
+        "verdict": "PASS",
+        "request_fingerprint": "75be71c1b9765a8fcd3cbbb07614b143c04ef061dadf3ccdd4437b6b72a67e33",
+        "test_runs": [
+          "20261127T233245-830610"
+        ]
+      }
+    ]
+  }
+}

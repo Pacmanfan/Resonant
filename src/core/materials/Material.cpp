@@ -14,6 +14,10 @@ std::string_view toString(Provenance provenance)
     case Provenance::Theoretical: return "theoretical";
     case Provenance::Illustrative: return "illustrative";
     case Provenance::Homogenized: return "homogenized";
+    case Provenance::Computed: return "computed";
+    case Provenance::Database: return "database";
+    case Provenance::Fitted: return "fitted";
+    case Provenance::Surrogate: return "surrogate";
     }
     return "illustrative";
 }
@@ -26,6 +30,10 @@ std::optional<Provenance> provenanceFromString(std::string_view text)
     if (text == "theoretical") return Provenance::Theoretical;
     if (text == "illustrative") return Provenance::Illustrative;
     if (text == "homogenized") return Provenance::Homogenized;
+    if (text == "computed") return Provenance::Computed;
+    if (text == "database") return Provenance::Database;
+    if (text == "fitted") return Provenance::Fitted;
+    if (text == "surrogate") return Provenance::Surrogate;
     return std::nullopt;
 }
 
@@ -105,6 +113,8 @@ Status checkPropertyValue(PhysicsDomain domain, const PropertyDef& def, const Pr
     };
     if (Status status = check(value.value); !status)
         return status;
+    if (value.uncertainty && !(std::isfinite(*value.uncertainty) && *value.uncertainty >= 0.0))
+        return Status::failure(def.label + ": the uncertainty must be a non-negative number");
     double previousFrequency = -1.0;
     for (const FrequencySample& sample : value.frequencyTable) {
         if (!(sample.frequencyHz > previousFrequency) || sample.frequencyHz < 0.0)

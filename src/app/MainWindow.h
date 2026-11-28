@@ -29,6 +29,8 @@ class OptimizationController;
 class OptimizationPanel;
 class FunctionalController;
 class FunctionalPanel;
+class MaterialScalesPanel;
+class MultiscaleController;
 class EmPanel;
 class FdtdPanel;
 class TimeSignalPanel;
@@ -88,6 +90,8 @@ public:
     OptimizationPanel& optimizationPanel();
     FunctionalPanel& functionalPanel();
     FunctionalController& functional() { return *functional_; }
+    MaterialScalesPanel& materialScalesPanel();
+    MultiscaleController& multiscale() { return *multiscale_; }
     FdtdPanel& fullWavePanel();
     TimeSignalPanel& timeSignals() { return *timeSignals_; }
     QAction* action(const QString& objectName) const;
@@ -156,6 +160,7 @@ private:
     void connectExperiments();
     void connectOptimization();
     void connectFunctional();
+    void connectMultiscale();
     void connectAutomation();
     void connectHelp();
     void connectDemos();
@@ -174,6 +179,7 @@ private:
     std::unique_ptr<Ui::MainWindow> ui_;
     DocumentController* controller_ = nullptr;
     FunctionalController* functional_ = nullptr;
+    MultiscaleController* multiscale_ = nullptr;
     AutomationServer* automationServer_ = nullptr;  // deleted before the document it serves
     AutomationServerDialog* automationDialog_ = nullptr;
     DisplayUnits* units_ = nullptr;

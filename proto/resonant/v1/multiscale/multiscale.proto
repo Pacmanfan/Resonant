@@ -1,0 +1,30 @@
+syntax = "proto3";
+package resonant.v1;
+
+// A material representation at its scale (REQ-CHAT-20261126-020, RES-MSC-001). The full
+// definition (structural data, assumptions, boundary conditions) is the JSON document.
+message MaterialRepresentation {
+  string representation_id = 1;
+  string name = 2;
+  string scale = 3;           // electronic, atomistic, molecular, microstructure, effective, continuum
+  string kind = 4;            // crystal, atomic-structure, molecule, molecular-system, rve.voxel, microstructure, electronic-structure, ...
+  string material_id = 5;     // the library material it describes, if any
+  string provenance = 6;      // synthetic (procedural), imported, computed, user
+  string validation = 7;      // unvalidated, verified, validated
+  string revision = 8;        // content key of its physical content
+  string model_card = 9;
+  repeated string constituents = 10;  // library material ids
+}
+
+// An external atomistic, molecular or electronic-structure engine (RES-MSC-010). None is
+// integrated in this build; `found` says whether an executable was found on PATH.
+message ExternalSolver {
+  string solver_id = 1;
+  string name = 2;
+  string scale = 3;
+  string license = 4;
+  string status = 5;
+  bool found = 6;
+  string install = 7;
+  repeated string provides = 8;
+}

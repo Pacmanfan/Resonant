@@ -104,7 +104,7 @@ own scope decides what each delivers.
 - **Risks:** retrieval branches; validity near resonances.
 - **Validation:** layered media (exact), comparison of homogenized and full-structure responses.
 - **Acceptance:** effective properties never shown without their model, cell and frequency range.
-- **Queued:** REQ-CHAT-20261126-020 (Prompt 22, multiscale material modeling). Done: REQ-CHAT-20261126-019.
+- **Done:** REQ-CHAT-20261126-019; REQ-CHAT-20261126-020 (Prompt 22, multiscale material modeling: voxel RVEs and computational homogenization of the potential problem with size studies and uncertainty, ADR-000224). Elastic RVE homogenization remains.
 
 ## Stage 9 — Multiscale external solver integration
 
@@ -113,7 +113,7 @@ own scope decides what each delivers.
 - **Risks:** licenses, installation burden, unknown model errors.
 - **Validation:** a phonopy- or ASE-based property compared with literature values.
 - **Acceptance:** one adapter end to end, optional, with a license review.
-- **Queued:** REQ-CHAT-20261126-020.
+- **Status:** the interfaces are current (REQ-CHAT-20261126-020, ADR-000224): the `Computed` provenance with derivation records and uncertainty, external engines listed with detection and requirements, and built-in Lennard-Jones reference calculations (lattice statics, NVE dynamics) as the first atomistic pathway. No external engine is installed in the reference environment, so no adapter exists yet.
 
 ## Stage 10 — Dynamic material response
 

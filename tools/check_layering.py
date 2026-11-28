@@ -119,21 +119,22 @@ def violations():
     # The optimization framework and the workflow engine are domain independent.
     # So is the Coupled Energy-Matter Engine (ADR-000220): src/core/multiphysics orchestrates;
     # the participants that adapt the domains live in src/core/coupling. So are the
-    # functional structures (ADR-000221): their analyses are registered in coupling.
+    # functional structures (ADR-000221): their analyses are registered in coupling. So is the
+    # multiscale model (ADR-000224): its derivations and couplings are in coupling.
     for path in sorted(sum((list((ROOT / "src" / "core" / d).glob("*")) for d in ("optimization", "automation", "help", "demo", "plugins",
-                                                                                "multiphysics", "functional", "oscillators")), [])):
+                                                                                "multiphysics", "functional", "oscillators", "multiscale")), [])):
         if path.suffix not in (".h", ".cpp"):
             continue
         for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
             match = INCLUDE.match(line)
             if match and match.group(1).split("/", 1)[0] in ("acoustics", "manipulators", "fdtd", "solvers", "mechanics",
-                                                             "electromagnetics", "thermal", "coupling", "acoustic_optimization"):
+                                                             "electromagnetics", "thermal", "atomistic", "coupling", "acoustic_optimization"):
                 found.append(f"{path.relative_to(ROOT)}:{number}: {path.parent.name} must not include <{match.group(1)}> "
                              f"(a physics domain); put the physics in the domain's adapter or action")
     # Domains do not include each other.
     domains = {"acoustics": "acoustic", "manipulators": "acoustic", "fdtd": "acoustic", "solvers": "acoustic",
                "acoustic_optimization": "acoustic",
-               "mechanics": "mechanical", "electromagnetics": "electromagnetic", "thermal": "thermal"}
+               "mechanics": "mechanical", "electromagnetics": "electromagnetic", "thermal": "thermal", "atomistic": "atomistic"}
     for path in sorted((ROOT / "src" / "core").rglob("*")):
         if path.suffix not in (".h", ".cpp"):
             continue

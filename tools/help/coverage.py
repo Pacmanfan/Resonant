@@ -45,6 +45,8 @@ FEATURES = [
      "resonant_api (FunctionalStructureService, ResonanceService)"),
     ("Metamaterials and effective properties", "opt.metamaterials", ["metamaterials/a-mass-in-mass-lattice.resonant", "metamaterials/e-layered-thermal.resonant"], [],
      "resonant_api (FunctionalStructureService.CreateEffectiveMaterial)"),
+    ("Multiscale materials and lineage", "concepts.multiscale", ["multiscale/a-crystalline-argon.resonant", "multiscale/c-porous-composite.resonant"], [],
+     "resonant_api (MultiscaleService)"),
     ("Topology optimization", "opt.topology", [], [], "-"),
     ("Experiments and acquisition", "exp.acquisition", ["experiments/acoustic_experiments.resonant", "experiments/mechanical_experiments.resonant"], [], "resonant.experiments"),
     ("Measurement correlation", "exp.correlation", ["experiments/rf_experiments.resonant"], ["demo-g-experimental-correlation"], "resonant.measurements.compare"),

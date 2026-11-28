@@ -12,7 +12,8 @@ enum Column { Property = 0, Value, Unit, ProvenanceColumn, ValidFrom, ValidTo, S
 
 const Provenance kProvenances[] = {Provenance::Measured, Provenance::ManufacturerSupplied,
                                    Provenance::LiteratureDerived, Provenance::Theoretical, Provenance::Illustrative,
-                                   Provenance::Homogenized};
+                                   Provenance::Homogenized, Provenance::Computed, Provenance::Database, Provenance::Fitted,
+                                   Provenance::Surrogate};
 
 QString provenanceLabel(Provenance provenance)
 {
@@ -23,6 +24,10 @@ QString provenanceLabel(Provenance provenance)
     case Provenance::Theoretical: return QStringLiteral("Theoretical");
     case Provenance::Illustrative: return QStringLiteral("Illustrative (not authoritative)");
     case Provenance::Homogenized: return QStringLiteral("Homogenized (derived from a structure)");
+    case Provenance::Computed: return QStringLiteral("Computed (from a lower-scale model)");
+    case Provenance::Database: return QStringLiteral("Database");
+    case Provenance::Fitted: return QStringLiteral("Fitted or calibrated");
+    case Provenance::Surrogate: return QStringLiteral("Surrogate prediction");
     }
     return {};
 }

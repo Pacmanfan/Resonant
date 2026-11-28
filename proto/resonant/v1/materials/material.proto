@@ -9,6 +9,10 @@ enum MaterialProvenance {
   MATERIAL_PROVENANCE_THEORETICAL = 4;   // a model or estimate
   MATERIAL_PROVENANCE_ILLUSTRATIVE = 5;  // for demonstration only
   MATERIAL_PROVENANCE_HOMOGENIZED = 6;   // derived from an organized structure by an effective-medium analysis
+  MATERIAL_PROVENANCE_COMPUTED = 7;      // calculated from a lower-scale representation (see derivation_id)
+  MATERIAL_PROVENANCE_DATABASE = 8;      // from a materials database
+  MATERIAL_PROVENANCE_FITTED = 9;        // fitted or calibrated to data
+  MATERIAL_PROVENANCE_SURROGATE = 10;    // a surrogate model's prediction
 }
 
 // One property of one physics domain. Values are SI (kg/m^3, m/s, Pa, S/m,
@@ -20,6 +24,9 @@ message MaterialProperty {
   reserved 4;
   MaterialProvenance provenance = 5;
   string source = 6;          // citation, data sheet, note
+  string derivation_id = 7;   // the multiscale derivation that produced the value (empty: none)
+  bool has_uncertainty = 8;
+  double uncertainty = 9;     // standard uncertainty in SI units, when has_uncertainty
 }
 
 message Material {

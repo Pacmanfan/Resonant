@@ -29,7 +29,10 @@ new project starts with the example library.
 
 Every value carries:
 
-- its **provenance**: *Measured*, *Manufacturer-supplied*, *Literature-derived*, *Theoretical* or *Illustrative (not authoritative)*;
+- its **provenance**: *Measured*, *Manufacturer-supplied*, *Literature-derived*, *Theoretical*, *Illustrative (not authoritative)*,
+  *Homogenized* (derived from an organized structure or a microstructure), *Computed* (from a lower-scale model),
+  *Database*, *Fitted or calibrated*, or *Surrogate prediction*; derived values also carry their derivation and, where known,
+  an uncertainty ([Material Scales and Lineage](multiscale-materials.md));
 - a **source / notes** text: the citation, data sheet or limitation;
 - an optional **validity range** in frequency (and in temperature, stored but not editable in the dialog);
 - an optional table of frequency-dependent values (stored and loaded, not editable in the dialog).

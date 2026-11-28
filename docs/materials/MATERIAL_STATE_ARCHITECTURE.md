@@ -55,7 +55,9 @@ property value records:
 
 What it cannot express: dependence on temperature, pressure, stress, strain
 or fields; anisotropy (tensors); spatial variation inside an object;
-history (plasticity, damage); phase; values computed by an external tool.
+history (plasticity, damage); phase; values computed by an external tool
+(values computed by Resonant's own multiscale methods are current, with their
+derivation records: [lineage](MATERIAL_LINEAGE.md)).
 (Thermal properties are current since REQ-CHAT-20261126-016; values
 homogenized from a structure since REQ-CHAT-20261126-019.)
 
@@ -82,7 +84,9 @@ Material ── per domain ──► PropertySet ── key ──► PropertyMo
 - **Validity is enforced:** evaluating outside the validity domain returns
   the value with a reported extrapolation (the run's warnings), or fails
   where the model forbids it. Never silent (RES-SFE-008).
-- **Provenance gains** `Computed` (tool, version, inputs), RES-SFE-009.
+- **Provenance** `Computed`, `Database`, `Fitted` and `Surrogate`, a derivation
+  id and a standard uncertainty per value are current (REQ-CHAT-20261126-020,
+  RES-MSC-003); external tools as sources remain planned (RES-SFE-009).
   `Homogenized` (structure, model, frequency range; RES-SFE-005) is current
   (`docs/materials/METAMATERIAL_ARCHITECTURE.md`).
 

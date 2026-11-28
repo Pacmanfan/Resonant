@@ -413,6 +413,11 @@ void toProto(const nlohmann::json& m, v1::Material* out)
             p->set_value_si(value.is_object() ? value.value("value", 0.0) : (value.is_number() ? value.get<double>() : 0.0));
             if (value.is_object()) {
                 p->set_source(value.value("source", std::string()));
+                p->set_derivation_id(value.value("derivation", std::string()));
+                if (value.contains("uncertainty") && value["uncertainty"].is_number()) {
+                    p->set_has_uncertainty(true);
+                    p->set_uncertainty(value["uncertainty"].get<double>());
+                }
                 const std::string provenance = value.value("provenance", std::string());
                 p->set_provenance(provenance == "measured"       ? v1::MATERIAL_PROVENANCE_MEASURED
                                   : provenance == "manufacturer" ? v1::MATERIAL_PROVENANCE_MANUFACTURER
@@ -420,6 +425,10 @@ void toProto(const nlohmann::json& m, v1::Material* out)
                                   : provenance == "theoretical"  ? v1::MATERIAL_PROVENANCE_THEORETICAL
                                   : provenance == "illustrative" ? v1::MATERIAL_PROVENANCE_ILLUSTRATIVE
                                   : provenance == "homogenized"  ? v1::MATERIAL_PROVENANCE_HOMOGENIZED
+                                  : provenance == "computed"     ? v1::MATERIAL_PROVENANCE_COMPUTED
+                                  : provenance == "database"     ? v1::MATERIAL_PROVENANCE_DATABASE
+                                  : provenance == "fitted"       ? v1::MATERIAL_PROVENANCE_FITTED
+                                  : provenance == "surrogate"    ? v1::MATERIAL_PROVENANCE_SURROGATE
                                                                  : v1::MATERIAL_PROVENANCE_UNSPECIFIED);
             }
         }

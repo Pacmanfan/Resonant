@@ -163,8 +163,10 @@ TEST(FunctionalServices, AnAnalysisRunsAsAJobAndItsResultBecomesStaleWhenTheGeom
     // Undo makes it current again: the fingerprints are of content, not counters.
     ASSERT_TRUE(f.s.project.undo(f.local()));
     EXPECT_FALSE(f.s.functional.result(f.local(), resultId).value()["stale"].get<bool>());
-    // A change while the job runs marks the result stale on completion.
-    auto job = f.s.functional.analyze(f.local(), "fs-microwave-cavity", "");
+    // A change while the job runs marks the result stale on completion. The full-wave model runs
+    // long enough that the change lands while it runs (the analytical one can finish first: the
+    // change's own call collects finished jobs before applying it).
+    auto job = f.s.functional.analyze(f.local(), "fs-microwave-cavity", "em.cavity.rectangular.yee");
     ASSERT_TRUE(job);
     ASSERT_TRUE(f.s.functional.setParameters(f.local(), "fs-microwave-cavity", {{"b", 0.011}}, std::nullopt));
     const json late = [&] {

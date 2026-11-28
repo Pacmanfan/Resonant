@@ -69,7 +69,9 @@ All in `src/core` (Qt-free), coupling-specific ones in `src/core/coupling`:
     geometry (RES-SFE-003).
 11. **Provenance extensions** — `Computed` (tool, version, input) and
     `Homogenized` (model, cell, frequency range) in addition to the existing
-    categories (RES-SFE-009).
+    categories (RES-SFE-009). Current since REQ-CHAT-20261126-019/-020, with
+    derivation records, uncertainty, `Database`, `Fitted` and `Surrogate`
+    (`docs/materials/MATERIAL_LINEAGE.md`).
 
 ## Missing domains and capabilities
 

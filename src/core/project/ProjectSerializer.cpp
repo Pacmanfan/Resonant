@@ -92,6 +92,10 @@ json propertyToJson(const PropertyValue& property)
             table.push_back({sample.frequencyHz, sample.value});
         result["frequencyTable"] = std::move(table);
     }
+    if (!property.derivation.empty())
+        result["derivation"] = property.derivation;
+    if (property.uncertainty)
+        result["uncertainty"] = *property.uncertainty;
     return result;
 }
 
@@ -123,6 +127,8 @@ PropertyValue propertyFromJson(const json& value, const std::string& where)
                                                numberValue(row[1], where + ".frequencyTable")});
         }
     }
+    property.derivation = optionalString(value, "derivation", where);
+    property.uncertainty = readOptionalNumber(value, "uncertainty", where);
     return property;
 }
 

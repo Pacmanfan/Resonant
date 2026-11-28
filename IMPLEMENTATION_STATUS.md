@@ -437,3 +437,22 @@ milestones below.)
 | Validity with every effective value; no effective material outside it | Tested | `docs/physics/HOMOGENIZATION_AND_VALIDITY.md` |
 | Effective materials saved into the library (provenance `homogenized`, undoable, stale results refused) and used by the coupled engine | Tested | `CreateEffectiveMaterial`; Python, MCP, the panel's Save effective material |
 | 2D/3D Bloch of continua, full-wave split rings, anisotropic (tensor) library materials, architected and graded lattices, nonlinear or time-varying metamaterials | Missing | planned |
+
+## Multiscale material modeling — `docs/requirements/multiscale.md`, `docs/materials/MULTISCALE_ARCHITECTURE.md`
+
+| Capability | State | Notes |
+|---|---|---|
+| Representations per scale (electronic … continuum) with revisions, provenance, validation, model cards; relationships | Tested | project extension `multiscale` |
+| Material lineage: derivation records, uncertainty, provenances computed / database / fitted / surrogate; save and reload; staleness | Tested | `docs/materials/MATERIAL_LINEAGE.md` |
+| Voxel RVEs: layered, spheres, pores, Voronoi grains with random or aligned orientations, imported voxels | Tested | seeded; labelled synthetic or imported |
+| Computational homogenization of the steady potential problem (thermal, electrical, static permittivity) with periodic, linear, flux and mixed boundaries | Tested | against exact, Maxwell-Garnett, Hashin-Shtrikman and self-consistent references |
+| RVE size studies, realizations, uncertainty, representativeness | Tested | |
+| Crystals, XYZ and POSCAR import, force-field records with applicability | Tested | CIF and PDB not supported |
+| Lennard-Jones lattice statics (elastic constants, stability, cutoff sensitivity) and NVE dynamics | Tested | reference implementations for pair potentials |
+| Derivation pipeline: applicability, reliability, assignment to library materials (one undo step) | Tested | `MultiscaleService` |
+| Local states of coupled results; iterative region-RVE coupling | Tested | one temperature per region |
+| Derived materials in the coupled engine, functional structures, metamaterial analyses | Tested | |
+| Material Scales panel, Python, MCP | Tested | |
+| External engines (LAMMPS, OpenMM, Quantum ESPRESSO, CP2K, GPAW, phonopy) | Missing | listed with detection and requirements; none installed or integrated |
+| Electronic-structure and molecular calculations | Missing | representations only |
+| Elastic RVE homogenization, FE2, concurrent coupling, uncertainty propagated through chains | Missing | planned |

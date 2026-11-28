@@ -68,6 +68,15 @@ analysis's model and offers **Save effective material** while the result is
 current; Python and the API call `CreateEffectiveMaterial`; the MCP adapter
 exposes `create_effective_material` at the `modify` level.
 
+## Below the unit cell
+
+A constituent of a cell may itself be derived: the porous dielectric of
+`examples/multiscale/d-multiscale-metamaterial` gets its permittivity from a
+pore RVE (`rve.static-permittivity`, provenance homogenized, with its
+derivation) and serves as a layer of a layered effective medium - a chain
+navigable through `MultiscaleService.GetMaterialLineage`
+([multiscale architecture](MULTISCALE_ARCHITECTURE.md)).
+
 ## Not covered
 
 2D and 3D Bloch analysis of continua (plane waves or finite elements), a

@@ -1,4 +1,7 @@
 #include "coupling/CouplingModels.h"
+#include "coupling/MultiscaleDerivations.h"
+#include "multiscale/Couplings.h"
+#include "multiscale/ExternalSolvers.h"
 #include "foundation/Types.h"
 #include "functional/Analysis.h"
 #include "geometry/Geometry.h"
@@ -58,6 +61,20 @@ Outcome<std::vector<CapabilityView>> ApplicationService::capabilities(const Call
         add({"coupling." + m.id, m.name, m.mechanism, "coupling", maturity, m.status == "validated" || m.status == "experimental", {}, {},
              m.limitations.empty() ? std::vector<std::string>{} : std::vector<std::string>{m.limitations}, m.sourceDomain + " -> " + m.targetDomain});
     }
+    // Multiscale material modeling (RES-MSC-014): the derivation methods, the coupling strategies
+    // as their contracts say, and the external engines - none integrated.
+    for (const auto& m : coupling::derivationMethods())
+        add({"multiscale.method." + m.id, m.title, m.description, "multiscale", "experimental", true, {}, {"3D"}, {},
+             std::string(multiscale::toString(m.source)) + " -> " + std::string(multiscale::toString(m.target))});
+    for (const auto& k : multiscale::couplingContracts())
+        add({"multiscale.coupling." + k.id, k.name, k.strategy + " coupling", "multiscale", k.status == "implemented" ? "experimental" : "planned",
+             k.status == "implemented", k.requirements, {}, {}, k.sourceScale + " -> " + k.targetScale});
+    for (const auto& x : multiscale::externalSolvers())
+        add({"multiscale.external." + x.id, x.name, "external " + x.scale + " engine (" + x.license + ")", "multiscale", "unavailable", false,
+             {x.install}, {}, {x.status}, x.scale});
+    add({"multiscale.electronic", "Electronic-structure calculations", "band structures, densities of states, dielectric response from first principles",
+         "multiscale", "unavailable", false, {"an integrated and validated electronic-structure engine (Quantum ESPRESSO, CP2K, GPAW)"}, {},
+         {"the electronic scale has a representation and an interface only"}, "electronic"});
     // Functional structures: every analysis with its models.
     for (const functional::AnalysisKind& k : functional::AnalysisRegistry::instance().kinds()) {
         std::string models;

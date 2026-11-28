@@ -22,6 +22,7 @@ carries a `resonant.v1.Error` (see [errors](#errors)).
 - [JobService](#jobservice) (4 methods)
 - [MaterialService](#materialservice) (6 methods)
 - [MultiphysicsService](#multiphysicsservice) (8 methods)
+- [MultiscaleService](#multiscaleservice) (17 methods)
 - [OptimizationService](#optimizationservice) (3 methods)
 - [ProjectService](#projectservice) (8 methods)
 - [ResonanceService](#resonanceservice) (1 method)
@@ -152,6 +153,30 @@ The Coupled Energy-Matter Engine: physical systems of interacting domains, coupl
 | `SetPhysicalSystem` | `SetPhysicalSystemRequest` | `SetPhysicalSystemResponse` | Adds a physical system to the project, or replaces the one with its id, as one undo step. |
 | `StartCoupledSimulation` | `StartCoupledSimulationRequest` | `StartCoupledSimulationResponse` | Starts a coupled simulation of a stored system or a definition as a job; the result id is in the finished job's results. |
 | `ValidatePhysicalSystem` | `ValidatePhysicalSystemRequest` | `ValidatePhysicalSystemResponse` | Checks a stored system or a definition against the project's materials, the coupling models and the available participants; nothing runs. |
+
+## MultiscaleService
+
+Multiscale material modeling: representations of materials at their scales, derivations of higher-scale properties assigned to library materials with lineage, local states of coupled results and iterative region-RVE coupling. External atomistic and electronic-structure engines are listed with their status; none is integrated.
+
+| Method | Request | Response | Description |
+|---|---|---|---|
+| `AssignDerivedProperties` | `AssignDerivedPropertiesRequest` | `AssignDerivedPropertiesResponse` | Assigns a current result's properties to a library material with a derivation record; one undo step. |
+| `CreateAtomisticStructure` | `CreateAtomisticStructureRequest` | `CreateAtomisticStructureResponse` | A crystal or atomic structure, built or imported (XYZ, POSCAR); one undo step. |
+| `DeleteRepresentation` | `DeleteRepresentationRequest` | `DeleteRepresentationResponse` | Removes a representation (properties derived from it become stale); one undo step. |
+| `DeriveMaterialProperties` | `DeriveMaterialPropertiesRequest` | `DeriveMaterialPropertiesResponse` | Runs a derivation as a job; the result id is in the finished job's results. |
+| `GenerateMicrostructure` | `GenerateMicrostructureRequest` | `GenerateMicrostructureResponse` | A voxel RVE from a seeded generator (labelled synthetic) or imported voxel data; one undo step. |
+| `GetLocalState` | `GetLocalStateRequest` | `GetLocalStateResponse` | The local state (temperature mean, range, gradient) of a region of a layered-slab system. |
+| `GetMaterialLineage` | `GetMaterialLineageRequest` | `GetMaterialLineageResponse` | Every property of a material with its provenance, uncertainty, derivation, source representation and chain. |
+| `GetMultiscaleModel` | `GetMultiscaleModelRequest` | `GetMultiscaleModelResponse` | The whole model: representations, relationships, derivations, validation issues and stale properties. |
+| `GetMultiscaleResult` | `GetMultiscaleResultRequest` | `GetMultiscaleResultResponse` | A derivation or coupling result with its staleness against the current project. |
+| `GetRepresentation` | `GetRepresentationRequest` | `GetRepresentationResponse` | One representation's definition with its model card, relationships and the methods that apply to it. |
+| `IterateRegionCoupling` | `IterateRegionCouplingRequest` | `IterateRegionCouplingResponse` | Iterates a region's RVE at the region's temperature to a fixed point, as a job. |
+| `ListDerivationMethods` | `ListDerivationMethodsRequest` | `ListDerivationMethodsResponse` | The derivation methods, with their applicability to a representation when one is named. |
+| `ListExternalSolvers` | `ListExternalSolversRequest` | `ListExternalSolversResponse` | The external atomistic, molecular and electronic-structure engines with their status (none integrated). |
+| `ListModelCards` | `ListModelCardsRequest` | `ListModelCardsResponse` | The model cards of the representation kinds and methods: assumptions, methods, validity, interpretation. |
+| `ListMultiscaleCouplings` | `ListMultiscaleCouplingsRequest` | `ListMultiscaleCouplingsResponse` | The coupling strategies' contracts, implemented or planned. |
+| `ListRepresentations` | `ListRepresentationsRequest` | `ListRepresentationsResponse` | Every representation with its scale, kind, provenance, validation, revision and constituents. |
+| `SetRepresentation` | `SetRepresentationRequest` | `SetRepresentationResponse` | Adds a representation, or replaces the one with its id, after validation; one undo step. |
 
 ## OptimizationService
 
@@ -379,6 +404,26 @@ One element: its position in the array's frame and its effective source settings
 | `index` | `int32` |  |
 | `local_position_meters` | `Vector3Meters` | COORDINATE_FRAME_OBJECT (the array's frame) |
 | `source` | `SourceSettings` |  |
+
+### AssignDerivedPropertiesRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `result_id` | `string` |  |
+| `material_id` | `string` | an existing material to update, or |
+| `new_material_id` | `string` | a new material (empty id: generated) |
+| `new_material_name` | `string` |  |
+| `properties` | repeated `string` | "domain.key"; empty: all |
+| `components` | repeated `AssignDerivedPropertiesRequest.ComponentsEntry` |  |
+
+### AssignDerivedPropertiesResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `material` | `Material` |  |
+| `changes` | `ChangeSummary` |  |
 
 ### AssignMaterialRequest
 
@@ -647,6 +692,29 @@ A coupling model: which quantity goes from which domain to which, how, and how f
 | `array` | `AcousticArray` |  |
 | `changes` | `ChangeSummary` |  |
 
+### CreateAtomisticStructureRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `representation_id` | `string` |  |
+| `name` | `string` |  |
+| `format` | `string` | xyz or poscar, with text; or empty for a built structure |
+| `text` | `string` |  |
+| `structure` | `string` | sc, bcc, fcc, diamond |
+| `lattice_parameter` | `double` | m |
+| `species` | `string` |  |
+| `force_field` | `string` | lj.argon, lj.reduced |
+| `allow_incompatible` | `bool` | store a structure the force field does not cover |
+| `material_id` | `string` | the library material it describes |
+
+### CreateAtomisticStructureResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `changes` | `ChangeSummary` |  |
+
 ### CreateEffectiveMaterialRequest
 
 | Field | Type | Description |
@@ -845,6 +913,36 @@ Deletes objects with their children, in one undoable step.
 |---|---|---|
 | `header` | `ResponseHeader` |  |
 | `changes` | `ChangeSummary` |  |
+
+### DeleteRepresentationRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `representation_id` | `string` |  |
+
+### DeleteRepresentationResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `changes` | `ChangeSummary` |  |
+
+### DeriveMaterialPropertiesRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `representation_id` | `string` |  |
+| `method_id` | `string` |  |
+| `settings` | `google.protobuf.Struct` |  |
+
+### DeriveMaterialPropertiesResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `job` | `Job` |  |
 
 ### Diagnostics
 
@@ -1076,6 +1174,21 @@ The open project's export as the project file's JSON (for inspection, copies and
 | `header` | `ResponseHeader` |  |
 | `project_json` | `string` |  |
 
+### ExternalSolver
+
+An external atomistic, molecular or electronic-structure engine (RES-MSC-010). None is integrated in this build; `found` says whether an executable was found on PATH.
+
+| Field | Type | Description |
+|---|---|---|
+| `solver_id` | `string` |  |
+| `name` | `string` |  |
+| `scale` | `string` |  |
+| `license` | `string` |  |
+| `status` | `string` |  |
+| `found` | `bool` |  |
+| `install` | `string` |  |
+| `provides` | repeated `string` |  |
+
 ### FieldDataChunk
 
 One chunk of a slice: complex samples as interleaved little-endian float32 pairs (real, imag), row-major over the two free axes (the second varies fastest).
@@ -1183,6 +1296,20 @@ Sent instead of events a client asked for but that are no longer retained: the c
 | `first_missed_sequence` | `uint64` |  |
 | `last_missed_sequence` | `uint64` |  |
 | `oldest_retained_sequence` | `uint64` |  |
+
+### GenerateMicrostructureRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `request` | `google.protobuf.Struct` | {"id", "name", "rve": {generator specification}, "phaseMaterials": [...], "temperatureLaws": [...], "materialId"} |
+
+### GenerateMicrostructureResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `changes` | `ChangeSummary` |  |
 
 ### GeometryInfo
 
@@ -1341,6 +1468,36 @@ Geometry of an object: a kind of the geometry registry with its parameters (SI u
 | `header` | `ResponseHeader` |  |
 | `job` | `Job` |  |
 
+### GetLocalStateRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `system_id` | `string` |  |
+| `region_id` | `string` |  |
+| `result_id` | `string` | a stored coupled result; empty: run the system now (needs execute) |
+
+### GetLocalStateResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `state` | `google.protobuf.Struct` |  |
+
+### GetMaterialLineageRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `material_id` | `string` |  |
+
+### GetMaterialLineageResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `lineage` | `google.protobuf.Struct` |  |
+
 ### GetMaterialRequest
 
 | Field | Type | Description |
@@ -1354,6 +1511,36 @@ Geometry of an object: a kind of the geometry registry with its parameters (SI u
 |---|---|---|
 | `header` | `ResponseHeader` |  |
 | `material` | `Material` |  |
+
+### GetMultiscaleModelRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+
+### GetMultiscaleModelResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `model` | `google.protobuf.Struct` |  |
+
+### GetMultiscaleResultRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `result_id` | `string` |  |
+
+### GetMultiscaleResultResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `document` | `google.protobuf.Struct` | resonant.multiscale-derivation or resonant.multiscale-coupling |
+| `stale` | `bool` |  |
+| `stale_reasons` | repeated `string` |  |
+| `reliable` | `bool` |  |
 
 ### GetObjectRequest
 
@@ -1395,6 +1582,21 @@ Geometry of an object: a kind of the geometry registry with its parameters (SI u
 |---|---|---|
 | `header` | `ResponseHeader` |  |
 | `project` | `Project` |  |
+
+### GetRepresentationRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `representation_id` | `string` |  |
+
+### GetRepresentationResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `representation` | `MaterialRepresentation` |  |
+| `document` | `google.protobuf.Struct` | the definition with its model card, relationships and applicable methods |
 
 ### GetResultRequest
 
@@ -1509,6 +1711,25 @@ A resonance identified from a signal (complex poles) or a spectrum (a Lorentzian
 | `relative_residual` | `double` | signals |
 | `warnings` | repeated `string` |  |
 
+### IterateRegionCouplingRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `system_id` | `string` |  |
+| `region_id` | `string` |  |
+| `representation_id` | `string` |  |
+| `tolerance` | `double` | 0: 1e-4 |
+| `max_iterations` | `int32` | 0: 20 |
+| `derive_settings` | `google.protobuf.Struct` |  |
+
+### IterateRegionCouplingResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `job` | `Job` |  |
+
 ### Job
 
 | Field | Type | Description |
@@ -1561,6 +1782,20 @@ job.updated (state or progress; progress events are throttled)
 | `header` | `ResponseHeader` |  |
 | `models` | repeated `CouplingModel` |  |
 
+### ListDerivationMethodsRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `representation_id` | `string` |  |
+
+### ListDerivationMethodsResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `methods` | repeated `google.protobuf.Struct` |  |
+
 ### ListEmittersRequest
 
 | Field | Type | Description |
@@ -1591,6 +1826,19 @@ job.updated (state or progress; progress events are throttled)
 | `events` | repeated `Event` |  |
 | `gap` | `GapNotice` | set when events after after_sequence are no longer retained |
 | `last_sequence` | `uint64` |  |
+
+### ListExternalSolversRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+
+### ListExternalSolversResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `solvers` | repeated `ExternalSolver` |  |
 
 ### ListFunctionalStructuresRequest
 
@@ -1645,6 +1893,32 @@ job.updated (state or progress; progress events are throttled)
 |---|---|---|
 | `header` | `ResponseHeader` |  |
 | `materials` | repeated `Material` |  |
+
+### ListModelCardsRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+
+### ListModelCardsResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `cards` | repeated `google.protobuf.Struct` |  |
+
+### ListMultiscaleCouplingsRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+
+### ListMultiscaleCouplingsResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `couplings` | repeated `google.protobuf.Struct` |  |
 
 ### ListObjectsRequest
 
@@ -1701,6 +1975,19 @@ job.updated (state or progress; progress events are throttled)
 |---|---|---|
 | `header` | `ResponseHeader` |  |
 | `systems` | repeated `PhysicalSystem` |  |
+
+### ListRepresentationsRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+
+### ListRepresentationsResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `representations` | repeated `MaterialRepresentation` |  |
 
 ### ListResultsRequest
 
@@ -1785,6 +2072,26 @@ One property of one physics domain. Values are SI (kg/m^3, m/s, Pa, S/m, relativ
 | `value_si` | `double` |  |
 | `provenance` | `MaterialProvenance` |  |
 | `source` | `string` | citation, data sheet, note |
+| `derivation_id` | `string` | the multiscale derivation that produced the value (empty: none) |
+| `has_uncertainty` | `bool` |  |
+| `uncertainty` | `double` | standard uncertainty in SI units, when has_uncertainty |
+
+### MaterialRepresentation
+
+A material representation at its scale (REQ-CHAT-20261126-020, RES-MSC-001). The full definition (structural data, assumptions, boundary conditions) is the JSON document.
+
+| Field | Type | Description |
+|---|---|---|
+| `representation_id` | `string` |  |
+| `name` | `string` |  |
+| `scale` | `string` | electronic, atomistic, molecular, microstructure, effective, continuum |
+| `kind` | `string` | crystal, atomic-structure, molecule, molecular-system, rve.voxel, microstructure, electronic-structure, ... |
+| `material_id` | `string` | the library material it describes, if any |
+| `provenance` | `string` | synthetic (procedural), imported, computed, user |
+| `validation` | `string` | unvalidated, verified, validated |
+| `revision` | `string` | content key of its physical content |
+| `model_card` | `string` |  |
+| `constituents` | repeated `string` | library material ids |
 
 ### MetricValue
 
@@ -2266,6 +2573,20 @@ session.opened / closed
 |---|---|---|
 | `header` | `ResponseHeader` |  |
 | `system` | `PhysicalSystem` |  |
+| `changes` | `ChangeSummary` |  |
+
+### SetRepresentationRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `definition` | `google.protobuf.Struct` |  |
+
+### SetRepresentationResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
 | `changes` | `ChangeSummary` |  |
 
 ### SetStructureParametersRequest
@@ -2761,7 +3082,7 @@ Waits until the job finishes or the timeout passes (at most 30 s), then returns 
 
 ### MaterialProvenance
 
-`MATERIAL_PROVENANCE_UNSPECIFIED` = 0, `MATERIAL_PROVENANCE_MEASURED` = 1, `MATERIAL_PROVENANCE_MANUFACTURER` = 2, `MATERIAL_PROVENANCE_LITERATURE` = 3, `MATERIAL_PROVENANCE_THEORETICAL` = 4, `MATERIAL_PROVENANCE_ILLUSTRATIVE` = 5, `MATERIAL_PROVENANCE_HOMOGENIZED` = 6
+`MATERIAL_PROVENANCE_UNSPECIFIED` = 0, `MATERIAL_PROVENANCE_MEASURED` = 1, `MATERIAL_PROVENANCE_MANUFACTURER` = 2, `MATERIAL_PROVENANCE_LITERATURE` = 3, `MATERIAL_PROVENANCE_THEORETICAL` = 4, `MATERIAL_PROVENANCE_ILLUSTRATIVE` = 5, `MATERIAL_PROVENANCE_HOMOGENIZED` = 6, `MATERIAL_PROVENANCE_COMPUTED` = 7, `MATERIAL_PROVENANCE_DATABASE` = 8, `MATERIAL_PROVENANCE_FITTED` = 9, `MATERIAL_PROVENANCE_SURROGATE` = 10
 
 ### FieldRegionKind
 

@@ -1,9 +1,14 @@
 # Multiscale Modeling
 
-**Status:** theoretical future and planned integration architecture
-(RES-SFE-009, ADR-000219). Resonant computes at the macroscopic scale only
-today; material values come from measurements, data sheets, literature or
-nominal values (the material provenance).
+**Status:** partly current (REQ-CHAT-20261126-020, ADR-000224): the
+multiscale model (representations from the electronic to the continuum
+scale, relationships, derivation records, model cards), voxel RVEs with
+computational homogenization, Lennard-Jones reference calculations for
+crystals, derivations assigned to library materials with lineage, and
+sequential and iterative coupling ([architecture](../materials/MULTISCALE_ARCHITECTURE.md),
+[lineage](../materials/MATERIAL_LINEAGE.md), [RVEs](RVE_HOMOGENIZATION.md),
+[atoms](ATOMISTIC_MODELS.md), [validation](MULTISCALE_VALIDATION.md)). External
+engines remain planned integrations (RES-SFE-009, ADR-000219).
 
 ## Scales
 
@@ -15,7 +20,9 @@ nominal values (the material provenance).
 | Atomic | crystal structures, lattice vibrations, defects, dislocations | lattice dynamics (phonopy), atomistic simulation (ASE drivers) | phonon dispersion, heat capacity, thermal expansion |
 | Quantum | electronic states and transitions | density functional theory (Quantum ESPRESSO, CP2K) | dielectric functions, elastic constants, magnetic properties from first principles |
 
-Resonant does not implement the lower scales. It integrates them.
+Resonant integrates the lower scales rather than reimplementing them: the
+built-in Lennard-Jones calculations are reference implementations for pair
+potentials, and the RVE solver covers steady potential problems.
 
 ## Integration architecture
 
@@ -62,8 +69,9 @@ framework) is the check.
 
 ## First steps (stage 9 of the roadmap)
 
-1. The `Computed` provenance and import of tabulated results with
-   uncertainty.
-2. One mesoscale path inside Resonant (unit-cell homogenization).
+1. The `Computed` provenance with derivation records and uncertainty -
+   current.
+2. One mesoscale path inside Resonant (RVE homogenization) - current.
 3. One external adapter as a reference implementation (phonopy or ASE, both
-   permissively licensed Python), run as a separate process from a plugin.
+   permissively licensed Python), run as a separate process from a plugin -
+   planned: no engine is installed in the reference environment.

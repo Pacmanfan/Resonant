@@ -1,0 +1,285 @@
+{
+ "format": "resonant-project",
+ "schemaVersion": 1,
+ "application": {
+  "name": "Resonant",
+  "version": "0.1.0"
+ },
+ "project": {
+  "id": "ex-ms-cross-scale",
+  "name": "e-cross-scale-investigation",
+  "createdUtc": "2026-11-27T00:00:00Z",
+  "modifiedUtc": "2026-11-27T00:00:00Z"
+ },
+ "units": {
+  "angle": "rad",
+  "axes": "right-handed; X horizontal, Y depth, Z vertical (up)",
+  "frequency": "Hz",
+  "length": "m",
+  "mass": "kg",
+  "rotation": "intrinsic Z-Y-X Euler angles stored as [x, y, z]",
+  "time": "s"
+ },
+ "materials": [
+  {
+   "id": "mat-ex-filler",
+   "name": "Alumina filler (example)",
+   "description": "Illustrative; its conductivity falls with temperature (law in the RVE).",
+   "domains": {
+    "thermal": {
+     "thermalConductivity": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the multiscale examples; not authoritative.",
+      "value": 30.0
+     },
+     "density": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the multiscale examples; not authoritative.",
+      "value": 3950.0
+     },
+     "specificHeat": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the multiscale examples; not authoritative.",
+      "value": 880.0
+     }
+    }
+   }
+  },
+  {
+   "id": "mat-ex-epoxy-resin",
+   "name": "Epoxy resin (example)",
+   "description": "Illustrative; its conductivity rises slightly with temperature (law in the RVE).",
+   "domains": {
+    "thermal": {
+     "thermalConductivity": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the multiscale examples; not authoritative.",
+      "value": 0.2
+     },
+     "density": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the multiscale examples; not authoritative.",
+      "value": 1200.0
+     },
+     "specificHeat": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the multiscale examples; not authoritative.",
+      "value": 1100.0
+     }
+    }
+   }
+  },
+  {
+   "id": "mat-ex-filled-epoxy",
+   "name": "Filled epoxy (derived)",
+   "description": "A thermal pad's material. The starting conductivity is the series (Reuss) bound, a theoretical guess; the iterative coupling replaces it with the RVE's value at the pad's temperature.",
+   "domains": {
+    "thermal": {
+     "thermalConductivity": {
+      "provenance": "theoretical",
+      "source": "starting guess: the series bound 1 / (0.65 / 0.2 + 0.35 / 30)",
+      "value": 0.307
+     },
+     "density": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the multiscale examples; not authoritative.",
+      "value": 2163.0
+     },
+     "specificHeat": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the multiscale examples; not authoritative.",
+      "value": 950.0
+     }
+    }
+   }
+  }
+ ],
+ "scene": {
+  "objects": [
+   {
+    "id": "ex-ms-thermal-pad",
+    "type": "geometry",
+    "name": "Thermal pad",
+    "visible": true,
+    "transform": {
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "children": [],
+    "geometry": {
+     "kind": "box",
+     "parameters": {
+      "width": 0.02,
+      "depth": 0.02,
+      "height": 0.002
+     }
+    },
+    "material": "mat-ex-filled-epoxy"
+   }
+  ]
+ },
+ "simulations": [],
+ "extensions": {
+  "multiscale": {
+   "format": "resonant.multiscale",
+   "version": 1,
+   "representations": [
+    {
+     "id": "rve-filled-epoxy",
+     "name": "Epoxy with 35 % alumina spheres",
+     "description": "60 um alumina spheres at 35 % in epoxy: the pad's microstructure.",
+     "scale": "microstructure",
+     "kind": "rve.voxel",
+     "materialId": "mat-ex-filled-epoxy",
+     "data": {
+      "rve": {
+       "generator": "spheres",
+       "voxels": [
+        22,
+        22,
+        22
+       ],
+       "size": [
+        0.0002,
+        0.0002,
+        0.0002
+       ],
+       "phases": [
+        "epoxy",
+        "alumina"
+       ],
+       "matrix": 0,
+       "inclusion": 1,
+       "radius": 3e-05,
+       "volumeFraction": 0.35,
+       "seed": 3
+      },
+      "phaseMaterials": [
+       "mat-ex-epoxy-resin",
+       "mat-ex-filler"
+      ],
+      "temperatureLaws": [
+       {
+        "material": "mat-ex-filler",
+        "property": "thermal.thermalConductivity",
+        "slope": -0.05,
+        "reference": 293.15
+       },
+       {
+        "material": "mat-ex-epoxy-resin",
+        "property": "thermal.thermalConductivity",
+        "slope": 0.0002,
+        "reference": 293.15
+       }
+      ]
+     },
+     "constituents": [
+      "mat-ex-epoxy-resin",
+      "mat-ex-filler"
+     ],
+     "state": {},
+     "assumptions": [
+      "each voxel holds one phase",
+      "phases are continua with their library properties",
+      "perfect contact between phases",
+      "constituent conductivities linear in temperature (illustrative laws)"
+     ],
+     "boundaryConditions": {},
+     "provenance": "synthetic",
+     "source": "procedural (spheres, seed 3): not a measured microstructure",
+     "validation": "unvalidated",
+     "validationNote": "",
+     "uncertainty": "",
+     "modelCard": "representation.rve.voxel"
+    }
+   ],
+   "relationships": [
+    {
+     "from": "representation:rve-filled-epoxy",
+     "to": "material:mat-ex-filled-epoxy",
+     "kind": "describes"
+    },
+    {
+     "from": "material:mat-ex-epoxy-resin",
+     "to": "representation:rve-filled-epoxy",
+     "kind": "constituent-of"
+    },
+    {
+     "from": "material:mat-ex-filler",
+     "to": "representation:rve-filled-epoxy",
+     "kind": "constituent-of"
+    }
+   ],
+   "derivations": []
+  },
+  "multiphysics": {
+   "format": "resonant.multiphysics",
+   "version": 1,
+   "systems": [
+    {
+     "format": "resonant.physical-system",
+     "version": 1,
+     "id": "sys-thermal-pad",
+     "name": "Heated thermal pad",
+     "description": "A 2 mm filled-epoxy pad dissipating 10 MW/m^3 (8 W over 4 cm^2), held at 300 K on one face and cooled by convection (h = 50 W/(m^2 K)) on the other.",
+     "geometry": {
+      "kind": "layered-slab",
+      "lateralArea": 0.0004
+     },
+     "environment": {
+      "ambientTemperature": 293.15
+     },
+     "regions": [
+      {
+       "id": "pad",
+       "name": "Pad",
+       "materialId": "mat-ex-filled-epoxy",
+       "thickness": 0.002,
+       "cells": 40,
+       "objectId": "ex-ms-thermal-pad"
+      }
+     ],
+     "domains": [
+      {
+       "id": "heat",
+       "kind": "thermal",
+       "solver": "thermal.conduction.fv",
+       "settings": {
+        "volumetricSource": 10000000.0,
+        "faces": {
+         "-z": {
+          "kind": "temperature",
+          "temperature": 300.0
+         },
+         "+z": {
+          "kind": "convective",
+          "h": 50.0,
+          "ambient": 293.15
+         }
+        }
+       }
+      }
+     ],
+     "couplings": [],
+     "materialLaws": [],
+     "scheme": {
+      "kind": "one-way"
+     }
+    }
+   ]
+  }
+ }
+}

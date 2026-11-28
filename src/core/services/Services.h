@@ -11,6 +11,7 @@
 #include "foundation/Transform.h"
 #include "materials/Material.h"
 #include "multiphysics/PhysicalSystem.h"
+#include "multiscale/Representation.h"
 #include "services/Session.h"
 
 #include <nlohmann/json.hpp>
@@ -406,6 +407,52 @@ private:
     Session& s_;
 };
 
+// Multiscale material modeling (REQ-CHAT-20261126-020, RES-MSC-001..014): representations of
+// materials at their scales, their relationships, derivations of higher-scale properties
+// (jobs) assigned to library materials with lineage, local states of coupled results and
+// iterative region-RVE coupling. Every change is one undoable step.
+class MultiscaleService {
+public:
+    explicit MultiscaleService(Session& s) : s_(s) {}
+    // The whole model with its validation issues and stale properties.
+    Outcome<nlohmann::json> model(const CallContext& c);
+    Outcome<std::vector<nlohmann::json>> representations(const CallContext& c);
+    // The representation with its model card, relationships and the methods that apply.
+    Outcome<nlohmann::json> representation(const CallContext& c, const std::string& id);
+    Outcome<Mutation> setRepresentation(const CallContext& c, const nlohmann::json& document);
+    Outcome<Mutation> deleteRepresentation(const CallContext& c, const std::string& id);
+    // request: {"id", "name", "rve": {generator spec}, "phaseMaterials": [...], "temperatureLaws": [...], "description"}
+    Outcome<Mutation> generateMicrostructure(const CallContext& c, const nlohmann::json& request);
+    // request: {"id", "name", "format": "xyz" | "poscar", "text", "forceField"} or
+    //          {"id", "name", "structure": "fcc" | "bcc" | "sc" | "diamond", "latticeParameter", "species", "forceField"}
+    Outcome<Mutation> createAtomisticStructure(const CallContext& c, const nlohmann::json& request);
+    Outcome<nlohmann::json> methods(const CallContext& c, const std::string& representationId);
+    Outcome<nlohmann::json> modelCards(const CallContext& c);
+    Outcome<nlohmann::json> couplings(const CallContext& c);
+    Outcome<nlohmann::json> externalSolvers(const CallContext& c);
+    Outcome<JobView> derive(const CallContext& c, const std::string& representationId, const std::string& method,
+                            const nlohmann::json& settings = nlohmann::json::object());
+    // A derivation or coupling result with its staleness against the current project.
+    Outcome<nlohmann::json> result(const CallContext& c, const std::string& resultId);
+    // options: see coupling::planAssignment. The material id is in the mutation's changes.
+    Outcome<Mutation> assign(const CallContext& c, const std::string& resultId, const nlohmann::json& options);
+    Outcome<nlohmann::json> lineage(const CallContext& c, const std::string& materialId);
+    // The local state of a region of a layered-slab system: from a stored coupled result, or by running the system.
+    Outcome<nlohmann::json> localState(const CallContext& c, const std::string& systemId, const std::string& region, const std::string& resultId);
+    // spec: {"system", "region", "representation", "tolerance", "maxIterations", "derive": {...}}
+    Outcome<JobView> iterate(const CallContext& c, const nlohmann::json& spec);
+
+    static constexpr const char* kDerivationKind = "multiscale.derivation";
+    static constexpr const char* kCouplingKind = "multiscale.coupling";
+
+private:
+    Outcome<JobView> startJob(const CallContext& c, const std::string& operation, const std::string& name, const std::string& kind,
+                              std::function<Result<nlohmann::json>(const Project&, JobContext&)> work, const std::vector<std::string>& resources);
+    Outcome<Mutation> changeModel(const CallContext& c, const std::string& operation, const std::string& description,
+                                  const std::function<Outcome<bool>(Project&, multiscale::MultiscaleModel&)>& change);
+    Session& s_;
+};
+
 // Batches and transactions: operations run on a staging copy of the project
 // (with the same revisions), and are committed as one undoable step.
 class TransactionService {
@@ -488,6 +535,7 @@ public:
     MultiphysicsService multiphysics;
     FunctionalStructureService functional;
     ResonanceService resonance;
+    MultiscaleService multiscale;
     ApplicationService application;
 
 private:
