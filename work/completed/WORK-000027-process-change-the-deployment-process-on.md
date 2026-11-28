@@ -1,13 +1,13 @@
 # WORK-000027: Process change: the deployment process (one Linux ZIP) and a concrete package lane in AGENTS.md and scripts/test_manifest.json
 
-**Status:** needs-review
+**Status:** completed
 **Type:** process-change
 **Request:** requests/processing/2026-11-28-part-ix-packaging-and-distribu-req-chat-20261128-002.md
 **Requirements:** RES-REL-005
 **Decision:** ADR-000230
-**Evidence:** VER-000027
+**Evidence:** VER-000027, VER-000031
 **Test-Suites:** scripts, audits
-**Test-Run:** 20261128T115100-2235108
+**Test-Run:** 20261128T140408-3006405
 
 ## Scope
 
@@ -47,6 +47,12 @@ Options:
 - (B) Request changes (for example, different publication gates or lane groups).
 - (C) Reject. The placeholders stay, and packaging verification remains outside the framework.
 
+## Human review 2026-11-28
+
+The owner answered in the session: "you have my perission to touch the agents.md go ahead and address that."
+
+Decision: option (A), approve as is: the AGENTS.md Deployment section and the `package` lane of `scripts/test_manifest.json` it describes. ADR-000230 is ACCEPTED, and the request resumes and completes through the gate.
+
 ## Traceability
 
 REQ-CHAT-20261128-002 -> RES-REL-005 -> WORK-000027 -> evidence (pending)
@@ -55,3 +61,5 @@ REQ-CHAT-20261128-002 -> RES-REL-005 -> WORK-000027 -> evidence (pending)
 
 - 2026-11-28T16:41:53.233764+00:00 created in active by agent-dev-20261126151713-76f632
 - 2026-11-28T16:58:28.726399+00:00 active -> needs-review by agent-dev-20261126151713-76f632: process change (docs/process/process-protection.md): AGENTS.md Deployment and the scripts/test_manifest.json package lane are protected artifacts and need human review; options A approve / B request changes / C reject in the work record's Escalation section
+- 2026-11-28T19:03:32.354272+00:00 needs-review -> active by agent-dev-20261126151713-76f632
+- 2026-11-28T19:05:05.147092+00:00 active -> completed by agent-dev-20261126151713-76f632

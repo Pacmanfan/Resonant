@@ -1,7 +1,7 @@
 # Deployment
 
 **Status:** the deployment process (RES-REL-005, ADR-000230; a process change,
-REQ-CHAT-20261128-002, subject to human review). The ZIP itself is described in
+REQ-CHAT-20261128-002, approved by the owner on 2026-11-28). The ZIP itself is described in
 `LINUX_ZIP_DISTRIBUTION.md`, its decisions in `PACKAGING_DECISIONS.md` and
 ADR-000218, its licences in `LICENSE_AUDIT.md` and `LICENSING_DECISION.md`.
 

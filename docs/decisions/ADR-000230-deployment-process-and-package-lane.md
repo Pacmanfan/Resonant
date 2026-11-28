@@ -1,6 +1,6 @@
 # ADR-000230: The deployment process: one Linux ZIP, verified once by a concrete package lane (process change)
 
-**Status:** PROPOSED (awaiting human review: process change)
+**Status:** ACCEPTED (process change approved by the owner, 2026-11-28)
 **Date:** 2026-11-28
 **Type:** process-change
 **Requirements:** `docs/requirements/release_readiness.md` RES-REL-005
@@ -56,5 +56,7 @@ change is a process change with human review.
 
 ## Review
 
-This record is PROPOSED until a human approves the process change. The
-approval is written here, then it becomes ACCEPTED and the request completes.
+Approved by the owner on 2026-11-28: "you have my perission to touch the
+agents.md go ahead and address that". That is option (A) of WORK-000027's
+escalation: the AGENTS.md Deployment section and the package lane as
+proposed.

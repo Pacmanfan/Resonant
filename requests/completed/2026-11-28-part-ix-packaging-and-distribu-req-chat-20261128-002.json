@@ -7,7 +7,7 @@
   "created_utc": "2026-11-28T16:25:49+00:00",
   "id_date": "2026-11-28",
   "timezone": "EST (UTC-05:00)",
-  "status": "needs-review",
+  "status": "completed",
   "original_text": "# PART IX \u2014 PACKAGING AND DISTRIBUTION\n\nThis work requires a PROCESS-CHANGE request because the existing package test lane and Deployment section of AGENTS.md need modification.\n\n## 9.1 Process change\n\nCreate the required PROCESS-CHANGE request.\n\nReview and update the deployment process to accommodate:\n\n- Clean-machine testing.\n- Reproducible builds.\n- Runtime dependency discovery.\n- Qt libraries and plugins.\n- C++ dependencies.\n- Resources.\n- Offline documentation.\n- Example projects.\n- Demonstration assets.\n\nPreserve the project's existing engineering governance.",
   "file": "requests/inbox/2026-11-28-part-ix-packaging-and-distribu-req-chat-20261128-002.md",
   "attachments": [],
@@ -103,9 +103,20 @@
   "commits": [],
   "resolution": {
     "from": "processing",
-    "to": "needs-review",
-    "at": "2026-11-28T16:58:28.798564+00:00",
+    "to": "completed",
+    "at": "2026-11-28T19:05:05.218253+00:00",
     "by": "agent-dev-20261126151713-76f632",
-    "reason": "human review of the process change: AGENTS.md Deployment section and the concrete package lane (ADR-000230 PROPOSED); the gate passed on this code"
+    "gates": [
+      {
+        "work": "WORK-000027",
+        "at": "2026-11-28T19:04:58.234119+00:00",
+        "verdict": "PASS",
+        "request_fingerprint": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "test_runs": [
+          "20261128T115100-2235108",
+          "20261128T140408-3006405"
+        ]
+      }
+    ]
   }
 }
