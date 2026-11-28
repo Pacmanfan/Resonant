@@ -1,0 +1,417 @@
+{
+  "request_id": "REQ-CHAT-20261126-021",
+  "source": "chat",
+  "type": "FEATURE",
+  "priority": "NORMAL",
+  "created": "2026-11-26T23:47:10-05:00",
+  "created_utc": "2026-11-27T04:47:10+00:00",
+  "id_date": "2026-11-26",
+  "timezone": "EST (UTC-05:00)",
+  "status": "completed",
+  "original_text": "# PROMPT 23 \u2014 DYNAMIC MATERIAL STATE, NONLINEAR MATTER AND EVOLVING PHYSICAL SYSTEMS\n\n## Project: RESONANT \u2014 Wave Field Engineering Studio\n\n## Mission\n\nImplement the next major scientific capability in RESONANT: **Dynamic Material State and Nonlinear Matter**.\n\nRESONANT must move beyond treating materials as static objects with fixed physical properties.\n\nIn real physical systems, matter changes in response to energy, temperature, electromagnetic fields, mechanical loading, pressure, chemical interactions, deformation, and time.\n\nThose changes can fundamentally alter how the system behaves.\n\nA material can:\n- Heat up and change its conductivity.\n- Expand and alter its geometry.\n- Deform and change its mechanical stiffness.\n- Undergo a phase transition.\n- Accumulate damage.\n- Develop cracks.\n- Change its magnetic properties.\n- Exhibit hysteresis.\n- Absorb energy and change its internal state.\n- Develop nonlinear responses to increasing excitation.\n- Change its resonance characteristics as its physical state evolves.\n\nThese effects are not independent.\n\nA change in material state can alter geometry, energy absorption, wave propagation, resonance, mechanical response, and subsequent energy transfer.\n\nRESONANT must gain the ability to represent these evolving relationships as part of its central physical simulation architecture.\n\nThe governing principle is:\n\n**Energy and Matter Interaction \u2192 Material State Evolution \u2192 Changed Physical Properties \u2192 Changed System Response \u2192 Further Energy and Matter Interaction**\n\nThis creates a continuously evolving physical feedback system.\n\nThe objective is not to implement every possible nonlinear material model immediately. It is to establish a rigorous architecture for dynamic material state, implement meaningful validated models, and integrate them with the existing CEME, geometry, resonance, metamaterial, and multiscale systems.\n\n---\n\n# 1. Governing Architecture\n\nEstablish a first-class concept of **Dynamic Material State**.\n\nA material definition describes what a material is.\n\nA material state describes what that material is currently experiencing and how its physical characteristics have evolved.\n\nThese must be separate concepts.\n\nFor example, two objects may use the same base material definition but have different physical states because one has been heated, strained, magnetized, damaged, or otherwise altered.\n\nThe material state must be capable of influencing the constitutive properties used by the simulation.\n\nEstablish the following relationship:\n\n**Material Definition + Current State + Physical History + Environmental Conditions \u2192 Constitutive Response**\n\nAnd:\n\n**Constitutive Response + Applied Physical Interactions \u2192 Updated Material State**\n\nThis must operate within the existing Coupled Energy\u2013Matter Engine.\n\nDo not create a separate dynamic-material simulation engine disconnected from CEME.\n\n---\n\n# 2. Audit Existing Architecture Before Implementation\n\nPerform a comprehensive audit of:\n\n- Material definitions and constitutive models.\n- Prompt 22 multiscale material representations and lineage.\n- CEME physical state management.\n- Geometry and deformation capabilities.\n- Mechanical and structural solvers.\n- Thermal solvers.\n- Electromagnetic and optical solvers.\n- Acoustic and fluid solvers.\n- Resonance and modal analysis.\n- Metamaterial and effective-property systems.\n- Time-domain simulation capabilities.\n- Numerical integration methods.\n- Mesh and field update mechanisms.\n- Energy accounting and conservation infrastructure.\n- Project serialization and versioning.\n- Automation architecture.\n- GUI material and simulation workflows.\n- Existing validation and regression tests.\n\nDetermine which physical state variables are already supported.\n\nDetermine whether existing solvers support transient simulation, nonlinear constitutive behavior, or state-dependent material properties.\n\nDo not infer capabilities from class names or interface declarations alone. Verify actual execution paths.\n\nCreate an architecture map showing how dynamic material state will be introduced into existing systems.\n\nReuse existing infrastructure wherever possible.\n\nDo not create duplicate material registries, competing time-management systems, or parallel physical simulation engines.\n\n---\n\n# 3. Dynamic Material State Model\n\nImplement a common state architecture capable of representing the evolving physical condition of a material.\n\nA material state should support relevant combinations of:\n\n### Thermal State\n- Temperature.\n- Temperature gradients.\n- Thermal history.\n- Thermal expansion.\n- Thermal strain.\n- Thermal gradients through the material.\n\n### Mechanical State\n- Stress.\n- Strain.\n- Strain rate.\n- Plastic strain.\n- Elastic strain.\n- Deformation.\n- Residual stress.\n- Internal mechanical energy.\n\n### Structural State\n- Damage.\n- Crack or fracture indicators.\n- Porosity.\n- Defect concentration.\n- Grain or phase distribution where modeled.\n- Microstructural evolution variables.\n\n### Electromagnetic State\n- Electric polarization.\n- Magnetization.\n- Magnetic domain state where supported.\n- Charge-related state variables.\n- Field-dependent material response.\n\n### Chemical and Compositional State\n- Composition.\n- Concentration fields.\n- Reaction progress.\n- Diffusion state.\n- Phase fractions.\n- Other supported chemical state variables.\n\n### History State\n- Previous loading conditions.\n- Previous temperatures.\n- Maximum historical stress or strain where relevant.\n- Accumulated fatigue.\n- Hysteresis variables.\n- Irreversible deformation.\n- Accumulated damage.\n- Other constitutive history variables.\n\nDo not require every material to carry every state variable.\n\nState variables must be defined by the physical model that uses them.\n\n## 3.1 Material State Identity\n\nEvery material state must be associated with:\n\n- Its material definition.\n- Its physical representation.\n- Its spatial location or simulation region.\n- Its current simulation time.\n- Its previous state.\n- Its relevant history variables.\n- Its constitutive model.\n- Its revision and provenance.\n\nWhere materials are spatially distributed, state must be capable of varying across the geometry or simulation mesh.\n\nA material must not be forced to have one uniform temperature, stress, damage value, or phase fraction when the physics requires spatial variation.\n\n## 3.2 Reversible and Irreversible State\n\nDistinguish between reversible and irreversible changes.\n\nExamples:\n\nReversible:\n- Elastic deformation.\n- Thermal expansion.\n- Reversible polarization.\n- Reversible magnetic response within the applicable model.\n\nIrreversible:\n- Plastic deformation.\n- Fatigue accumulation.\n- Permanent damage.\n- Fracture.\n- Plastic hysteresis.\n- Irreversible phase transformation where applicable.\n\nThis distinction is essential for physically meaningful simulation.\n\n---\n\n# 4. Nonlinear Constitutive Modeling\n\nIntroduce a common architecture for nonlinear constitutive models.\n\nA constitutive model describes how a material responds to physical loading and its current internal state.\n\nIt must be possible to implement different constitutive models without changing the entire CEME architecture.\n\nEstablish a consistent interface for:\n\n- Current state.\n- Applied physical conditions.\n- Time increment.\n- Constitutive response.\n- Updated state.\n- Internal variables.\n- Tangent or linearized response where required.\n- Convergence information.\n- Energy contribution.\n- Model validity.\n\nThe exact interface must respect the numerical requirements of the existing solvers.\n\nDo not force electromagnetic, mechanical, thermal, acoustic, and fluid constitutive models into one inappropriate universal equation.\n\nThey may share software architecture while retaining their own physical equations.\n\n## 4.1 Linear and Nonlinear Behavior\n\nSupport the distinction between:\n\n- Linear constitutive response.\n- Nonlinear reversible response.\n- History-dependent response.\n- Rate-dependent response.\n- Hysteretic response.\n- Irreversible response.\n- Coupled multiphysics response.\n\nA material may behave linearly within one operating region and nonlinearly outside it.\n\nThe system should allow models to specify their applicable range.\n\n---\n\n# 5. Mechanical Material Evolution\n\nImplement the architecture for evolving mechanical material behavior.\n\nThis should become one of the primary applications of dynamic material state.\n\n## 5.1 Elasticity\n\nSupport state-dependent elastic properties where appropriate.\n\nExamples:\n\n- Temperature-dependent Young's modulus.\n- Temperature-dependent stiffness tensors.\n- Anisotropic elasticity.\n- Nonlinear elastic response.\n- Hyperelastic behavior where supported.\n\nPreserve the distinction between elastic deformation and permanent deformation.\n\n## 5.2 Plasticity\n\nEstablish support for plastic material behavior.\n\nRelevant concepts include:\n\n- Yield criteria.\n- Yield surfaces.\n- Plastic flow.\n- Hardening.\n- Softening.\n- Plastic strain.\n- Residual stress.\n- Loading and unloading behavior.\n\nPotential models include:\n\n- von Mises plasticity.\n- Tresca plasticity.\n- Isotropic hardening.\n- Kinematic hardening.\n- Combined hardening.\n\nImplement models that are compatible with the existing mechanical solver.\n\nDo not add model names without working constitutive calculations.\n\n## 5.3 Viscoelasticity and Visco-Plasticity\n\nSupport time-dependent mechanical response where practical.\n\nRelevant concepts include:\n\n- Creep.\n- Stress relaxation.\n- Rate-dependent deformation.\n- Delayed elastic recovery.\n- Temperature-dependent viscosity.\n- Viscoelastic hysteresis.\n\nPotential reference models:\n\n- Maxwell.\n- Kelvin\u2013Voigt.\n- Standard linear solid.\n- Generalized Maxwell models.\n\nThe implementation must distinguish instantaneous elastic response from time-dependent behavior.\n\n## 5.4 Hyperelasticity\n\nWhere supported, investigate nonlinear elastic models for materials that can undergo large reversible deformation.\n\nExamples:\n\n- Rubber-like materials.\n- Elastomers.\n- Soft materials.\n\nPotential constitutive models include Neo-Hookean and Mooney\u2013Rivlin.\n\nDo not apply small-strain assumptions to large-deformation problems.\n\n---\n\n# 6. Damage, Fracture and Fatigue\n\nIntroduce damage as an evolving material state.\n\nDamage must influence the physical properties and response of the material.\n\nIt must not be merely a visual effect.\n\n## 6.1 Damage Models\n\nSupport appropriate damage variables representing degradation.\n\nExamples:\n\n- Stiffness degradation.\n- Strength degradation.\n- Loss of load-bearing capacity.\n- Progressive material deterioration.\n- Localized damage.\n- Distributed damage.\n\nDamage evolution must depend on an appropriate physical loading or history criterion.\n\n## 6.2 Fracture\n\nEstablish interfaces for fracture modeling.\n\nPotential approaches include:\n\n- Cohesive-zone models.\n- Phase-field fracture.\n- Continuum damage mechanics.\n- Discrete crack representations.\n\nDo not implement every approach simultaneously.\n\nSelect an approach that is compatible with the existing geometry, mesh, and numerical infrastructure.\n\nA fracture model must account for the appropriate fracture energy or other physically meaningful dissipation mechanism.\n\n## 6.3 Fatigue\n\nEstablish an architecture for cyclic damage accumulation.\n\nRelevant concepts include:\n\n- Stress amplitude.\n- Strain amplitude.\n- Mean stress.\n- Load cycles.\n- Fatigue damage.\n- Crack initiation.\n- Crack propagation.\n- Variable-amplitude loading.\n\nPotential models include appropriately qualified S\u2013N and strain-life relationships, Miner-type accumulation, and more advanced approaches where supported.\n\nClearly distinguish empirical fatigue models from physically resolved fracture simulations.\n\n## 6.4 Damage Feedback\n\nDamage must be capable of changing:\n\n- Elastic stiffness.\n- Strength.\n- Thermal transport.\n- Electrical properties where appropriate.\n- Acoustic response.\n- Resonance characteristics.\n- Energy dissipation.\n\nOnly implement property changes that are supported by the selected material model.\n\n---\n\n# 7. Phase Transitions and Evolving Microstructure\n\nIntroduce material phase evolution.\n\nMaterials may change their internal phase composition in response to temperature, pressure, fields, composition, and other physical conditions.\n\nExamples:\n\n- Solid\u2013liquid transitions.\n- Solid\u2013solid phase transitions.\n- Crystallization.\n- Melting.\n- Solidification.\n- Glass transitions.\n- Magnetic phase transitions.\n- Structural phase transformations.\n- Transformation-induced deformation.\n\n## 7.1 Phase Representation\n\nSupport materials with multiple phases.\n\nA phase representation should be capable of recording:\n\n- Phase identity.\n- Phase fraction.\n- Relevant thermodynamic properties.\n- Spatial distribution.\n- Transformation conditions.\n- Transformation history.\n- Associated material properties.\n\n## 7.2 Phase Evolution\n\nSupport appropriate phase evolution models.\n\nPotential approaches include:\n\n- Equilibrium phase selection.\n- Kinetic transformation models.\n- Nucleation and growth models.\n- Phase-field methods.\n- Empirical transformation kinetics.\n\nDo not confuse an equilibrium phase diagram with a time-dependent phase transformation simulation.\n\nThe system must distinguish between predicting which phase is thermodynamically favored and calculating how quickly or where the transformation occurs.\n\n## 7.3 Latent Heat and Energy Transfer\n\nPhase transformations can absorb or release energy.\n\nWhere supported, incorporate:\n\n- Latent heat.\n- Transformation enthalpy.\n- Temperature-dependent heat capacity.\n- Phase-dependent conductivity.\n- Transformation-related strain.\n- Other relevant energy terms.\n\nThe energy transferred during a phase transition must be accounted for within CEME.\n\n---\n\n# 8. Thermal Evolution and Thermo-Mechanical Feedback\n\nEstablish a complete connection between thermal and mechanical state evolution.\n\nA material may heat, expand, deform, develop stress, change stiffness, and subsequently alter its energy absorption.\n\nSupport appropriate combinations of:\n\n- Temperature-dependent material properties.\n- Thermal expansion.\n- Thermal stress.\n- Thermal strain.\n- Thermal gradients.\n- Heat capacity changes.\n- Temperature-dependent conductivity.\n- Thermal softening.\n- Thermal damage.\n- Phase-change effects.\n\nThe system must support feedback:\n\n**Energy Absorption \u2192 Temperature Increase \u2192 Material Property Change \u2192 Changed Physical Response \u2192 Changed Energy Absorption**\n\nExample:\n\nAn electromagnetic structure absorbs energy.\n\nThe material heats up.\n\nIts electrical conductivity and permittivity change.\n\nThe electromagnetic field distribution changes.\n\nThe energy absorption pattern changes again.\n\nThis is a coupled physical process, not a one-time correction to a static material property.\n\nImplement a meaningful thermo-physical feedback workflow where the existing solvers permit it.\n\n---\n\n# 9. Nonlinear Electromagnetic, Optical and Magnetic Materials\n\nDynamic material behavior must not be limited to mechanical materials.\n\nEstablish interfaces for nonlinear electromagnetic and optical constitutive behavior.\n\nWhere supported, investigate:\n\n## 9.1 Nonlinear Dielectrics\n\n- Field-dependent permittivity.\n- Nonlinear polarization.\n- Dielectric saturation.\n- Dielectric loss.\n- Hysteresis where appropriate.\n\n## 9.2 Nonlinear Optical Materials\n\n- Intensity-dependent refractive index.\n- Kerr-type nonlinear response.\n- Harmonic generation.\n- Nonlinear absorption.\n- Saturable absorption where supported.\n- Other domain-appropriate nonlinear optical effects.\n\n## 9.3 Magnetic Materials\n\n- Nonlinear magnetization.\n- Hysteresis.\n- Magnetic saturation.\n- Remanence.\n- Coercivity.\n- Magnetic loss.\n- Temperature-dependent magnetic response.\n\nPotential models include appropriate B\u2013H constitutive relationships and hysteresis models.\n\n## 9.4 Frequency- and State-Dependent Response\n\nThe system must be capable of representing material response that depends on both frequency and current state.\n\nFor example, a material's electromagnetic properties may change with temperature, applied field, or internal phase.\n\nDo not assume a constant scalar permittivity or permeability when a dispersive, tensorial, nonlinear, or history-dependent model is required.\n\n---\n\n# 10. Nonlinear Acoustic, Fluid and Other Physical Domains\n\nExtend dynamic-state architecture to other domains where the existing solver infrastructure supports it.\n\nPotential areas include:\n\n### Acoustic Materials\n- Amplitude-dependent response.\n- Nonlinear acoustic propagation.\n- Temperature-dependent acoustic properties.\n- Viscoelastic acoustic losses.\n- State-dependent absorption.\n\n### Fluids\n- Temperature-dependent viscosity.\n- Non-Newtonian response.\n- Pressure-dependent density.\n- Phase changes.\n- Flow-dependent constitutive behavior.\n\n### Thermal Materials\n- Temperature-dependent conductivity.\n- Nonlinear heat capacity.\n- State-dependent transport.\n- Anisotropic thermal evolution.\n\nThese capabilities must remain domain-specific.\n\nDo not claim nonlinear acoustic or fluid simulation if the current solver cannot execute it.\n\nPrioritize the domains already supported by RESONANT.\n\n---\n\n# 11. Hysteresis and Memory Effects\n\nHysteresis deserves its own architectural treatment.\n\nSome materials respond not only to their current conditions but also to the path by which they arrived there.\n\nExamples:\n\n- Magnetic hysteresis.\n- Mechanical plastic hysteresis.\n- Ferroelectric polarization.\n- Viscoelastic response.\n- Thermal hysteresis.\n- Phase transformation hysteresis.\n\nThe system must be able to represent internal variables that preserve relevant physical history.\n\nA material's response at a given temperature or field may differ depending on its previous state.\n\nDo not implement hysteresis as a graphical loop disconnected from the constitutive calculation.\n\nThe hysteresis model must calculate the actual response and preserve the state necessary for subsequent time steps.\n\n---\n\n# 12. Material State Evolution Engine\n\nImplement a common architecture responsible for coordinating material state updates.\n\nThe state evolution process should follow a controlled sequence:\n\n1. Retrieve the current material definition.\n2. Retrieve the current material state.\n3. Obtain relevant physical fields and environmental conditions.\n4. Identify applicable constitutive models.\n5. Calculate constitutive response.\n6. Evaluate state evolution.\n7. Apply appropriate numerical updates.\n8. Check convergence and model validity.\n9. Calculate relevant energy contributions.\n10. Commit the updated state.\n11. Notify dependent physical systems.\n12. Record the state transition and provenance.\n\nState updates must be coordinated with the solver's numerical integration method.\n\nAvoid updating a material state independently of the physical time step in a way that produces inconsistent field solutions.\n\n## 12.1 State Update Contracts\n\nEvery evolving material model should define:\n\n- Required input variables.\n- Required history variables.\n- Constitutive response.\n- State evolution equations.\n- Numerical update method.\n- Validity conditions.\n- Convergence criteria.\n- Energy contributions.\n- Failure behavior.\n\n## 12.2 Spatial State\n\nWhere appropriate, material state must be stored spatially.\n\nFor a meshed object, different regions may have different:\n\n- Temperatures.\n- Strains.\n- Damage values.\n- Phase fractions.\n- Magnetic states.\n- Other internal variables.\n\nSupport state interpolation and mapping using appropriate numerical methods.\n\n## 12.3 Time Integration\n\nUse the existing simulation time infrastructure where possible.\n\nSupport appropriate methods for:\n\n- Explicit integration.\n- Implicit integration.\n- Adaptive time stepping.\n- Nonlinear iteration.\n- State rollback.\n- Checkpointing.\n\nDo not assume one integration method is appropriate for every material model.\n\n## 12.4 Numerical Stability\n\nState evolution can introduce numerical instability.\n\nImplement appropriate checks for:\n\n- Excessive state changes.\n- Nonphysical negative quantities.\n- Invalid phase fractions.\n- Constitutive divergence.\n- Unstable time steps.\n- Failed nonlinear iterations.\n- Nonphysical energy generation.\n\nWhere possible, provide adaptive step reduction or controlled rollback.\n\nNever silently clamp physically meaningful variables simply to make a calculation complete.\n\n---\n\n# 13. Energy Accounting and Conservation\n\nDynamic material evolution must integrate with the existing CEME energy framework.\n\nMaterial state changes may involve:\n\n- Stored elastic energy.\n- Plastic dissipation.\n- Viscous dissipation.\n- Fracture energy.\n- Thermal energy.\n- Latent heat.\n- Magnetic energy.\n- Dielectric energy.\n- Other domain-specific stored or dissipated energy.\n\nThe material update process must expose the relevant energy changes to CEME.\n\nFor every supported model, identify which terms represent:\n\n- Reversible energy storage.\n- Irreversible energy dissipation.\n- Energy transferred to another physical domain.\n- Energy supplied externally.\n- Energy released during state evolution.\n\nDo not double-count energy already accounted for by the underlying solver.\n\nDo not use a universal material energy equation that replaces domain-specific physical laws.\n\nPrompt 24 will establish a more comprehensive unified energy, momentum, force, and conservation framework.\n\nPrompt 23 must provide the interfaces and accounting information that framework will require.\n\n---\n\n# 14. Feedback Into Geometry and Functional Structures\n\nDynamic material state must be capable of affecting physical geometry.\n\nExamples include:\n\n- Thermal expansion.\n- Elastic deformation.\n- Plastic deformation.\n- Swelling.\n- Shrinkage.\n- Phase-transformation strain.\n- Damage-induced geometry changes.\n- Fracture.\n\nThe geometry system must distinguish between:\n\n- Original reference geometry.\n- Current deformed geometry.\n- Updated physical geometry.\n- Visual representation.\n\nWhere supported, updated geometry must be reflected in the simulation domain.\n\nChanges in geometry can alter:\n\n- Field distributions.\n- Boundary conditions.\n- Resonance.\n- Energy confinement.\n- Mechanical response.\n- Wave propagation.\n- Material interaction.\n\nIntegrate with Prompt 19's geometry architecture.\n\nDo not implement geometry changes as visual-only transformations.\n\nIf the solver cannot update its mesh or physical domain dynamically, document that limitation and expose the appropriate interface for future work.\n\n---\n\n# 15. Feedback Into Resonance and Metamaterials\n\nThis is an especially important integration.\n\nA material's evolving state can alter its resonance and effective material properties.\n\nExamples:\n\n- Temperature shifts resonant frequency.\n- Mechanical deformation changes cavity dimensions.\n- Damage changes mechanical stiffness and modal frequencies.\n- Magnetic state changes permeability.\n- Dielectric nonlinearity changes electromagnetic resonance.\n- Phase transformation changes refractive index.\n- Material loss changes Q factor.\n- Microstructural changes alter effective metamaterial response.\n\nIntegrate with Prompts 20 and 21.\n\n## 15.1 Dynamic Resonance\n\nSupport re-evaluation of resonance characteristics when material state changes.\n\nWhere applicable, update:\n\n- Natural frequencies.\n- Resonant frequencies.\n- Mode shapes.\n- Damping.\n- Q factor.\n- Coupling.\n- Energy storage.\n- Resonant response.\n\nDo not automatically recompute expensive modal analyses after every insignificant state change.\n\nUse appropriate dependency tracking and update criteria.\n\n## 15.2 Dynamic Metamaterials\n\nEffective material properties must be capable of changing as their constituents or microstructure evolve.\n\nFor example:\n\n- Temperature-dependent unit-cell behavior.\n- Deformation-dependent band structures.\n- Damage-dependent effective stiffness.\n- State-dependent electromagnetic response.\n\nPreserve the relationship between the effective material and its underlying unit cell.\n\nA dynamically changed constituent must invalidate or update dependent effective properties as appropriate.\n\n---\n\n# 16. Connection to Multiscale Material Modeling \u2014 Prompt 22\n\nDynamic state evolution must be compatible with the multiscale hierarchy established in Prompt 22.\n\nMaterial changes may occur at different scales.\n\nExamples:\n\n- Atomic defects form or migrate.\n- Molecular configurations change.\n- Grain boundaries evolve.\n- Phase fractions change.\n- Microcracks develop.\n- Effective material properties change.\n- Macroscopic behavior changes.\n\nEstablish interfaces for state transfer across scales.\n\nFor example:\n\n1. A macroscopic model identifies a region under elevated temperature and stress.\n2. The relevant local state is transferred to an RVE or lower-scale representation.\n3. A supported lower-scale model evaluates structural or material changes.\n4. The resulting property changes are derived.\n5. The updated properties are propagated to the higher-scale model.\n\nDo not implement unrestricted real-time atomistic-to-continuum coupling unless the numerical methods and solver infrastructure genuinely support it.\n\nStart with sequential or iterative coupling where practical.\n\nEvery transferred state must preserve units, coordinate conventions, physical assumptions, and provenance.\n\n---\n\n# 17. Nonlinear Resonance and Dynamic Material Interaction\n\nConnect nonlinear material behavior to Prompt 20's resonance architecture.\n\nSupport appropriate investigations involving:\n\n- Amplitude-dependent resonance.\n- Nonlinear stiffness.\n- Nonlinear damping.\n- Frequency shifts.\n- Hysteretic response.\n- Bistability.\n- Jump phenomena.\n- Parametric excitation.\n- Nonlinear mode interaction.\n- Temperature-dependent resonance.\n- State-dependent resonance.\n\nPotential reference systems include:\n\n- Duffing-type mechanical resonator.\n- Nonlinear dielectric resonator.\n- Magnetically nonlinear resonant structure.\n- Thermally shifting electromagnetic cavity.\n- Coupled resonators with state-dependent material properties.\n\nDistinguish between:\n\n- Linear eigenmode analysis.\n- Nonlinear steady-state response.\n- Transient nonlinear simulation.\n- Stability analysis.\n\nA nonlinear frequency response must not be presented as though it were simply a linear eigenfrequency calculation.\n\n---\n\n# 18. Reference Engineering Demonstrations\n\nImplement practical demonstrations that prove dynamic material behavior is integrated into the physical simulation framework.\n\nPrefer examples that reuse existing solvers.\n\n## Example A \u2014 Thermally Evolving Electrical Conductor\n\nCreate a conductive object subjected to a defined heating condition.\n\nDemonstrate:\n\n1. Initial material properties.\n2. Energy absorption or thermal input.\n3. Temperature evolution.\n4. Temperature-dependent conductivity.\n5. Updated electrical response.\n6. Feedback into subsequent energy absorption.\n7. Recorded energy and material state.\n\nThis should be a priority example if the existing electromagnetic and thermal solvers support it.\n\n## Example B \u2014 Thermo-Mechanical Expansion\n\nCreate a structure subjected to a temperature change.\n\nDemonstrate:\n\n1. Initial geometry and material state.\n2. Thermal evolution.\n3. Thermal expansion.\n4. Thermal strain.\n5. Induced mechanical stress where constrained.\n6. Updated physical geometry where supported.\n7. Changes in subsequent mechanical or physical response.\n\n## Example C \u2014 Plastic Deformation\n\nCreate a mechanical specimen under increasing load.\n\nDemonstrate:\n\n1. Initial elastic response.\n2. Yield onset.\n3. Plastic deformation.\n4. Unloading.\n5. Residual deformation.\n6. History-dependent subsequent loading.\n\nThe result must distinguish elastic and plastic strain.\n\n## Example D \u2014 Damage and Resonance Shift\n\nCreate a mechanical resonator or supported structural model.\n\nIntroduce progressive material damage.\n\nDemonstrate:\n\n1. Initial stiffness and modal characteristics.\n2. Damage accumulation.\n3. Changes in material response.\n4. Changes in resonant behavior.\n5. Changes in stored and dissipated energy.\n\nDo not fabricate damage-to-frequency relationships. Calculate them through the implemented physical model.\n\n## Example E \u2014 Phase Transformation\n\nCreate a simple material model that undergoes a supported phase transition.\n\nDemonstrate:\n\n1. Initial phase.\n2. Transformation condition.\n3. Phase evolution.\n4. Energy absorption or release.\n5. Changes in material properties.\n6. Resulting physical response.\n\nAn equilibrium phase selection alone does not qualify as a dynamic transformation simulation.\n\n## Example F \u2014 Hysteretic Material\n\nImplement one genuine hysteretic constitutive model.\n\nDemonstrate a loading cycle and unloading cycle.\n\nVerify that the subsequent material response depends on the internal state and loading history.\n\nThe hysteresis loop must arise from the constitutive model.\n\n---\n\n# 19. Visualization and User Experience\n\nDynamic material state should be understandable without overwhelming the existing interface.\n\nExtend existing material and simulation workflows.\n\n## 19.1 Material State Inspector\n\nProvide an interface for examining:\n\n- Current material state.\n- Initial state.\n- State history.\n- Constitutive model.\n- Active internal variables.\n- Current physical conditions.\n- Validity and convergence status.\n\n## 19.2 Spatial State Visualization\n\nWhere supported, visualize state variables across the geometry.\n\nExamples:\n\n- Temperature maps.\n- Stress and strain maps.\n- Plastic deformation.\n- Damage.\n- Phase fractions.\n- Magnetic state.\n- Other supported internal variables.\n\nUse existing visualization infrastructure.\n\n## 19.3 Time Evolution\n\nProvide time-dependent views of material state.\n\nAllow users to inspect:\n\n- Temperature versus time.\n- Stress versus time.\n- Strain versus time.\n- Damage accumulation.\n- Phase fraction evolution.\n- Material property changes.\n- Energy storage and dissipation.\n\nWhere useful, compare multiple state variables on synchronized timelines.\n\n## 19.4 Material State History\n\nAllow users to navigate previous material states.\n\nThe user should be able to inspect how the current state developed.\n\nWhere simulation checkpointing supports it, provide a way to restore or branch from a prior state without corrupting the original project.\n\n## 19.5 Material Model Configuration\n\nProvide a clear workflow for selecting and configuring nonlinear material models.\n\nDisplay:\n\n- Required parameters.\n- Units.\n- Validity ranges.\n- Assumptions.\n- Unsupported features.\n- Relevant warnings.\n\nDo not expose a large collection of poorly explained numerical parameters.\n\n---\n\n# 20. Automation and Programmatic Access\n\nExtend the existing automation architecture.\n\nExpose supported operations such as:\n\n- Create dynamic material state.\n- Inspect material state.\n- Select constitutive model.\n- Configure nonlinear material behavior.\n- Apply physical loading.\n- Advance material state.\n- Run transient simulation.\n- Inspect internal variables.\n- Query damage.\n- Query phase state.\n- Inspect material history.\n- Extract energy contributions.\n- Compare material states.\n- Recalculate dependent material properties.\n- Invalidate dependent results.\n- Restore supported checkpoints.\n\nAutomation must use the same physical models as the GUI.\n\nDo not create a separate simplified implementation for scripted workflows.\n\nResults must include structured information about:\n\n- Simulation time.\n- Material identity.\n- State identity.\n- Constitutive model.\n- Updated variables.\n- Convergence.\n- Energy changes.\n- Warnings and limitations.\n\n---\n\n# 21. Persistence, History and Reproducibility\n\nDynamic material state creates a significant persistence requirement.\n\nA saved simulation must preserve enough information to reproduce or continue its physical evolution.\n\nPersist:\n\n- Initial material definitions.\n- Initial material states.\n- Constitutive models.\n- Model parameters.\n- State variables.\n- Internal history variables.\n- Time-step information.\n- Relevant solver state.\n- Material property dependencies.\n- Energy contributions.\n- Simulation checkpoints.\n- State history where configured.\n- Provenance and validation information.\n\nDo not save only the final visual state.\n\nA material with hysteresis, plastic deformation, damage, or other history-dependent behavior cannot necessarily be reconstructed from its current geometry and temperature alone.\n\nPreserve the internal variables required by the model.\n\nImplement efficient storage.\n\nAvoid storing every full simulation field at every time step when checkpointing or selective history retention would be more appropriate.\n\nMaintain project compatibility and version migrations.\n\n---\n\n# 22. Performance and Numerical Robustness\n\nDynamic nonlinear simulations can be substantially more expensive than static analyses.\n\nAccount for:\n\n- Nonlinear iteration costs.\n- Time-step size.\n- Mesh resolution.\n- State-variable count.\n- Material update frequency.\n- Solver coupling frequency.\n- Memory use.\n- Checkpoint storage.\n- Visualization overhead.\n\nImplement:\n\n- Appropriate update scheduling.\n- Adaptive time stepping where supported.\n- Nonlinear convergence checks.\n- State rollback.\n- Checkpointing.\n- Cancellation.\n- Resource reporting.\n- Dependency-aware recomputation.\n\nAvoid unnecessary recomputation of material properties or resonance analyses.\n\nA material state update should invalidate only the calculations that genuinely depend on it.\n\nWhen a simulation fails to converge, report the physical and numerical context of the failure.\n\nDo not silently accept an unconverged state.\n\n---\n\n# 23. Scientific Validation and Benchmarking\n\nValidation is mandatory.\n\nTests must establish that the implemented constitutive models produce physically meaningful behavior.\n\n## 23.1 State Architecture\n\nVerify:\n\n- Material definitions and states are separate.\n- State variables are associated with the correct material and spatial region.\n- History-dependent variables persist.\n- Revisions invalidate dependent results.\n- State history survives serialization.\n- State rollback restores the appropriate physical state.\n\n## 23.2 Mechanical Models\n\nWhere implemented, validate:\n\n- Linear elastic response.\n- Thermal expansion.\n- Yield onset.\n- Plastic deformation.\n- Unloading and residual strain.\n- Viscoelastic time response.\n- Damage evolution.\n\nUse analytical solutions or independently verified benchmarks.\n\n## 23.3 Thermal and Phase Models\n\nWhere implemented, validate:\n\n- Thermal evolution.\n- Temperature-dependent properties.\n- Thermal expansion.\n- Energy associated with phase transitions.\n- Phase fraction evolution.\n- Relevant limiting cases.\n\n## 23.4 Electromagnetic and Magnetic Models\n\nWhere implemented, validate:\n\n- Nonlinear constitutive response.\n- Hysteresis.\n- Saturation.\n- Field-dependent material properties.\n- Energy storage and loss.\n\n## 23.5 Energy Accounting\n\nVerify that:\n\n- Reversible energy storage is calculated consistently.\n- Irreversible dissipation is nonnegative where required by the model.\n- Energy transfer between coupled domains is accounted for.\n- Energy is not double-counted.\n- Energy balance errors are measured and reported.\n\n## 23.6 Regression and Integration\n\nVerify that:\n\n- Existing linear simulations still behave correctly.\n- Static material models remain compatible.\n- Prompt 22 material lineage remains intact.\n- Prompt 20 resonance analysis can consume updated properties.\n- Prompt 21 effective materials can be updated when underlying constituents change.\n- CEME can coordinate supported dynamic material updates.\n\nDo not claim universal energy conservation for numerical models that have not implemented or validated the necessary accounting.\n\n---\n\n# 24. Implementation Strategy\n\nImplement this capability in deliberate phases.\n\n## Phase 1 \u2014 Architecture Audit and Dynamic State Framework\n\n- Audit existing material and CEME systems.\n- Establish material state identity.\n- Separate material definitions from current states.\n- Establish state history.\n- Define constitutive update contracts.\n- Define spatial state interfaces.\n- Establish persistence and dependency tracking.\n\n## Phase 2 \u2014 Nonlinear Mechanical Materials\n\n- Implement the constitutive architecture.\n- Add a validated nonlinear mechanical model.\n- Add plastic or viscoelastic behavior where practical.\n- Validate loading and unloading.\n- Preserve internal history variables.\n\n## Phase 3 \u2014 Thermal and Thermo-Mechanical Evolution\n\n- Implement temperature-dependent material properties.\n- Connect thermal and mechanical state.\n- Support thermal expansion and thermal stress where appropriate.\n- Validate the feedback process.\n- Connect thermal energy contributions to CEME.\n\n## Phase 4 \u2014 Damage and Phase Evolution\n\n- Implement an initial damage model.\n- Establish fracture interfaces.\n- Implement an appropriate phase evolution model where practical.\n- Account for energy associated with irreversible changes.\n- Validate state evolution.\n\n## Phase 5 \u2014 Nonlinear Electromagnetic and Other Domains\n\n- Extend the architecture to supported electromagnetic, optical, magnetic, acoustic, and fluid domains.\n- Implement at least one genuine nonlinear constitutive model in an additional domain if existing solver infrastructure supports it.\n- Preserve domain-specific equations.\n\n## Phase 6 \u2014 Geometry, Resonance and Metamaterial Integration\n\n- Connect state changes to physical geometry.\n- Update dependent material properties.\n- Integrate with resonance and modal analysis.\n- Integrate with metamaterial effective-property derivation.\n- Implement dependency-aware recalculation.\n\n## Phase 7 \u2014 Multiscale and Automation Integration\n\n- Connect state changes to Prompt 22 lineage.\n- Establish state-transfer interfaces.\n- Extend automation.\n- Implement state inspection and history visualization.\n- Add reference engineering projects.\n\n## Phase 8 \u2014 Validation and Documentation\n\n- Run all scientific benchmarks.\n- Run regression tests.\n- Evaluate performance.\n- Document supported models.\n- Document limitations.\n- Produce the engineering completion report.\n\nDo not implement every possible nonlinear model in one pass.\n\nPrioritize a small number of complete, validated physical models over a large number of superficial model definitions.\n\n---\n\n# 25. Explicit Scientific Guardrails\n\nThese requirements are mandatory.\n\n1. Do not treat dynamic material state as a visual animation.\n2. Do not treat material properties as automatically constant throughout a simulation.\n3. Do not confuse reversible and irreversible deformation.\n4. Do not implement hysteresis as a graphical effect.\n5. Do not apply a mechanical constitutive equation to an unrelated physical domain.\n6. Do not claim fracture simulation when only a damage indicator is calculated.\n7. Do not claim dynamic phase transformation when only equilibrium phase selection is implemented.\n8. Do not claim atomistic microstructural evolution without an actual lower-scale model.\n9. Do not create arbitrary property changes to make a demonstration appear interesting.\n10. Do not silently clamp unstable or nonphysical state variables.\n11. Do not discard history variables required by a constitutive model.\n12. Do not allow unconverged state updates to be presented as valid results.\n13. Do not double-count energy contributions across coupled solvers.\n14. Do not update geometry visually without updating the physical simulation representation when geometry changes affect the physics.\n15. Do not automatically recompute expensive analyses without dependency and significance checks.\n16. Do not claim a nonlinear capability unless its governing model and numerical implementation actually exist.\n17. Do not force every material or solver to support every state variable.\n18. Do not sacrifice existing linear simulation behavior when adding nonlinear capabilities.\n\nThe system must remain scientifically honest about what it can and cannot simulate.\n\n---\n\n# 26. Acceptance Criteria\n\nPrompt 23 is complete when the following conditions are satisfied.\n\n### Dynamic Material Architecture\n\n- [ ] Material definitions and material states are separate entities.\n- [ ] Material states can contain physical and historical variables.\n- [ ] State updates are coordinated with the simulation time step.\n- [ ] Spatially varying material states are supported where appropriate.\n- [ ] State history survives persistence and reload.\n- [ ] State-dependent properties can be consumed by existing solvers.\n\n### Nonlinear Constitutive Modeling\n\n- [ ] A genuine nonlinear constitutive model is implemented.\n- [ ] At least one history-dependent model is implemented and validated.\n- [ ] Loading and unloading behavior is correctly distinguished.\n- [ ] Internal variables are persisted.\n- [ ] Numerical convergence and failure are reported.\n\n### Thermal and Mechanical Integration\n\n- [ ] Temperature-dependent properties are supported where appropriate.\n- [ ] At least one thermo-mechanical feedback workflow is operational if the existing solvers permit it.\n- [ ] Energy contributions are exposed to CEME.\n- [ ] Geometry updates are physically integrated where supported.\n\n### Damage and Phase Evolution\n\n- [ ] Damage architecture exists.\n- [ ] At least one genuine damage model is operational, or its implementation boundary is explicitly documented.\n- [ ] Phase evolution architecture exists.\n- [ ] Any implemented phase transition includes appropriate state and energy handling.\n- [ ] Unsupported fracture or transformation capabilities are not misrepresented.\n\n### Cross-System Integration\n\n- [ ] Material state updates can affect supported engineering calculations.\n- [ ] Resonance analysis can consume updated material properties.\n- [ ] Metamaterial dependencies can be invalidated or updated appropriately.\n- [ ] Prompt 22 material lineage is preserved.\n- [ ] CEME coordinates the implemented dynamic physical interactions.\n\n### User Experience and Automation\n\n- [ ] Users can inspect material state.\n- [ ] Users can inspect relevant state history.\n- [ ] Users can visualize supported spatial state variables.\n- [ ] Supported operations are accessible through existing automation.\n- [ ] Example projects demonstrate genuine dynamic material behavior.\n\n### Scientific Quality\n\n- [ ] Constitutive benchmark tests pass.\n- [ ] Energy accounting tests pass for the implemented models.\n- [ ] Numerical stability and convergence tests pass.\n- [ ] Existing linear simulation regression tests pass.\n- [ ] Documentation clearly identifies implemented models and limitations.\n\n**Completion does not require every nonlinear physical domain or every damage and phase model to be implemented. It requires a functioning dynamic material-state architecture and multiple meaningful, validated examples that demonstrate its integration with RESONANT.**\n\n---\n\n# 27. Final Engineering Report\n\nWhen implementation is complete, provide a detailed report covering:\n\n1. Existing architecture audit.\n2. Dynamic material state architecture.\n3. Constitutive model interfaces.\n4. Implemented nonlinear material models.\n5. Mechanical behavior.\n6. Thermal and thermo-mechanical behavior.\n7. Damage and fracture capabilities.\n8. Phase evolution capabilities.\n9. Nonlinear electromagnetic and other supported domains.\n10. Material state history and persistence.\n11. Geometry integration.\n12. Resonance and metamaterial integration.\n13. CEME energy accounting.\n14. Automation and GUI changes.\n15. Scientific benchmarks and results.\n16. Numerical stability and performance.\n17. Test results.\n18. Known limitations.\n19. Deferred capabilities.\n20. Recommended next engineering steps.\n\nIdentify the relevant source files, modules, interfaces, and tests.\n\nClearly distinguish implemented capabilities from architectural interfaces and future work.\n\n---\n\n# Final Directive\n\nRESONANT must now be capable of representing matter as something that evolves.\n\nA material is not simply assigned a stiffness, conductivity, density, or permittivity and then left unchanged while energy passes through it.\n\nIt experiences the physical world.\n\nIt heats, expands, deforms, absorbs energy, changes phase, accumulates damage, develops internal stresses, and alters its response.\n\nThose changes influence the fields and structures around it.\n\nThe surrounding system then responds to the changed material.\n\nThis is a feedback process.\n\n**The central objective is to make the material itself an active participant in the simulation.**\n\nImplement this as a cohesive extension of the existing RESONANT architecture, with rigorous physical models, meaningful numerical integration, traceable state evolution, and scientific validation.",
+  "file": "requests/inbox/2026-11-26-prompt-23-dynamic-material-sta-req-chat-20261126-021.md",
+  "attachments": [],
+  "context": "User: 'add this and perform in order' (queued after REQ-CHAT-20261126-020, Prompt 22)",
+  "text_sha256": "fa35727e3f080db0da7e2ffb841bd5f87fdca59816835d2c1ca798a00927c534",
+  "classification": {
+    "proposed_type": null,
+    "proposed_source": "heuristic",
+    "normalized_type": null,
+    "heuristic_type": "FEATURE",
+    "final_type": "FEATURE",
+    "confidence": "high",
+    "validation": "PASS",
+    "classifier_reason": "request statement is framed as feature: Develop, EVOLVING, Implement, ability to",
+    "correction_reason": null,
+    "normalization_note": null,
+    "evidence": [
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "EVOLVING",
+        "strength": "strong",
+        "note": "",
+        "sentence": "DYNAMIC MATERIAL STATE, NONLINEAR MATTER AND EVOLVING PHYSICAL SYSTEMS"
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement the next major scientific capability in RESONANT: **Dynamic Material State and Nonlinear Matter**."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "capability",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement the next major scientific capability in RESONANT: **Dynamic Material State and Nonlinear Matter**."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "Develop",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Develop cracks."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "Develop",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Develop nonlinear responses to increasing excitation."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "ability to",
+        "strength": "strong",
+        "note": "",
+        "sentence": "RESONANT must gain the ability to represent these evolving relationships as part of its central physical simulation architecture."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "evolving",
+        "strength": "strong",
+        "note": "",
+        "sentence": "RESONANT must gain the ability to represent these evolving relationships as part of its central physical simulation architecture."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "creates",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This creates a continuously evolving physical feedback system."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "evolving",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This creates a continuously evolving physical feedback system."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "objective",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The objective is not to implement every possible nonlinear material model immediately."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The objective is not to implement every possible nonlinear material model immediately."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "It is to establish a rigorous architecture for dynamic material state, implement meaningful validated models, and integrate them with the existing CEME, geometry, resonance, metamaterial, and multisca"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "integrate",
+        "strength": "strong",
+        "note": "",
+        "sentence": "It is to establish a rigorous architecture for dynamic material state, implement meaningful validated models, and integrate them with the existing CEME, geometry, resonance, metamaterial, and multisca"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "first-class",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Establish a first-class concept of **Dynamic Material State**."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not create a separate dynamic-material simulation engine disconnected from CEME."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capabilities",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Geometry and deformation capabilities."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capabilities",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Time-domain simulation capabilities."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "integration",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Numerical integration methods."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capabilities",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not infer capabilities from class names or interface declarations alone."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Create an architecture map showing how dynamic material state will be introduced into existing systems."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Reuse",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Reuse existing infrastructure wherever possible."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not create duplicate material registries, competing time-management systems, or parallel physical simulation engines."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement a common state architecture capable of representing the evolving physical condition of a material."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "evolving",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement a common state architecture capable of representing the evolving physical condition of a material."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "should support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "A material state should support relevant combinations of:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Introduce",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Introduce a common architecture for nonlinear constitutive models."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "It must be possible to implement different constitutive models without changing the entire CEME architecture."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support the distinction between:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "should allow",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The system should allow models to specify their applicable range."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement the architecture for evolving mechanical material behavior."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "evolving",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement the architecture for evolving mechanical material behavior."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "should become",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This should become one of the primary applications of dynamic material state."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support state-dependent elastic properties where appropriate."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "support for",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Establish support for plastic material behavior."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement models that are compatible with the existing mechanical solver."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "add",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not add model names without working constitutive calculations."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support time-dependent mechanical response where practical."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Introduce",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Introduce damage as an evolving material state."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "evolving",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Introduce damage as an evolving material state."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support appropriate damage variables representing degradation."
+      }
+    ],
+    "scores": {
+      "FEATURE": {
+        "head": 7,
+        "body": 143
+      },
+      "BUG": {
+        "head": 2,
+        "body": 17
+      },
+      "CRASH": {
+        "head": 0,
+        "body": 0
+      },
+      "REGRESSION": {
+        "head": 0,
+        "body": 0
+      },
+      "PERFORMANCE": {
+        "head": 0,
+        "body": 0
+      },
+      "REFACTOR": {
+        "head": 0,
+        "body": 2
+      },
+      "BUILD": {
+        "head": 0,
+        "body": 0
+      },
+      "DOCUMENTATION": {
+        "head": 0,
+        "body": 6
+      },
+      "INVESTIGATION": {
+        "head": 0,
+        "body": 18
+      },
+      "PROCESS-CHANGE": {
+        "head": 0,
+        "body": 0
+      }
+    },
+    "evidence_total": 195,
+    "validator": "scripts/request_classification.py"
+  },
+  "links": {
+    "work": [
+      "WORK-000022"
+    ]
+  },
+  "commits": [],
+  "resolution": {
+    "from": "processing",
+    "to": "completed",
+    "at": "2026-11-28T05:18:31.351477+00:00",
+    "by": "agent-dev-20261126151713-76f632",
+    "gates": [
+      {
+        "work": "WORK-000022",
+        "at": "2026-11-28T05:18:22.886610+00:00",
+        "verdict": "PASS",
+        "request_fingerprint": "734bbbf96f5057e8728ecf2467d15544219034529466e7da4fb50360f040ec1a",
+        "test_runs": [
+          "20261128T001259-980638"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MaterialStatePanel</class>
+ <widget class="QWidget" name="MaterialStatePanel">
+  <layout class="QVBoxLayout" name="mainLayout">
+   <item>
+    <layout class="QHBoxLayout" name="studyRow">
+     <item><widget class="QLabel" name="studyLabel"><property name="text"><string>Study</string></property></widget></item>
+     <item><widget class="QComboBox" name="studyCombo"><property name="sizePolicy"><sizepolicy hsizetype="Expanding" vsizetype="Fixed"/></property></widget></item>
+     <item><widget class="QPushButton" name="runStudyButton"><property name="text"><string>Run</string></property><property name="enabled"><bool>false</bool></property></widget></item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="modelRow">
+     <item><widget class="QLabel" name="modelLabel"><property name="text"><string>Model</string></property></widget></item>
+     <item><widget class="QComboBox" name="modelCombo"><property name="sizePolicy"><sizepolicy hsizetype="Expanding" vsizetype="Fixed"/></property></widget></item>
+     <item><widget class="QComboBox" name="presetCombo"/></item>
+     <item><widget class="QPushButton" name="runModelButton"><property name="text"><string>Try</string></property>
+      <property name="toolTip"><string>Run the model with its default parameters and the chosen loading.</string></property></widget></item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QPlainTextEdit" name="cardText">
+     <property name="readOnly"><bool>true</bool></property>
+     <property name="maximumBlockCount"><number>200</number></property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="statusLabel">
+     <property name="wordWrap"><bool>true</bool></property>
+     <property name="text"><string/></property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="curveRow">
+     <item><widget class="QComboBox" name="curveCombo"><property name="sizePolicy"><sizepolicy hsizetype="Expanding" vsizetype="Fixed"/></property></widget></item>
+     <item><widget class="QLabel" name="snapshotLabel"><property name="text"><string>Snapshot</string></property></widget></item>
+     <item><widget class="QSpinBox" name="snapshotSpin"><property name="toolTip"><string>The snapshot whose spatial profile is shown.</string></property></widget></item>
+    </layout>
+   </item>
+   <item><widget class="PlotWidget" name="plot"><property name="minimumSize"><size><width>0</width><height>180</height></size></property></widget></item>
+   <item>
+    <widget class="QTableWidget" name="historyTable">
+     <property name="toolTip"><string>The state history: one row per recorded step.</string></property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="recordRow">
+     <item><widget class="QPushButton" name="saveButton"><property name="text"><string>Save record</string></property><property name="enabled"><bool>false</bool></property></widget></item>
+     <item><widget class="QComboBox" name="recordCombo"><property name="sizePolicy"><sizepolicy hsizetype="Expanding" vsizetype="Fixed"/></property></widget></item>
+     <item><widget class="QComboBox" name="targetCombo"/></item>
+     <item>
+      <widget class="QPushButton" name="commitButton">
+       <property name="text"><string>Commit</string></property>
+       <property name="enabled"><bool>false</bool></property>
+       <property name="toolTip"><string>Write the record's evolved values (for example a damaged modulus) into the chosen library material, with provenance computed and its lineage; one undoable step.</string></property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget><class>PlotWidget</class><extends>QWidget</extends><header>PlotWidget.h</header><container>0</container></customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

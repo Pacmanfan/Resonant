@@ -1,0 +1,90 @@
+syntax = "proto3";
+package resonant.v1;
+
+import "google/protobuf/struct.proto";
+import "resonant/v1/common/jobs.proto";
+import "resonant/v1/common/metadata.proto";
+import "resonant/v1/common/validation.proto";
+import "resonant/v1/materialstate/material_state.proto";
+
+message ListMaterialStateModelsRequest { RequestHeader header = 1; }
+message ListMaterialStateModelsResponse { ResponseHeader header = 1; repeated google.protobuf.Struct models = 2; }
+
+message ListMaterialStateStudiesRequest { RequestHeader header = 1; }
+message ListMaterialStateStudiesResponse { ResponseHeader header = 1; repeated google.protobuf.Struct studies = 2; }
+
+message SetMaterialStateStudyRequest { RequestHeader header = 1; google.protobuf.Struct study = 2; }
+message SetMaterialStateStudyResponse { ResponseHeader header = 1; ChangeSummary changes = 2; }
+
+message DeleteMaterialStateStudyRequest { RequestHeader header = 1; string study_id = 2; }
+message DeleteMaterialStateStudyResponse { ResponseHeader header = 1; ChangeSummary changes = 2; }
+
+message RunMaterialStateStudyRequest {
+  RequestHeader header = 1;
+  string study_id = 2;                 // a stored study, or
+  google.protobuf.Struct study = 3;    // {"model", "parameters", "loading"} (or "system" for coupled.evolution)
+}
+message RunMaterialStateStudyResponse { ResponseHeader header = 1; Job job = 2; }
+
+message EvolvePhysicalSystemRequest {
+  RequestHeader header = 1;
+  string system_id = 2;
+  double duration = 3;   // s
+  int32 steps = 4;       // 0: 20
+  int32 substeps = 5;    // 0: 4
+}
+message EvolvePhysicalSystemResponse { ResponseHeader header = 1; Job job = 2; }
+
+message GetMaterialStateResultRequest { RequestHeader header = 1; string result_id = 2; }
+message GetMaterialStateResultResponse { ResponseHeader header = 1; google.protobuf.Struct document = 2; bool reliable = 3; }
+
+message SaveMaterialStateRecordRequest { RequestHeader header = 1; string result_id = 2; string record_id = 3; string name = 4; }
+message SaveMaterialStateRecordResponse { ResponseHeader header = 1; ChangeSummary changes = 2; string record_id = 3; }
+
+message ListMaterialStateRecordsRequest { RequestHeader header = 1; }
+message ListMaterialStateRecordsResponse { ResponseHeader header = 1; repeated MaterialStateRecordSummary records = 2; }
+
+message GetMaterialStateRecordRequest { RequestHeader header = 1; string record_id = 2; }
+message GetMaterialStateRecordResponse { ResponseHeader header = 1; google.protobuf.Struct record = 2; }
+
+message DeleteMaterialStateRecordRequest { RequestHeader header = 1; string record_id = 2; }
+message DeleteMaterialStateRecordResponse { ResponseHeader header = 1; ChangeSummary changes = 2; }
+
+message CommitMaterialStateRequest {
+  RequestHeader header = 1;
+  string record_id = 2;
+  string material_id = 3;          // empty: each committable value's own material
+  repeated string properties = 4;  // "domain.key"; empty: all
+}
+message CommitMaterialStateResponse { ResponseHeader header = 1; ChangeSummary changes = 2; }
+
+// Dynamic material state: constitutive models (plasticity, damage, viscoelasticity, phase change,
+// hysteresis) run as studies, time-stepped evolutions of physical systems through the coupled
+// engine, records of runs in the project, and commits of an evolved state to a library material
+// with its lineage.
+service MaterialStateService {
+  // The model cards: variables, parameters, assumptions, validity, loading presets; and the models not implemented.
+  rpc ListMaterialStateModels(ListMaterialStateModelsRequest) returns (ListMaterialStateModelsResponse);
+  // The studies stored in the project.
+  rpc ListMaterialStateStudies(ListMaterialStateStudiesRequest) returns (ListMaterialStateStudiesResponse);
+  // Adds a study, or replaces the one with its id; one undo step.
+  rpc SetMaterialStateStudy(SetMaterialStateStudyRequest) returns (SetMaterialStateStudyResponse);
+  // Removes a study; one undo step.
+  rpc DeleteMaterialStateStudy(DeleteMaterialStateStudyRequest) returns (DeleteMaterialStateStudyResponse);
+  // Runs a stored or inline study as a job; the result id is in the finished job's results.
+  rpc RunMaterialStateStudy(RunMaterialStateStudyRequest) returns (RunMaterialStateStudyResponse);
+  // Evolves a physical system in time steps (each a coupled run continuing from the last temperature), as a job.
+  rpc EvolvePhysicalSystem(EvolvePhysicalSystemRequest) returns (EvolvePhysicalSystemResponse);
+  // A run or evolution document: history, curves, profiles, energies, convergence, committable values.
+  rpc GetMaterialStateResult(GetMaterialStateResultRequest) returns (GetMaterialStateResultResponse);
+  // Stores a result as a record in the project; one undo step.
+  rpc SaveMaterialStateRecord(SaveMaterialStateRecordRequest) returns (SaveMaterialStateRecordResponse);
+  // The stored records.
+  rpc ListMaterialStateRecords(ListMaterialStateRecordsRequest) returns (ListMaterialStateRecordsResponse);
+  // One record with its history and final state.
+  rpc GetMaterialStateRecord(GetMaterialStateRecordRequest) returns (GetMaterialStateRecordResponse);
+  // Removes a record; one undo step.
+  rpc DeleteMaterialStateRecord(DeleteMaterialStateRecordRequest) returns (DeleteMaterialStateRecordResponse);
+  // Writes a record's committable values to a library material (provenance computed, with a derivation); one undo step.
+  rpc CommitMaterialState(CommitMaterialStateRequest) returns (CommitMaterialStateResponse);
+}

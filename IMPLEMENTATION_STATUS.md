@@ -169,7 +169,7 @@ milestones below.)
 | Capability | State | Notes |
 |---|---|---|
 | Separate mechanical module; signals shared through `src/core/dsp`; coupling module | Tested | |
-| Isotropic elastic materials (E, nu, rho, loss factor) with derived constants | Tested | anisotropic, viscoelastic, frequency- and temperature-dependent behaviour: Missing |
+| Isotropic elastic materials (E, nu, rho, loss factor) with derived constants | Tested | anisotropic and frequency-dependent library data: Missing; plastic, damaging and viscoelastic states: see Dynamic material state |
 | Material library: stainless steel, brass, titanium, ABS, PLA, nylon, polycarbonate, alumina added | Tested | illustrative values; composites not included (need orthotropy) |
 | Structural idealization chosen by the user, explained, with warnings | Tested | boxes, cylinders, planes, horns, periodic rods; other geometry refused |
 | Euler-Bernoulli 3D frame element | Tested | shear deformation and rotary inertia neglected (stated) |
@@ -365,7 +365,7 @@ milestones below.)
 | Shared resonance description, Q, mode extraction, coupled resonators | Missing | planned: stage 6 |
 | Unit cells, lattices, 2D/3D Bloch analysis, effective properties | Missing | planned: stages 7–8 |
 | Multiscale adapters to external tools | Missing | planned: stage 9 |
-| Nonlinear, viscoelastic, plastic, damaging, phase-changing materials | Missing | planned: stage 10 |
+| Nonlinear, viscoelastic, plastic, damaging, phase-changing materials | Tested | see Dynamic material state (REQ-CHAT-20261126-021); finite strain, fracture and fatigue: Missing |
 | Optical resonators and photonics | Missing | theoretical future (the electromagnetic domain is RF) |
 
 ## Coupled Energy–Matter Engine — `docs/requirements/coupled_engine.md`, `docs/architecture/COUPLED_ENGINE_ARCHITECTURE.md`
@@ -456,3 +456,21 @@ milestones below.)
 | External engines (LAMMPS, OpenMM, Quantum ESPRESSO, CP2K, GPAW, phonopy) | Missing | listed with detection and requirements; none installed or integrated |
 | Electronic-structure and molecular calculations | Missing | representations only |
 | Elastic RVE homogenization, FE2, concurrent coupling, uncertainty propagated through chains | Missing | planned |
+
+## Dynamic material state — `docs/requirements/material_state.md`, `docs/materials/DYNAMIC_MATERIAL_STATE.md`
+
+| Capability | State | Notes |
+|---|---|---|
+| State variables with unit and class (reversible, irreversible, history), fields with summaries, model cards | Tested | `src/core/materialstate` |
+| State records in the project (extension `material-state`), save and reload, undo | Tested | |
+| J2 plasticity: isotropic and kinematic hardening, radial return, consistent tangent, energy split; uniaxial point; indeterminate bar | Tested | small strain |
+| Scalar damage (exponential, power law); a cantilever accumulating damage with its modes from the damaged stiffness | Tested | also the functional analysis `mechanics.damaged-cantilever` |
+| Standard linear solid: exact relaxation, storage and loss moduli | Tested | one branch (no Prony series) |
+| Phase change by the enthalpy method: latent heat, phase properties, energy balance, Stefan front, refused unstable steps | Tested | one-dimensional slab |
+| Preisach hysteresis: loops, return-point memory, congruent minor loops, loss per cycle, core power | Tested | scalar, rate-independent |
+| Time-stepped coupled evolution: temperature-dependent properties per step, thermo-mechanical stress and thickness, energy per step | Tested | the coupled solvers carry temperature laws only |
+| Commit of an evolved state to a library material: provenance computed, derivation, lineage, staleness of dependents | Tested | |
+| Catalogue naming the models that are not implemented | Tested | |
+| MaterialStateService, Python, MCP, Material State panel, examples a–f | Tested | |
+| Crack propagation, fatigue, finite-strain plasticity, hyperelasticity | Missing | listed as not implemented |
+| Nonlinear dielectrics, nonlinear optics, nonlinear acoustics, reaction kinetics | Missing | listed as not implemented |

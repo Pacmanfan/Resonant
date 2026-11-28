@@ -1,0 +1,14 @@
+syntax = "proto3";
+package resonant.v1;
+
+// A stored run of a material-state model or a time-stepped evolution (REQ-CHAT-20261126-021,
+// RES-DMS-003). The full record (history, final state, energies, committable values) is the
+// JSON document of GetMaterialStateRecord.
+message MaterialStateRecordSummary {
+  string record_id = 1;
+  string name = 2;
+  string model = 3;      // the model card id, or coupled.evolution
+  string kind = 4;       // material-point, structure, evolution
+  string created = 5;    // UTC
+  int32 steps = 6;       // history entries
+}

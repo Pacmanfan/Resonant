@@ -453,6 +453,40 @@ private:
     Session& s_;
 };
 
+// Dynamic material state (REQ-CHAT-20261126-021, RES-DMS-001..014): the constitutive models'
+// cards, studies (material points and structures) and time-stepped evolutions of physical
+// systems as jobs, records of runs stored in the project, and commits of an evolved state to a
+// library material with its lineage. Every change is one undoable step.
+class MaterialStateService {
+public:
+    explicit MaterialStateService(Session& s) : s_(s) {}
+    Outcome<nlohmann::json> models(const CallContext& c);
+    Outcome<nlohmann::json> studies(const CallContext& c);
+    Outcome<Mutation> setStudy(const CallContext& c, const nlohmann::json& study);
+    Outcome<Mutation> deleteStudy(const CallContext& c, const std::string& id);
+    // A stored study by id, or an inline study {"model", "parameters", "loading"}.
+    Outcome<JobView> run(const CallContext& c, const std::string& studyId, const nlohmann::json& study);
+    // settings: {"duration", "steps", "substeps"}
+    Outcome<JobView> evolve(const CallContext& c, const std::string& systemId, const nlohmann::json& settings);
+    Outcome<nlohmann::json> result(const CallContext& c, const std::string& resultId);
+    Outcome<Mutation> saveRecord(const CallContext& c, const std::string& resultId, const std::string& recordId, const std::string& name);
+    Outcome<std::vector<nlohmann::json>> records(const CallContext& c);
+    Outcome<nlohmann::json> record(const CallContext& c, const std::string& id);
+    Outcome<Mutation> deleteRecord(const CallContext& c, const std::string& id);
+    // options: {"materialId" (default: the committable entry's own), "properties": ["domain.key", ...] (default all)}
+    Outcome<Mutation> commit(const CallContext& c, const std::string& recordId, const nlohmann::json& options);
+
+    static constexpr const char* kRunKind = "material-state.run";
+    static constexpr const char* kEvolutionKind = "material-state.evolution";
+
+private:
+    Outcome<JobView> startJob(const CallContext& c, const std::string& operation, const std::string& name, const std::string& kind,
+                              std::function<Result<nlohmann::json>(const Project&, JobContext&)> work, const std::vector<std::string>& resources);
+    Outcome<Mutation> change(const CallContext& c, const std::string& operation, const std::string& description,
+                             const std::function<Outcome<bool>(Project&)>& apply);
+    Session& s_;
+};
+
 // Batches and transactions: operations run on a staging copy of the project
 // (with the same revisions), and are committed as one undoable step.
 class TransactionService {
@@ -536,6 +570,7 @@ public:
     FunctionalStructureService functional;
     ResonanceService resonance;
     MultiscaleService multiscale;
+    MaterialStateService materialState;
     ApplicationService application;
 
 private:

@@ -18,6 +18,7 @@
 #include "resonant/v1/materials/material_service.pb.h"
 #include "resonant/v1/multiphysics/multiphysics_service.pb.h"
 #include "resonant/v1/functional/functional_service.pb.h"
+#include "resonant/v1/materialstate/material_state_service.pb.h"
 #include "resonant/v1/multiscale/multiscale_service.pb.h"
 #include "resonant/v1/resonance/resonance_service.pb.h"
 #include "resonant/v1/optimization/optimization_service.pb.h"
@@ -1975,6 +1976,139 @@ void Dispatcher::registerAutomation()
             if (!job)
                 return job.error();
             toProto(job.value(), out.mutable_job());
+            return std::nullopt;
+        });
+    // --- MaterialStateService (REQ-CHAT-20261126-021, RES-DMS-014) -------------------------------
+    const auto structs = [](const nlohmann::json& list, auto* field) -> Failure {
+        for (const auto& item : list)
+            if (Failure f = structOf(item, field->Add()))
+                return f;
+        return std::nullopt;
+    };
+    const auto changed = [](v1::ResponseHeader* header, v1::ChangeSummary* changes, const services::Mutation& m) {
+        detail::mutated(header, m);
+        toProto(m.changes, changes);
+    };
+    unary<v1::ListMaterialStateModelsRequest, v1::ListMaterialStateModelsResponse>(
+        "MaterialStateService", "ListMaterialStateModels", Permission::Read, false, true,
+        [this, structs](const v1::ListMaterialStateModelsRequest&, v1::ListMaterialStateModelsResponse& out, const CallContext& c) -> Failure {
+            auto m = session_.services().materialState.models(c);
+            if (!m)
+                return m.error();
+            return structs(m.value(), out.mutable_models());
+        });
+    unary<v1::ListMaterialStateStudiesRequest, v1::ListMaterialStateStudiesResponse>(
+        "MaterialStateService", "ListMaterialStateStudies", Permission::Read, false, true,
+        [this, structs](const v1::ListMaterialStateStudiesRequest&, v1::ListMaterialStateStudiesResponse& out, const CallContext& c) -> Failure {
+            auto m = session_.services().materialState.studies(c);
+            if (!m)
+                return m.error();
+            return structs(m.value(), out.mutable_studies());
+        });
+    unary<v1::SetMaterialStateStudyRequest, v1::SetMaterialStateStudyResponse>(
+        "MaterialStateService", "SetMaterialStateStudy", Permission::Modify, true, false,
+        [this, changed](const v1::SetMaterialStateStudyRequest& in, v1::SetMaterialStateStudyResponse& out, const CallContext& c) -> Failure {
+            auto m = session_.services().materialState.setStudy(c, jsonOf(in.study()));
+            if (!m)
+                return m.error();
+            changed(out.mutable_header(), out.mutable_changes(), m.value());
+            return std::nullopt;
+        });
+    unary<v1::DeleteMaterialStateStudyRequest, v1::DeleteMaterialStateStudyResponse>(
+        "MaterialStateService", "DeleteMaterialStateStudy", Permission::Modify, true, false,
+        [this, changed](const v1::DeleteMaterialStateStudyRequest& in, v1::DeleteMaterialStateStudyResponse& out, const CallContext& c) -> Failure {
+            auto m = session_.services().materialState.deleteStudy(c, in.study_id());
+            if (!m)
+                return m.error();
+            changed(out.mutable_header(), out.mutable_changes(), m.value());
+            return std::nullopt;
+        });
+    unary<v1::RunMaterialStateStudyRequest, v1::RunMaterialStateStudyResponse>(
+        "MaterialStateService", "RunMaterialStateStudy", Permission::Execute, false, false,
+        [this](const v1::RunMaterialStateStudyRequest& in, v1::RunMaterialStateStudyResponse& out, const CallContext& c) -> Failure {
+            auto job = session_.services().materialState.run(c, in.study_id(), in.has_study() ? jsonOf(in.study()) : nlohmann::json());
+            if (!job)
+                return job.error();
+            toProto(job.value(), out.mutable_job());
+            return std::nullopt;
+        });
+    unary<v1::EvolvePhysicalSystemRequest, v1::EvolvePhysicalSystemResponse>(
+        "MaterialStateService", "EvolvePhysicalSystem", Permission::Execute, false, false,
+        [this](const v1::EvolvePhysicalSystemRequest& in, v1::EvolvePhysicalSystemResponse& out, const CallContext& c) -> Failure {
+            auto job = session_.services().materialState.evolve(c, in.system_id(),
+                                                                {{"duration", in.duration()}, {"steps", in.steps() > 0 ? in.steps() : 20},
+                                                                 {"substeps", in.substeps() > 0 ? in.substeps() : 4}});
+            if (!job)
+                return job.error();
+            toProto(job.value(), out.mutable_job());
+            return std::nullopt;
+        });
+    unary<v1::GetMaterialStateResultRequest, v1::GetMaterialStateResultResponse>(
+        "MaterialStateService", "GetMaterialStateResult", Permission::Read, false, true,
+        [this](const v1::GetMaterialStateResultRequest& in, v1::GetMaterialStateResultResponse& out, const CallContext& c) -> Failure {
+            auto r = session_.services().materialState.result(c, in.result_id());
+            if (!r)
+                return r.error();
+            out.set_reliable(r.value().value("reliable", false));
+            return structOf(r.value(), out.mutable_document());
+        });
+    unary<v1::SaveMaterialStateRecordRequest, v1::SaveMaterialStateRecordResponse>(
+        "MaterialStateService", "SaveMaterialStateRecord", Permission::Modify, true, false,
+        [this, changed](const v1::SaveMaterialStateRecordRequest& in, v1::SaveMaterialStateRecordResponse& out, const CallContext& c) -> Failure {
+            const std::string id = in.record_id().empty() ? "rec-" + Id::generate().str().substr(0, 8) : in.record_id();
+            auto m = session_.services().materialState.saveRecord(c, in.result_id(), id, in.name());
+            if (!m)
+                return m.error();
+            changed(out.mutable_header(), out.mutable_changes(), m.value());
+            out.set_record_id(id);
+            return std::nullopt;
+        });
+    unary<v1::ListMaterialStateRecordsRequest, v1::ListMaterialStateRecordsResponse>(
+        "MaterialStateService", "ListMaterialStateRecords", Permission::Read, false, true,
+        [this](const v1::ListMaterialStateRecordsRequest&, v1::ListMaterialStateRecordsResponse& out, const CallContext& c) -> Failure {
+            auto list = session_.services().materialState.records(c);
+            if (!list)
+                return list.error();
+            for (const auto& r : list.value()) {
+                auto* x = out.add_records();
+                x->set_record_id(r.value("id", std::string()));
+                x->set_name(r.value("name", std::string()));
+                x->set_model(r.value("model", std::string()));
+                x->set_kind(r.value("kind", std::string()));
+                x->set_created(r.value("created", std::string()));
+                x->set_steps(static_cast<int>(r.value("steps", 0)));
+            }
+            return std::nullopt;
+        });
+    unary<v1::GetMaterialStateRecordRequest, v1::GetMaterialStateRecordResponse>(
+        "MaterialStateService", "GetMaterialStateRecord", Permission::Read, false, true,
+        [this](const v1::GetMaterialStateRecordRequest& in, v1::GetMaterialStateRecordResponse& out, const CallContext& c) -> Failure {
+            auto r = session_.services().materialState.record(c, in.record_id());
+            if (!r)
+                return r.error();
+            return structOf(r.value(), out.mutable_record());
+        });
+    unary<v1::DeleteMaterialStateRecordRequest, v1::DeleteMaterialStateRecordResponse>(
+        "MaterialStateService", "DeleteMaterialStateRecord", Permission::Modify, true, false,
+        [this, changed](const v1::DeleteMaterialStateRecordRequest& in, v1::DeleteMaterialStateRecordResponse& out, const CallContext& c) -> Failure {
+            auto m = session_.services().materialState.deleteRecord(c, in.record_id());
+            if (!m)
+                return m.error();
+            changed(out.mutable_header(), out.mutable_changes(), m.value());
+            return std::nullopt;
+        });
+    unary<v1::CommitMaterialStateRequest, v1::CommitMaterialStateResponse>(
+        "MaterialStateService", "CommitMaterialState", Permission::Modify, true, false,
+        [this, changed](const v1::CommitMaterialStateRequest& in, v1::CommitMaterialStateResponse& out, const CallContext& c) -> Failure {
+            nlohmann::json options = nlohmann::json::object();
+            if (!in.material_id().empty())
+                options["materialId"] = in.material_id();
+            if (in.properties_size() > 0)
+                options["properties"] = std::vector<std::string>(in.properties().begin(), in.properties().end());
+            auto m = session_.services().materialState.commit(c, in.record_id(), options);
+            if (!m)
+                return m.error();
+            changed(out.mutable_header(), out.mutable_changes(), m.value());
             return std::nullopt;
         });
     unary<v1::ExplainCandidatesRequest, v1::ExplainCandidatesResponse>(

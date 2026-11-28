@@ -37,7 +37,7 @@ proto/resonant/v1/multiphysics           the contract (MultiphysicsService, 8 me
 |---|---|
 | Physical system model | `multiphysics/PhysicalSystem` ([the model](PHYSICAL_SYSTEM_MODEL.md)) |
 | Simulation domain registry | `coupling/CouplingModels::participantSolvers`, `coupling::makeParticipant` |
-| Material state manager | `multiphysics/MaterialState` ([material state](../materials/MATERIAL_STATE_ARCHITECTURE.md)) |
+| Material state manager | `multiphysics/MaterialState` ([material state](../materials/MATERIAL_STATE_ARCHITECTURE.md)); time-stepped evolution across runs in `coupling/StateEvolution` ([state evolution](../physics/STATE_EVOLUTION.md)) |
 | Geometry state manager | `multiphysics/GeometryState` |
 | Physical quantity registry | `multiphysics/Quantity` ([quantities](../physics/PHYSICAL_QUANTITY_SYSTEM.md)) |
 | Coupling manager | `coupling/CouplingModels` + the orchestrator's coupling application ([couplings](../physics/COUPLING_ARCHITECTURE.md)) |

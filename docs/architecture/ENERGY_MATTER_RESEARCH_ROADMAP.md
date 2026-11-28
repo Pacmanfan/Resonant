@@ -36,7 +36,7 @@ own scope decides what each delivers.
 - **Risks:** a property model too generic to validate; breaking existing projects.
 - **Validation:** unit tests per model; old projects load identically (regression on every example).
 - **Acceptance:** every existing material round-trips; a temperature-dependent value is used by one solver with its validity reported.
-- **Queued:** REQ-CHAT-20261126-021 (Prompt 23, dynamic material state) covers this with stage 10.
+- **Dynamic state:** current since REQ-CHAT-20261126-021 (ADR-000225) for state variables with classes, fields and records (`docs/materials/DYNAMIC_MATERIAL_STATE.md`).
 
 ## Stage 3 — Energy and momentum accounting
 
@@ -117,14 +117,13 @@ own scope decides what each delivers.
 
 ## Stage 10 — Dynamic material response
 
-- **Status:** lumped nonlinear and parametric resonance (Duffing, Mathieu) current (REQ-CHAT-20261126-018); nonlinear materials remain.
+- **Status:** lumped nonlinear and parametric resonance (Duffing, Mathieu) current (REQ-CHAT-20261126-018); plastic (J2), damaging, viscoelastic (standard linear solid), phase-changing (enthalpy method) and hysteretic (Preisach) materials, and state fields evolving over time-stepped coupled runs, current (REQ-CHAT-20261126-021, ADR-000225, `docs/physics/CONSTITUTIVE_MODELS.md`); finite strain, fracture, fatigue and nonlinear optics and acoustics remain.
 
 - **Goals:** nonlinear, viscoelastic, plastic, damaging and phase-changing materials; state fields evolving during coupled runs.
 - **Depends on:** stages 2, 5.
 - **Risks:** stability of nonlinear solvers; parameter identification.
 - **Validation:** standard material tests (relaxation, hysteresis), published benchmarks.
-- **Acceptance:** each model validated against its reference before it is offered.
-- **Queued:** REQ-CHAT-20261126-021.
+- **Acceptance:** each model validated against its reference before it is offered (`docs/physics/MATERIAL_STATE_VALIDATION.md`).
 
 ## Stage 11 — Function-driven inverse design
 

@@ -1,0 +1,223 @@
+{
+ "format": "resonant-project",
+ "schemaVersion": 1,
+ "application": {
+  "name": "Resonant",
+  "version": "0.1.0"
+ },
+ "project": {
+  "id": "ex-mst-conductor",
+  "name": "a-evolving-conductor",
+  "createdUtc": "2026-11-28T00:00:00Z",
+  "modifiedUtc": "2026-11-28T00:00:00Z"
+ },
+ "units": {
+  "angle": "rad",
+  "axes": "right-handed; X horizontal, Y depth, Z vertical (up)",
+  "frequency": "Hz",
+  "length": "m",
+  "mass": "kg",
+  "rotation": "intrinsic Z-Y-X Euler angles stored as [x, y, z]",
+  "time": "s"
+ },
+ "materials": [
+  {
+   "id": "mat-ex-brine-gel",
+   "name": "Saline gel (example)",
+   "description": "A weakly conducting gel; its conductivity falls as it heats (illustrative law in the system).",
+   "domains": {
+    "electromagnetic": {
+     "relativePermittivity": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the material-state examples; not authoritative.",
+      "value": 60.0
+     },
+     "lossTangent": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the material-state examples; not authoritative.",
+      "value": 0.0
+     },
+     "conductivity": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the material-state examples; not authoritative.",
+      "value": 1.2
+     },
+     "relativePermeability": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the material-state examples; not authoritative.",
+      "value": 1.0
+     }
+    },
+    "thermal": {
+     "thermalConductivity": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the material-state examples; not authoritative.",
+      "value": 0.55
+     },
+     "density": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the material-state examples; not authoritative.",
+      "value": 1050.0
+     },
+     "specificHeat": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the material-state examples; not authoritative.",
+      "value": 3800.0
+     }
+    }
+   }
+  }
+ ],
+ "scene": {
+  "objects": [
+   {
+    "id": "ex-mst-gel",
+    "type": "geometry",
+    "name": "Saline gel slab",
+    "visible": true,
+    "transform": {
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "children": [],
+    "geometry": {
+     "kind": "box",
+     "parameters": {
+      "width": 0.1,
+      "depth": 0.1,
+      "height": 0.02
+     }
+    },
+    "material": "mat-ex-brine-gel"
+   }
+  ]
+ },
+ "simulations": [],
+ "extensions": {
+  "material-state": {
+   "format": "resonant.material-state",
+   "version": 1,
+   "studies": [
+    {
+     "id": "st-evolve-gel",
+     "name": "Heat the gel for 10 minutes",
+     "model": "coupled.evolution",
+     "system": "sys-evolving-conductor",
+     "parameters": {
+      "duration": 600.0,
+      "steps": 20,
+      "substeps": 4
+     }
+    }
+   ],
+   "records": []
+  },
+  "multiphysics": {
+   "format": "resonant.multiphysics",
+   "version": 1,
+   "systems": [
+    {
+     "format": "resonant.physical-system",
+     "version": 1,
+     "id": "sys-evolving-conductor",
+     "name": "Evolving conductor",
+     "description": "A 20 mm saline gel in a 2.45 GHz plane wave of 20 kW/m^2, cooled by convection: its conductivity (1.2 S/m at 20 degC) falls 0.25 % per kelvin, so the absorbed power changes as it heats. Evolve it over 10 minutes.",
+     "geometry": {
+      "kind": "layered-slab",
+      "lateralArea": 0.01
+     },
+     "environment": {
+      "ambientTemperature": 293.15
+     },
+     "regions": [
+      {
+       "id": "gel",
+       "name": "Gel",
+       "materialId": "mat-ex-brine-gel",
+       "thickness": 0.02,
+       "cells": 40,
+       "objectId": "ex-mst-gel"
+      }
+     ],
+     "domains": [
+      {
+       "id": "em",
+       "kind": "electromagnetic",
+       "solver": "em.layered.transfer-matrix",
+       "settings": {
+        "frequencyHz": 2450000000.0,
+        "incidentIntensity": 20000.0
+       }
+      },
+      {
+       "id": "heat",
+       "kind": "thermal",
+       "solver": "thermal.conduction.fv",
+       "settings": {
+        "faces": {
+         "-z": {
+          "kind": "convective",
+          "h": 15.0
+         },
+         "+z": {
+          "kind": "convective",
+          "h": 15.0
+         }
+        }
+       }
+      }
+     ],
+     "couplings": [
+      {
+       "id": "absorb",
+       "model": "em.absorption-to-heat",
+       "from": "em",
+       "to": "heat"
+      },
+      {
+       "id": "conductivity",
+       "model": "thermal.temperature-to-em-properties",
+       "from": "heat",
+       "to": "em"
+      }
+     ],
+     "materialLaws": [
+      {
+       "region": "gel",
+       "property": "electromagnetic.conductivity",
+       "law": "linear",
+       "value": 1.2,
+       "reference": 293.15,
+       "slope": -0.003,
+       "validity": [
+        273.15,
+        360.0
+       ],
+       "provenance": "illustrative",
+       "source": "illustrative: -0.25 % per kelvin"
+      }
+     ],
+     "scheme": {
+      "kind": "iterative",
+      "maxIterations": 50,
+      "temperatureTolerance": 1e-06,
+      "geometryTolerance": 1e-12
+     }
+    }
+   ]
+  }
+ }
+}

@@ -1,6 +1,7 @@
 #include "coupling/FunctionalAnalyses.h"
 
 #include "coupling/CoupledRun.h"
+#include "coupling/MaterialStateAnalyses.h"
 #include "coupling/MetamaterialAnalyses.h"
 #include "coupling/ResonanceAnalyses.h"
 #include "dsp/Resonance.h"
@@ -1028,6 +1029,7 @@ void registerFunctionalAnalyses(AnalysisRegistry& registry)
     }
     registerResonanceAnalyses(registry);
     registerMetamaterialAnalyses(registry);
+    registerMaterialStateAnalyses(registry);
     // Every evaluation turns exceptions (an invalid setting) into a failure.
     for (const AnalysisKind& k : registry.kinds()) {
         AnalysisKind copy = k;

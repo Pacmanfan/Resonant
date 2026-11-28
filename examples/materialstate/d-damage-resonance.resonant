@@ -1,0 +1,197 @@
+{
+ "format": "resonant-project",
+ "schemaVersion": 1,
+ "application": {
+  "name": "Resonant",
+  "version": "0.1.0"
+ },
+ "project": {
+  "id": "ex-mst-damage",
+  "name": "d-damage-resonance",
+  "createdUtc": "2026-11-28T00:00:00Z",
+  "modifiedUtc": "2026-11-28T00:00:00Z"
+ },
+ "units": {
+  "angle": "rad",
+  "axes": "right-handed; X horizontal, Y depth, Z vertical (up)",
+  "frequency": "Hz",
+  "length": "m",
+  "mass": "kg",
+  "rotation": "intrinsic Z-Y-X Euler angles stored as [x, y, z]",
+  "time": "s"
+ },
+ "materials": [
+  {
+   "id": "mat-ex-laminate",
+   "name": "Glass-fibre laminate (example)",
+   "description": "Illustrative values; damage threshold in the structure's analysis.",
+   "domains": {
+    "mechanical": {
+     "density": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the material-state examples; not authoritative.",
+      "value": 2000.0
+     },
+     "youngsModulus": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the material-state examples; not authoritative.",
+      "value": 25000000000.0
+     },
+     "poissonsRatio": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the material-state examples; not authoritative.",
+      "value": 0.25
+     }
+    }
+   }
+  }
+ ],
+ "scene": {
+  "objects": [
+   {
+    "id": "ex-mst-beam",
+    "type": "geometry",
+    "name": "Laminate cantilever",
+    "visible": true,
+    "transform": {
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "children": [],
+    "geometry": {
+     "kind": "box",
+     "parameters": {
+      "width": 0.5,
+      "depth": 0.03,
+      "height": 0.005
+     }
+    },
+    "material": "mat-ex-laminate"
+   }
+  ]
+ },
+ "simulations": [],
+ "extensions": {
+  "material-state": {
+   "format": "resonant.material-state",
+   "version": 1,
+   "studies": [
+    {
+     "id": "st-beam-cycles",
+     "name": "Three growing cycles",
+     "model": "mechanics.damaged-cantilever",
+     "parameters": {
+      "youngsModulus": 25000000000.0,
+      "density": 2000.0,
+      "length": 0.5,
+      "width": 0.03,
+      "thickness": 0.005,
+      "thresholdStrain": 0.0001,
+      "exponent": 0.6,
+      "law": "power",
+      "elements": 40
+     },
+     "loading": {
+      "amplitudes": [
+       0.005,
+       0.01,
+       0.02
+      ],
+      "increments": 40
+     }
+    },
+    {
+     "id": "st-damage-point",
+     "name": "The damage law at a point",
+     "model": "mechanics.damage.point",
+     "parameters": {
+      "youngsModulus": 25000000000.0,
+      "thresholdStrain": 0.0001,
+      "exponent": 0.6,
+      "law": "power"
+     },
+     "loading": {
+      "amplitudes": [
+       0.0005,
+       0.001,
+       0.002
+      ],
+      "increments": 100
+     }
+    }
+   ],
+   "records": []
+  },
+  "functional": {
+   "format": "resonant.functional",
+   "version": 1,
+   "structures": [
+    {
+     "format": "resonant.functional-structure",
+     "version": 1,
+     "id": "fs-damaged-cantilever",
+     "name": "Damaged cantilever",
+     "description": "A 500 x 30 x 5 mm laminate cantilever cycled by its tip to growing amplitudes: damage at the root lowers its bending frequencies.",
+     "bodies": [
+      {
+       "objectId": "ex-mst-beam",
+       "role": "beam"
+      }
+     ],
+     "parameters": [
+      {
+       "id": "amplitude",
+       "name": "Largest tip deflection",
+       "kind": "free",
+       "value": 0.02,
+       "unit": "m",
+       "min": 0.0,
+       "max": 0.05,
+       "group": "loading"
+      },
+      {
+       "id": "threshold",
+       "name": "Damage threshold strain",
+       "kind": "free",
+       "value": 0.0001,
+       "unit": "",
+       "min": 1e-05,
+       "max": 0.01,
+       "group": "material"
+      }
+     ],
+     "domains": [
+      "mechanical"
+     ],
+     "analysis": {
+      "kind": "mechanics.damaged-cantilever",
+      "model": "",
+      "settings": {
+       "amplitudes": [
+        "amplitude"
+       ],
+       "thresholdStrain": "threshold",
+       "law": "power",
+       "exponent": 0.6,
+       "elements": 40,
+       "increments": 40
+      }
+     }
+    }
+   ]
+  }
+ }
+}

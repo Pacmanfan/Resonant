@@ -324,8 +324,18 @@ public:
             ownSource_ = uniform != 0.0;
             p.source.assign(n, uniform);
         }
-        if (transient())
-            p.initialTemperature.assign(n, system_.ambientTemperature);
+        if (transient()) {
+            // A time-stepped evolution starts each step from the previous one's temperature field
+            // (RES-DMS-009); a single transient run starts at the ambient temperature.
+            const nlohmann::json initial = def_.settings["transient"].value("initialTemperature", nlohmann::json::array());
+            if (initial.empty())
+                p.initialTemperature.assign(n, system_.ambientTemperature);
+            else if (initial.size() == n)
+                p.initialTemperature = initial.get<std::vector<double>>();
+            else
+                return Status::failure("the transient initial temperature has " + std::to_string(initial.size()) + " values for " + std::to_string(n) +
+                                       " cells");
+        }
         problem_ = p;
         preparedMaterial_ = state.materials.revision();
         preparedGeometry_ = state.geometry.revision();

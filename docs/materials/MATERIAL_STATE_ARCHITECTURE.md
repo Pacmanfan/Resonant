@@ -4,8 +4,11 @@
 REQ-CHAT-20261126-016 (RES-CEME-003, ADR-000220) part of material state is
 implemented: region laws (constant, linear in temperature, table) with
 validity and provenance, the temperature state of a coupled run, revisions and
-history, and the thermal property set; the rest of this page remains planned
-(RES-SFE-008, ADR-000219).
+history, and the thermal property set. Since REQ-CHAT-20261126-021
+(RES-DMS-001..014, ADR-000225) states with internal variables are current:
+plasticity, damage, viscoelasticity, phase change and hysteresis, time-stepped
+evolutions, records and commits ([dynamic material state](DYNAMIC_MATERIAL_STATE.md)).
+The rest of this page remains planned (RES-SFE-008, ADR-000219).
 
 ## Implemented (the Coupled Energy–Matter Engine)
 
@@ -55,7 +58,8 @@ property value records:
 
 What it cannot express: dependence on temperature, pressure, stress, strain
 or fields; anisotropy (tensors); spatial variation inside an object;
-history (plasticity, damage); phase; values computed by an external tool
+history and phase as library data (they are states of a constitutive model:
+[dynamic material state](DYNAMIC_MATERIAL_STATE.md)); values computed by an external tool
 (values computed by Resonant's own multiscale methods are current, with their
 derivation records: [lineage](MATERIAL_LINEAGE.md)).
 (Thermal properties are current since REQ-CHAT-20261126-016; values
@@ -113,11 +117,12 @@ solver:  evaluates E(T(x)) per element, reports min/max T and any extrapolation
 | Anisotropic | tensors in a material frame tied to the object | mechanics, electromagnetics, acoustics (anisotropic fluids rarely) |
 | Dispersive | frequency models with causality (Kramers–Kronig consistent: Debye, Lorentz) | electromagnetics, acoustics (porous) |
 | Temperature-dependent | tables or formulas of T | all, through coupling |
-| Viscoelastic | relaxation spectra | mechanics, acoustics |
-| Plastic, damaging | history variables, evolution laws | mechanics |
+| Viscoelastic | relaxation spectra (one branch current: the standard linear solid) | mechanics, acoustics |
+| Plastic, damaging | history variables, evolution laws (current: J2, scalar damage) | mechanics |
 | Porous | equivalent-fluid or Biot models | acoustics, mechanics |
 | Composite, layered | homogenized properties or explicit structure | all ([metamaterials](METAMATERIALS_AND_ENGINEERED_STRUCTURES.md)) |
-| Phase-changing | phase fraction, latent heat | thermal, mechanics |
+| Phase-changing | phase fraction, latent heat (current: the enthalpy method, 1D) | thermal, mechanics |
+| Hysteretic | relay states, return-point memory (current: Preisach) | electromagnetics |
 | Evolving microstructure | state from a lower scale | through [multiscale](../physics/MULTISCALE_MODELING.md) |
 
 ## Compatibility

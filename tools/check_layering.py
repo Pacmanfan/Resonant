@@ -120,9 +120,11 @@ def violations():
     # So is the Coupled Energy-Matter Engine (ADR-000220): src/core/multiphysics orchestrates;
     # the participants that adapt the domains live in src/core/coupling. So are the
     # functional structures (ADR-000221): their analyses are registered in coupling. So is the
-    # multiscale model (ADR-000224): its derivations and couplings are in coupling.
+    # multiscale model (ADR-000224): its derivations and couplings are in coupling. So is the
+    # material state (ADR-000225): its constitutive models are in the domains.
     for path in sorted(sum((list((ROOT / "src" / "core" / d).glob("*")) for d in ("optimization", "automation", "help", "demo", "plugins",
-                                                                                "multiphysics", "functional", "oscillators", "multiscale")), [])):
+                                                                                "multiphysics", "functional", "oscillators", "multiscale",
+                                                                                "materialstate")), [])):
         if path.suffix not in (".h", ".cpp"):
             continue
         for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):

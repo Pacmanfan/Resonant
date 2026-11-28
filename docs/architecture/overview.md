@@ -1,7 +1,7 @@
 # Resonant — Architecture Overview
 
 **Status:** current. Decisions: ADR-000204 (stack, build systems),
-ADR-000205 (layers, domains), ADR-000207 (acoustics), ADR-000208 (manipulators), ADR-000209 (full-wave solver), ADR-000210 (mechanics), ADR-000211 (electromagnetics), ADR-000212 (compute backends), ADR-000213 (experiments), ADR-000214 (optimization), ADR-000219 (Shape–Function–Energy direction), ADR-000220 (Coupled Energy–Matter Engine), ADR-000221 (functional structures), ADR-000224 (multiscale materials), ADR-000223 (metamaterials), ADR-000222 (resonance engineering). Requirements: `docs/requirements/product.md`.
+ADR-000205 (layers, domains), ADR-000207 (acoustics), ADR-000208 (manipulators), ADR-000209 (full-wave solver), ADR-000210 (mechanics), ADR-000211 (electromagnetics), ADR-000212 (compute backends), ADR-000213 (experiments), ADR-000214 (optimization), ADR-000219 (Shape–Function–Energy direction), ADR-000220 (Coupled Energy–Matter Engine), ADR-000221 (functional structures), ADR-000225 (material state), ADR-000224 (multiscale materials), ADR-000223 (metamaterials), ADR-000222 (resonance engineering). Requirements: `docs/requirements/product.md`.
 
 This document describes the architecture every milestone builds on. Each
 subsystem gets its own document in this directory when it is implemented;
@@ -126,7 +126,10 @@ lumped oscillator networks (`src/core/oscillators`, no domain) and spectroscopy
 are functional structures whose effective-medium analyses derive effective materials, saved into the library
 with provenance `homogenized` (ADR-000223, `docs/materials/METAMATERIAL_ARCHITECTURE.md`). Materials have
 representations from atoms to the continuum (`src/core/multiscale`, `src/core/atomistic`), and derived values keep
-their lineage (ADR-000224, `docs/materials/MULTISCALE_ARCHITECTURE.md`). The audit of the
+their lineage (ADR-000224, `docs/materials/MULTISCALE_ARCHITECTURE.md`). Materials evolve: constitutive models
+with state (plasticity, damage, viscoelasticity, phase change, hysteresis) are in their domains, states and records
+in `src/core/materialstate` (no physics), and physical systems evolve in time steps through the coupled engine
+(ADR-000225, `docs/materials/DYNAMIC_MATERIAL_STATE.md`). The audit of the
 current architecture against this direction is
 `SHAPE_FUNCTION_ENERGY_AUDIT.md`; the plan is `ENERGY_MATTER_RESEARCH_ROADMAP.md`.
 

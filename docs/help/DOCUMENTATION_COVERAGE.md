@@ -5,8 +5,8 @@ screenshot manifest, `demos/profiles/` and the Python package; `python/tests`
 fails when this report is out of date. A major user-facing feature is not complete
 without a help topic (RES-HELP-012).
 
-**34 features.** Help topic: 34/34. Illustrated with a screenshot: 19/34. Example project: 26/34. Demonstration: 17/34. Python API: 25/34.
-Help: 125 topics in 12 categories.
+**35 features.** Help topic: 35/35. Illustrated with a screenshot: 19/35. Example project: 27/35. Demonstration: 17/35. Python API: 26/35.
+Help: 126 topics in 12 categories.
 
 | Feature | Help topic | Status | Screenshots | Example projects | Demos | Python API |
 |---|---|---|---|---|---|---|
@@ -33,6 +33,7 @@ Help: 125 topics in 12 categories.
 | Resonance engineering | `opt.functional-structures` | available | - | resonance/a-helmholtz-resonator.resonant, resonance/b-coupled-cantilevers.resonant | - | resonant_api (FunctionalStructureService, ResonanceService) |
 | Metamaterials and effective properties | `opt.metamaterials` | available | - | metamaterials/a-mass-in-mass-lattice.resonant, metamaterials/e-layered-thermal.resonant | - | resonant_api (FunctionalStructureService.CreateEffectiveMaterial) |
 | Multiscale materials and lineage | `concepts.multiscale` | available | - | multiscale/a-crystalline-argon.resonant, multiscale/c-porous-composite.resonant | - | resonant_api (MultiscaleService) |
+| Dynamic material state | `concepts.material-state` | available | - | materialstate/c-plastic-bar.resonant, materialstate/d-damage-resonance.resonant | - | resonant_api (MaterialStateService) |
 | Topology optimization | `opt.topology` | experimental | - | - | - | - |
 | Experiments and acquisition | `exp.acquisition` | available | experiment-workspace.png | experiments/acoustic_experiments.resonant, experiments/mechanical_experiments.resonant | - | resonant.experiments |
 | Measurement correlation | `exp.correlation` | available | - | experiments/rf_experiments.resonant | G (partial) | resonant.measurements.compare |

@@ -1,4 +1,5 @@
 #include "coupling/CouplingModels.h"
+#include "coupling/MaterialStateModels.h"
 #include "coupling/MultiscaleDerivations.h"
 #include "multiscale/Couplings.h"
 #include "multiscale/ExternalSolvers.h"
@@ -75,6 +76,12 @@ Outcome<std::vector<CapabilityView>> ApplicationService::capabilities(const Call
     add({"multiscale.electronic", "Electronic-structure calculations", "band structures, densities of states, dielectric response from first principles",
          "multiscale", "unavailable", false, {"an integrated and validated electronic-structure engine (Quantum ESPRESSO, CP2K, GPAW)"}, {},
          {"the electronic scale has a representation and an interface only"}, "electronic"});
+    // Dynamic material state (RES-DMS-013): the constitutive models, implemented or not.
+    for (const auto& m : coupling::materialStateModels())
+        add({"material-state." + m.id, m.title, m.method.empty() ? m.status : m.method, "material-state", m.status == "implemented" ? "experimental" : "unavailable",
+             m.status == "implemented", {}, {}, m.excluded, m.domain});
+    add({"material-state.evolution", "Time-stepped evolution", "coupled runs step by step, each continuing from the previous temperature field", "material-state",
+         "experimental", true, {}, {"1D"}, {"layered-slab systems with a thermal domain"}, "thermal"});
     // Functional structures: every analysis with its models.
     for (const functional::AnalysisKind& k : functional::AnalysisRegistry::instance().kinds()) {
         std::string models;

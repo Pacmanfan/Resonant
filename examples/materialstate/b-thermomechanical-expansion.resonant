@@ -1,0 +1,239 @@
+{
+ "format": "resonant-project",
+ "schemaVersion": 1,
+ "application": {
+  "name": "Resonant",
+  "version": "0.1.0"
+ },
+ "project": {
+  "id": "ex-mst-thermomechanical",
+  "name": "b-thermomechanical-expansion",
+  "createdUtc": "2026-11-28T00:00:00Z",
+  "modifiedUtc": "2026-11-28T00:00:00Z"
+ },
+ "units": {
+  "angle": "rad",
+  "axes": "right-handed; X horizontal, Y depth, Z vertical (up)",
+  "frequency": "Hz",
+  "length": "m",
+  "mass": "kg",
+  "rotation": "intrinsic Z-Y-X Euler angles stored as [x, y, z]",
+  "time": "s"
+ },
+ "materials": [
+  {
+   "id": "mat-ex-polymer",
+   "name": "Polymer plate (example)",
+   "description": "Illustrative thermal and elastic values.",
+   "domains": {
+    "electromagnetic": {
+     "relativePermittivity": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the material-state examples; not authoritative.",
+      "value": 3.0
+     },
+     "lossTangent": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the material-state examples; not authoritative.",
+      "value": 0.0
+     },
+     "conductivity": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the material-state examples; not authoritative.",
+      "value": 0.0
+     },
+     "relativePermeability": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the material-state examples; not authoritative.",
+      "value": 1.0
+     }
+    },
+    "thermal": {
+     "thermalConductivity": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the material-state examples; not authoritative.",
+      "value": 0.2
+     },
+     "density": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the material-state examples; not authoritative.",
+      "value": 1200.0
+     },
+     "specificHeat": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the material-state examples; not authoritative.",
+      "value": 1500.0
+     },
+     "thermalExpansion": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the material-state examples; not authoritative.",
+      "value": 7e-05
+     }
+    },
+    "mechanical": {
+     "density": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the material-state examples; not authoritative.",
+      "value": 1200.0
+     },
+     "youngsModulus": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the material-state examples; not authoritative.",
+      "value": 2500000000.0
+     },
+     "poissonsRatio": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the material-state examples; not authoritative.",
+      "value": 0.35
+     }
+    }
+   }
+  }
+ ],
+ "scene": {
+  "objects": [
+   {
+    "id": "ex-mst-plate",
+    "type": "geometry",
+    "name": "Polymer plate",
+    "visible": true,
+    "transform": {
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "children": [],
+    "geometry": {
+     "kind": "box",
+     "parameters": {
+      "width": 0.1,
+      "depth": 0.1,
+      "height": 0.01
+     }
+    },
+    "material": "mat-ex-polymer"
+   }
+  ]
+ },
+ "simulations": [],
+ "extensions": {
+  "material-state": {
+   "format": "resonant.material-state",
+   "version": 1,
+   "studies": [
+    {
+     "id": "st-evolve-plate",
+     "name": "Heat for 20 minutes",
+     "model": "coupled.evolution",
+     "system": "sys-thermomechanical",
+     "parameters": {
+      "duration": 1200.0,
+      "steps": 12,
+      "substeps": 4
+     }
+    }
+   ],
+   "records": []
+  },
+  "multiphysics": {
+   "format": "resonant.multiphysics",
+   "version": 1,
+   "systems": [
+    {
+     "format": "resonant.physical-system",
+     "version": 1,
+     "id": "sys-thermomechanical",
+     "name": "Constrained heated plate",
+     "description": "A 10 mm polymer plate heated inside (50 kW/m^3), held laterally: it thickens and builds compressive stress as it warms. A negligible 1 GHz wave carries the deformed thickness.",
+     "geometry": {
+      "kind": "layered-slab",
+      "lateralArea": 0.01
+     },
+     "environment": {
+      "ambientTemperature": 293.15
+     },
+     "regions": [
+      {
+       "id": "plate",
+       "name": "Plate",
+       "materialId": "mat-ex-polymer",
+       "thickness": 0.01,
+       "cells": 20,
+       "objectId": "ex-mst-plate"
+      }
+     ],
+     "domains": [
+      {
+       "id": "heat",
+       "kind": "thermal",
+       "solver": "thermal.conduction.fv",
+       "settings": {
+        "volumetricSource": 50000.0,
+        "faces": {
+         "-z": {
+          "kind": "convective",
+          "h": 5.0
+         },
+         "+z": {
+          "kind": "convective",
+          "h": 5.0
+         }
+        }
+       }
+      },
+      {
+       "id": "solid",
+       "kind": "mechanical",
+       "solver": "mechanics.fe.solid-column",
+       "settings": {
+        "lateral": "constrained"
+       }
+      },
+      {
+       "id": "em",
+       "kind": "electromagnetic",
+       "solver": "em.layered.transfer-matrix",
+       "settings": {
+        "frequencyHz": 1000000000.0,
+        "incidentIntensity": 1e-09
+       }
+      }
+     ],
+     "couplings": [
+      {
+       "id": "expand",
+       "model": "thermal.expansion",
+       "from": "heat",
+       "to": "solid"
+      },
+      {
+       "id": "deform",
+       "model": "mechanics.deformation-to-geometry",
+       "from": "solid",
+       "to": "em"
+      }
+     ],
+     "materialLaws": [],
+     "scheme": {
+      "kind": "iterative",
+      "maxIterations": 50,
+      "temperatureTolerance": 1e-06,
+      "geometryTolerance": 1e-12
+     }
+    }
+   ]
+  }
+ }
+}

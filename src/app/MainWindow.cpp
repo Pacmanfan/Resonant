@@ -21,6 +21,8 @@
 #include "FunctionalController.h"
 #include "FunctionalPanel.h"
 #include "MaterialScalesPanel.h"
+#include "MaterialStateController.h"
+#include "MaterialStatePanel.h"
 #include "MultiscaleController.h"
 #include "MechanicsController.h"
 #include "MechanicsMarkers.h"
@@ -105,6 +107,7 @@ MainWindow::MainWindow(QWidget* parent)
     ui_->menuPanels->addAction(ui_->optimizationDock->toggleViewAction());
     ui_->menuPanels->addAction(ui_->functionalDock->toggleViewAction());
     ui_->menuPanels->addAction(ui_->materialScalesDock->toggleViewAction());
+    ui_->menuPanels->addAction(ui_->materialStateDock->toggleViewAction());
     ui_->menuPanels->addAction(ui_->pythonConsoleDock->toggleViewAction());
     ui_->menuPanels->addAction(ui_->demoStudioDock->toggleViewAction());
     ui_->menuPanels->addSeparator();
@@ -152,6 +155,7 @@ MainWindow::MainWindow(QWidget* parent)
     connectOptimization();
     connectFunctional();
     connectMultiscale();
+    connectMaterialState();
     connectAutomation();
     connectHelp();
     connectDemos();
@@ -179,7 +183,8 @@ MainWindow::MainWindow(QWidget* parent)
     tabifyDockWidget(ui_->experimentsDock, ui_->optimizationDock);
     tabifyDockWidget(ui_->optimizationDock, ui_->functionalDock);
     tabifyDockWidget(ui_->functionalDock, ui_->materialScalesDock);
-    tabifyDockWidget(ui_->materialScalesDock, ui_->demoStudioDock);
+    tabifyDockWidget(ui_->materialScalesDock, ui_->materialStateDock);
+    tabifyDockWidget(ui_->materialStateDock, ui_->demoStudioDock);
     tabifyDockWidget(ui_->analysisDock, ui_->pythonConsoleDock);
     ui_->demoStudioDock->hide();
     ui_->presenterDock->hide();
@@ -584,6 +589,19 @@ void MainWindow::connectExperiments()
 OptimizationPanel& MainWindow::optimizationPanel()
 {
     return *ui_->optimizationPanel;
+}
+
+MaterialStatePanel& MainWindow::materialStatePanel()
+{
+    return *ui_->materialStatePanel;
+}
+
+void MainWindow::connectMaterialState()
+{
+    materialState_ = new MaterialStateController(controller_, this);
+    ui_->materialStatePanel->setController(materialState_);
+    connect(materialState_, &MaterialStateController::runFailed, this,
+            [this](const QString& message) { statusBar()->showMessage(tr("Material state: %1").arg(message), 8000); });
 }
 
 MaterialScalesPanel& MainWindow::materialScalesPanel()

@@ -1,0 +1,123 @@
+{
+ "format": "resonant-project",
+ "schemaVersion": 1,
+ "application": {
+  "name": "Resonant",
+  "version": "0.1.0"
+ },
+ "project": {
+  "id": "ex-mst-hysteresis",
+  "name": "f-hysteretic-core",
+  "createdUtc": "2026-11-28T00:00:00Z",
+  "modifiedUtc": "2026-11-28T00:00:00Z"
+ },
+ "units": {
+  "angle": "rad",
+  "axes": "right-handed; X horizontal, Y depth, Z vertical (up)",
+  "frequency": "Hz",
+  "length": "m",
+  "mass": "kg",
+  "rotation": "intrinsic Z-Y-X Euler angles stored as [x, y, z]",
+  "time": "s"
+ },
+ "materials": [
+  {
+   "id": "mat-ex-ferrite",
+   "name": "Soft ferrite (example)",
+   "description": "Illustrative; its hysteresis is the Preisach model of the study.",
+   "domains": {
+    "electromagnetic": {
+     "relativePermittivity": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the material-state examples; not authoritative.",
+      "value": 12.0
+     },
+     "relativePermeability": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the material-state examples; not authoritative.",
+      "value": 2000.0
+     },
+     "conductivity": {
+      "provenance": "illustrative",
+      "source": "Illustrative value for the material-state examples; not authoritative.",
+      "value": 0.01
+     }
+    }
+   }
+  }
+ ],
+ "scene": {
+  "objects": [
+   {
+    "id": "ex-mst-core",
+    "type": "geometry",
+    "name": "Toroidal core",
+    "visible": true,
+    "transform": {
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "children": [],
+    "geometry": {
+     "kind": "cylinder",
+     "parameters": {
+      "radius": 0.025,
+      "height": 0.01
+     }
+    },
+    "material": "mat-ex-ferrite"
+   }
+  ]
+ },
+ "simulations": [],
+ "extensions": {
+  "material-state": {
+   "format": "resonant.material-state",
+   "version": 1,
+   "studies": [
+    {
+     "id": "st-core",
+     "name": "A ferrite toroid driven at 50 Hz",
+     "model": "em.preisach",
+     "parameters": {
+      "saturationMagnetization": 300000.0,
+      "saturationField": 400.0,
+      "reversibleSusceptibility": 100.0,
+      "levels": 200,
+      "density": "gaussian",
+      "coercivity": 40.0,
+      "coerciveSpread": 15.0,
+      "interactionSpread": 20.0
+     },
+     "loading": {
+      "amplitudes": [
+       300.0,
+       60.0
+      ],
+      "increments": 200,
+      "core": {
+       "turns": 100,
+       "meanRadius": 0.02,
+       "crossSection": 0.0001,
+       "frequencyHz": 50.0
+      }
+     }
+    }
+   ],
+   "records": []
+  }
+ }
+}

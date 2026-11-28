@@ -21,6 +21,7 @@ carries a `resonant.v1.Error` (see [errors](#errors)).
 - [GeometryService](#geometryservice) (4 methods)
 - [JobService](#jobservice) (4 methods)
 - [MaterialService](#materialservice) (6 methods)
+- [MaterialStateService](#materialstateservice) (12 methods)
 - [MultiphysicsService](#multiphysicsservice) (8 methods)
 - [MultiscaleService](#multiscaleservice) (17 methods)
 - [OptimizationService](#optimizationservice) (3 methods)
@@ -138,6 +139,25 @@ Materials with physical properties and their provenance.
 | `GetMaterial` | `GetMaterialRequest` | `GetMaterialResponse` | One material with its properties and their provenance. |
 | `ListMaterials` | `ListMaterialsRequest` | `ListMaterialsResponse` | The project's materials, optionally only those with properties of one physics domain. |
 | `RemoveMaterialAssignment` | `RemoveMaterialAssignmentRequest` | `RemoveMaterialAssignmentResponse` | Clears the material of objects. |
+
+## MaterialStateService
+
+Dynamic material state: constitutive models (plasticity, damage, viscoelasticity, phase change, hysteresis) run as studies, time-stepped evolutions of physical systems through the coupled engine, records of runs in the project, and commits of an evolved state to a library material with its lineage.
+
+| Method | Request | Response | Description |
+|---|---|---|---|
+| `CommitMaterialState` | `CommitMaterialStateRequest` | `CommitMaterialStateResponse` | Writes a record's committable values to a library material (provenance computed, with a derivation); one undo step. |
+| `DeleteMaterialStateRecord` | `DeleteMaterialStateRecordRequest` | `DeleteMaterialStateRecordResponse` | Removes a record; one undo step. |
+| `DeleteMaterialStateStudy` | `DeleteMaterialStateStudyRequest` | `DeleteMaterialStateStudyResponse` | Removes a study; one undo step. |
+| `EvolvePhysicalSystem` | `EvolvePhysicalSystemRequest` | `EvolvePhysicalSystemResponse` | Evolves a physical system in time steps (each a coupled run continuing from the last temperature), as a job. |
+| `GetMaterialStateRecord` | `GetMaterialStateRecordRequest` | `GetMaterialStateRecordResponse` | One record with its history and final state. |
+| `GetMaterialStateResult` | `GetMaterialStateResultRequest` | `GetMaterialStateResultResponse` | A run or evolution document: history, curves, profiles, energies, convergence, committable values. |
+| `ListMaterialStateModels` | `ListMaterialStateModelsRequest` | `ListMaterialStateModelsResponse` | The model cards: variables, parameters, assumptions, validity, loading presets; and the models not implemented. |
+| `ListMaterialStateRecords` | `ListMaterialStateRecordsRequest` | `ListMaterialStateRecordsResponse` | The stored records. |
+| `ListMaterialStateStudies` | `ListMaterialStateStudiesRequest` | `ListMaterialStateStudiesResponse` | The studies stored in the project. |
+| `RunMaterialStateStudy` | `RunMaterialStateStudyRequest` | `RunMaterialStateStudyResponse` | Runs a stored or inline study as a job; the result id is in the finished job's results. |
+| `SaveMaterialStateRecord` | `SaveMaterialStateRecordRequest` | `SaveMaterialStateRecordResponse` | Stores a result as a record in the project; one undo step. |
+| `SetMaterialStateStudy` | `SetMaterialStateStudyRequest` | `SetMaterialStateStudyResponse` | Adds a study, or replaces the one with its id; one undo step. |
 
 ## MultiphysicsService
 
@@ -560,6 +580,22 @@ What a mutation changed, or would change in a dry run.
 |---|---|---|
 | `header` | `ResponseHeader` |  |
 
+### CommitMaterialStateRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `record_id` | `string` |  |
+| `material_id` | `string` | empty: each committable value's own material |
+| `properties` | repeated `string` | "domain.key"; empty: all |
+
+### CommitMaterialStateResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `changes` | `ChangeSummary` |  |
+
 ### CommitTransactionRequest
 
 | Field | Type | Description |
@@ -883,6 +919,34 @@ Deletes a material; assignments to it are removed in the same undoable step.
 | `header` | `ResponseHeader` |  |
 | `changes` | `ChangeSummary` |  |
 
+### DeleteMaterialStateRecordRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `record_id` | `string` |  |
+
+### DeleteMaterialStateRecordResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `changes` | `ChangeSummary` |  |
+
+### DeleteMaterialStateStudyRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `study_id` | `string` |  |
+
+### DeleteMaterialStateStudyResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `changes` | `ChangeSummary` |  |
+
 ### DeleteObjectsRequest
 
 Deletes objects with their children, in one undoable step.
@@ -1106,6 +1170,23 @@ Rotation as Z-Y-X Euler angles in radians (about X, Y, Z of the parent frame).
 | `session_id` | `string` |  |
 | `client_name` | `string` |  |
 | `source_interface` | `SourceInterface` |  |
+
+### EvolvePhysicalSystemRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `system_id` | `string` |  |
+| `duration` | `double` | s |
+| `steps` | `int32` | 0: 20 |
+| `substeps` | `int32` | 0: 4 |
+
+### EvolvePhysicalSystemResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `job` | `Job` |  |
 
 ### ExecuteBatchRequest
 
@@ -1512,6 +1593,35 @@ Geometry of an object: a kind of the geometry registry with its parameters (SI u
 | `header` | `ResponseHeader` |  |
 | `material` | `Material` |  |
 
+### GetMaterialStateRecordRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `record_id` | `string` |  |
+
+### GetMaterialStateRecordResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `record` | `google.protobuf.Struct` |  |
+
+### GetMaterialStateResultRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `result_id` | `string` |  |
+
+### GetMaterialStateResultResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `document` | `google.protobuf.Struct` |  |
+| `reliable` | `bool` |  |
+
 ### GetMultiscaleModelRequest
 
 | Field | Type | Description |
@@ -1880,6 +1990,45 @@ job.updated (state or progress; progress events are throttled)
 | `header` | `ResponseHeader` |  |
 | `jobs` | repeated `Job` |  |
 
+### ListMaterialStateModelsRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+
+### ListMaterialStateModelsResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `models` | repeated `google.protobuf.Struct` |  |
+
+### ListMaterialStateRecordsRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+
+### ListMaterialStateRecordsResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `records` | repeated `MaterialStateRecordSummary` |  |
+
+### ListMaterialStateStudiesRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+
+### ListMaterialStateStudiesResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `studies` | repeated `google.protobuf.Struct` |  |
+
 ### ListMaterialsRequest
 
 | Field | Type | Description |
@@ -2092,6 +2241,19 @@ A material representation at its scale (REQ-CHAT-20261126-020, RES-MSC-001). The
 | `revision` | `string` | content key of its physical content |
 | `model_card` | `string` |  |
 | `constituents` | repeated `string` | library material ids |
+
+### MaterialStateRecordSummary
+
+A stored run of a material-state model or a time-stepped evolution (REQ-CHAT-20261126-021, RES-DMS-003). The full record (history, final state, energies, committable values) is the JSON document of GetMaterialStateRecord.
+
+| Field | Type | Description |
+|---|---|---|
+| `record_id` | `string` |  |
+| `name` | `string` |  |
+| `model` | `string` | the model card id, or coupled.evolution |
+| `kind` | `string` | material-point, structure, evolution |
+| `created` | `string` | UTC |
+| `steps` | `int32` | history entries |
 
 ### MetricValue
 
@@ -2455,6 +2617,38 @@ How a result was produced (docs/reference/PROTOBUF_API.md "Provenance").
 | `max_magnitude` | `double` | in `unit` |
 | `provenance` | `ResultProvenance` |  |
 
+### RunMaterialStateStudyRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `study_id` | `string` | a stored study, or |
+| `study` | `google.protobuf.Struct` | {"model", "parameters", "loading"} (or "system" for coupled.evolution) |
+
+### RunMaterialStateStudyResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `job` | `Job` |  |
+
+### SaveMaterialStateRecordRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `result_id` | `string` |  |
+| `record_id` | `string` |  |
+| `name` | `string` |  |
+
+### SaveMaterialStateRecordResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `changes` | `ChangeSummary` |  |
+| `record_id` | `string` |  |
+
 ### SaveProjectRequest
 
 Saves to the current file, or to `file_name` (relative to the project directory). Requires PERMISSION_FILES.
@@ -2558,6 +2752,20 @@ session.opened / closed
 |---|---|---|
 | `header` | `ResponseHeader` |  |
 | `structure` | `FunctionalStructure` |  |
+| `changes` | `ChangeSummary` |  |
+
+### SetMaterialStateStudyRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `study` | `google.protobuf.Struct` |  |
+
+### SetMaterialStateStudyResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
 | `changes` | `ChangeSummary` |  |
 
 ### SetPhysicalSystemRequest

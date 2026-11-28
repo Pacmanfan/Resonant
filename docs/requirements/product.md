@@ -26,8 +26,9 @@ a physical design variable (REQ-CHAT-20261126-017, `functional_structures.md`
 RES-FUNC-001..016), resonance engineering across the domains
 (REQ-CHAT-20261126-018, `resonance.md` RES-RSN-001..014), and metamaterials
 with engineered effective properties (REQ-CHAT-20261126-019, `metamaterials.md`
-RES-META-001..012), and multiscale material modeling (REQ-CHAT-20261126-020,
-`multiscale.md` RES-MSC-001..014).
+RES-META-001..012), multiscale material modeling (REQ-CHAT-20261126-020,
+`multiscale.md` RES-MSC-001..014), and dynamic material state
+(REQ-CHAT-20261126-021, `material_state.md` RES-DMS-001..014).
 
 Each requirement below names the release in which it must first hold:
 **V1** (the initial release, a complete acoustic workflow), or **LATER**
