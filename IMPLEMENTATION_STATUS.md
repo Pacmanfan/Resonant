@@ -91,7 +91,7 @@ Milestones and the requests that deliver them are in
 |---|---|---|
 | Geometry import from CAD or mesh files | Missing | no request covers it yet; it is part of V1 (RES-PRODUCT-015) |
 | Windows and macOS builds | Untested | nothing platform-specific is used on purpose, but only Linux has been built and run |
-| Binary installer / distribution package | Missing | `make install` / `cmake --install` install the application with its help, demonstrations, examples, plugins and Python package (REQ-CHAT-20261126-010) |
+| Binary installer / distribution package | Tested | the self-contained Linux ZIP (REQ-CHAT-20261126-013, ADR-000218, `docs/release/LINUX_ZIP_DISTRIBUTION.md`); `make install` / `cmake --install` as before; no installer for other systems |
 
 (Full-wave acoustics, wave manipulators, hardware and measurements, optimization,
 Python scripting, the help system and demonstrations were delivered by the
@@ -361,10 +361,10 @@ milestones below.)
 | Single-domain resonances (acoustic cavity estimates, modal analysis, EM cavity modes, 1D Bloch band structure) | Tested | no shared resonance description, no Q from losses |
 | One-way structure-to-sound coupling | Tested | outside the coupled engine (listed there as an external model) |
 | Coupled Energy–Matter Engine, material state of temperature, thermal domain | Tested | see the section below (REQ-CHAT-20261126-016) |
-| Material state of stress or fields; anisotropic tensors; laws in the material library | Missing | planned: stage 2 |
-| Shared resonance description, Q, mode extraction, coupled resonators | Missing | planned: stage 6 |
-| Unit cells, lattices, 2D/3D Bloch analysis, effective properties | Missing | planned: stages 7–8 |
-| Multiscale adapters to external tools | Missing | planned: stage 9 |
+| Material state of stress or fields; anisotropic tensors; laws in the material library | Partial | material-state fields (REQ-CHAT-20261126-021); anisotropic sets on architecture regions (REQ-CHAT-20261127-001); no tensors or laws in the library itself (REQ-CHAT-20261128-006) |
+| Shared resonance description, Q, mode extraction, coupled resonators | Tested | resonance engineering (REQ-CHAT-20261126-018, `docs/requirements/resonance.md`) |
+| Unit cells, lattices, 2D/3D Bloch analysis, effective properties | Partial | 1D lattices, layered and resonator cells, effective properties with validity (REQ-CHAT-20261126-019); 2D/3D Bloch of continua missing |
+| Multiscale adapters to external tools | Partial | detection and requirements of external engines, built-in Lennard-Jones references (REQ-CHAT-20261126-020); no engine installed (REQ-CHAT-20261128-006) |
 | Nonlinear, viscoelastic, plastic, damaging, phase-changing materials | Tested | see Dynamic material state (REQ-CHAT-20261126-021); finite strain, fracture and fatigue: Missing |
 | Optical resonators and photonics | Missing | theoretical future (the electromagnetic domain is RF) |
 
@@ -535,4 +535,13 @@ milestones below.)
 | Thermoelectric, magnetostrictive, photovoltaic, triboelectric, induction and chemical conversion | Missing | listed as mechanisms, not modeled |
 | Finite-stiffness, frictional, diffusive, reactive and charge-transfer interfaces in the solvers | Missing | recorded and refused |
 | Fields in two and three dimensions; CAD export; 3D field rendering; editing in the panel | Missing | through the service and files today |
+
+## Release readiness (milestone 27) — `docs/requirements/release_readiness.md`, `docs/architecture/MILESTONE_27_GAP_ANALYSIS.md`
+
+| Capability | State | Notes |
+|---|---|---|
+| Baseline gap analysis and the phase plan (REQ-CHAT-20261128-001..011) | Tested | the status classes V, L, P, X, N per capability |
+| Licensing decision document | Partial | prepared; the owner's decision is not yet recorded (`docs/release/LICENSING_DECISION.md`) |
+| Decision-number integrity (ADR-000217 recorded as unused) | Tested | numbers are never reused |
+| Demonstration readiness audit (electric bell, energy-focusing metamaterial, resonant pendulum) | Tested | the audit; the scenarios depend on phases 3-10 (`docs/demos/DEMONSTRATION_READINESS.md`) |
 

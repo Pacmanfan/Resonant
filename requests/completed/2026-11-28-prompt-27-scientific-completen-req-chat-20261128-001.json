@@ -1,0 +1,417 @@
+{
+  "request_id": "REQ-CHAT-20261128-001",
+  "source": "chat",
+  "type": "FEATURE",
+  "priority": "NORMAL",
+  "created": "2026-11-28T11:25:20-05:00",
+  "created_utc": "2026-11-28T16:25:20+00:00",
+  "id_date": "2026-11-28",
+  "timezone": "EST (UTC-05:00)",
+  "status": "completed",
+  "original_text": "# PROMPT 27 \u2014 SCIENTIFIC COMPLETENESS, MULTISCALE PHYSICS, AND RELEASE READINESS\n\n## Project: RESONANT \u2014 Wave Field Engineering Studio\n\n## Mission\n\nImplement the next major development milestone for RESONANT.\n\nThis milestone has two overarching objectives:\n\n1. Close the outstanding scientific, computational, testing, and architectural gaps identified in the previous development cycles.\n2. Establish a reproducible, professionally distributable application capable of supporting impressive, scientifically defensible demonstration videos.\n\nThis is not a cosmetic release-preparation exercise.\n\nRESONANT must become a more complete engineering environment, capable of representing increasingly sophisticated physical structures, energy transformations, material architectures, and experimental observations.\n\nAll capabilities must be integrated into the existing architecture rather than implemented as isolated demonstrations.\n\nPreserve the existing scientific standards, provenance requirements, uncertainty accounting, validation gates, and explicit model-validity boundaries.\n\n---\n\n# PART I \u2014 AUDIT AND ESTABLISH BASELINE\n\nBefore changing anything:\n\n1. Read AGENTS.md and all applicable engineering instructions.\n2. Inspect the current architecture and implementation status.\n3. Review ADR-000227 and ADR-000228.\n4. Review WORK-000024 and WORK-000025.\n5. Review VER-000024 and VER-000025.\n6. Inspect the outstanding work recorded in IMPLEMENTATION_STATUS.md.\n7. Audit the existing demo system, automation framework, recording facilities, and any previous video-generation infrastructure.\n\nProduce a gap analysis covering:\n\n- Scientific capabilities.\n- Multiphysics integration.\n- Material representation.\n- Interfaces and boundary conditions.\n- Atomistic and multiscale integration.\n- GUI and visualization.\n- Testing and reliability.\n- Packaging and deployment.\n- Demo automation and video production.\n\nDo not duplicate existing functionality.\n\n# PART II \u2014 MULTIPHYSICS AND ENERGY CONVERSION\n\n## 2.1 Unified energy-conversion architecture\n\nExtend the existing coupled physics architecture to support additional energy-conversion mechanisms.\n\nThe architecture must support:\n\n- Mechanical energy.\n- Acoustic energy.\n- Thermal energy.\n- Electrical energy.\n- Electromagnetic energy.\n- Optical energy.\n- Elastic strain energy.\n- Dissipative energy.\n\nEstablish consistent energy accounting between interacting physical domains.\n\nEvery conversion mechanism must explicitly identify:\n\n- Input energy.\n- Output energy.\n- Stored energy.\n- Dissipated energy.\n- Coupling coefficients.\n- Boundary conditions.\n- Assumptions.\n- Validity limits.\n- Uncertainty.\n\nEnergy must never appear or disappear through an undocumented numerical operation.\n\n## 2.2 Piezoelectric multiphysics\n\nExtend piezoelectric modeling beyond the existing single-mode cantilever.\n\nImplement a generalizable coupled electromechanical formulation suitable for integration into the coupled engine.\n\nSupport, as appropriate:\n\n- Piezoelectric constitutive relationships.\n- Stress-charge and strain-charge formulations.\n- Anisotropic piezoelectric coefficients.\n- Electrical boundary conditions.\n- Mechanical boundary conditions.\n- Electrode geometry.\n- Dielectric properties.\n- Mechanical damping.\n- Electrical loading.\n- Frequency-dependent behavior.\n\nInclude:\n\n- Piezoelectric plates.\n- Piezoelectric beams.\n- Cantilever structures.\n- Layered piezoelectric composites.\n\nPreserve the existing cantilever implementation as a reference model.\n\nValidate against analytical solutions and established benchmark cases.\n\n## 2.3 Thermoelectric conversion\n\nImplement thermoelectric modeling.\n\nInclude:\n\n- Seebeck effect.\n- Peltier effect.\n- Thomson effect where supported.\n- Temperature-dependent electrical conductivity.\n- Temperature-dependent thermal conductivity.\n- Seebeck coefficient.\n- Joule heating.\n- Thermal and electrical boundary conditions.\n\nSupport thermoelectric generators and coolers.\n\nInclude energy and entropy accounting.\n\nValidate against analytical thermoelectric models and established reference cases.\n\n## 2.4 Magnetostrictive conversion\n\nImplement magnetostrictive material behavior.\n\nInclude:\n\n- Magnetic field excitation.\n- Magnetostrictive strain.\n- Mechanical response.\n- Magnetic and mechanical coupling.\n- Material anisotropy where supported.\n- Hysteresis and losses where a validated model is available.\n\nSupport magnetostrictive actuators and energy harvesters.\n\nExplicitly distinguish linear approximations from nonlinear constitutive models.\n\n## 2.5 Photovoltaic conversion\n\nImplement a physically grounded photovoltaic modeling capability.\n\nInclude:\n\n- Incident optical energy.\n- Spectral response.\n- Absorption.\n- Carrier generation.\n- Electrical output.\n- Temperature dependence.\n- Equivalent-circuit models.\n\nBegin with a validated equivalent-circuit model.\n\nDo not represent semiconductor-level physics as solved unless the required transport equations are actually implemented.\n\n## 2.6 Cross-domain energy accounting\n\nIntegrate these mechanisms into the existing energy ledger.\n\nDemonstrate that energy can be followed through a chain of transformations.\n\nFor example:\n\nAcoustic excitation \u2192 mechanical strain \u2192 piezoelectric conversion \u2192 electrical output \u2192 electrical load.\n\nEvery stage must have measurable quantities and an independently verifiable energy balance.\n\n# PART III \u2014 THREE-DIMENSIONAL STRUCTURES AND INTERFACES\n\n## 3.1 Three-dimensional layered structures\n\nAddress the missing full-shell modeling capability identified in ADR-000228.\n\nDevelop a geometry-aware structural modeling architecture for layered and coated three-dimensional bodies.\n\nSupport:\n\n- Three-dimensional geometry.\n- Layered shells.\n- Coatings.\n- Composite structures.\n- Variable thickness.\n- Material transitions.\n- Curved interfaces.\n- Spatially varying material properties.\n\nUse an appropriate numerical method, preferably integrating an established finite-element architecture if compatible with the existing application.\n\nDo not pretend that layered-plate theory is equivalent to a general three-dimensional shell solution.\n\nRetain analytical plate and beam models as lower-fidelity reference methods.\n\n## 3.2 Non-ideal interface physics\n\nImplement a general interface representation.\n\nSupport progressively:\n\n- Perfect bonding as an explicitly selected idealization.\n- Finite normal stiffness.\n- Finite tangential stiffness.\n- Thermal contact resistance.\n- Mechanical slip.\n- Friction.\n- Partial debonding.\n- Interface failure criteria.\n\nEvery interface must have its own properties and provenance.\n\nA perfect interface must never be silently assumed.\n\nWhere an interface model is unavailable, the solver must identify the limitation and refuse the unsupported analysis.\n\n## 3.3 Functionally graded materials\n\nExpand material-field representation.\n\nSupport:\n\n- Spatially varying density.\n- Spatially varying stiffness.\n- Spatially varying thermal conductivity.\n- Spatially varying electrical conductivity.\n- Spatially varying dielectric properties.\n- Spatially varying piezoelectric coefficients.\n- Spatially varying magnetic properties.\n\nSupport directional and anisotropic material fields.\n\nEach field must identify its coordinate system and tensor representation.\n\nSupport interpolation between measured, imported, and analytically defined fields.\n\n# PART IV \u2014 MULTISCALE AND ATOMISTIC ARCHITECTURE\n\nNo atomistic engines are currently installed.\n\nDo not make the application dependent on an unavailable external solver.\n\nInstead, establish a formal multiscale integration architecture.\n\n## 4.1 Solver integration\n\nDesign an adapter architecture capable of integrating appropriate external atomistic engines.\n\nInvestigate compatibility with:\n\n- LAMMPS.\n- GROMACS where appropriate.\n- Other scientifically relevant atomistic engines.\n\nDo not assume these engines are interchangeable.\n\nIdentify their respective domains of applicability.\n\n## 4.2 Atomistic-to-continuum bridge\n\nDesign the data model for transferring information between scales.\n\nPotential transferred quantities include:\n\n- Elastic constants.\n- Thermal conductivity.\n- Density.\n- Diffusion coefficients.\n- Interfacial properties.\n- Defect-related properties.\n- Temperature-dependent constitutive behavior.\n\nPreserve:\n\n- Units.\n- Coordinate systems.\n- Temperature.\n- Pressure.\n- Composition.\n- Simulation conditions.\n- Statistical uncertainty.\n- Provenance.\n\nDo not generate fabricated atomistic results.\n\nWhen an external engine is unavailable, report the missing dependency and provide a testable integration interface.\n\n## 4.3 Microstructure representation\n\nEstablish foundations for:\n\n- Grains.\n- Grain boundaries.\n- Defects.\n- Inclusions.\n- Porosity.\n- Phase distributions.\n- Multiphase materials.\n\nEnsure microstructure can eventually influence continuum-scale material properties.\n\n# PART V \u2014 MANUFACTURING AND DESIGN INTEGRATION\n\nIntegrate the expanded physical models with the existing functional architecture and manufacturing systems.\n\nSupport manufacturing-aware constraints involving:\n\n- Minimum feature dimensions.\n- Layer thickness.\n- Material compatibility.\n- Thermal processing.\n- Residual stress.\n- Interface integrity.\n- Geometric limitations.\n- Manufacturing tolerances.\n\nExpand optimization to account for the new physics.\n\nThe optimizer must be capable of evaluating competing objectives, including:\n\n- Energy conversion efficiency.\n- Structural stiffness.\n- Mass.\n- Thermal performance.\n- Electrical performance.\n- Manufacturing feasibility.\n- Reliability.\n\nPreserve Pareto trade-off sets.\n\nNever conceal infeasible designs by silently relaxing manufacturing constraints.\n\n# PART VI \u2014 GEOMETRY AND VISUALIZATION\n\n## 6.1 Three-dimensional material visualization\n\nImplement the missing 3D visualization foundations.\n\nVisualize:\n\n- Material regions.\n- Layer boundaries.\n- Interfaces.\n- Graded property fields.\n- Directional properties.\n- Stress fields.\n- Strain fields.\n- Temperature fields.\n- Electric fields.\n- Magnetic fields.\n- Energy density.\n\nProvide independent controls for each visualization layer.\n\nSupport color scales with explicit units and numerical ranges.\n\nDo not use visual interpolation to imply physical resolution that the underlying solver does not possess.\n\n## 6.2 CAD integration\n\nEstablish CAD export capabilities.\n\nSupport appropriate exchange formats, prioritizing STEP and STL where suitable.\n\nPreserve material-region boundaries where the target format permits.\n\nDocument information that cannot survive export.\n\n## 6.3 Matter editor\n\nExpand the existing Matter panel.\n\nProvide editing capabilities for:\n\n- Material regions.\n- Layer stacks.\n- Interface properties.\n- Graded material fields.\n- Functional assignments.\n- Manufacturing processes.\n\nAll edits must create traceable revisions.\n\nNever silently modify an existing material record.\n\n# PART VII \u2014 EXPERIMENTAL LABORATORY\n\nBuild upon the existing experimental laboratory.\n\nExtend measurement comparison to the additional physical domains.\n\nSupport appropriate measurements involving:\n\n- Acoustic response.\n- Mechanical vibration.\n- Electrical output.\n- Temperature.\n- Thermal gradients.\n- Magnetic response.\n- Optical response.\n\nMaintain the existing read-only original-file policy.\n\nExpand calibration where appropriate.\n\nPreserve the requirement that calibration validation must use independent data.\n\nAdd cross-domain experimental energy-balance reports.\n\nEnsure synthetic measurements remain explicitly labeled synthetic.\n\n# PART VIII \u2014 RELIABILITY AND TESTING\n\nAddress the outstanding reliability issues.\n\n## 8.1 Flaky cancellation test\n\nInvestigate and eliminate the flakiness in:\n\nJobs/RunningJobIsCancelledPromptly\n\nIdentify the actual race condition or synchronization defect.\n\nDo not merely increase timeouts or disable the test.\n\nAdd deterministic regression coverage.\n\n## 8.2 C++ gRPC transport\n\nResolve the outstanding dependency requirement:\n\nlibgrpc++-dev  \nprotobuf-compiler-grpc\n\nCheck whether the packages are installed.\n\nIf not, document the required system installation and request appropriate authorization rather than silently skipping the integration.\n\nBuild and test the C++ transport.\n\nVerify interoperability with existing services and MCP tools.\n\n## 8.3 Test coverage\n\nExpand testing across:\n\n- Physics unit tests.\n- Analytical benchmarks.\n- Coupled-system integration.\n- Material architecture.\n- Interface models.\n- Measurement ingestion.\n- Calibration.\n- Optimization.\n- Manufacturing constraints.\n- GUI workflows.\n- Service interfaces.\n- MCP tools.\n- Serialization.\n- Reproducibility.\n\nEvery new solver must have at least one independently calculated reference result.\n\nAdd conservation and dimensional-consistency checks.\n\n# PART IX \u2014 PACKAGING AND DISTRIBUTION\n\nThis work requires a PROCESS-CHANGE request because the existing package test lane and Deployment section of AGENTS.md need modification.\n\n## 9.1 Process change\n\nCreate the required PROCESS-CHANGE request.\n\nReview and update the deployment process to accommodate:\n\n- Clean-machine testing.\n- Reproducible builds.\n- Runtime dependency discovery.\n- Qt libraries and plugins.\n- C++ dependencies.\n- Resources.\n- Offline documentation.\n- Example projects.\n- Demonstration assets.\n\nPreserve the project's existing engineering governance.\n\n## 9.2 Linux distribution\n\nProduce a self-contained Linux distribution.\n\nTarget a ZIP package that includes:\n\n- Application executable.\n- Required Qt runtime libraries.\n- Required plugins.\n- Resources.\n- Supporting libraries.\n- Offline HTML documentation.\n- Example projects.\n- Reference data.\n- Demonstration scenarios.\n\nUse linuxdeployqt or an appropriate alternative.\n\nThe package must not require root privileges, installation scripts, or manual environment configuration to launch.\n\nDocument the supported Linux compatibility baseline.\n\n## 9.3 Clean-machine validation\n\nUse the existing resonant-clean/* Docker images.\n\nTest the distribution in a clean environment.\n\nVerify:\n\n- Startup.\n- GUI rendering.\n- Physics calculations.\n- Example loading.\n- Data import.\n- Saving and reopening projects.\n- Service availability.\n- MCP integration where supported.\n- Offline operation.\n- Resource discovery.\n\nRecord all missing dependencies and failures.\n\nDo not declare the distribution complete until the clean-machine tests pass.\n\n# PART X \u2014 LICENSING AND RELEASE GOVERNANCE\n\nThe project's own license remains an owner decision.\n\nDo not independently select or impose a license.\n\nPrepare a concise licensing decision document identifying:\n\n- Available licensing choices.\n- Consequences for commercial distribution.\n- Compatibility with incorporated dependencies.\n- LGPL source-distribution obligations.\n- Required notices.\n- Source availability requirements.\n\nPreserve LGPL obligations, including publishing corresponding LGPL source code with any applicable release.\n\nDo not finalize release licensing until the owner approves the decision.\n\n## ADR bookkeeping\n\nInvestigate ADR-000217, which was allocated but never used.\n\nDetermine whether it should be formally recorded as unused or reassigned under the project's ADR conventions.\n\nDo not silently reuse decision numbers.\n\n# PART XI \u2014 DEMONSTRATION SYSTEM READINESS\n\nWe are deliberately not producing the final demonstration videos in this milestone.\n\nHowever, audit the existing demonstration system and ensure that the application is ready to support the next phase.\n\nEstablish or verify reusable demonstration scenarios for:\n\n1. Electric Bell.\n2. Energy-Focusing Metamaterial.\n3. Resonant Pendulum.\n\nEach scenario should eventually support:\n\n- Reproducible project setup.\n- Deterministic simulation configuration.\n- Controlled input excitation.\n- Observable physical quantities.\n- Synchronized visualization.\n- Simulation and measurement comparison.\n- Energy accounting.\n- Exportable numerical results.\n- Screenshots.\n- Interaction traces.\n- Video recording.\n\nThe demonstration system must distinguish actual application output from post-production graphics.\n\nDo not create synthetic measurements that could be mistaken for experimental results.\n\nPrepare the infrastructure for 60\u201390 second flagship demonstration videos.\n\nThe Electric Bell should eventually demonstrate:\n\nBell excitation \u2192 acoustic field \u2192 Helmholtz resonance \u2192 piezoelectric cantilever \u2192 electrical output.\n\nThe Energy-Focusing Metamaterial should demonstrate geometry-driven wave interaction, focusing, and energy redistribution.\n\nThe Resonant Pendulum should demonstrate coupled dynamic behavior, resonance, energy transfer, and dissipation.\n\nThese are future demonstration deliverables, not excuses to bypass missing physics.\n\n# PART XII \u2014 DOCUMENTATION AND COMPLETION\n\nUpdate:\n\n- Architecture documentation.\n- Physics documentation.\n- Model-validity documentation.\n- API documentation.\n- MCP documentation.\n- Installation and deployment documentation.\n- Example projects.\n- IMPLEMENTATION_STATUS.md.\n\nCreate appropriate ADRs, WORK records, and VER evidence.\n\nFor every capability, distinguish:\n\n1. Implemented and verified.\n2. Implemented with limitations.\n3. Architecturally prepared but not implemented.\n4. Dependent on unavailable external software.\n5. Not supported.\n\nDo not describe architectural preparation as completed scientific functionality.\n\n# EXECUTION STRATEGY\n\nThis is a substantial milestone.\n\nBreak the work into coherent implementation phases and use the existing request-management and completion-gate framework.\n\nDo not attempt a superficial implementation of every feature.\n\nPrioritize correctness and integration.\n\nSuggested order:\n\n1. Baseline audit and process-change request.\n2. Reliability and dependency resolution.\n3. Three-dimensional geometry and interface foundations.\n4. Expanded multiphysics and energy conversion.\n5. Material fields and multiscale architecture.\n6. Manufacturing and optimization integration.\n7. Visualization and CAD integration.\n8. Experimental laboratory expansion.\n9. Packaging and clean-machine validation.\n10. Documentation and final audit.\n\nUse parallel agents where useful, but establish clear ownership and integration boundaries.\n\nEvery completed request must pass the appropriate T2 verification tier, including:\n\n- Core tests.\n- GUI tests.\n- CMake build.\n- CTest.\n- Relevant audits.\n- Completion gate.\n\nCommit and push completed work according to project conventions.\n\nDo not leave untracked implementation changes.\n\n## FINAL ACCEPTANCE CRITERIA\n\nThe milestone is complete only when:\n\n- New physical mechanisms are genuinely implemented and validated.\n- The coupled engine accounts for energy across supported domains.\n- Three-dimensional layered structures have an explicit modeling pathway.\n- Non-ideal interfaces are represented without hidden idealizations.\n- Material fields support directional and spatial variation.\n- Multiscale integration has a documented, testable architecture.\n- Manufacturing constraints remain integrated with optimization.\n- Three-dimensional visualization and CAD exchange are operational.\n- Experimental validation supports the expanded physics.\n- The cancellation test is reliable.\n- The gRPC transport is built and verified.\n- The deployment process is documented and approved.\n- The clean-machine package tests pass.\n- Licensing obligations are documented and the owner decision is recorded.\n- The demonstration infrastructure is audited and ready for the next phase.\n\nAt completion, provide a comprehensive engineering report.\n\nInclude:\n\n- Implemented capabilities.\n- Outstanding limitations.\n- Benchmark results.\n- Test results.\n- Packaging results.\n- External dependencies.\n- ADRs and work records.\n- Commit identifiers.\n- Demonstration readiness assessment.\n\n**The ultimate objective is to make RESONANT an engineering environment in which sophisticated physical structures can be conceived, modeled, optimized, experimentally evaluated, and ultimately demonstrated with scientific credibility.**",
+  "file": "requests/inbox/2026-11-28-prompt-27-scientific-completen-req-chat-20261128-001.md",
+  "attachments": [],
+  "context": "Pasted by the user as one message after the status report on Demo Studio. Processed in phases as separate requests (the prompt's execution strategy): this request carries the full statement and the baseline deliverables (Part I gap analysis, Part X licensing decision document and ADR-000217 bookkeeping, the Part XI demonstration-system audit, the phase plan); each later phase is its own request referring to this one.",
+  "text_sha256": "dfbdfe2895e5288d5f71f64335f2b121b8117aeb41ab66b3522d06b2a752bc60",
+  "classification": {
+    "proposed_type": "FEATURE",
+    "proposed_source": "override",
+    "normalized_type": "FEATURE",
+    "heuristic_type": "FEATURE",
+    "final_type": "FEATURE",
+    "confidence": "high",
+    "validation": "PASS",
+    "classifier_reason": "request statement is framed as feature: Implement, capabilities, milestone, must become",
+    "correction_reason": null,
+    "normalization_note": null,
+    "evidence": [
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement the next major development milestone for RESONANT."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "milestone",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement the next major development milestone for RESONANT."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "milestone",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This milestone has two overarching objectives:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "objectives",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This milestone has two overarching objectives:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "must become",
+        "strength": "strong",
+        "note": "",
+        "sentence": "RESONANT must become a more complete engineering environment, capable of representing increasingly sophisticated physical structures, energy transformations, material architectures, and experimental o"
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "capabilities",
+        "strength": "strong",
+        "note": "",
+        "sentence": "All capabilities must be integrated into the existing architecture rather than implemented as isolated demonstrations."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "framework",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Audit the existing demo system, automation framework, recording facilities, and any previous video-generation infrastructure."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Produce",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Produce a gap analysis covering:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capabilities",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Scientific capabilities."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "integration",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Multiphysics integration."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "integration",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Atomistic and multiscale integration."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Extend",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Extend the existing coupled physics architecture to support additional energy-conversion mechanisms."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "support additional",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Extend the existing coupled physics architecture to support additional energy-conversion mechanisms."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "must support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The architecture must support:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Extend",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Extend piezoelectric modeling beyond the existing single-mode cantilever."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement a generalizable coupled electromechanical formulation suitable for integration into the coupled engine."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "integration",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement a generalizable coupled electromechanical formulation suitable for integration into the coupled engine."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support, as appropriate:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement thermoelectric modeling."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support thermoelectric generators and coolers."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement magnetostrictive material behavior."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support magnetostrictive actuators and energy harvesters."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement a physically grounded photovoltaic modeling capability."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capability",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement a physically grounded photovoltaic modeling capability."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Integrate",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Integrate these mechanisms into the existing energy ledger."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capability",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Address the missing full-shell modeling capability identified in ADR-000228."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Develop",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Develop a geometry-aware structural modeling architecture for layered and coated three-dimensional bodies."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "integrating",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Use an appropriate numerical method, preferably integrating an established finite-element architecture if compatible with the existing application."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement a general interface representation."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support progressively:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support directional and anisotropic material fields."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support interpolation between measured, imported, and analytically defined fields."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "integration",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Instead, establish a formal multiscale integration architecture."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Design",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Design an adapter architecture capable of integrating appropriate external atomistic engines."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "integrating",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Design an adapter architecture capable of integrating appropriate external atomistic engines."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Design",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Design the data model for transferring information between scales."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "provide",
+        "strength": "strong",
+        "note": "",
+        "sentence": "When an external engine is unavailable, report the missing dependency and provide a testable integration interface."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "integration",
+        "strength": "strong",
+        "note": "",
+        "sentence": "When an external engine is unavailable, report the missing dependency and provide a testable integration interface."
+      }
+    ],
+    "scores": {
+      "FEATURE": {
+        "head": 6,
+        "body": 78
+      },
+      "BUG": {
+        "head": 2,
+        "body": 10
+      },
+      "CRASH": {
+        "head": 0,
+        "body": 0
+      },
+      "REGRESSION": {
+        "head": 0,
+        "body": 0
+      },
+      "PERFORMANCE": {
+        "head": 0,
+        "body": 5
+      },
+      "REFACTOR": {
+        "head": 1,
+        "body": 9
+      },
+      "BUILD": {
+        "head": 0,
+        "body": 0
+      },
+      "DOCUMENTATION": {
+        "head": 0,
+        "body": 18
+      },
+      "INVESTIGATION": {
+        "head": 0,
+        "body": 18
+      },
+      "PROCESS-CHANGE": {
+        "head": 0,
+        "body": 8
+      }
+    },
+    "evidence_total": 155,
+    "validator": "scripts/request_classification.py"
+  },
+  "links": {
+    "work": [
+      "WORK-000026"
+    ]
+  },
+  "commits": [],
+  "resolution": {
+    "from": "processing",
+    "to": "completed",
+    "at": "2026-11-28T16:31:11.083690+00:00",
+    "by": "agent-dev-20261126151713-76f632",
+    "gates": [
+      {
+        "work": "WORK-000026",
+        "at": "2026-11-28T16:31:10.877308+00:00",
+        "verdict": "PASS",
+        "request_fingerprint": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "test_runs": [
+          "20261128T113053-2103696"
+        ]
+      }
+    ]
+  }
+}

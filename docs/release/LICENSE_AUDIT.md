@@ -11,7 +11,8 @@ is not accepted. `tools/release/validate_licenses.py` checks the package.
 
 No license has been chosen for Resonant's own code yet. The package's
 `LICENSE` (and `licenses/application/LICENSE`) says so and grants nothing
-beyond what the law allows. **Choosing a license is a decision for the
+beyond what the law allows (the options and what each requires are in
+`LICENSING_DECISION.md`). **Choosing a license is a decision for the
 project's owner** before the ZIP is published; the third-party obligations
 below do not depend on that choice (no component requires Resonant to be
 under a particular license: there is no GPL-only component).
