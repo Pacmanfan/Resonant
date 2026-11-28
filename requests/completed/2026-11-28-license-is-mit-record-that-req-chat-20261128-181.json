@@ -1,0 +1,96 @@
+{
+  "request_id": "REQ-CHAT-20261128-181",
+  "source": "chat",
+  "type": "DOCUMENTATION",
+  "priority": "HIGH",
+  "created": "2026-11-28T14:49:36-05:00",
+  "created_utc": "2026-11-28T19:49:36+00:00",
+  "id_date": "2026-11-28",
+  "timezone": "EST (UTC-05:00)",
+  "status": "completed",
+  "original_text": "License is MIT. record that",
+  "file": "requests/inbox/2026-11-28-license-is-mit-record-that-req-chat-20261128-181.md",
+  "attachments": [],
+  "context": "The owner's answer to docs/release/LICENSING_DECISION.md (RES-REL-002, ADR-000229): Resonant's own code is licensed under the MIT License. Record it in the decision document, an addendum to ADR-000229, the release LICENSE template and the status documents.",
+  "text_sha256": "0d555544664122435db48bf0bb98a3e2b67292b625ca713a9a251a00a1b293d7",
+  "classification": {
+    "proposed_type": "DOCUMENTATION",
+    "proposed_source": "override",
+    "normalized_type": "DOCUMENTATION",
+    "heuristic_type": "INVESTIGATION",
+    "final_type": "DOCUMENTATION",
+    "confidence": "low",
+    "validation": "PASS",
+    "classifier_reason": "override DOCUMENTATION accepted (text alone suggests INVESTIGATION: no classifiable statement; recorded for investigation)",
+    "correction_reason": null,
+    "normalization_note": null,
+    "evidence": [],
+    "scores": {
+      "FEATURE": {
+        "head": 0,
+        "body": 0
+      },
+      "BUG": {
+        "head": 0,
+        "body": 0
+      },
+      "CRASH": {
+        "head": 0,
+        "body": 0
+      },
+      "REGRESSION": {
+        "head": 0,
+        "body": 0
+      },
+      "PERFORMANCE": {
+        "head": 0,
+        "body": 0
+      },
+      "REFACTOR": {
+        "head": 0,
+        "body": 0
+      },
+      "BUILD": {
+        "head": 0,
+        "body": 0
+      },
+      "DOCUMENTATION": {
+        "head": 0,
+        "body": 0
+      },
+      "INVESTIGATION": {
+        "head": 0,
+        "body": 0
+      },
+      "PROCESS-CHANGE": {
+        "head": 0,
+        "body": 0
+      }
+    },
+    "evidence_total": 0,
+    "validator": "scripts/request_classification.py"
+  },
+  "links": {
+    "work": [
+      "WORK-000032"
+    ]
+  },
+  "commits": [],
+  "resolution": {
+    "from": "processing",
+    "to": "completed",
+    "at": "2026-11-28T19:57:43.454768+00:00",
+    "by": "agent-dev-20261126151713-76f632",
+    "gates": [
+      {
+        "work": "WORK-000032",
+        "at": "2026-11-28T19:57:36.351279+00:00",
+        "verdict": "PASS",
+        "request_fingerprint": "f0d8bf019127c4a8083415b327e12bce6e57d7c0fa986faee7045e210880b0fa",
+        "test_runs": [
+          "20261128T145046-3242849"
+        ]
+      }
+    ]
+  }
+}

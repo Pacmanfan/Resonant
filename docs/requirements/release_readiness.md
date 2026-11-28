@@ -35,6 +35,10 @@ document lists:
 
 The owner's decision is recorded in the document and in its ADR before a public
 release. The release tooling keeps the LGPL obligations whatever the choice is.
+
+**Decided 2026-11-28: the MIT License** (REQ-CHAT-20261128-181, ADR-000229
+addendum). It is the repository's `LICENSE`, and the package's `LICENSE`
+comes from `tools/release/LICENSE.txt`.
 *Verification:* `docs/release/LICENSING_DECISION.md`; `tools/release/validate_licenses.py` (the package lane).
 
 ### RES-REL-003 — Decision-number integrity

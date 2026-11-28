@@ -557,7 +557,7 @@ milestones below.)
 | Capability | State | Notes |
 |---|---|---|
 | Baseline gap analysis and the phase plan (REQ-CHAT-20261128-001..011) | Tested | the status classes V, L, P, X, N per capability |
-| Licensing decision document | Partial | prepared; the owner's decision is not yet recorded (`docs/release/LICENSING_DECISION.md`) |
+| Licensing decision document | Done | the owner's decision recorded: the MIT License (`docs/release/LICENSING_DECISION.md`, `LICENSE`, `tools/release/LICENSE.txt`) |
 | Decision-number integrity (ADR-000217 recorded as unused) | Tested | numbers are never reused |
 | The deployment process and a concrete package lane (validate, clean-machine) | Partial | the process change approved by the owner (ADR-000230); the lane itself runs on a built ZIP in REQ-CHAT-20261128-010 |
 | Demonstration readiness audit (electric bell, energy-focusing metamaterial, resonant pendulum) | Tested | the audit; the scenarios depend on phases 3-10 (`docs/demos/DEMONSTRATION_READINESS.md`) |

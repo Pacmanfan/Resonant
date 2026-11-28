@@ -1,13 +1,16 @@
 # Licensing Decision
 
-**Status:** awaiting the owner's decision (RES-REL-002, ADR-000229). This
-document prepares the decision; it does not make it. The component-by-component
-audit is `LICENSE_AUDIT.md`.
+**Status:** decided: the MIT License (the owner, 2026-11-28; RES-REL-002,
+ADR-000229 addendum, REQ-CHAT-20261128-181). The options below are kept as the
+record of what was weighed. The component-by-component audit is
+`LICENSE_AUDIT.md`.
 
 ## Where things stand
 
-- **No licence yet.** Resonant's own code has no licence, and the package's
-  `LICENSE` grants nothing beyond what the law allows.
+- **The MIT License.** Resonant's own code is under the MIT License: the
+  repository's `LICENSE` and the package's `LICENSE` (from
+  `tools/release/LICENSE.txt`). Before the decision, the package's `LICENSE`
+  granted nothing beyond what the law allows.
 - **No component constrains the choice.** No bundled component requires a
   particular licence for Resonant: no GPL-only library is linked or shipped.
   GNU Readline and gdbm are left out of the bundled Python for that reason.
@@ -69,4 +72,30 @@ No release is published before this section is filled in.
 
 ## Decision
 
-*Not yet decided.*
+**The MIT License**, decided by the owner on 2026-11-28 ("License is MIT.
+record that", REQ-CHAT-20261128-181).
+
+What it means for a release, against the list above:
+1. **LGPL corresponding source:** unchanged. It is required for the bundled
+   LGPL libraries, whatever Resonant's licence is.
+2. **Replaceability:** unchanged.
+3. **Notices:** unchanged. `THIRD_PARTY_NOTICES.txt`, `licenses/`, the
+   Cyrus SASL attribution and Attachment A of the CUDA EULA ship as before.
+4. **Resonant's own notice:** the MIT text with `Copyright (c) 2026 the
+   Resonant authors`.
+   - It is the repository's `LICENSE`, and `tools/release/LICENSE.txt` puts
+     it into the package as `LICENSE` and `licenses/application/LICENSE`.
+   - The owner may name a specific copyright holder in that line at any time.
+   - No `NOTICE` file is needed (that is Apache-2.0's).
+5. **Source availability of Resonant:** not required by MIT. The source is
+   public in the project's repository all the same.
+
+Compatibility:
+- MIT is compatible with every bundled component's licence: LGPL-2.1 and
+  LGPL-3.0 (shared and replaceable), MPL-2.0, GPL with the GCC runtime
+  exception, Apache-2.0, BSD, and the CUDA runtime's Attachment A.
+- The legal check that a GPL-family licence would have needed for the static
+  CUDA runtime does not arise.
+
+Publication still needs the `package` lane to pass on the exact ZIP, and the
+LGPL sources next to it (`DEPLOYMENT.md`).

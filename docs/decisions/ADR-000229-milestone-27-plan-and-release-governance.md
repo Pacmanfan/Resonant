@@ -69,3 +69,17 @@ parts need decisions or actions that are not the agent's:
   limitations are stated in its own records.
 - The final engineering report (request -011) collects the phases, their
   commits and the owner decisions.
+
+## Addendum 2026-11-28: the licence is MIT
+
+The owner decided Resonant's own licence: **the MIT License** ("License is
+MIT. record that", REQ-CHAT-20261128-181). It is recorded in:
+- the Decision section of `docs/release/LICENSING_DECISION.md`;
+- the repository's `LICENSE`;
+- the release template `tools/release/LICENSE.txt`, which the package copies
+  to `LICENSE` and `licenses/application/LICENSE`.
+
+The copyright line is `Copyright (c) 2026 the Resonant authors`. The
+third-party obligations of decision 2 are unchanged: LGPL sources,
+replaceable shared libraries, notices. Point 2's "until then" no longer
+applies.

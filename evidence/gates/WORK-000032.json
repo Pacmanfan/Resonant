@@ -1,0 +1,30 @@
+{
+ "work": "WORK-000032",
+ "runs": [
+  {
+   "at": "2026-11-28T19:57:36.351279+00:00",
+   "verdict": "PASS",
+   "gate_version": 3,
+   "work": "WORK-000032",
+   "request": "2026-11-28-license-is-mit-record-that-req-chat-20261128-181.md",
+   "request_id": "REQ-CHAT-20261128-181",
+   "request_fingerprint": "f0d8bf019127c4a8083415b327e12bce6e57d7c0fa986faee7045e210880b0fa",
+   "request_code_paths": [
+    "tools/release/LICENSE.txt"
+   ],
+   "test_runs": [
+    "20261128T145046-3242849"
+   ],
+   "evidence": [
+    "VER-000032"
+   ],
+   "head": "4a17392db6c23ac2c45b01fd4a28d67251120391",
+   "agent_id": "agent-dev-20261126151713-76f632",
+   "fails": [],
+   "warns": [
+    "349 unowned change(s) in the tree (not this request's; never committed by it)"
+   ],
+   "passes": 14
+  }
+ ]
+}

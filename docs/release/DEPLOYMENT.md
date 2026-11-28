@@ -52,7 +52,8 @@ A missing tool fails its group; the lane never substitutes a weaker check.
 
 1. The `package` lane passed on the exact ZIP, and its checksum is published
    with it.
-2. The owner's licensing decision is recorded (`LICENSING_DECISION.md`).
+2. The owner's licensing decision is recorded (`LICENSING_DECISION.md`; the MIT
+   License, decided 2026-11-28).
 3. The LGPL corresponding sources are published next to the ZIP, one per name
    and version in `THIRD_PARTY_NOTICES.txt`.
 4. `CHANGELOG.md` and `RELEASE_REPORT.md` describe the release.

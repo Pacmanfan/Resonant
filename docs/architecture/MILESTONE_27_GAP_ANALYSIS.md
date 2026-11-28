@@ -93,7 +93,7 @@
 | Linux ZIP, launcher, offline help, licences, clean-container tests | V | REQ-CHAT-20261126-013, ADR-000218 | -010 refreshes it for the new content |
 | AGENTS.md Deployment section, the `package` lane | P | placeholder text; a protected artifact | -002 (human review) |
 | Distribution baseline | L | glibc 2.38+ only; x86-64 | -010 documents it |
-| Resonant's own licence | N | an owner decision | -001 prepares it; the owner decides |
+| Resonant's own licence | N | an owner decision | -001 prepared it; decided 2026-11-28: the MIT License (REQ-CHAT-20261128-181) |
 | LGPL source publication | L | the notice points to Ubuntu's archive; publishing the sources next to a release is open | -010 |
 
 ## 9. Demonstration automation and video production
