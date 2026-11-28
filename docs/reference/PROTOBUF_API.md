@@ -20,6 +20,7 @@ carries a `resonant.v1.Error` (see [errors](#errors)).
 - [GeometryService](#geometryservice) (4 methods)
 - [JobService](#jobservice) (4 methods)
 - [MaterialService](#materialservice) (6 methods)
+- [MultiphysicsService](#multiphysicsservice) (8 methods)
 - [OptimizationService](#optimizationservice) (3 methods)
 - [ProjectService](#projectservice) (8 methods)
 - [ResultsService](#resultsservice) (4 methods)
@@ -112,6 +113,21 @@ Materials with physical properties and their provenance.
 | `GetMaterial` | `GetMaterialRequest` | `GetMaterialResponse` | One material with its properties and their provenance. |
 | `ListMaterials` | `ListMaterialsRequest` | `ListMaterialsResponse` | The project's materials, optionally only those with properties of one physics domain. |
 | `RemoveMaterialAssignment` | `RemoveMaterialAssignmentRequest` | `RemoveMaterialAssignmentResponse` | Clears the material of objects. |
+
+## MultiphysicsService
+
+The Coupled Energy-Matter Engine: physical systems of interacting domains, coupled simulations as jobs, and their energy accounting.
+
+| Method | Request | Response | Description |
+|---|---|---|---|
+| `DeletePhysicalSystem` | `DeletePhysicalSystemRequest` | `DeletePhysicalSystemResponse` | Removes a physical system from the project, as one undo step. |
+| `GetCoupledResult` | `GetCoupledResultRequest` | `GetCoupledResultResponse` | A coupled simulation's result: status, iteration history, energy terms and transfers, the conservation audit, warnings, and optionally the full document. |
+| `GetPhysicalSystem` | `GetPhysicalSystemRequest` | `GetPhysicalSystemResponse` | One stored physical system. |
+| `ListCouplingModels` | `ListCouplingModelsRequest` | `ListCouplingModelsResponse` | The coupling models the engine knows: domains, quantities, mechanism, equations and status (validated, experimental, external, planned). |
+| `ListPhysicalSystems` | `ListPhysicalSystemsRequest` | `ListPhysicalSystemsResponse` | The physical systems stored in the project. |
+| `SetPhysicalSystem` | `SetPhysicalSystemRequest` | `SetPhysicalSystemResponse` | Adds a physical system to the project, or replaces the one with its id, as one undo step. |
+| `StartCoupledSimulation` | `StartCoupledSimulationRequest` | `StartCoupledSimulationResponse` | Starts a coupled simulation of a stored system or a definition as a job; the result id is in the finished job's results. |
+| `ValidatePhysicalSystem` | `ValidatePhysicalSystemRequest` | `ValidatePhysicalSystemResponse` | Checks a stored system or a definition against the project's materials, the coupling models and the available participants; nothing runs. |
 
 ## OptimizationService
 
@@ -424,6 +440,72 @@ A complex value (peak amplitude, phase convention exp(+j omega t)).
 | `real` | `double` |  |
 | `imag` | `double` |  |
 
+### ConservationAudit
+
+The conservation audit of a coupled run.
+
+| Field | Type | Description |
+|---|---|---|
+| `mode` | `string` |  |
+| `external_input` | `double` |  |
+| `boundary_out` | `double` |  |
+| `dissipated` | `double` |  |
+| `stored` | `double` |  |
+| `transfer_error` | `double` |  |
+| `system_residual` | `double` |  |
+| `relative_residual` | `double` |  |
+| `tolerance` | `double` |  |
+| `balanced` | `bool` |  |
+| `attribution` | repeated `string` |  |
+| `participants` | repeated `ParticipantBalance` |  |
+
+### CoupledResult
+
+| Field | Type | Description |
+|---|---|---|
+| `result_id` | `string` |  |
+| `system_id` | `string` |  |
+| `status` | `string` | converged, completed, not-converged, failed, cancelled |
+| `message` | `string` |  |
+| `failed_stage` | `string` |  |
+| `passes` | `int32` |  |
+| `history` | repeated `CouplingIteration` |  |
+| `terms` | repeated `EnergyTerm` |  |
+| `transfers` | repeated `EnergyTransfer` |  |
+| `audit` | `ConservationAudit` |  |
+| `warnings` | repeated `string` |  |
+| `job_id` | `string` |  |
+| `document` | `google.protobuf.Struct` | the full resonant.coupled-result document (fields, participants, provenance) |
+
+### CouplingIteration
+
+| Field | Type | Description |
+|---|---|---|
+| `pass` | `int32` |  |
+| `max_temperature_change_kelvin` | `double` |  |
+| `max_geometry_change` | `double` | relative to the reference dimension |
+| `transferred_energy` | `double` | W or J |
+
+### CouplingModel
+
+A coupling model: which quantity goes from which domain to which, how, and how far it is implemented.
+
+| Field | Type | Description |
+|---|---|---|
+| `model_id` | `string` |  |
+| `name` | `string` |  |
+| `source_domain` | `string` | "electromagnetic", "thermal", "mechanical", "acoustic", "fluid" |
+| `target_domain` | `string` |  |
+| `kind` | `string` | "field-transfer", "state-update", "geometry-update" |
+| `source_quantity` | `string` |  |
+| `target_quantity` | `string` |  |
+| `default_transfer` | `string` | "conservative" or "interpolating" |
+| `mechanism` | `string` |  |
+| `equations` | `string` |  |
+| `status` | `string` | "validated", "experimental", "external", "planned" |
+| `validation` | `string` | the reference tests |
+| `limitations` | `string` |  |
+
 ### CreateArrayRequest
 
 | Field | Type | Description |
@@ -601,6 +683,20 @@ Deletes objects with their children, in one undoable step.
 | `header` | `ResponseHeader` |  |
 | `changes` | `ChangeSummary` |  |
 
+### DeletePhysicalSystemRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `system_id` | `string` |  |
+
+### DeletePhysicalSystemResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `changes` | `ChangeSummary` |  |
+
 ### Diagnostics
 
 | Field | Type | Description |
@@ -656,6 +752,39 @@ Per-element excitation: phases and/or amplitudes by element index.
 | `local_transform` | `Transform` |  |
 | `world_position_meters` | `Vector3Meters` |  |
 | `source` | `SourceSettings` |  |
+
+### EnergyTerm
+
+One term of the energy ledger.
+
+| Field | Type | Description |
+|---|---|---|
+| `participant` | `string` |  |
+| `domain` | `string` |  |
+| `kind` | `string` | input, boundary-out, dissipated, stored, transfer-out, transfer-in, informational |
+| `mechanism` | `string` |  |
+| `value` | `double` | W or J |
+| `description` | `string` |  |
+
+### EnergyTransfer
+
+One exchange between participants.
+
+| Field | Type | Description |
+|---|---|---|
+| `coupling_id` | `string` |  |
+| `model_id` | `string` |  |
+| `source_participant` | `string` |  |
+| `destination_participant` | `string` |  |
+| `mechanism` | `string` |  |
+| `source_quantity` | `string` |  |
+| `target_quantity` | `string` |  |
+| `unit` | `string` |  |
+| `method` | `string` | conservative, interpolating |
+| `source_integral` | `double` |  |
+| `target_integral` | `double` |  |
+| `relative_difference` | `double` |  |
+| `energy` | `bool` | false for intensive quantities (temperature): not in the balance |
 
 ### Error
 
@@ -932,6 +1061,21 @@ Geometry of an object: a kind of the geometry registry with its parameters (SI u
 | `capabilities` | repeated `Capability` |  |
 | `operations` | repeated `OperationCapability` |  |
 
+### GetCoupledResultRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `result_id` | `string` |  |
+| `include_document` | `bool` | also the full document with the fields' values |
+
+### GetCoupledResultResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `result` | `CoupledResult` |  |
+
 ### GetDiagnosticsRequest
 
 | Field | Type | Description |
@@ -1000,6 +1144,20 @@ Geometry of an object: a kind of the geometry registry with its parameters (SI u
 |---|---|---|
 | `header` | `ResponseHeader` |  |
 | `object` | `SceneObject` |  |
+
+### GetPhysicalSystemRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `system_id` | `string` |  |
+
+### GetPhysicalSystemResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `system` | `PhysicalSystem` |  |
 
 ### GetProjectRequest
 
@@ -1095,6 +1253,19 @@ job.updated (state or progress; progress events are throttled)
 | Field | Type | Description |
 |---|---|---|
 | `job` | `Job` |  |
+
+### ListCouplingModelsRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+
+### ListCouplingModelsResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `models` | repeated `CouplingModel` |  |
 
 ### ListEmittersRequest
 
@@ -1210,6 +1381,19 @@ job.updated (state or progress; progress events are throttled)
 |---|---|---|
 | `header` | `ResponseHeader` |  |
 | `runs` | repeated `OptimizationRunSummary` |  |
+
+### ListPhysicalSystemsRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+
+### ListPhysicalSystemsResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `systems` | repeated `PhysicalSystem` |  |
 
 ### ListResultsRequest
 
@@ -1398,6 +1582,32 @@ One RPC of the contract and whether this server implements it.
 |---|---|---|
 | `next_page_token` | `string` | empty on the last page |
 | `total_size` | `int32` |  |
+
+### ParticipantBalance
+
+| Field | Type | Description |
+|---|---|---|
+| `participant` | `string` |  |
+| `domain` | `string` |  |
+| `input` | `double` |  |
+| `transfer_in` | `double` |  |
+| `boundary_out` | `double` |  |
+| `dissipated` | `double` |  |
+| `stored` | `double` |  |
+| `transfer_out` | `double` |  |
+| `residual` | `double` |  |
+| `relative_residual` | `double` |  |
+| `solver_residual` | `double` |  |
+
+### PhysicalSystem
+
+A physical system stored in the project; `definition` is its resonant.physical-system document.
+
+| Field | Type | Description |
+|---|---|---|
+| `system_id` | `string` |  |
+| `name` | `string` |  |
+| `definition` | `google.protobuf.Struct` |  |
 
 ### Project
 
@@ -1680,6 +1890,21 @@ session.opened / closed
 | `array` | `AcousticArray` |  |
 | `changes` | `ChangeSummary` |  |
 
+### SetPhysicalSystemRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `definition` | `google.protobuf.Struct` |  |
+
+### SetPhysicalSystemResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `system` | `PhysicalSystem` |  |
+| `changes` | `ChangeSummary` |  |
+
 ### Solver
 
 | Field | Type | Description |
@@ -1756,6 +1981,21 @@ Starts the field calculation as a job (returns at once with the job; the result 
 | `header` | `ResponseHeader` |  |
 | `job` | `Job` |  |
 | `plan` | `AcousticFieldPlan` |  |
+
+### StartCoupledSimulationRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `system_id` | `string` | a stored system, or |
+| `definition` | `google.protobuf.Struct` | a definition |
+
+### StartCoupledSimulationResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `job` | `Job` |  |
 
 ### StartOptimizationRequest
 
@@ -1906,6 +2146,21 @@ Changes the fields that are set. Refused with CONFLICT when expected_revision is
 | `object_id` | `string` |  |
 
 ### ValidateObjectResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `validation` | `ValidationResult` |  |
+
+### ValidatePhysicalSystemRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `system_id` | `string` | a stored system, or |
+| `definition` | `google.protobuf.Struct` | a definition |
+
+### ValidatePhysicalSystemResponse
 
 | Field | Type | Description |
 |---|---|---|

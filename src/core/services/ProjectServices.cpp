@@ -17,7 +17,7 @@ std::string objectTypeOf(const SceneObject& o)
 
 Services::Services(Session& s)
     : project(s), scene(s), geometry(s), materials(s), emitters(s), arrays(s), simulation(s), jobs(s), results(s), optimization(s), workflows(s),
-      transactions(s), application(s), session_(s)
+      transactions(s), multiphysics(s), application(s), session_(s)
 {
 }
 

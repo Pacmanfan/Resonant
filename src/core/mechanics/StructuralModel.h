@@ -127,4 +127,12 @@ ElementStress elementStress(const StructuralModel& model, const Element& element
 // Whether this kind of model has stresses (a membrane does not: only its pre-tension).
 bool hasStress(ElementKind kind);
 
+// The solid element's strain-displacement matrix (engineering shear strains,
+// order xx, yy, zz, xy, yz, zx) at a natural point of the hexahedron with
+// corner positions x, and the Jacobian determinant there; and the isotropic
+// elasticity matrix in the same order. Used by the thermal loads
+// (mechanics/ThermalLoads).
+Eigen::Matrix<double, 6, 24> solidStrainMatrix(const std::array<Vec3, 8>& x, double xi, double eta, double zeta, double& detJ);
+Eigen::Matrix<double, 6, 6> solidElasticity(const ElasticMaterial& material);
+
 }  // namespace resonant::mechanics

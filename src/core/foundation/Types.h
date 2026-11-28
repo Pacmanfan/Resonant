@@ -18,7 +18,7 @@ using Complex = std::complex<double>;
 
 // A physical wave domain. Each domain has its own material property set and
 // its own solvers; nothing is shared between domains except the scene.
-enum class PhysicsDomain { Acoustic, Mechanical, Electromagnetic };
+enum class PhysicsDomain { Acoustic, Mechanical, Electromagnetic, Thermal };
 
 std::string_view toString(PhysicsDomain domain);
 std::optional<PhysicsDomain> physicsDomainFromString(std::string_view text);

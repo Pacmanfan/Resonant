@@ -359,11 +359,30 @@ milestones below.)
 | Conventions shared by every domain (SI, `e^{+jωt}` peak phasors, provenance) | Tested | checked consistent by the audit |
 | Single-domain energy records (acoustic FDTD, Yee, mechanical transient balance) | Tested | the first entries of the planned ledger |
 | Single-domain resonances (acoustic cavity estimates, modal analysis, EM cavity modes, 1D Bloch band structure) | Tested | no shared resonance description, no Q from losses |
-| One-way structure-to-sound coupling | Tested | the only coupling |
-| Coupled Energy–Matter Engine (participants, exchanged quantities, transfer operators, scheduler, energy ledger) | Missing | planned: roadmap stages 3–5 |
-| Thermal domain; material state (properties of temperature, stress, fields; anisotropic tensors) | Missing | planned: stages 2, 5 |
+| One-way structure-to-sound coupling | Tested | outside the coupled engine (listed there as an external model) |
+| Coupled Energy–Matter Engine, material state of temperature, thermal domain | Tested | see the section below (REQ-CHAT-20261126-016) |
+| Material state of stress or fields; anisotropic tensors; laws in the material library | Missing | planned: stage 2 |
 | Shared resonance description, Q, mode extraction, coupled resonators | Missing | planned: stage 6 |
 | Unit cells, lattices, 2D/3D Bloch analysis, effective properties | Missing | planned: stages 7–8 |
 | Multiscale adapters to external tools | Missing | planned: stage 9 |
 | Nonlinear, viscoelastic, plastic, damaging, phase-changing materials | Missing | planned: stage 10 |
 | Optical resonators and photonics | Missing | theoretical future (the electromagnetic domain is RF) |
+
+## Coupled Energy–Matter Engine — `docs/requirements/coupled_engine.md`, `docs/architecture/COUPLED_ENGINE_ARCHITECTURE.md`
+
+| Capability | State | Notes |
+|---|---|---|
+| Typed physical quantities, field data on cell grids, conservative and interpolating transfer with reports | Tested | `src/core/multiphysics`; mesh-to-mesh mapping and local frames are planned |
+| Material state: region laws (constant, linear, table) of temperature with validity, extrapolation warnings, revisions, history | Tested | laws live in the physical system, not yet in the material library |
+| Geometry state: reference and current layer thicknesses, revisions, stale-solution reporting | Tested | layered systems only |
+| Physical systems in the project (undoable, saved, validated), the coupling-model registry with real maturity | Tested | `layered-slab` systems only; scene-object systems are planned |
+| One-way, sequential and iterative coupling with relaxation; failure, invalid-value and cancellation handling; jobs and provenance | Tested | no multirate time-dependent coupling, no checkpoint resume |
+| Energy ledger: per-participant and system residuals, transfer records, attribution | Tested | momentum and force accounting are planned |
+| Thermal domain: finite-volume conduction, steady and transient (implicit Euler), thermal property set | Tested | `src/core/thermal`; no GUI panel; the example library has no thermal values |
+| Layered-media plane-wave solution (exact, lossy layers, absorbed power) | Tested | normal incidence |
+| Thermal loads and thermal stress in the finite-element model (solids, frames) | Tested | plates and membranes refused |
+| Couplings EM → heat, temperature → EM, expansion, temperature → modulus, deformation → geometry | Tested | validated against analytical or independent references in 1D (`docs/physics/COUPLED_SIMULATION_VALIDATION.md`) |
+| `MultiphysicsService` (8 methods), Python, MCP, capabilities | Tested | `tests/core/test_multiphysics_services.cpp`, `python/tests/test_multiphysics_api.py` |
+| A physical-system panel, ledger and coupling-graph views in the GUI | Missing | planned (`docs/architecture/COUPLED_ENGINE_ROADMAP.md`) |
+| Yee, FDTD, finite-element plates and 3D conduction as participants | Missing | planned |
+| Acoustic ↔ structure, Lorentz, radiation-pressure, magnetic-loss, piezoelectric, acoustic-heating and fluid couplings | Missing | registered as planned; validation refuses them |

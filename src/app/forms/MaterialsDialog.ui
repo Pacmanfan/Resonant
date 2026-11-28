@@ -42,6 +42,7 @@
            <item><property name="text"><string>Acoustic</string></property></item>
            <item><property name="text"><string>Mechanical</string></property></item>
            <item><property name="text"><string>Electromagnetic</string></property></item>
+           <item><property name="text"><string>Thermal</string></property></item>
           </widget>
          </item>
          <item><widget class="QCheckBox" name="domainApplies"><property name="text"><string>Material has properties in this domain</string></property></widget></item>

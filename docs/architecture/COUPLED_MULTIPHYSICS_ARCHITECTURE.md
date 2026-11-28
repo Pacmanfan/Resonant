@@ -1,9 +1,13 @@
 # Coupled Multiphysics Architecture
 
-**Status:** planned architecture (ADR-000219, RES-SFE-006, RES-SFE-007,
-RES-SFE-012). The only coupling implemented today is one-way sound radiation
-from a vibrating plate (`src/core/coupling/StructuralRadiation`,
-`docs/mechanics/FLUID_STRUCTURE_COUPLING.md`). The physics of coupling is in
+**Status:** the direction (ADR-000219, RES-SFE-006, RES-SFE-007, RES-SFE-012).
+Its first implementation, for layered systems, is described in
+[the Coupled Energy–Matter Engine architecture](COUPLED_ENGINE_ARCHITECTURE.md)
+(REQ-CHAT-20261126-016, ADR-000220): the building blocks below exist as
+`multiphysics/Quantity`, `FieldData`, `Transfer`, `Orchestrator` (participants,
+scheduler), `Ledger` and `coupling/CouplingModels`; the microwave-heating
+example below runs in one dimension (`examples/multiphysics`). The one-way
+plate radiation (`coupling/StructuralRadiation`) is not yet a participant pair. The physics of coupling is in
 [coupled energy–matter](../physics/COUPLED_ENERGY_MATTER.md); the gaps this
 fills are in [the audit](SHAPE_FUNCTION_ENERGY_AUDIT.md).
 
@@ -27,7 +31,7 @@ what the energy books say.
                 CouplingParticipant   CouplingParticipant   CouplingParticipant
                    (adapter)              (adapter)             (adapter)
                        │                      │                     │
-             electromagnetics/Yee     thermal (planned)     mechanics/FE
+             electromagnetics/Yee     thermal/               mechanics/FE
              acoustics/FDTD ...       its own grid          its own mesh
 ```
 
@@ -72,11 +76,11 @@ checks it.
 ## Example: microwave heating that detunes a cavity
 
 ```text
- Yee (EM, harmonic or transient) ──absorbed power density q(x)──► thermal (planned)
+ Yee (EM, harmonic or transient) ──absorbed power density q(x)──► thermal
       ▲                                                                │
       │ changed geometry / permittivity(T)                  temperature T(x)
       │                                                                ▼
- geometry update ◄──── displacement u(x) ──── mechanics FE (thermal expansion, planned)
+ geometry update ◄──── displacement u(x) ──── mechanics FE (thermal expansion)
 ```
 
 Exchanges: `heat_source_density` [W/m³] (time-averaged, conservative

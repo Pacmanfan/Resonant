@@ -27,6 +27,8 @@ own scope decides what each delivers.
 
 ## Stage 2 — Unified material state and physical quantity conventions
 
+- **Status:** partly current (REQ-CHAT-20261126-016): the quantity registry, region laws with validity, the temperature state and the thermal property set; anisotropic tensors and laws in the material library remain.
+
 - **Goals:** `PhysicalQuantity` registry; `PropertyModel` (constant, table, formula, constitutive) with state variables, validity and the `Computed` / `Homogenized` provenance; a thermal property set.
 - **Work:** `src/core/materials`, `src/core/foundation`; project schema migration; services and contract additions.
 - **Depends on:** stage 1. **Reuses:** material provenance, validity ranges, frequency tables.
@@ -38,6 +40,8 @@ own scope decides what each delivers.
 
 ## Stage 3 — Energy and momentum accounting
 
+- **Status:** energy partly current (REQ-CHAT-20261126-016): the coupled ledger, transfer records and audit; adapters from the FDTD and Yee energy records, intensity and Poynting results, momentum and force remain.
+
 - **Goals:** `EnergyLedger`; the definitions of [the accounting page](../physics/ENERGY_AND_MOMENTUM_ACCOUNTING.md) per domain; radiation force and Maxwell stress where force is a function.
 - **Work:** ledger type in the core; adapters from the existing FDTD, Yee and mechanical transient energy records; time-averaged intensity and Poynting results; display.
 - **Depends on:** stage 2 (quantities). **Reuses:** the three energy records.
@@ -48,6 +52,8 @@ own scope decides what each delivers.
 
 ## Stage 4 — Coupled solver interfaces
 
+- **Status:** current for layered systems (REQ-CHAT-20261126-016): participants, field data, transfers, the scheduler and coupled results; StructuralRadiation as a participant pair remains.
+
 - **Goals:** `CouplingParticipant`, `FieldData` on `Support`, `TransferOperator`, `CouplingGraph`, `CouplingScheduler`, `CoupledResult` ([architecture](COUPLED_MULTIPHYSICS_ARCHITECTURE.md)).
 - **Work:** `src/core/coupling`; wrap `StructuralRadiation` as the first participant pair; jobs and services for coupled runs.
 - **Depends on:** stages 2–3. **Reuses:** solver setups, jobs, compute backends, provenance.
@@ -57,6 +63,8 @@ own scope decides what each delivers.
 - **Queued:** REQ-CHAT-20261126-016 (Prompt 18, Coupled Energy–Matter Engine).
 
 ## Stage 5 — One-way and two-way multiphysics coupling
+
+- **Status:** partly current (REQ-CHAT-20261126-016): the thermal domain, EM loss → heat (one- and two-way), expansion and stress, geometry feedback, all validated in 1D; fluid loading and 3D systems remain.
 
 - **Goals:** a thermal domain (conduction, sources, boundary conditions); electromagnetic loss → heat; heat → expansion and thermal stress; two-way iteration with convergence control; fluid loading of structures (two-way vibro-acoustics).
 - **Work:** `src/core/thermal` (new domain, its own module and solver), participants, scheduler modes.

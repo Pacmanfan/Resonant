@@ -173,7 +173,7 @@ TEST(ProjectFormat, InvalidDocumentsAreRejectedWithTheReason)
     rejects([](json& d) { d["materials"][0]["domains"]["acoustic"]["density"]["value"] = -3.0; }, "Density");
     rejects([](json& d) { d["materials"][0]["domains"]["acoustic"]["density"]["provenance"] = "guess"; },
             "unknown provenance");
-    rejects([](json& d) { d["materials"][0]["domains"]["thermal"] = json::object(); }, "unknown physics domain");
+    rejects([](json& d) { d["materials"][0]["domains"]["optical"] = json::object(); }, "unknown physics domain");  // thermal is a domain since REQ-CHAT-20261126-016
     rejects([](json& d) { d["materials"][1]["id"] = d["materials"][0]["id"]; }, "already exists");
 }
 

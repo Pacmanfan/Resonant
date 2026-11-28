@@ -118,14 +118,17 @@ PhysicsDomain MaterialsDialog::domain() const
     switch (ui_->domainCombo->currentIndex()) {
     case 1: return PhysicsDomain::Mechanical;
     case 2: return PhysicsDomain::Electromagnetic;
+    case 3: return PhysicsDomain::Thermal;
     default: return PhysicsDomain::Acoustic;
     }
 }
 
 void MaterialsDialog::setCurrentDomain(PhysicsDomain newDomain)
 {
-    ui_->domainCombo->setCurrentIndex(newDomain == PhysicsDomain::Mechanical ? 1
-                                      : newDomain == PhysicsDomain::Electromagnetic ? 2 : 0);
+    ui_->domainCombo->setCurrentIndex(newDomain == PhysicsDomain::Mechanical        ? 1
+                                      : newDomain == PhysicsDomain::Electromagnetic ? 2
+                                      : newDomain == PhysicsDomain::Thermal         ? 3
+                                                                                    : 0);
 }
 
 Id MaterialsDialog::currentMaterialId() const

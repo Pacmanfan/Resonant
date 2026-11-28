@@ -90,3 +90,4 @@ problem with the real physics.
 | `optimization/f-sidelobe-reduction.resonant` | a symmetric taper (derived variables) of a 10-element array: directivity against sidelobes, Pareto | array factor; compare with Dolph-Chebyshev |
 | `optimization/g-robust-design.resonant` | a taper for the worst directivity toward 30 degrees over 0.9 - 1.1 GHz, against the 1 GHz optimum | the band is a stated requirement, sampled at eight common frequencies |
 | `optimization/read_run.py` | reads an exported run record (standard library; `--plot` with NumPy and matplotlib) | |
+| `multiphysics/a-microwave-heated-slab.resonant` | a physical system: a lossy slab heated by a 2.45 GHz plane wave, its loss rising with temperature, its expansion feeding back into the wave solution, iterated with an energy ledger (`multiphysics/README.md`) | layered 1D models of the Coupled Energy–Matter Engine; illustrative material values; run through the automation API (no panel yet) |

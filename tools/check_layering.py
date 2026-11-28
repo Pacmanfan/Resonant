@@ -19,7 +19,10 @@ the instrument rules of ADR-000213:
     src/core/experiments  includes no physics domain: physical interpretation of
                       measurements belongs to the domains, which may use experiments
 
-the optimization rules of ADR-000214:
+the optimization rules of ADR-000214 (and the engine rule of ADR-000220:
+src/core/multiphysics, the Coupled Energy-Matter Engine, includes no physics
+domain - thermal included - and no coupling; the thermal domain is a domain
+like the others):
 
     src/core/optimization includes no physics domain (no acoustics, manipulators,
                       fdtd, solvers, mechanics, electromagnetics, coupling,
@@ -110,19 +113,22 @@ def violations():
                 found.append(f"{path.relative_to(ROOT)}:{number}: the experiment framework must not include <{match.group(1)}> "
                              f"(a physics domain); put the physical interpretation in the domain")
     # The optimization framework and the workflow engine are domain independent.
-    for path in sorted(sum((list((ROOT / "src" / "core" / d).glob("*")) for d in ("optimization", "automation", "help", "demo", "plugins")), [])):
+    # So is the Coupled Energy-Matter Engine (ADR-000220): src/core/multiphysics orchestrates;
+    # the participants that adapt the domains live in src/core/coupling.
+    for path in sorted(sum((list((ROOT / "src" / "core" / d).glob("*")) for d in ("optimization", "automation", "help", "demo", "plugins",
+                                                                                "multiphysics")), [])):
         if path.suffix not in (".h", ".cpp"):
             continue
         for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
             match = INCLUDE.match(line)
             if match and match.group(1).split("/", 1)[0] in ("acoustics", "manipulators", "fdtd", "solvers", "mechanics",
-                                                             "electromagnetics", "coupling", "acoustic_optimization"):
+                                                             "electromagnetics", "thermal", "coupling", "acoustic_optimization"):
                 found.append(f"{path.relative_to(ROOT)}:{number}: {path.parent.name} must not include <{match.group(1)}> "
                              f"(a physics domain); put the physics in the domain's adapter or action")
     # Domains do not include each other.
     domains = {"acoustics": "acoustic", "manipulators": "acoustic", "fdtd": "acoustic", "solvers": "acoustic",
                "acoustic_optimization": "acoustic",
-               "mechanics": "mechanical", "electromagnetics": "electromagnetic"}
+               "mechanics": "mechanical", "electromagnetics": "electromagnetic", "thermal": "thermal"}
     for path in sorted((ROOT / "src" / "core").rglob("*")):
         if path.suffix not in (".h", ".cpp"):
             continue

@@ -10,6 +10,7 @@
 #include "acoustics/FieldGrid.h"
 #include "foundation/Transform.h"
 #include "materials/Material.h"
+#include "multiphysics/PhysicalSystem.h"
 #include "services/Session.h"
 
 #include <nlohmann/json.hpp>
@@ -319,6 +320,30 @@ private:
     Session& s_;
 };
 
+// The Coupled Energy-Matter Engine (REQ-CHAT-20261126-016, RES-CEME-015):
+// physical systems stored in the project (extension "multiphysics"), their
+// validation, coupled simulations as jobs, and their result documents.
+class MultiphysicsService {
+public:
+    explicit MultiphysicsService(Session& s) : s_(s) {}
+    Outcome<std::vector<multiphysics::CouplingModelDescriptor>> couplingModels(const CallContext& c);
+    Outcome<std::vector<nlohmann::json>> systems(const CallContext& c);
+    Outcome<nlohmann::json> system(const CallContext& c, const std::string& id);
+    // Adds the system, or replaces the one with its id; one undoable step.
+    Outcome<Mutation> setSystem(const CallContext& c, const nlohmann::json& document);
+    Outcome<Mutation> deleteSystem(const CallContext& c, const std::string& id);
+    // A stored system (id) or a document (inline), against the project's materials.
+    Outcome<ValidationView> validate(const CallContext& c, const std::string& id, const nlohmann::json& document);
+    Outcome<JobView> start(const CallContext& c, const std::string& id, const nlohmann::json& document);
+    Outcome<std::shared_ptr<const nlohmann::json>> result(const CallContext& c, const std::string& resultId);
+
+    static constexpr const char* kExtension = "multiphysics";
+
+private:
+    Outcome<multiphysics::PhysicalSystem> resolve(const std::string& id, const nlohmann::json& document);
+    Session& s_;
+};
+
 // Batches and transactions: operations run on a staging copy of the project
 // (with the same revisions), and are committed as one undoable step.
 class TransactionService {
@@ -398,6 +423,7 @@ public:
     OptimizationService optimization;
     WorkflowService workflows;
     TransactionService transactions;
+    MultiphysicsService multiphysics;
     ApplicationService application;
 
 private:

@@ -1,3 +1,4 @@
+#include "coupling/CouplingModels.h"
 #include "foundation/Types.h"
 #include "geometry/Geometry.h"
 #include "optimization/Algorithms.h"
@@ -42,9 +43,20 @@ Outcome<std::vector<CapabilityView>> ApplicationService::capabilities(const Call
     for (const GeometryKind* k : GeometryRegistry::instance().kinds())
         add({"geometry." + k->id, k->displayName, "geometry kind (" + k->category + ")", "geometry", "stable", true, {}, {"3D"}, {}, ""});
     // Material models (the physics domains materials carry properties for).
-    for (PhysicsDomain d : {PhysicsDomain::Acoustic, PhysicsDomain::Mechanical, PhysicsDomain::Electromagnetic})
+    for (PhysicsDomain d : {PhysicsDomain::Acoustic, PhysicsDomain::Mechanical, PhysicsDomain::Electromagnetic, PhysicsDomain::Thermal})
         add({"material-model." + std::string(toString(d)), std::string(toString(d)) + " material properties", "isotropic properties with provenance",
              "material-model", "stable", true, {}, {}, {}, std::string(toString(d))});
+    // The Coupled Energy-Matter Engine: its participant solvers and coupling models, as implemented.
+    add({"multiphysics.engine", "Coupled Energy-Matter Engine", "one-way, sequential and iterative coupling of steady solutions with an energy ledger",
+         "multiphysics", "experimental", true, {}, {"1D"}, {"layered-slab systems only", "steady and quasi-static coupling; no multirate time-dependent coupling"}, ""});
+    for (const auto& [domain, solver] : coupling::participantSolvers())
+        add({"multiphysics.participant." + solver, solver, "a participant of coupled simulations", "multiphysics", "experimental", true, {}, {"1D"}, {},
+             domain});
+    for (const auto& m : coupling::couplingModels()) {
+        const std::string maturity = m.status == "validated" ? "stable" : m.status == "experimental" ? "experimental" : m.status == "planned" ? "planned" : "unavailable";
+        add({"coupling." + m.id, m.name, m.mechanism, "coupling", maturity, m.status == "validated" || m.status == "experimental", {}, {},
+             m.limitations.empty() ? std::vector<std::string>{} : std::vector<std::string>{m.limitations}, m.sourceDomain + " -> " + m.targetDomain});
+    }
     // Optimization algorithms.
     for (const optimization::Algorithm* algorithm : optimization::algorithms()) {
         const auto info = algorithm->info();

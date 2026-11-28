@@ -1,8 +1,52 @@
 # Energy and Momentum Accounting
 
 **Status:** the definitions and the rule are normative (RES-SFE-007,
-ADR-000219); single-domain energy records exist (below); the coupled
-ledger is planned ([architecture](../architecture/COUPLED_MULTIPHYSICS_ARCHITECTURE.md)).
+ADR-000219). The coupled ledger and conservation audit are implemented
+(REQ-CHAT-20261126-016, RES-CEME-009, ADR-000220: `src/core/multiphysics/Ledger`);
+momentum and force accounting are planned.
+
+## The coupled ledger (implemented)
+
+Each participant reports its external terms (input, boundary losses,
+dissipation, storage); the engine adds one transfer record per exchange (source
+and destination, mechanism, quantities, unit, operator, source and target
+integrals, approximation) and the matching transfer-out and transfer-in
+terms, so energy that moves between domains is counted once. The audit gives,
+per participant and for the system, the residual
+
+```text
+participant:  input + transfer-in − boundary-out − dissipated − stored − transfer-out
+system:       external input + (Σ target − Σ source over energy transfers) − boundary-out − dissipated − stored
+```
+
+and attributes what it knows: the transfer (mapping) error, the coupling error
+(the change of the transferred power over the last iteration), and each
+solver's own balance residual. Steady runs are accounted in watts; a run with
+a transient participant in joules over its interval (steady participants'
+powers multiplied by the interval). Informational terms (the elastic strain
+energy of quasi-static linear thermoelasticity, which draws on no modeled
+power) are reported and not summed. A wave participant whose absorbed power is
+not passed on reports it as dissipated; when it heats another domain, it is a
+transfer instead. `GetCoupledResult` returns the terms, transfers and audit.
+
+```text
+energy transfer and conservation accounting (the microwave-heated slab, steady, watts)
+
+  external input            em participant                 transfer record                heat participant          boundary out
+  I · A (incident) ──► [ reflected, transmitted: boundary-out ]                                                    
+                       [ absorbed P_abs ] ── transfer-out ──► conservative, per reference ──► transfer-in ──► [ conduction ] ── faces: h (T − T∞) A
+                                                              volume: source ∫ = target ∫                       stored: 0 (steady)
+  audit:  em:   I·A − R − T − P_abs = solver residual (exact solution: rounding)
+          heat: P_abs,in − Σ face losses = conduction balance residual
+          system: I·A − R − T − Σ face losses + (target ∫ − source ∫)  →  relative residual vs. the tolerance (1e-6)
+          attributed: transfer error, last-iteration coupling change, each solver's residual
+```
+
+Discrepancy sources the request names, and how they appear: physical
+dissipation (dissipated terms), external work and boundary transfer (input
+and boundary-out terms), solver error (solver residuals), interpolation error
+(transfer records), coupling error (the last iteration's change), incomplete
+accounting (a residual left after these).
 
 ## The rule
 
@@ -26,7 +70,7 @@ and the ledger shows that it did.
 | Acoustics (linear, fluid at rest) | w = p²/(2ρc²) + ½ ρ|v|² | I = p v | ⟨w⟩ = |P|²/(4ρc²) + ρ|V|²/4, ⟨I⟩ = ½ Re{P V*} |
 | Electromagnetics (linear, non-dispersive) | w = ½ ε|E|² + ½ μ|H|² | S = E × H | ⟨w⟩ = ¼ ε|E|² + ¼ μ|H|², ⟨S⟩ = ½ Re{E × H*} |
 | Elastic solids | w = ½ ρ|u̇|² + ½ σ:ε | −σ·u̇ | ⟨w⟩ = ¼ ρω²|U|² + ¼ Re{σ:ε*} |
-| Heat (planned) | ρ c_p T (relative to a reference) | −k ∇T | — |
+| Heat (`thermal/HeatConduction`) | ρ c_p T (relative to a reference) | −k ∇T | — |
 
 Dissipation: acoustic attenuation and viscous losses; ½ σ|E|² and
 ½ ωε₀ε″|E|² in electromagnetics; damping forces (Rayleigh damping in the

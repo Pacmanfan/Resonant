@@ -1,0 +1,417 @@
+{
+  "request_id": "REQ-CHAT-20261126-016",
+  "source": "chat",
+  "type": "FEATURE",
+  "priority": "NORMAL",
+  "created": "2026-11-26T23:27:02-05:00",
+  "created_utc": "2026-11-27T04:27:02+00:00",
+  "id_date": "2026-11-26",
+  "timezone": "EST (UTC-05:00)",
+  "status": "completed",
+  "original_text": "# PROMPT 18 \u2014 RESONANT Coupled Energy\u2013Matter Engine\n## Unified Multiphysics Architecture, Cross-Domain Energy Transfer, Dynamic Material State, Conservation Laws, and Solver Coupling\n\nYou are working on **RESONANT \u2014 Wave Field Engineering Studio**.\n\nThis is a major architectural milestone.\n\nThe objective is to design and integrate the foundational architecture for the **Coupled Energy\u2013Matter Engine (CEME)**.\n\nRESONANT is evolving beyond independent wave and field simulators into a scientific engineering platform for understanding and designing the interactions between geometry, matter, energy, momentum, forces, and physical transformation.\n\nThe Coupled Energy\u2013Matter Engine must become the architectural foundation that allows independently implemented physics domains to interact within a unified simulation.\n\nThis is not an instruction to replace existing physics solvers with one universal solver.\n\nIt is an instruction to create a scientifically rigorous framework through which specialized solvers can exchange information, interact, and evolve a shared physical system.\n\nThe central engineering principle is:\n\n**Energy interacts with matter through geometry, material properties, boundaries, and physical fields. Those interactions change the state of matter, which can in turn change subsequent energy propagation and transfer.**\n\nThe engine must eventually support this entire feedback process.\n\n---\n\n# 1. Begin with a comprehensive architecture audit\n\nBefore implementation, inspect the existing RESONANT repository and documentation.\n\nReview:\n\n- Foundational application architecture.\n- Scene and geometry architecture.\n- Material system.\n- Acoustic physics engine.\n- Mechanical physics engine.\n- Electromagnetic physics engine.\n- Thermal capabilities, if present.\n- Simulation framework.\n- Solver interfaces.\n- Simulation job management.\n- Optimization framework.\n- Python API.\n- Protobuf/gRPC automation framework.\n- Visualization architecture.\n- Project storage.\n- Experiment and measurement architecture.\n- Existing physical quantity and unit conventions.\n\nRead the existing Shape\u2013Function\u2013Energy documentation and the architectural work from Prompt 17 if already completed.\n\nDo not assume documentation perfectly represents the current implementation. Verify the actual source code.\n\nCreate:\n\n`docs/architecture/COUPLED_ENGINE_AUDIT.md`\n\nDocument:\n\n1. Existing physical domains.\n2. Existing solver capabilities.\n3. Existing material abstractions.\n4. Existing geometry and mesh representations.\n5. Existing simulation data structures.\n6. Existing unit conventions.\n7. Existing job and scheduling infrastructure.\n8. Existing optimization integration.\n9. Existing serialization and project storage.\n10. Existing automation interfaces.\n11. Architectural gaps.\n12. Integration risks.\n13. Recommended migration strategy.\n\nDo not duplicate functionality that already exists.\n\n---\n\n# 2. Establish the Coupled Energy\u2013Matter Engine as a central subsystem\n\nCreate a clearly defined application subsystem:\n\n**Coupled Energy\u2013Matter Engine (CEME)**\n\nIts responsibility is to coordinate physical interactions across independent simulation domains.\n\nThe engine must support:\n\n- Multiple simultaneous physical domains.\n- Independent domain-specific solvers.\n- Cross-domain energy transfer.\n- Momentum transfer.\n- Force generation.\n- Material state changes.\n- Geometry changes.\n- Dynamic boundary conditions.\n- Time-dependent coupling.\n- Spatially varying material properties.\n- Energy and momentum accounting.\n- Reproducible coupled simulations.\n\nThe engine must not become a monolithic collection of physical equations.\n\nIts responsibilities should be orchestration, coupling, synchronization, state management, transfer, conservation auditing, and result provenance.\n\nPhysical equations remain implemented by their appropriate domain-specific models.\n\nCreate a modular architecture with clear ownership boundaries.\n\nRecommended conceptual components:\n\n```text\nCoupled Energy\u2013Matter Engine\n\u2502\n\u251c\u2500\u2500 Physical System Model\n\u2502\n\u251c\u2500\u2500 Simulation Domain Registry\n\u2502   \u251c\u2500\u2500 Electromagnetics\n\u2502   \u251c\u2500\u2500 Acoustics\n\u2502   \u251c\u2500\u2500 Mechanics\n\u2502   \u251c\u2500\u2500 Thermodynamics\n\u2502   \u251c\u2500\u2500 Fluid Dynamics\n\u2502   \u2514\u2500\u2500 Future Domains\n\u2502\n\u251c\u2500\u2500 Material State Manager\n\u2502\n\u251c\u2500\u2500 Geometry State Manager\n\u2502\n\u251c\u2500\u2500 Physical Quantity Registry\n\u2502\n\u251c\u2500\u2500 Coupling Manager\n\u2502\n\u251c\u2500\u2500 Energy Transfer Manager\n\u2502\n\u251c\u2500\u2500 Momentum and Force Manager\n\u2502\n\u251c\u2500\u2500 Conservation Auditor\n\u2502\n\u251c\u2500\u2500 Time Coordination Manager\n\u2502\n\u251c\u2500\u2500 Spatial Mapping and Projection\n\u2502\n\u251c\u2500\u2500 Solver Orchestrator\n\u2502\n\u251c\u2500\u2500 Simulation State History\n\u2502\n\u2514\u2500\u2500 Provenance and Validation\n```\n\nThese are conceptual responsibilities, not mandatory classes.\n\nUse the existing architecture where possible.\n\n---\n\n# 3. Define the Physical System Model\n\nIntroduce a physical system representation that describes an engineered object or collection of interacting objects.\n\nA physical system should contain:\n\n- One or more geometries.\n- Material regions.\n- Interfaces and boundaries.\n- Simulation domains.\n- Excitation sources.\n- Environmental conditions.\n- Sensors and observation points.\n- Domain-specific solver configurations.\n- Coupling relationships.\n- Initial conditions.\n- Constraints.\n- Simulation time configuration.\n\nThe system must represent relationships between objects, not just a flat collection of scene entities.\n\nExamples:\n\n- An electromagnetic source interacting with a dielectric cavity.\n- An acoustic transducer coupled to a fluid and surrounding mechanical structure.\n- A mechanical resonator with a temperature-dependent material.\n- An electromagnetic resonator coupled to a thermally expanding structure.\n- A multilayer metamaterial interacting with acoustic and electromagnetic waves.\n- A fluid interacting with an elastic membrane.\n\nThe representation must be serializable into the RESONANT project format.\n\nEvery object must have a stable identity.\n\nPhysical relationships must survive save, load, rename, and project migration.\n\n---\n\n# 4. Establish a unified physical quantity system\n\nThis is a critical foundation.\n\nRESONANT must be able to exchange physical information between domains without confusing units, definitions, or physical meaning.\n\nCreate a typed physical quantity architecture.\n\nPotential categories include:\n\n### Energy-related quantities\n\n- Total energy.\n- Kinetic energy.\n- Potential energy.\n- Internal energy.\n- Thermal energy.\n- Electromagnetic energy.\n- Acoustic energy.\n- Elastic strain energy.\n- Energy density.\n- Energy flux.\n- Power.\n- Power density.\n- Dissipated energy.\n\n### Momentum-related quantities\n\n- Linear momentum.\n- Angular momentum.\n- Momentum density.\n- Momentum flux.\n- Mechanical force.\n- Torque.\n- Pressure.\n- Stress.\n- Radiation pressure where appropriate.\n\n### Field-related quantities\n\n- Electric field.\n- Magnetic field.\n- Electric displacement.\n- Magnetic flux density.\n- Acoustic pressure.\n- Particle velocity.\n- Fluid velocity.\n- Mechanical displacement.\n- Mechanical velocity.\n- Temperature.\n- Charge density.\n- Current density.\n\n### Material-related quantities\n\n- Mass density.\n- Number density.\n- Charge density.\n- Heat capacity.\n- Thermal conductivity.\n- Elastic moduli.\n- Electrical conductivity.\n- Permittivity.\n- Permeability.\n- Acoustic impedance.\n- Damping.\n- Phase.\n- Composition.\n- Damage state.\n\nDo not represent all quantities as generic untyped floating-point arrays.\n\nUse typed metadata that identifies:\n\n- Physical quantity.\n- SI unit.\n- Spatial location.\n- Coordinate frame.\n- Time or frequency domain.\n- Scalar, vector, tensor, or complex representation.\n- Peak, RMS, instantaneous, averaged, or integrated meaning.\n- Reference values where relevant.\n- Validity range.\n- Associated physical domain.\n- Source solver.\n- Material or geometry revision.\n\nAvoid ambiguous field names.\n\nExamples:\n\n- `frequency_hz`\n- `phase_radians`\n- `position_meters`\n- `temperature_kelvin`\n- `pressure_pascal`\n- `energy_density_joules_per_cubic_meter`\n- `power_watts`\n\nUse SI units internally.\n\nConversions should occur at explicit input and presentation boundaries.\n\nA quantity must not be transferred between solvers unless its physical definition and interpretation are compatible.\n\n---\n\n# 5. Dynamic Material State Manager\n\nIntroduce a central material state management system.\n\nA material must no longer be assumed to have one immutable collection of properties.\n\nIts response can depend on the conditions it experiences.\n\nThe state may vary with:\n\n- Position.\n- Time.\n- Temperature.\n- Pressure.\n- Stress.\n- Strain.\n- Frequency.\n- Electric field.\n- Magnetic field.\n- Composition.\n- Phase.\n- Microstructure.\n- Damage.\n- Deformation history.\n\nThe material state manager must distinguish:\n\n1. Intrinsic material definitions.\n2. Initial material state.\n3. Current material state.\n4. Evolving material state.\n5. Effective or homogenized material properties.\n6. Derived properties calculated by constitutive models.\n\nExamples:\n\n- Electrical conductivity changes with temperature.\n- A material expands under heating.\n- Elastic properties change with temperature.\n- Magnetic response changes with field strength.\n- A viscoelastic material responds differently at different frequencies.\n- A phase transition changes density and other constitutive properties.\n- Material damage changes stiffness and wave propagation.\n\nDo not create one universal material model.\n\nCreate a common state and property interface that can host domain-specific constitutive laws.\n\nSupport spatially varying material properties.\n\nSupport material regions and interfaces within one physical object.\n\nDefine how material properties are interpolated and evaluated at solver locations.\n\nEnsure changes to material state can invalidate and update dependent solver data correctly.\n\n---\n\n# 6. Geometry and physical state coupling\n\nGeometry is not necessarily static during a simulation.\n\nThe engine must eventually support geometry changes caused by physical interactions.\n\nExamples:\n\n- Thermal expansion.\n- Mechanical deformation.\n- Fluid-structure interaction.\n- Pressure-induced deformation.\n- Elastic vibration.\n- Plastic deformation.\n- Phase-dependent volume changes.\n- Structural damage.\n\nDefine a geometry state architecture that distinguishes:\n\n- Reference geometry.\n- Current geometry.\n- Deformed geometry.\n- Simulation mesh.\n- Material-region geometry.\n- Boundary geometry.\n\nThe engine must support updating solver geometry when physical state changes.\n\nPlan for:\n\n- Mesh deformation.\n- Remeshing.\n- Moving boundaries.\n- Mesh-to-mesh transfer.\n- Geometry validation.\n- Contact and interface updates.\n- Conservative transfer of relevant fields where possible.\n\nDo not require every solver to use the same mesh.\n\nDo not rebuild geometry unnecessarily when a field update does not require it.\n\nGeometry updates must be versioned so dependent simulation data can detect stale geometry.\n\n---\n\n# 7. Coupling architecture\n\nThis is the central technical challenge.\n\nCreate a flexible coupling framework supporting several strategies.\n\n## A. One-way coupling\n\nOne domain influences another, but feedback is not returned.\n\nExample:\n\nElectromagnetic absorption produces a thermal source term.\n\nThe thermal solver calculates temperature, but the electromagnetic solver does not update its material properties during that run.\n\n## B. Two-way coupling\n\nBoth domains influence each other.\n\nExample:\n\nElectromagnetic heating changes temperature, temperature changes dielectric properties, and those changed properties alter electromagnetic field propagation.\n\n## C. Sequential coupling\n\nSolvers execute in a defined order and exchange results between stages.\n\nExample:\n\n1. Electromagnetic simulation.\n2. Calculate absorbed power.\n3. Thermal simulation.\n4. Update material state.\n5. Mechanical simulation.\n6. Update geometry.\n7. Recalculate electromagnetic response.\n\n## D. Iterative coupling\n\nSolvers exchange information repeatedly until a defined convergence criterion is satisfied.\n\n## E. Fully time-dependent coupling\n\nDomains advance together using compatible time coordination and data exchange.\n\nSupport the ability to use different numerical time steps.\n\nA thermal solver may operate on a much slower timescale than an electromagnetic or acoustic solver.\n\nDo not force all solvers to use the same time step.\n\nDefine interfaces for:\n\n- Coupling inputs.\n- Coupling outputs.\n- Transfer operators.\n- Update frequency.\n- Synchronization.\n- Convergence.\n- Relaxation.\n- Stability monitoring.\n- Failure handling.\n- Cancellation.\n\nThe coupling architecture must be extensible to future physical domains without requiring a redesign of the engine.\n\n---\n\n# 8. Define initial cross-domain coupling models\n\nCreate an architecture and implementation plan for the following interactions.\n\nThese are the initial reference cases for the engine.\n\n## Electromagnetic \u2194 Thermal\n\n- Electromagnetic energy absorption.\n- Joule heating.\n- Dielectric losses.\n- Magnetic losses where applicable.\n- Spatial heat source generation.\n- Temperature-dependent permittivity.\n- Temperature-dependent conductivity.\n- Temperature-dependent permeability where appropriate.\n\n## Thermal \u2194 Mechanical\n\n- Thermal expansion.\n- Thermal stress.\n- Temperature-dependent elasticity.\n- Temperature-dependent damping.\n- Thermomechanical deformation.\n- Thermal boundary conditions.\n\n## Acoustic \u2194 Mechanical\n\n- Acoustic pressure acting on structures.\n- Structural vibration generating acoustic waves.\n- Acoustic-structure coupling.\n- Fluid-structure interaction.\n- Acoustic energy absorption.\n- Boundary impedance.\n\n## Electromagnetic \u2194 Mechanical\n\n- Lorentz forces.\n- Maxwell stress.\n- Electromagnetic pressure.\n- Electromechanical coupling.\n- Magnetostrictive effects where supported.\n- Piezoelectric coupling where supported.\n\n## Acoustic \u2194 Thermal\n\n- Absorption and dissipative heating.\n- Thermoviscous effects.\n- Temperature-dependent acoustic properties.\n- Thermal-acoustic feedback.\n\n## Fluid \u2194 Mechanical\n\n- Fluid pressure and viscous loading.\n- Moving boundaries.\n- Elastic structures interacting with fluid flow.\n- Structural response changing the flow field.\n\nFor each coupling, document:\n\n- Governing equations.\n- Required physical inputs.\n- Produced outputs.\n- Material dependencies.\n- Numerical requirements.\n- Conservation considerations.\n- Appropriate solvers.\n- Validation benchmarks.\n- Known limitations.\n\nDo not claim a coupling is implemented until the underlying equations and transfer mechanism are actually implemented and validated.\n\n---\n\n# 9. Energy and momentum accounting\n\nIntroduce a dedicated conservation auditor.\n\nThis is a foundational scientific requirement.\n\nEvery coupled simulation should be able to account for energy entering, leaving, being stored, converted, and dissipated.\n\nDefine an energy accounting framework that can distinguish:\n\n- External energy input.\n- Energy entering through boundaries.\n- Energy leaving through boundaries.\n- Stored field energy.\n- Kinetic energy.\n- Elastic energy.\n- Internal and thermal energy.\n- Converted energy.\n- Dissipated energy.\n- Numerical energy imbalance.\n\nThe accounting framework must respect the relevant physics.\n\nDo not blindly add quantities that have different definitions or overlapping contributions.\n\nFor example, an electromagnetic field solver may report stored field energy and power flow, while a thermal solver reports internal energy and heat flux. Coupling must not double-count energy transferred between them.\n\nIntroduce explicit energy transfer records.\n\nEach transfer should identify:\n\n- Source domain.\n- Destination domain.\n- Physical mechanism.\n- Quantity and units.\n- Spatial region.\n- Time interval.\n- Transfer amount.\n- Associated solver.\n- Numerical approximation.\n- Uncertainty or known limitation.\n\nEstablish a conservation residual for each applicable conservation law.\n\nWhere appropriate, calculate:\n\n- Energy balance error.\n- Momentum balance error.\n- Mass balance error.\n- Charge conservation error.\n\nDo not assume all physical systems conserve every quantity under arbitrary boundary conditions.\n\nExternal work, open boundaries, sources, sinks, and dissipative mechanisms must be represented explicitly.\n\nThe application must be able to identify whether a discrepancy originates from:\n\n- Physical dissipation.\n- External work.\n- Boundary transfer.\n- Solver error.\n- Interpolation error.\n- Coupling error.\n- Incomplete accounting.\n\nCreate:\n\n`docs/physics/ENERGY_AND_MOMENTUM_ACCOUNTING.md`\n\n---\n\n# 10. Time coordination and numerical stability\n\nCoupled simulation introduces numerical risks.\n\nDesign a time coordination manager.\n\nSupport:\n\n- Independent domain time steps.\n- Common synchronization points.\n- Subcycling.\n- Adaptive time stepping where supported.\n- Event-driven updates.\n- Iterative coupling.\n- Convergence detection.\n- Relaxation.\n- Stability checks.\n- Checkpointing.\n\nDefine how a coupled simulation responds when one solver:\n\n- Fails.\n- Diverges.\n- Cannot converge.\n- Runs out of memory.\n- Produces invalid values.\n- Requires a smaller time step.\n- Is cancelled.\n\nThe engine must not silently accept invalid solver results.\n\nPreserve partial results when safe and meaningful.\n\nEvery simulation must record its time coordination configuration.\n\nDo not impose an unnecessarily sophisticated time integrator on every solver.\n\nChoose methods appropriate to each domain.\n\n---\n\n# 11. Spatial mapping and data transfer\n\nDifferent solvers may use:\n\n- Different meshes.\n- Different coordinate systems.\n- Different element types.\n- Different spatial resolutions.\n- Different field representations.\n- Different time grids.\n\nCreate a spatial mapping and projection architecture.\n\nSupport:\n\n- Mesh-to-mesh mapping.\n- Interpolation.\n- Conservative transfer.\n- Boundary-to-volume mapping.\n- Surface field transfer.\n- Volume source transfer.\n- Coordinate transformations.\n- Unit conversion.\n- Temporal interpolation.\n- Spatial averaging.\n- Region-based aggregation.\n\nDistinguish between interpolation and physically conservative transfer.\n\nWhere conservation is required, provide appropriate transfer methods and tests.\n\nSupport nonmatching meshes.\n\nDo not force all physical domains to share one universal mesh.\n\n---\n\n# 12. Solver orchestration and simulation execution\n\nThe Coupled Energy\u2013Matter Engine must integrate with the existing simulation job framework.\n\nA coupled simulation should be represented as an execution graph.\n\nFor example:\n\n```text\nInitial Material State\n        |\n        v\nElectromagnetic Solver\n        |\n        v\nAbsorbed Power Distribution\n        |\n        v\nThermal Solver\n        |\n        v\nUpdated Temperature\n        |\n        v\nMaterial State Update\n        |\n        v\nMechanical Solver\n        |\n        v\nUpdated Geometry\n        |\n        v\nElectromagnetic Solver\n        |\n        v\nConvergence Evaluation\n        |\n        +------> Repeat if required\n        |\n        v\nFinal Results and Conservation Audit\n```\n\nThe actual execution graph must be constructed from the selected physical models and coupling configuration.\n\nSupport:\n\n- Dependency graphs.\n- Solver execution ordering.\n- Parallel execution where physically valid.\n- Intermediate result storage.\n- Checkpoints.\n- Cancellation.\n- Progress reporting.\n- Resource estimates.\n- Failure propagation.\n- Reproducibility.\n\nLong-running coupled simulations must execute asynchronously.\n\nDo not hold GUI or gRPC requests open for the duration of long simulations.\n\nUse the existing unified job system.\n\nExpose coupled simulation operations through the existing automation services and Protobuf contracts.\n\nDo not create a separate automation interface.\n\n---\n\n# 13. Physical system configuration and user workflow\n\nDesign a future user experience for configuring coupled simulations.\n\nThe user should be able to:\n\n1. Create or open a physical system.\n2. Add or import geometry.\n3. Assign materials.\n4. Select physical domains.\n5. Add excitation sources.\n6. Select relevant solvers.\n7. Define domain coupling.\n8. Configure simulation conditions.\n9. Inspect resource estimates.\n10. Validate the model.\n11. Run the simulation.\n12. Inspect individual domain results.\n13. Inspect cross-domain interactions.\n14. Inspect energy and momentum accounting.\n15. Compare results with uncoupled simulations.\n\nThe interface should make coupling relationships visible.\n\nPlan a graphical representation of the simulation dependency graph.\n\nThe user should be able to inspect which domains exchange information and why.\n\nDo not implement a generic visual programming environment as a substitute for the physical system model.\n\nThe graph must represent actual solver and physical dependencies.\n\n---\n\n# 14. Visualization of coupled physical behavior\n\nThe existing 3D viewport must support synchronized inspection of multiple physical quantities.\n\nPlan for:\n\n- Electromagnetic field overlays.\n- Acoustic pressure overlays.\n- Mechanical deformation.\n- Stress and strain.\n- Temperature distributions.\n- Energy density.\n- Energy flux.\n- Momentum-related quantities where defined.\n- Material phase.\n- Changing material properties.\n- Moving boundaries.\n- Time-dependent geometry.\n- Energy transfer paths.\n\nThe user should be able to select a point or region and inspect its physical state across domains.\n\nFor example:\n\nAt one location, display:\n\n- Electromagnetic field strength.\n- Absorbed power density.\n- Temperature.\n- Mechanical stress.\n- Displacement.\n- Local material properties.\n\nAll values must correspond to the same simulation time or clearly indicate their time offsets.\n\nVisualization must remain separate from numerical computation.\n\nChanging the visualization must not force a new simulation.\n\n---\n\n# 15. Result provenance and reproducibility\n\nA coupled simulation has many interacting dependencies.\n\nRecord:\n\n- Project version.\n- Geometry revision.\n- Material definitions.\n- Material state.\n- Domain configurations.\n- Solver names and versions.\n- Solver numerical settings.\n- Mesh versions.\n- Coupling definitions.\n- Transfer operators.\n- Time coordination.\n- Boundary conditions.\n- Initial conditions.\n- External sources.\n- Convergence settings.\n- Conservation audit results.\n- Software build identifier.\n- Relevant dependencies.\n\nThe result must be reproducible to the extent permitted by the numerical methods and execution environment.\n\nSupport saving intermediate states and resuming where technically safe.\n\nDo not allow results to appear valid after their geometry, material state, or solver dependencies have changed without clearly identifying them as stale.\n\n---\n\n# 16. Scientific validation\n\nCreate a dedicated validation plan.\n\nBegin with simple analytical and established benchmark cases.\n\nRequired reference cases include:\n\n### Electromagnetic to thermal\n\nA simple dielectric or conductive object receiving electromagnetic energy.\n\nVerify absorbed power, heating distribution, and total energy accounting against an appropriate analytical or independently validated reference.\n\n### Thermal to mechanical\n\nA homogeneous object undergoing uniform thermal expansion.\n\nVerify deformation and thermal stress under clearly defined boundary conditions.\n\n### Acoustic to mechanical\n\nA simple elastic structure subjected to acoustic pressure.\n\nCompare the response with an appropriate analytical or established reference solution.\n\n### Mechanical to acoustic\n\nA vibrating surface radiating sound.\n\nCompare predicted acoustic output with a known analytical case.\n\n### Coupled iterative feedback\n\nA simplified temperature-dependent material whose electromagnetic response changes as it heats.\n\nVerify convergence and demonstrate that the feedback is physically consistent.\n\nFor every test:\n\n- Define assumptions.\n- Define governing equations.\n- Define expected behavior.\n- Define numerical tolerances.\n- Compare against reference results.\n- Record error.\n- Explain deviations.\n\nDo not validate a coupled engine merely by checking that its components execute.\n\nValidate the physical result.\n\n---\n\n# 17. Testing architecture\n\nCreate tests for:\n\n- Physical quantity typing.\n- Unit consistency.\n- Coordinate transformations.\n- Material state updates.\n- Geometry state versioning.\n- Solver registration.\n- Coupling registration.\n- One-way coupling.\n- Two-way coupling.\n- Sequential execution.\n- Iterative convergence.\n- Time synchronization.\n- Spatial transfer.\n- Conservative mapping.\n- Energy accounting.\n- Momentum accounting.\n- Failure propagation.\n- Cancellation.\n- Checkpointing.\n- Project serialization.\n- Automation API.\n- Result provenance.\n\nInclude regression tests for existing independent acoustic, mechanical, and electromagnetic simulations.\n\nA new coupling architecture must not break existing standalone simulations.\n\nUse synthetic and analytical test cases where appropriate.\n\n---\n\n# 18. Automation and extensibility\n\nThe engine must integrate with the existing RESONANT automation architecture.\n\nExpose meaningful operations through the existing Protobuf/gRPC contracts.\n\nExamples:\n\n- Create physical system.\n- Add simulation domain.\n- Assign material.\n- Configure coupling.\n- Inspect coupling graph.\n- Validate physical system.\n- Estimate simulation resources.\n- Start coupled simulation.\n- Query simulation state.\n- Inspect transfer records.\n- Inspect conservation results.\n- Cancel simulation.\n- Retrieve results.\n- Save simulation configuration.\n\nFollow the existing contract versioning, capability discovery, job management, events, and error-handling conventions.\n\nThe engine must also be accessible through the existing Python API.\n\nDo not create parallel business logic for GUI, Python, or remote automation.\n\nAll clients must use the same application services.\n\n---\n\n# 19. Implementation strategy\n\nDo not attempt to implement every multiphysics interaction at once.\n\nUse this phased strategy.\n\n## Phase A \u2014 Architecture and interfaces\n\n- Audit existing systems.\n- Define engine responsibilities.\n- Define physical quantity types.\n- Define material state interfaces.\n- Define coupling contracts.\n- Define geometry state interfaces.\n- Define conservation interfaces.\n- Document the architecture.\n\n## Phase B \u2014 Core engine infrastructure\n\nImplement:\n\n- Physical system representation.\n- Domain registry.\n- Coupling registry.\n- Material state management.\n- Geometry state versioning.\n- Solver orchestration.\n- Result provenance.\n\n## Phase C \u2014 Energy and momentum accounting\n\nImplement:\n\n- Transfer records.\n- Energy ledgers.\n- Conservation residuals.\n- Accounting visualization and reporting.\n- Analytical tests.\n\n## Phase D \u2014 First working coupling\n\nImplement one complete, validated coupling path:\n\nElectromagnetic \u2192 Thermal.\n\nStart with a deliberately simple physical case.\n\nDemonstrate that absorbed energy produces a thermal source and that the resulting temperature distribution is physically reasonable.\n\n## Phase E \u2014 Two-way coupling\n\nExtend the first example to include temperature-dependent electromagnetic material properties.\n\nDemonstrate iterative feedback and convergence.\n\n## Phase F \u2014 Thermomechanical coupling\n\nConnect thermal state to mechanical response.\n\nDemonstrate thermal expansion and stress.\n\n## Phase G \u2014 Additional domain interactions\n\nIntroduce acoustic-mechanical, electromagnetic-mechanical, and other validated couplings.\n\n## Phase H \u2014 User workflow and automation\n\nExpose coupled simulation configuration and execution through the GUI, Python, and automation services.\n\n## Phase I \u2014 Advanced coupling\n\nIntroduce nonmatching meshes, multirate simulation, moving geometry, nonlinear coupling, and additional domains as justified.\n\n---\n\n# 20. Documentation deliverables\n\nCreate or update:\n\n1. `docs/architecture/COUPLED_ENGINE_ARCHITECTURE.md`\n2. `docs/architecture/PHYSICAL_SYSTEM_MODEL.md`\n3. `docs/physics/PHYSICAL_QUANTITY_SYSTEM.md`\n4. `docs/materials/MATERIAL_STATE_ARCHITECTURE.md`\n5. `docs/physics/COUPLING_ARCHITECTURE.md`\n6. `docs/physics/ENERGY_AND_MOMENTUM_ACCOUNTING.md`\n7. `docs/physics/SPATIAL_AND_TEMPORAL_TRANSFER.md`\n8. `docs/physics/COUPLED_SIMULATION_EXECUTION.md`\n9. `docs/physics/COUPLED_SIMULATION_VALIDATION.md`\n10. `docs/roadmap/COUPLED_ENGINE_ROADMAP.md`\n\nFollow existing documentation conventions if the repository has already established equivalent locations.\n\nUpdate the primary architecture and project vision to reference the Coupled Energy\u2013Matter Engine.\n\nProvide diagrams for:\n\n- Engine architecture.\n- Domain coupling.\n- Material state evolution.\n- Energy transfer.\n- Geometry feedback.\n- Solver execution.\n- Conservation accounting.\n\nDistinguish implemented, planned, experimental, and future functionality.\n\n---\n\n# 21. Engineering constraints\n\n- C++20.\n- Existing Qt 6 application architecture.\n- Existing CMake build system.\n- Existing simulation job infrastructure.\n- Existing Protobuf/gRPC automation architecture.\n- Existing Python API.\n- Existing project serialization.\n- SI units internally.\n- Domain-specific physics and numerical formulations.\n- Physics independent of rendering.\n- Modular solver interfaces.\n- Optional dependencies where appropriate.\n- Reproducible simulation provenance.\n- Scientific validation required.\n\nDo not:\n\n- Replace every solver with a universal solver.\n- Force all domains to use one mesh.\n- Force all domains to use one time step.\n- Treat all physical quantities as interchangeable floating-point arrays.\n- Double-count energy during transfer.\n- Assume all materials are linear or static.\n- Assume all geometry is fixed.\n- Claim conservation without calculating and checking it.\n- Implement arbitrary physical behavior to make a demonstration look convincing.\n- Introduce a separate automation or project system.\n- Rewrite stable existing components without evidence that they must change.\n\n---\n\n# 22. Final acceptance criteria\n\n| ID | Acceptance criterion |\n|---|---|\n| CEME-001 | Existing architecture has been audited |\n| CEME-002 | Central Coupled Energy\u2013Matter Engine architecture is documented |\n| CEME-003 | Physical system representation is defined |\n| CEME-004 | Typed physical quantity architecture is defined |\n| CEME-005 | Material state architecture is defined |\n| CEME-006 | Geometry state architecture is defined |\n| CEME-007 | Domain registration and coupling contracts are defined |\n| CEME-008 | One-way coupling is supported |\n| CEME-009 | Two-way coupling architecture is supported |\n| CEME-010 | Sequential and iterative coupling are supported |\n| CEME-011 | Independent domain time steps are addressed |\n| CEME-012 | Spatial mapping architecture is defined |\n| CEME-013 | Energy transfer accounting is implemented or explicitly staged |\n| CEME-014 | Conservation auditing is implemented or explicitly staged |\n| CEME-015 | Solver orchestration integrates with existing job infrastructure |\n| CEME-016 | Project serialization and provenance are addressed |\n| CEME-017 | Existing standalone solvers remain functional |\n| CEME-018 | First validated electromagnetic-to-thermal coupling is implemented |\n| CEME-019 | Temperature-dependent feedback is implemented and validated |\n| CEME-020 | Automation and Python integration are addressed |\n| CEME-021 | Required documentation is complete |\n| CEME-022 | Analytical and regression tests pass |\n\nMark each criterion PASS, FAIL, BLOCKED, or NOT APPLICABLE.\n\nDo not mark architectural designs as implemented functionality.\n\nDo not claim physical coupling is working until the actual equations, data exchange, and validation tests exist.\n\n---\n\n# 23. Final report\n\nProvide:\n\n1. Architecture audit findings.\n2. New engine architecture.\n3. New interfaces and data models.\n4. Existing components reused.\n5. Components modified.\n6. Components added.\n7. Couplings actually implemented.\n8. Couplings only designed or planned.\n9. Energy and momentum accounting results.\n10. Scientific validation results.\n11. Test results.\n12. Performance and resource implications.\n13. Known limitations.\n14. Recommended next development milestone.\n\nThe ultimate objective is to give RESONANT a common scientific engine through which geometry, materials, energy fields, momentum, forces, and evolving physical states can interact.\n\n**RESONANT must ultimately be able to model not only what happens when energy encounters matter, but how that interaction changes matter\u2014and how the changed matter subsequently transforms the energy acting upon it.**",
+  "file": "requests/inbox/2026-11-26-prompt-18-resonant-coupled-ene-req-chat-20261126-016.md",
+  "attachments": [],
+  "context": "User: 'add this as a ticket. process it in order' (queued after REQ-CHAT-20261126-015)",
+  "text_sha256": "3e5cdf10a192e9a4add2708fade574fd8bf69542910c29d52888ddebfc696690",
+  "classification": {
+    "proposed_type": null,
+    "proposed_source": "heuristic",
+    "normalized_type": null,
+    "heuristic_type": "FEATURE",
+    "final_type": "FEATURE",
+    "confidence": "low",
+    "validation": "PASS",
+    "classifier_reason": "no framing in the request statement; body suggests feature: Add, Create, Design, Evolving",
+    "correction_reason": null,
+    "normalization_note": null,
+    "evidence": [
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "milestone",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This is a major architectural milestone."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "objective",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The objective is to design and integrate the foundational architecture for the **Coupled Energy\u2013Matter Engine (CEME)**."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "integrate",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The objective is to design and integrate the foundational architecture for the **Coupled Energy\u2013Matter Engine (CEME)**."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "evolving",
+        "strength": "strong",
+        "note": "",
+        "sentence": "RESONANT is evolving beyond independent wave and field simulators into a scientific engineering platform for understanding and designing the interactions between geometry, matter, energy, momentum, fo"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "must become",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The Coupled Energy\u2013Matter Engine must become the architectural foundation that allows independently implemented physics domains to interact within a unified simulation."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "allows",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The Coupled Energy\u2013Matter Engine must become the architectural foundation that allows independently implemented physics domains to interact within a unified simulation."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "It is an instruction to create a scientifically rigorous framework through which specialized solvers can exchange information, interact, and evolve a shared physical system."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "framework",
+        "strength": "strong",
+        "note": "",
+        "sentence": "It is an instruction to create a scientifically rigorous framework through which specialized solvers can exchange information, interact, and evolve a shared physical system."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "evolve",
+        "strength": "strong",
+        "note": "",
+        "sentence": "It is an instruction to create a scientifically rigorous framework through which specialized solvers can exchange information, interact, and evolve a shared physical system."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capabilities",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Thermal capabilities, if present."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "framework",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Simulation framework."
+      },
+      {
+        "category": "PERFORMANCE",
+        "where": "body",
+        "phrase": "Optimization",
+        "strength": "weak",
+        "note": "bullet",
+        "sentence": "Optimization framework."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "framework",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Optimization framework."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "framework",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Protobuf/gRPC automation framework."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Create:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capabilities",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Existing solver capabilities."
+      },
+      {
+        "category": "PERFORMANCE",
+        "where": "body",
+        "phrase": "optimization",
+        "strength": "weak",
+        "note": "bullet",
+        "sentence": "Existing optimization integration."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "integration",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Existing optimization integration."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Integration",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Integration risks."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Create a clearly defined application subsystem:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "must support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The engine must support:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Create a modular architecture with clear ownership boundaries."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Introduce",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Introduce a physical system representation that describes an engineered object or collection of interacting objects."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "must be able",
+        "strength": "strong",
+        "note": "",
+        "sentence": "RESONANT must be able to exchange physical information between domains without confusing units, definitions, or physical meaning."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Create a typed physical quantity architecture."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Introduce",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Introduce a central material state management system."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Evolving",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Evolving material state."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not create one universal material model."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Create a common state and property interface that can host domain-specific constitutive laws."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support spatially varying material properties."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support material regions and interfaces within one physical object."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "must support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The engine must support updating solver geometry when physical state changes."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Create a flexible coupling framework supporting several strategies."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "framework",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Create a flexible coupling framework supporting several strategies."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "advance",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Domains advance together using compatible time coordination and data exchange."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support the ability to use different numerical time steps."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "ability to",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support the ability to use different numerical time steps."
+      },
+      {
+        "category": "PERFORMANCE",
+        "where": "body",
+        "phrase": "slower",
+        "strength": "strong",
+        "note": "",
+        "sentence": "A thermal solver may operate on a much slower timescale than an electromagnetic or acoustic solver."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Create an architecture and implementation plan for the following interactions."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Introduce",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Introduce a dedicated conservation auditor."
+      }
+    ],
+    "scores": {
+      "FEATURE": {
+        "head": 0,
+        "body": 97
+      },
+      "BUG": {
+        "head": 0,
+        "body": 16
+      },
+      "CRASH": {
+        "head": 0,
+        "body": 0
+      },
+      "REGRESSION": {
+        "head": 0,
+        "body": 0
+      },
+      "PERFORMANCE": {
+        "head": 0,
+        "body": 3
+      },
+      "REFACTOR": {
+        "head": 0,
+        "body": 22
+      },
+      "BUILD": {
+        "head": 0,
+        "body": 0
+      },
+      "DOCUMENTATION": {
+        "head": 0,
+        "body": 11
+      },
+      "INVESTIGATION": {
+        "head": 0,
+        "body": 13
+      },
+      "PROCESS-CHANGE": {
+        "head": 0,
+        "body": 0
+      }
+    },
+    "evidence_total": 162,
+    "validator": "scripts/request_classification.py"
+  },
+  "links": {
+    "work": [
+      "WORK-000017"
+    ]
+  },
+  "commits": [],
+  "resolution": {
+    "from": "processing",
+    "to": "completed",
+    "at": "2026-11-28T00:51:16.822577+00:00",
+    "by": "agent-dev-20261126151713-76f632",
+    "gates": [
+      {
+        "work": "WORK-000017",
+        "at": "2026-11-28T00:51:12.384573+00:00",
+        "verdict": "PASS",
+        "request_fingerprint": "e4331c77a85ab2886adbcb949dade6b92945e9a1ef84bb98cc2df2adeadb5d04",
+        "test_runs": [
+          "20261127T194500-59855"
+        ]
+      }
+    ]
+  }
+}

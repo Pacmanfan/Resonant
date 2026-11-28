@@ -1,7 +1,40 @@
 # Material State Architecture
 
-**Status:** the current material model is described first; material state is
-planned (RES-SFE-008, ADR-000219).
+**Status:** the current material model is described first. Since
+REQ-CHAT-20261126-016 (RES-CEME-003, ADR-000220) part of material state is
+implemented: region laws (constant, linear in temperature, table) with
+validity and provenance, the temperature state of a coupled run, revisions and
+history, and the thermal property set; the rest of this page remains planned
+(RES-SFE-008, ADR-000219).
+
+## Implemented (the Coupled Energy–Matter Engine)
+
+`src/core/multiphysics/MaterialState`: a physical system attaches laws to a
+region's property (`"electromagnetic.lossTangent"`, `"mechanical.youngsModulus"`,
+`"thermal.thermalConductivity"`, ...). The intrinsic value stays in the material
+library; the state is a temperature field from the thermal participant
+(relaxed updates, a revision per update, the last 20 snapshots kept). A
+property at a material point is the law at the temperature interpolated
+there; outside the law's validity the value at the nearest valid temperature
+is used and a warning names the property, region, temperature and range. The
+participants read the laws at their cells or elements whenever the material
+revision changed. Distinguished as the request asks: intrinsic definition
+(library), initial state (the reference temperature), current state (the
+temperature field), its evolution (history), derived properties (law
+values); effective (homogenized) properties remain planned.
+
+```text
+material state evolution in an iterative coupled run (revisions increase on every update)
+
+library (intrinsic)        system law (derived)              state (current)                    use
+ tan δ = 0.05      ──►  tan δ(T) = 0.05 + 2e-4 (T−T₀)   T₀ everywhere (revision 0)  ──►  EM sublayer properties
+                         valid 273–450 K                       │ thermal solve
+                                                               ▼
+                                                  T₁(x) = T₀ + ω (T_solve − T₀)  (revision 1, snapshot)
+                                                               │ EM prepares again: law at T₁(x), warning if outside validity
+                                                               ▼
+                                                  T₂(x) … until max |T_k − T_{k−1}| ≤ tolerance  →  result: state, history, revisions
+```
 
 ## Today
 

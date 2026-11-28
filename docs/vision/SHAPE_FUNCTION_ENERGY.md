@@ -58,7 +58,7 @@ excitation and computing again, by hand or through optimization.
 | Acoustic horn as impedance transformer | match a source to free air | slow change of cross-section | FDTD can simulate the shape; no impedance analysis | planned |
 | Optical resonator | stable optical modes | mirror curvature and spacing | none (the electromagnetic domain is RF) | theoretical future |
 | Metamaterial unit cell | effective properties absent in its constituents | engineered local resonances or geometry | none | planned (stage 7) |
-| Heated, expanding absorber | absorb, heat, deform, detune | electromagnetic loss → heat → strain → geometry | none (no thermal domain, no two-way coupling) | planned (stages 4–5, 10) |
+| Heated, expanding absorber | absorb, heat, deform, detune | electromagnetic loss → heat → strain → geometry | layered-media wave solution, finite-volume conduction, finite-element thermal stress, coupled by the Coupled Energy–Matter Engine | current for layered slabs (REQ-CHAT-20261126-016, `examples/multiphysics`); 3D bodies planned |
 
 The status words follow RES-SFE-011: **current** is implemented and
 tested; **planned** has its architecture defined; a **research prototype**
@@ -94,8 +94,10 @@ bandwidth, coupling, localization) while each domain keeps its equations
 
 Many functions are conversions: vibration to sound, field to heat, heat to
 strain, strain to a changed geometry that changes the field again. The
-Coupled Energy–Matter Engine will coordinate the existing solvers through
-such chains, with every exchange and every balance accounted for
+Coupled Energy–Matter Engine coordinates the solvers through such chains,
+with every exchange and every balance accounted for; its first
+implementation runs the field → heat → strain → geometry → field loop for
+layered systems ([the engine](../architecture/COUPLED_ENGINE_ARCHITECTURE.md),
 ([coupled energy–matter](../physics/COUPLED_ENERGY_MATTER.md),
 [energy and momentum accounting](../physics/ENERGY_AND_MOMENTUM_ACCOUNTING.md),
 RES-SFE-006, RES-SFE-007).

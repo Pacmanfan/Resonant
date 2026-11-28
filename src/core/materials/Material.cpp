@@ -64,10 +64,18 @@ const std::vector<PropertyDef>& propertyDefinitions(PhysicsDomain domain)
         {"conductivity", "Electrical conductivity", "S/m", 0.0, false},
         {"lossTangent", "Dielectric loss tangent", "", 0.0, false},
     };
+    // Heat conduction and thermal expansion (REQ-CHAT-20261126-016, RES-CEME-010).
+    static const std::vector<PropertyDef> thermal = {
+        {"density", "Density", "kg/m^3", 0.0, true},
+        {"thermalConductivity", "Thermal conductivity", "W/(m K)", 0.0, true},
+        {"specificHeat", "Specific heat capacity", "J/(kg K)", 0.0, true},
+        {"thermalExpansion", "Linear thermal expansion coefficient", "1/K", -1.0, false},
+    };
     switch (domain) {
     case PhysicsDomain::Acoustic: return acoustic;
     case PhysicsDomain::Mechanical: return mechanical;
     case PhysicsDomain::Electromagnetic: return electromagnetic;
+    case PhysicsDomain::Thermal: return thermal;
     }
     return acoustic;
 }

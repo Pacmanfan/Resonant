@@ -1,0 +1,69 @@
+syntax = "proto3";
+package resonant.v1;
+
+import "google/protobuf/struct.proto";
+import "resonant/v1/common/jobs.proto";
+import "resonant/v1/common/metadata.proto";
+import "resonant/v1/common/validation.proto";
+import "resonant/v1/multiphysics/multiphysics.proto";
+
+message ListCouplingModelsRequest { RequestHeader header = 1; }
+message ListCouplingModelsResponse { ResponseHeader header = 1; repeated CouplingModel models = 2; }
+
+message ListPhysicalSystemsRequest { RequestHeader header = 1; }
+message ListPhysicalSystemsResponse { ResponseHeader header = 1; repeated PhysicalSystem systems = 2; }
+
+message GetPhysicalSystemRequest { RequestHeader header = 1; string system_id = 2; }
+message GetPhysicalSystemResponse { ResponseHeader header = 1; PhysicalSystem system = 2; }
+
+message SetPhysicalSystemRequest { RequestHeader header = 1; google.protobuf.Struct definition = 2; }
+message SetPhysicalSystemResponse { ResponseHeader header = 1; PhysicalSystem system = 2; ChangeSummary changes = 3; }
+
+message DeletePhysicalSystemRequest { RequestHeader header = 1; string system_id = 2; }
+message DeletePhysicalSystemResponse { ResponseHeader header = 1; ChangeSummary changes = 2; }
+
+message ValidatePhysicalSystemRequest {
+  RequestHeader header = 1;
+  string system_id = 2;                       // a stored system, or
+  google.protobuf.Struct definition = 3;      // a definition
+}
+message ValidatePhysicalSystemResponse { ResponseHeader header = 1; ValidationResult validation = 2; }
+
+message StartCoupledSimulationRequest {
+  RequestHeader header = 1;
+  string system_id = 2;                       // a stored system, or
+  google.protobuf.Struct definition = 3;      // a definition
+}
+message StartCoupledSimulationResponse { ResponseHeader header = 1; Job job = 2; }
+
+message GetCoupledResultRequest {
+  RequestHeader header = 1;
+  string result_id = 2;
+  bool include_document = 3;                  // also the full document with the fields' values
+}
+message GetCoupledResultResponse { ResponseHeader header = 1; CoupledResult result = 2; }
+
+// The Coupled Energy-Matter Engine: physical systems of interacting domains,
+// coupled simulations as jobs, and their energy accounting.
+service MultiphysicsService {
+  // The coupling models the engine knows: domains, quantities, mechanism, equations and status
+  // (validated, experimental, external, planned).
+  rpc ListCouplingModels(ListCouplingModelsRequest) returns (ListCouplingModelsResponse);
+  // The physical systems stored in the project.
+  rpc ListPhysicalSystems(ListPhysicalSystemsRequest) returns (ListPhysicalSystemsResponse);
+  // One stored physical system.
+  rpc GetPhysicalSystem(GetPhysicalSystemRequest) returns (GetPhysicalSystemResponse);
+  // Adds a physical system to the project, or replaces the one with its id, as one undo step.
+  rpc SetPhysicalSystem(SetPhysicalSystemRequest) returns (SetPhysicalSystemResponse);
+  // Removes a physical system from the project, as one undo step.
+  rpc DeletePhysicalSystem(DeletePhysicalSystemRequest) returns (DeletePhysicalSystemResponse);
+  // Checks a stored system or a definition against the project's materials, the coupling models and
+  // the available participants; nothing runs.
+  rpc ValidatePhysicalSystem(ValidatePhysicalSystemRequest) returns (ValidatePhysicalSystemResponse);
+  // Starts a coupled simulation of a stored system or a definition as a job; the result id is in the
+  // finished job's results.
+  rpc StartCoupledSimulation(StartCoupledSimulationRequest) returns (StartCoupledSimulationResponse);
+  // A coupled simulation's result: status, iteration history, energy terms and transfers, the
+  // conservation audit, warnings, and optionally the full document.
+  rpc GetCoupledResult(GetCoupledResultRequest) returns (GetCoupledResultResponse);
+}

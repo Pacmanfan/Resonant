@@ -1,7 +1,7 @@
 # Resonant — Architecture Overview
 
 **Status:** current. Decisions: ADR-000204 (stack, build systems),
-ADR-000205 (layers, domains), ADR-000207 (acoustics), ADR-000208 (manipulators), ADR-000209 (full-wave solver), ADR-000210 (mechanics), ADR-000211 (electromagnetics), ADR-000212 (compute backends), ADR-000213 (experiments), ADR-000214 (optimization), ADR-000219 (Shape–Function–Energy direction). Requirements: `docs/requirements/product.md`.
+ADR-000205 (layers, domains), ADR-000207 (acoustics), ADR-000208 (manipulators), ADR-000209 (full-wave solver), ADR-000210 (mechanics), ADR-000211 (electromagnetics), ADR-000212 (compute backends), ADR-000213 (experiments), ADR-000214 (optimization), ADR-000219 (Shape–Function–Energy direction), ADR-000220 (Coupled Energy–Matter Engine). Requirements: `docs/requirements/product.md`.
 
 This document describes the architecture every milestone builds on. Each
 subsystem gets its own document in this directory when it is implemented;
@@ -110,10 +110,14 @@ changes a historical result.
 An object's function is computed from its geometry, materials, excitation
 and environment by a physical model, never attached to its type
 (RES-SFE-001, `docs/vision/SHAPE_FUNCTION_ENERGY.md`). Interactions between
-domains will go through a Coupled Energy–Matter Engine in `src/core/coupling`
-that coordinates the existing solvers with explicit exchanged quantities,
-transfer operators and energy accounting, without replacing them
-(ADR-000219, `COUPLED_MULTIPHYSICS_ARCHITECTURE.md`). The audit of the
+domains go through the Coupled Energy–Matter Engine, which coordinates the
+solvers with explicit exchanged quantities, transfer operators and energy
+accounting, without replacing them (ADR-000219,
+`COUPLED_MULTIPHYSICS_ARCHITECTURE.md`). Its domain-independent core is
+`src/core/multiphysics` (it includes no domain); participants and coupling
+models live in `src/core/coupling`; the thermal domain is `src/core/thermal`
+(ADR-000220, `COUPLED_ENGINE_ARCHITECTURE.md`; implemented for layered
+systems). The audit of the
 current architecture against this direction is
 `SHAPE_FUNCTION_ENERGY_AUDIT.md`; the plan is `ENERGY_MATTER_RESEARCH_ROADMAP.md`.
 

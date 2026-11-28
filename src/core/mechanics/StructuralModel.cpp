@@ -604,4 +604,14 @@ ElementStress elementStress(const StructuralModel& model, const Element& e, cons
     return out;
 }
 
+Eigen::Matrix<double, 6, 24> solidStrainMatrix(const std::array<Vec3, 8>& x, double xi, double eta, double zeta, double& detJ)
+{
+    return hexB(x, xi, eta, zeta, detJ);
+}
+
+Eigen::Matrix<double, 6, 6> solidElasticity(const ElasticMaterial& material)
+{
+    return elasticity(material);
+}
+
 }  // namespace resonant::mechanics

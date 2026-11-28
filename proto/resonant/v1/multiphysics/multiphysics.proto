@@ -1,0 +1,112 @@
+syntax = "proto3";
+package resonant.v1;
+
+import "google/protobuf/struct.proto";
+
+// The Coupled Energy-Matter Engine's data (REQ-CHAT-20261126-016,
+// docs/architecture/COUPLED_ENGINE_ARCHITECTURE.md). Energies are in watts for
+// steady runs and in joules over the interval for transient ones (the audit's mode).
+
+// A coupling model: which quantity goes from which domain to which, how, and how far it is implemented.
+message CouplingModel {
+  string model_id = 1;
+  string name = 2;
+  string source_domain = 3;     // "electromagnetic", "thermal", "mechanical", "acoustic", "fluid"
+  string target_domain = 4;
+  string kind = 5;              // "field-transfer", "state-update", "geometry-update"
+  string source_quantity = 6;
+  string target_quantity = 7;
+  string default_transfer = 8;  // "conservative" or "interpolating"
+  string mechanism = 9;
+  string equations = 10;
+  string status = 11;           // "validated", "experimental", "external", "planned"
+  string validation = 12;       // the reference tests
+  string limitations = 13;
+}
+
+// A physical system stored in the project; `definition` is its resonant.physical-system document.
+message PhysicalSystem {
+  string system_id = 1;
+  string name = 2;
+  google.protobuf.Struct definition = 3;
+}
+
+// One term of the energy ledger.
+message EnergyTerm {
+  string participant = 1;
+  string domain = 2;
+  string kind = 3;              // input, boundary-out, dissipated, stored, transfer-out, transfer-in, informational
+  string mechanism = 4;
+  double value = 5;             // W or J
+  string description = 6;
+}
+
+// One exchange between participants.
+message EnergyTransfer {
+  string coupling_id = 1;
+  string model_id = 2;
+  string source_participant = 3;
+  string destination_participant = 4;
+  string mechanism = 5;
+  string source_quantity = 6;
+  string target_quantity = 7;
+  string unit = 8;
+  string method = 9;            // conservative, interpolating
+  double source_integral = 10;
+  double target_integral = 11;
+  double relative_difference = 12;
+  bool energy = 13;             // false for intensive quantities (temperature): not in the balance
+}
+
+message ParticipantBalance {
+  string participant = 1;
+  string domain = 2;
+  double input = 3;
+  double transfer_in = 4;
+  double boundary_out = 5;
+  double dissipated = 6;
+  double stored = 7;
+  double transfer_out = 8;
+  double residual = 9;
+  double relative_residual = 10;
+  double solver_residual = 11;
+}
+
+// The conservation audit of a coupled run.
+message ConservationAudit {
+  string mode = 1;
+  double external_input = 2;
+  double boundary_out = 3;
+  double dissipated = 4;
+  double stored = 5;
+  double transfer_error = 6;
+  double system_residual = 7;
+  double relative_residual = 8;
+  double tolerance = 9;
+  bool balanced = 10;
+  repeated string attribution = 11;
+  repeated ParticipantBalance participants = 12;
+}
+
+message CouplingIteration {
+  int32 pass = 1;
+  double max_temperature_change_kelvin = 2;
+  double max_geometry_change = 3;   // relative to the reference dimension
+  double transferred_energy = 4;    // W or J
+}
+
+message CoupledResult {
+  string result_id = 1;
+  string system_id = 2;
+  string status = 3;            // converged, completed, not-converged, failed, cancelled
+  string message = 4;
+  string failed_stage = 5;
+  int32 passes = 6;
+  repeated CouplingIteration history = 7;
+  repeated EnergyTerm terms = 8;
+  repeated EnergyTransfer transfers = 9;
+  ConservationAudit audit = 10;
+  repeated string warnings = 11;
+  string job_id = 12;
+  google.protobuf.Struct document = 13;   // the full resonant.coupled-result document (fields, participants, provenance)
+}

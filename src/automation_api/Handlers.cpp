@@ -16,6 +16,7 @@
 #include "resonant/v1/emitters/emitter_service.pb.h"
 #include "resonant/v1/geometry/geometry_service.pb.h"
 #include "resonant/v1/materials/material_service.pb.h"
+#include "resonant/v1/multiphysics/multiphysics_service.pb.h"
 #include "resonant/v1/optimization/optimization_service.pb.h"
 #include "resonant/v1/project/project_service.pb.h"
 #include "resonant/v1/results/results_service.pb.h"
@@ -332,6 +333,93 @@ bool remote(services::Interface source)
 {
     return source == services::Interface::Grpc || source == services::Interface::Mcp || source == services::Interface::Unspecified;
 }
+
+// --- multiphysics ----------------------------------------------------------------------------
+
+void systemToProto(const nlohmann::json& document, v1::PhysicalSystem* out)
+{
+    out->set_system_id(document.value("id", std::string()));
+    out->set_name(document.value("name", std::string()));
+    [[maybe_unused]] const Failure f = structOf(document, out->mutable_definition());
+}
+
+Failure coupledResultToProto(const std::string& resultId, const nlohmann::json& d, bool includeDocument, v1::CoupledResult* out)
+{
+    out->set_result_id(resultId);
+    out->set_system_id(d.contains("provenance") ? d["provenance"]["system"].value("id", std::string()) : std::string());
+    out->set_status(d.value("status", std::string()));
+    out->set_message(d.value("message", std::string()));
+    out->set_failed_stage(d.value("failedStage", std::string()));
+    out->set_passes(d.value("passes", 0));
+    out->set_job_id(d.value("jobId", std::string()));
+    for (const auto& h : d.value("history", nlohmann::json::array())) {
+        v1::CouplingIteration* it = out->add_history();
+        it->set_pass(h.value("pass", 0));
+        it->set_max_temperature_change_kelvin(h.value("maxTemperatureChangeK", 0.0));
+        it->set_max_geometry_change(h.value("maxGeometryChange", 0.0));
+        it->set_transferred_energy(h.value("transferredEnergy", 0.0));
+    }
+    const nlohmann::json ledger = d.value("ledger", nlohmann::json::object());
+    for (const auto& t : ledger.value("terms", nlohmann::json::array())) {
+        v1::EnergyTerm* e = out->add_terms();
+        e->set_participant(t.value("participant", std::string()));
+        e->set_domain(t.value("domain", std::string()));
+        e->set_kind(t.value("kind", std::string()));
+        e->set_mechanism(t.value("mechanism", std::string()));
+        e->set_value(t.value("value", 0.0));
+        e->set_description(t.value("description", std::string()));
+    }
+    for (const auto& t : ledger.value("transfers", nlohmann::json::array())) {
+        v1::EnergyTransfer* e = out->add_transfers();
+        e->set_coupling_id(t.value("coupling", std::string()));
+        e->set_model_id(t.value("model", std::string()));
+        e->set_source_participant(t.value("sourceParticipant", std::string()));
+        e->set_destination_participant(t.value("destinationParticipant", std::string()));
+        e->set_mechanism(t.value("mechanism", std::string()));
+        e->set_source_quantity(t.value("sourceQuantity", std::string()));
+        e->set_target_quantity(t.value("targetQuantity", std::string()));
+        e->set_unit(t.value("unit", std::string()));
+        e->set_method(t.value("method", std::string()));
+        e->set_source_integral(t.value("sourceIntegral", 0.0));
+        e->set_target_integral(t.value("targetIntegral", 0.0));
+        e->set_relative_difference(t.value("relativeDifference", 0.0));
+        e->set_energy(t.value("energy", false));
+    }
+    const nlohmann::json a = d.value("audit", nlohmann::json::object());
+    v1::ConservationAudit* audit = out->mutable_audit();
+    audit->set_mode(a.value("mode", std::string()));
+    audit->set_external_input(a.value("externalInput", 0.0));
+    audit->set_boundary_out(a.value("boundaryOut", 0.0));
+    audit->set_dissipated(a.value("dissipated", 0.0));
+    audit->set_stored(a.value("stored", 0.0));
+    audit->set_transfer_error(a.value("transferError", 0.0));
+    audit->set_system_residual(a.value("systemResidual", 0.0));
+    audit->set_relative_residual(a.value("relativeResidual", 0.0));
+    audit->set_tolerance(a.value("tolerance", 0.0));
+    audit->set_balanced(a.value("balanced", false));
+    for (const auto& line : a.value("attribution", nlohmann::json::array()))
+        audit->add_attribution(line.get<std::string>());
+    for (const auto& b : a.value("participants", nlohmann::json::array())) {
+        v1::ParticipantBalance* p = audit->add_participants();
+        p->set_participant(b.value("participant", std::string()));
+        p->set_domain(b.value("domain", std::string()));
+        p->set_input(b.value("input", 0.0));
+        p->set_transfer_in(b.value("transferIn", 0.0));
+        p->set_boundary_out(b.value("boundaryOut", 0.0));
+        p->set_dissipated(b.value("dissipated", 0.0));
+        p->set_stored(b.value("stored", 0.0));
+        p->set_transfer_out(b.value("transferOut", 0.0));
+        p->set_residual(b.value("residual", 0.0));
+        p->set_relative_residual(b.value("relativeResidual", 0.0));
+        p->set_solver_residual(b.value("solverResidual", 0.0));
+    }
+    for (const auto& w : d.value("warnings", nlohmann::json::array()))
+        out->add_warnings(w.get<std::string>());
+    if (includeDocument)
+        return structOf(d, out->mutable_document());
+    return std::nullopt;
+}
+
 
 }  // namespace
 
@@ -1238,6 +1326,100 @@ void Dispatcher::registerAutomation()
                 return t.error();
             transactionToProto(t.value(), out.mutable_transaction());
             return std::nullopt;
+        });
+
+    // --- the Coupled Energy-Matter Engine (REQ-CHAT-20261126-016) ---
+    unary<v1::ListCouplingModelsRequest, v1::ListCouplingModelsResponse>(
+        "MultiphysicsService", "ListCouplingModels", Permission::Read, false, true,
+        [this](const v1::ListCouplingModelsRequest&, v1::ListCouplingModelsResponse& out, const CallContext& c) -> Failure {
+            auto models = session_.services().multiphysics.couplingModels(c);
+            if (!models)
+                return models.error();
+            for (const auto& m : models.value()) {
+                v1::CouplingModel* o = out.add_models();
+                o->set_model_id(m.id);
+                o->set_name(m.name);
+                o->set_source_domain(m.sourceDomain);
+                o->set_target_domain(m.targetDomain);
+                o->set_kind(m.kind);
+                o->set_source_quantity(m.sourceQuantity);
+                o->set_target_quantity(m.targetQuantity);
+                o->set_default_transfer(m.defaultTransfer);
+                o->set_mechanism(m.mechanism);
+                o->set_equations(m.equations);
+                o->set_status(m.status);
+                o->set_validation(m.validation);
+                o->set_limitations(m.limitations);
+            }
+            return std::nullopt;
+        });
+    unary<v1::ListPhysicalSystemsRequest, v1::ListPhysicalSystemsResponse>(
+        "MultiphysicsService", "ListPhysicalSystems", Permission::Read, false, true,
+        [this](const v1::ListPhysicalSystemsRequest&, v1::ListPhysicalSystemsResponse& out, const CallContext& c) -> Failure {
+            auto list = session_.services().multiphysics.systems(c);
+            if (!list)
+                return list.error();
+            for (const nlohmann::json& d : list.value())
+                systemToProto(d, out.add_systems());
+            return std::nullopt;
+        });
+    unary<v1::GetPhysicalSystemRequest, v1::GetPhysicalSystemResponse>(
+        "MultiphysicsService", "GetPhysicalSystem", Permission::Read, false, true,
+        [this](const v1::GetPhysicalSystemRequest& in, v1::GetPhysicalSystemResponse& out, const CallContext& c) -> Failure {
+            auto d = session_.services().multiphysics.system(c, in.system_id());
+            if (!d)
+                return d.error();
+            systemToProto(d.value(), out.mutable_system());
+            return std::nullopt;
+        });
+    unary<v1::SetPhysicalSystemRequest, v1::SetPhysicalSystemResponse>(
+        "MultiphysicsService", "SetPhysicalSystem", Permission::Modify, true, true,
+        [this](const v1::SetPhysicalSystemRequest& in, v1::SetPhysicalSystemResponse& out, const CallContext& c) -> Failure {
+            const nlohmann::json definition = in.has_definition() ? jsonOf(in.definition()) : nlohmann::json::object();
+            auto m = session_.services().multiphysics.setSystem(c, definition);
+            if (!m)
+                return m.error();
+            detail::mutated(out.mutable_header(), m.value());
+            toProto(m.value().changes, out.mutable_changes());
+            if (auto stored = session_.services().multiphysics.system(c, definition.value("id", std::string())))
+                systemToProto(stored.value(), out.mutable_system());
+            return std::nullopt;
+        });
+    unary<v1::DeletePhysicalSystemRequest, v1::DeletePhysicalSystemResponse>(
+        "MultiphysicsService", "DeletePhysicalSystem", Permission::Modify, true, false,
+        [this](const v1::DeletePhysicalSystemRequest& in, v1::DeletePhysicalSystemResponse& out, const CallContext& c) -> Failure {
+            auto m = session_.services().multiphysics.deleteSystem(c, in.system_id());
+            if (!m)
+                return m.error();
+            detail::mutated(out.mutable_header(), m.value());
+            toProto(m.value().changes, out.mutable_changes());
+            return std::nullopt;
+        });
+    unary<v1::ValidatePhysicalSystemRequest, v1::ValidatePhysicalSystemResponse>(
+        "MultiphysicsService", "ValidatePhysicalSystem", Permission::Read, false, true,
+        [this](const v1::ValidatePhysicalSystemRequest& in, v1::ValidatePhysicalSystemResponse& out, const CallContext& c) -> Failure {
+            auto v = session_.services().multiphysics.validate(c, in.system_id(), in.has_definition() ? jsonOf(in.definition()) : nlohmann::json());
+            if (!v)
+                return v.error();
+            toProto(v.value(), out.mutable_validation());
+            return std::nullopt;
+        });
+    unary<v1::StartCoupledSimulationRequest, v1::StartCoupledSimulationResponse>(
+        "MultiphysicsService", "StartCoupledSimulation", Permission::Execute, false, false,
+        [this](const v1::StartCoupledSimulationRequest& in, v1::StartCoupledSimulationResponse& out, const CallContext& c) -> Failure {
+            auto job = session_.services().multiphysics.start(c, in.system_id(), in.has_definition() ? jsonOf(in.definition()) : nlohmann::json());
+            if (!job)
+                return job.error();
+            toProto(job.value(), out.mutable_job());
+            return std::nullopt;
+        });
+    unary<v1::GetCoupledResultRequest, v1::GetCoupledResultResponse>(
+        "MultiphysicsService", "GetCoupledResult", Permission::Read, false, true,
+        [this](const v1::GetCoupledResultRequest& in, v1::GetCoupledResultResponse& out, const CallContext& c) -> Failure {
+            auto r = session_.services().multiphysics.result(c, in.result_id());
+            if (!r)
+                return r.error();
+            return coupledResultToProto(in.result_id(), *r.value(), in.include_document(), out.mutable_result());
         });
 }
 

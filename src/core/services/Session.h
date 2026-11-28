@@ -113,6 +113,7 @@ struct ResultEntry {
     std::chrono::system_clock::time_point created;
     std::uint64_t projectRevision = 0;
     std::shared_ptr<const acoustics::FieldResult> field;  // kind "acoustic.field"
+    std::shared_ptr<const nlohmann::json> document;       // kind "multiphysics.coupled": the coupled result document
 };
 
 // A job started through the services, with what to do on the owner thread when it ends.
