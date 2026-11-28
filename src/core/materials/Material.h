@@ -27,6 +27,7 @@ enum class Provenance {
     LiteratureDerived,     // from a cited publication or handbook
     Theoretical,           // calculated from a model
     Illustrative,          // a nominal value for demonstration; not authoritative
+    Homogenized,           // derived from an organized structure by an effective-medium analysis (RES-META-011)
 };
 
 std::string_view toString(Provenance provenance);

@@ -1,0 +1,417 @@
+{
+  "request_id": "REQ-CHAT-20261126-019",
+  "source": "chat",
+  "type": "FEATURE",
+  "priority": "NORMAL",
+  "created": "2026-11-26T23:38:19-05:00",
+  "created_utc": "2026-11-27T04:38:19+00:00",
+  "id_date": "2026-11-26",
+  "timezone": "EST (UTC-05:00)",
+  "status": "completed",
+  "original_text": "# PROMPT 21 \u2014 METAMATERIALS AND ENGINEERED EFFECTIVE PROPERTIES\n\n## Project: RESONANT \u2014 Wave Field Engineering Studio\n\n## Mission\n\nImplement the next major scientific and engineering capability in RESONANT: **Metamaterials and Engineered Effective Properties**.\n\nThis capability establishes the ability to engineer macroscopic physical behavior through deliberately designed internal material structures.\n\nRESONANT must move beyond treating materials as homogeneous substances with fixed properties.\n\nIt must support the investigation and engineering of materials whose effective physical behavior emerges from:\n\n- Internal geometry.\n- Constituent materials.\n- Periodic arrangements.\n- Resonant inclusions.\n- Spatial organization.\n- Layering.\n- Interfaces.\n- Anisotropy.\n- Scale-dependent interactions.\n- Frequency-dependent response.\n- Coupling between internal structures.\n\nThe governing concept is:\n\n**Constituent Materials + Internal Geometry + Spatial Organization + Excitation**\n\n\u2193\n\n**Local Physical Interactions + Resonance + Scattering + Coupling**\n\n\u2193\n\n**Emergent Effective Properties**\n\n\u2193\n\n**Macroscopic Wave, Energy and Matter Behavior**\n\nThe objective is to progressively allow users to design materials with deliberately engineered physical characteristics rather than simply selecting from predefined material-property databases.\n\nRESONANT should support metamaterial engineering across electromagnetic, optical, acoustic, mechanical, elastic, thermal, and other supported physical domains.\n\nThe system must distinguish actual calculated effective properties from assumed, fitted, homogenized, or approximate values.\n\nA negative effective property, unusual dispersion curve, or apparent exotic material response must emerge from a valid physical model. It must never be assigned artificially to make a structure appear to exhibit metamaterial behavior.\n\nThis work extends:\n\n- Prompt 17 \u2014 Shape\u2013Function\u2013Energy Architecture.\n- Prompt 18 \u2014 Coupled Energy\u2013Matter Engine.\n- Prompt 19 \u2014 Geometry-Driven Energy Transformation.\n- Prompt 20 \u2014 Resonant Structures and Energy Storage.\n\nDo not duplicate these systems. Extend their capabilities through established interfaces.\n\n---\n\n# 1. AUDIT FIRST\n\nBefore implementation, inspect the existing repository.\n\nRead AGENTS.md and all applicable development instructions.\n\nEstablish the actual state of:\n\n- Material models and constitutive properties.\n- Geometry representation.\n- CAD and OpenCASCADE integration.\n- Geometry parameterization.\n- Functional structures.\n- Periodic geometry support.\n- Unit-cell representation.\n- Electromagnetic solvers.\n- Optical solvers.\n- Acoustic solvers.\n- Mechanical and elastic solvers.\n- Thermal solvers.\n- Eigenmode analysis.\n- Frequency-domain analysis.\n- Time-domain analysis.\n- Coupled-mode analysis.\n- Resonance characterization.\n- Energy and momentum accounting.\n- CEME material-state management.\n- Boundary-condition management.\n- Periodic boundary conditions.\n- Bloch-Floquet boundary conditions.\n- Mesh generation.\n- Parameter sweeps.\n- Optimization infrastructure.\n- Project serialization.\n- Visualization.\n- Automation and gRPC services.\n\nIdentify:\n\n1. Existing capabilities.\n2. Partially implemented capabilities.\n3. Missing capabilities.\n4. Reusable solvers and scientific libraries.\n5. Architectural changes required.\n6. External dependencies and licensing implications.\n\nProduce an implementation plan based on repository evidence.\n\nDo not invent existing capabilities.\n\nDo not create parallel material, geometry, resonance, or solver architectures.\n\nPreserve existing project compatibility.\n\n---\n\n# 2. METAMATERIAL ARCHITECTURE\n\nEstablish a reusable metamaterial architecture.\n\nA metamaterial must be represented as a physical structure with explicitly defined constituent geometry, materials, interfaces, and spatial organization.\n\nIntroduce a metamaterial resource that references:\n\n- Metamaterial identity.\n- Constituent material definitions.\n- Unit-cell geometry.\n- Internal inclusions.\n- Resonant elements.\n- Periodicity.\n- Lattice configuration.\n- Spatial arrangement.\n- Layering.\n- Interfaces.\n- Physical domains.\n- Excitation conditions.\n- Boundary conditions.\n- Operating frequency or frequency range.\n- Analysis configuration.\n- Homogenization configuration.\n- Effective-property results.\n- Manufacturing constraints.\n- Validation information.\n\nDo not make metamaterial a special-purpose replacement for the existing material system.\n\nA metamaterial is a structured physical assembly whose behavior is calculated from its constituents.\n\nThe resulting effective material model should integrate with CEME through existing material and constitutive-model interfaces.\n\n## 2.1 Distinguish material representations\n\nKeep these concepts distinct:\n\n1. Constituent materials: actual physical materials used to build the structure.\n2. Microstructure: the geometry and arrangement of constituent materials.\n3. Unit cell: a representative repeating physical region.\n4. Periodic structure: an assembly of repeating unit cells.\n5. Effective material: a homogenized representation derived from the underlying structure.\n6. Equivalent model: a reduced-order representation used within a defined validity range.\n\nMaintain traceability between these representations.\n\nAn effective material must identify the microstructure and constituent revisions from which it was derived.\n\n---\n\n# 3. UNIT-CELL ENGINEERING\n\nEstablish the unit cell as a first-class engineering object.\n\nThe unit cell is the fundamental building block for periodic metamaterial design.\n\nSupport:\n\n## 3.1 Unit-cell geometry\n\n- Three-dimensional unit cells.\n- Two-dimensional unit cells.\n- One-dimensional periodic structures.\n- Rectangular lattices.\n- Square lattices.\n- Hexagonal lattices.\n- Triangular lattices.\n- Custom lattice vectors.\n- Layered unit cells.\n- Embedded inclusions.\n- Resonant elements.\n- Cavities.\n- Channels.\n- Voids.\n- Conductive patterns.\n- Dielectric structures.\n- Elastic inclusions.\n- Composite arrangements.\n\nSupport arbitrary parameterized geometry using the existing CAD architecture.\n\n## 3.2 Unit-cell parameters\n\nSupport named parameters including:\n\n- Cell dimensions.\n- Lattice constants.\n- Inclusion dimensions.\n- Inclusion spacing.\n- Inclusion orientation.\n- Wall thickness.\n- Layer thickness.\n- Void dimensions.\n- Resonator dimensions.\n- Resonator placement.\n- Material proportions.\n- Symmetry parameters.\n\nParameters must have:\n\n- Units.\n- Valid ranges.\n- Dependencies.\n- Constraints.\n- Revision tracking.\n- Derived values.\n\n## 3.3 Unit-cell boundaries\n\nSupport appropriate boundary conditions:\n\n- Periodic boundaries.\n- Bloch-Floquet boundaries.\n- Symmetry boundaries.\n- Perfect electric conductor.\n- Perfect magnetic conductor.\n- Domain-specific physical boundaries.\n\nDo not assume that ordinary periodic boundary conditions are interchangeable with Bloch-Floquet conditions.\n\nThe phase relationship across periodic boundaries must be represented correctly.\n\n## 3.4 Unit-cell validation\n\nValidate:\n\n- Geometric closure.\n- Periodic face correspondence.\n- Material-region consistency.\n- Interface continuity.\n- Mesh compatibility.\n- Boundary-condition compatibility.\n- Lattice-vector validity.\n\nReject invalid configurations with useful engineering diagnostics.\n\n---\n\n# 4. PERIODIC STRUCTURES AND BLOCH-FLOQUET ANALYSIS\n\nImplement a reusable periodic-physics analysis interface.\n\nSupport Bloch-Floquet analysis where the underlying solver permits it.\n\nFor a periodic structure, represent the appropriate phase relationship between corresponding fields in adjacent cells.\n\nUse the relevant Bloch condition:\n\n\\[\n\\psi(\\mathbf r+\\mathbf R)\n=\n\\psi(\\mathbf r)e^{i\\mathbf k\\cdot\\mathbf R}\n\\]\n\nwhere:\n\n- \\(\\mathbf R\\) is a lattice translation.\n- \\(\\mathbf k\\) is the Bloch wavevector.\n- \\(\\psi\\) represents the relevant physical field or state.\n\nThe actual field formulation must remain domain-specific.\n\nSupport:\n\n- One-dimensional dispersion.\n- Two-dimensional dispersion.\n- Three-dimensional dispersion where supported.\n- Wavevector sweeps.\n- Frequency sweeps.\n- Eigenmode analysis.\n- Band structure.\n- Band-gap identification.\n- Mode classification.\n- Group velocity.\n- Mode localization.\n\n## 4.1 Brillouin zone\n\nSupport:\n\n- Reciprocal lattice construction.\n- First Brillouin zone.\n- High-symmetry points.\n- High-symmetry paths.\n- Wavevector sampling.\n- Band-structure plotting.\n\nDo not hardcode a single lattice configuration.\n\nGenerate reciprocal-space geometry from the actual lattice definition.\n\n## 4.2 Band structures\n\nCalculate dispersion relations from the underlying physical model.\n\nDisplay:\n\n- Frequency versus wavevector.\n- Band branches.\n- Mode crossings.\n- Avoided crossings.\n- Degeneracies.\n- Band gaps.\n- Flat bands.\n- Group velocity.\n- Mode polarization where supported.\n\nDo not fabricate band structures from analytical sketches.\n\n## 4.3 Band-gap analysis\n\nIdentify:\n\n- Complete band gaps.\n- Directional band gaps.\n- Polarization-dependent gaps.\n- Partial gaps.\n- Local resonant gaps.\n- Bragg scattering gaps.\n\nDistinguish these mechanisms.\n\nReport the frequency range, propagation directions, and polarizations for which a gap exists.\n\nA gap in one propagation direction must not be presented as a complete three-dimensional band gap.\n\n---\n\n# 5. ENGINEERED EFFECTIVE MATERIAL PROPERTIES\n\nThis is the central scientific capability of Prompt 21.\n\nDevelop an architecture for calculating effective constitutive behavior from the underlying structured material.\n\nDo not create a universal effective-property calculator.\n\nUse domain-specific homogenization methods.\n\n## 5.1 Electromagnetic effective properties\n\nWhere supported, investigate:\n\n- Effective permittivity.\n- Effective permeability.\n- Effective impedance.\n- Effective refractive index.\n- Effective conductivity.\n- Effective anisotropy.\n- Frequency-dependent constitutive response.\n\nSupport tensor-valued properties where appropriate.\n\nDistinguish:\n\n- Constituent properties.\n- Effective bulk properties.\n- Retrieved effective parameters.\n- Local field-derived response.\n- Nonlocal or spatially dispersive behavior.\n\nInvestigate:\n\n- Negative effective permittivity.\n- Negative effective permeability.\n- Negative refractive index.\n- Double-negative behavior.\n- Near-zero permittivity.\n- Near-zero permeability.\n- Anisotropic response.\n- Hyperbolic dispersion.\n\nThese behaviors must be derived from valid physical calculations.\n\nDo not assign negative parameters manually.\n\n## 5.2 Acoustic effective properties\n\nWhere supported, investigate:\n\n- Effective density.\n- Effective bulk modulus.\n- Effective compressibility.\n- Effective acoustic impedance.\n- Effective sound speed.\n- Anisotropic acoustic response.\n- Frequency-dependent acoustic behavior.\n\nSupport investigation of:\n\n- Negative effective density.\n- Negative effective bulk modulus.\n- Near-zero effective parameters.\n- Acoustic band gaps.\n- Local resonant behavior.\n- Unusual acoustic dispersion.\n\n## 5.3 Mechanical and elastic effective properties\n\nWhere supported, investigate:\n\n- Effective stiffness tensors.\n- Effective compliance.\n- Effective density.\n- Effective elastic modulus.\n- Effective Poisson response.\n- Effective anisotropy.\n- Effective wave speed.\n- Frequency-dependent dynamic stiffness.\n\nSupport investigation of:\n\n- Negative effective dynamic mass density.\n- Negative effective stiffness.\n- Auxetic response.\n- Anisotropic elasticity.\n- Local resonant elastic behavior.\n- Elastic band gaps.\n\nClearly distinguish dynamic effective parameters from static material properties.\n\n## 5.4 Thermal effective properties\n\nWhere supported, investigate:\n\n- Effective thermal conductivity.\n- Anisotropic thermal conductivity.\n- Effective thermal diffusivity.\n- Thermal interface effects.\n- Directional heat transport.\n- Engineered thermal pathways.\n\nSupport investigation of:\n\n- Thermal concentration.\n- Thermal insulation.\n- Directional heat transport.\n- Effective thermal anisotropy.\n\nDo not claim thermal metamaterial functionality without a validated heat-transfer model.\n\n## 5.5 Optical effective properties\n\nWhere supported, derive optical effective behavior from appropriate electromagnetic or optical models.\n\nSupport:\n\n- Effective refractive index.\n- Effective anisotropy.\n- Effective optical dispersion.\n- Photonic band gaps.\n- Engineered optical propagation.\n- Frequency-dependent optical response.\n\nDistinguish effective optical models from full-wave electromagnetic calculations.\n\n---\n\n# 6. HOMOGENIZATION AND VALIDITY\n\nImplement homogenization as a first-class scientific operation.\n\nEffective properties are meaningful only under appropriate assumptions.\n\nSupport applicable methods including:\n\n- Volume averaging.\n- Field averaging.\n- Effective constitutive retrieval.\n- Asymptotic homogenization.\n- Dynamic homogenization.\n- Domain-specific equivalent-medium methods.\n\nUse existing scientific implementations where appropriate.\n\nDo not implement every homogenization method in this prompt.\n\n## 6.1 Scale separation\n\nEvaluate whether the unit-cell dimensions are sufficiently small relative to the relevant wavelength or characteristic physical length.\n\nDo not automatically assume homogenization is valid.\n\nReport:\n\n- Unit-cell dimensions.\n- Operating wavelength.\n- Wavelength-to-cell-size ratio.\n- Relevant spatial scales.\n- Frequency range.\n- Homogenization assumptions.\n- Expected validity limitations.\n\n## 6.2 Frequency dependence\n\nEffective properties may vary significantly with frequency.\n\nRepresent effective material properties as frequency-dependent quantities when required.\n\nDo not reduce a dispersive material to a single constant value unless that approximation is explicitly justified.\n\n## 6.3 Spatial dispersion\n\nWhere appropriate, identify behavior that depends on wavevector as well as frequency.\n\nDistinguish local effective constitutive models from nonlocal or spatially dispersive models.\n\nDo not force a local effective material representation onto a structure when it is physically inadequate.\n\n## 6.4 Retrieval stability\n\nFor retrieval-based methods, investigate:\n\n- Branch ambiguity.\n- Phase ambiguity.\n- Resonance singularities.\n- Numerical instability.\n- Sensitivity to sample thickness.\n- Boundary effects.\n- Parameter non-uniqueness.\n\nReport uncertain or nonphysical retrieval results rather than silently accepting them.\n\n## 6.5 Full-structure comparison\n\nWhere practical, compare effective-medium predictions against a finite structure containing multiple unit cells.\n\nMeasure:\n\n- Reflection.\n- Transmission.\n- Phase.\n- Attenuation.\n- Dispersion.\n- Field distribution.\n\nQuantify the difference between the homogenized model and the explicit structure.\n\n---\n\n# 7. RESONANT METAMATERIALS\n\nIntegrate the resonance architecture from Prompt 20.\n\nSupport the engineering of metamaterials whose response emerges from resonant internal structures.\n\nExamples include:\n\n- Split-ring resonators.\n- Dielectric resonators.\n- Electric resonators.\n- Magnetic resonators.\n- Acoustic Helmholtz resonators.\n- Membrane-type acoustic resonators.\n- Elastic local resonators.\n- Mechanical resonator arrays.\n- Coupled resonator lattices.\n- Optical resonant inclusions.\n\nSupport analysis of:\n\n- Individual resonator modes.\n- Unit-cell modes.\n- Coupled resonances.\n- Mode splitting.\n- Resonance bandwidth.\n- Q factor.\n- Effective-property response.\n- Energy localization.\n- Field concentration.\n- Damping.\n- Band formation.\n\nInvestigate the transition from individual resonant elements to collective periodic behavior.\n\nDistinguish:\n\n- Isolated resonator behavior.\n- Coupled unit-cell behavior.\n- Collective lattice modes.\n- Effective macroscopic response.\n\nDo not assume that a resonant inclusion automatically creates a useful metamaterial response.\n\nCalculate the resulting physical behavior.\n\n---\n\n# 8. SPATIAL ORGANIZATION AND STRUCTURED MATERIALS\n\nSupport metamaterials beyond perfectly periodic arrangements.\n\nIntroduce architecture for:\n\n- Periodic materials.\n- Quasiperiodic materials.\n- Graded materials.\n- Layered metamaterials.\n- Composite metamaterials.\n- Spatially varying lattices.\n- Defect-engineered structures.\n- Disordered structures.\n- Hierarchical structures.\n\n## 8.1 Graded metamaterials\n\nAllow unit-cell parameters to vary spatially.\n\nExamples:\n\n- Gradually changing lattice constant.\n- Gradually changing inclusion dimensions.\n- Spatially varying resonator frequency.\n- Varying material composition.\n- Varying effective anisotropy.\n\nAnalyze the resulting spatially dependent physical response.\n\n## 8.2 Defect engineering\n\nSupport controlled deviations from periodicity.\n\nExamples:\n\n- Missing inclusions.\n- Modified unit cells.\n- Embedded resonators.\n- Localized cavities.\n- Defect channels.\n- Localized modes.\n\nAnalyze defect states and localized energy where supported.\n\n## 8.3 Layered structures\n\nSupport stacked layers with different:\n\n- Unit cells.\n- Materials.\n- Orientations.\n- Thicknesses.\n- Effective properties.\n\nAnalyze interfaces and wave propagation through layered assemblies.\n\n## 8.4 Quasiperiodic and disordered structures\n\nEstablish extensible representations for non-periodic structured materials.\n\nUse appropriate finite-structure analysis.\n\nDo not apply Bloch-Floquet periodicity to structures that do not possess the required translational symmetry.\n\n---\n\n# 9. WAVE PROPAGATION AND ENERGY TRANSPORT\n\nInvestigate how engineered material structures influence energy propagation.\n\nSupport:\n\n- Transmission.\n- Reflection.\n- Absorption.\n- Scattering.\n- Refraction.\n- Diffraction.\n- Attenuation.\n- Evanescent fields.\n- Slow-wave behavior.\n- Group velocity.\n- Phase velocity.\n- Energy velocity where supported.\n\nAnalyze:\n\n- Energy flux.\n- Power transmission.\n- Field concentration.\n- Mode localization.\n- Surface and interface modes.\n- Directional propagation.\n- Energy confinement.\n\nDistinguish phase velocity, group velocity, and energy transport.\n\nDo not assume they are equivalent.\n\nWhere negative phase velocity or unusual group velocity occurs, verify the actual energy-flow direction and physical interpretation.\n\n## 9.1 Energy accounting\n\nUse CEME to account for:\n\n- Incident energy.\n- Reflected energy.\n- Transmitted energy.\n- Absorbed energy.\n- Stored energy.\n- Scattered energy.\n- Dissipated energy.\n\nAvoid double-counting energy in periodic cells and finite structures.\n\n---\n\n# 10. METAMATERIAL REFERENCE ENGINEERING EXAMPLES\n\nImplement these as genuine engineering models.\n\nThey must use real geometry, material definitions, appropriate solvers, and scientifically valid analysis.\n\nPrioritize:\n\n## 10.1 Electromagnetic split-ring resonator array\n\nImplement a parameterized split-ring resonator unit cell.\n\nSupport:\n\n- Ring dimensions.\n- Ring thickness.\n- Gap size.\n- Conductivity.\n- Substrate properties.\n- Lattice spacing.\n- Ring orientation.\n- Excitation polarization.\n- Frequency sweep.\n\nAnalyze:\n\n- Resonant frequency.\n- Electric-field concentration.\n- Magnetic-field response.\n- Surface currents.\n- Reflection.\n- Transmission.\n- Absorption.\n- Effective response where valid.\n- Coupling between neighboring resonators.\n\nInvestigate the influence of geometric changes on resonance and effective properties.\n\nDo not assume a negative permeability response. Calculate and validate it where the selected model supports meaningful retrieval.\n\n## 10.2 Acoustic locally resonant metamaterial\n\nImplement a parameterized acoustic unit cell with a local resonator.\n\nSupport:\n\n- Cell dimensions.\n- Cavity geometry.\n- Neck geometry.\n- Resonator mass and compliance where appropriate.\n- Material properties.\n- Array spacing.\n- Acoustic excitation.\n\nAnalyze:\n\n- Local resonance.\n- Dispersion.\n- Band gaps.\n- Effective density or bulk modulus where valid.\n- Pressure fields.\n- Particle velocity.\n- Transmission and reflection.\n\nCompare with an appropriate analytical or established model.\n\n## 10.3 Mechanical locally resonant lattice\n\nImplement a parameterized elastic or mechanical unit cell.\n\nSupport:\n\n- Host material.\n- Internal resonator.\n- Resonator mass.\n- Spring or elastic connection.\n- Lattice spacing.\n- Boundary conditions.\n- Excitation.\n\nAnalyze:\n\n- Dispersion.\n- Local resonance.\n- Band gaps.\n- Effective dynamic properties.\n- Mode shapes.\n- Energy localization.\n- Transmission.\n\nCompare against an analytical coupled-oscillator or established elastic model.\n\n## 10.4 Photonic periodic structure\n\nImplement a photonic crystal or equivalent periodic optical structure using an appropriate existing optical or electromagnetic solver.\n\nSupport:\n\n- Lattice geometry.\n- Dielectric inclusions.\n- Refractive indices.\n- Periodicity.\n- Polarization.\n- Wavevector.\n- Frequency range.\n\nAnalyze:\n\n- Photonic bands.\n- Band gaps.\n- Mode localization.\n- Transmission.\n- Reflection.\n- Polarization dependence.\n\nClearly identify the solver and approximation used.\n\n## 10.5 Layered effective medium\n\nImplement a layered structure as a reference for engineered anisotropic response.\n\nSupport:\n\n- Layer thickness.\n- Constituent materials.\n- Layer orientation.\n- Number of layers.\n- Operating frequency.\n\nAnalyze:\n\n- Effective anisotropy.\n- Reflection.\n- Transmission.\n- Dispersion.\n- Field distribution.\n\nCompare the homogenized representation with an explicit multilayer model.\n\n---\n\n# 11. FUNCTION-DRIVEN METAMATERIAL DESIGN\n\nExtend the function-driven design architecture established in Prompt 19.\n\nAllow the user to define a desired macroscopic physical response and investigate candidate microstructures.\n\nExample objectives:\n\n- Create a band gap around a target frequency.\n- Produce a specified effective refractive index.\n- Achieve a target effective density.\n- Engineer directional propagation.\n- Minimize reflection.\n- Maximize transmission.\n- Create localized modes.\n- Maximize field concentration.\n- Control dispersion.\n- Create an anisotropic response.\n- Minimize material losses.\n- Maximize a specified bandwidth.\n- Produce a desired effective stiffness tensor.\n- Engineer directional thermal conductivity.\n\nEach objective must specify:\n\n- Physical quantity.\n- Units.\n- Target.\n- Frequency or operating range.\n- Direction or polarization where applicable.\n- Relevant spatial region.\n- Solver.\n- Homogenization method.\n- Validity conditions.\n- Constraints.\n\nSupport multiple objectives and tradeoffs.\n\nDo not optimize a homogenized result without checking that the underlying microstructure supports it.\n\nCandidate designs must be validated against the relevant physical model.\n\n---\n\n# 12. PARAMETER EXPLORATION AND OPTIMIZATION\n\nIntegrate with the existing parameterization and optimization systems.\n\nSupport:\n\n- Unit-cell parameter sweeps.\n- Lattice parameter sweeps.\n- Inclusion geometry sweeps.\n- Resonator tuning.\n- Material parameter sweeps.\n- Orientation sweeps.\n- Frequency sweeps.\n- Wavevector sweeps.\n- Sensitivity analysis.\n- Tolerance analysis.\n- Multi-objective comparisons.\n\nWhere supported, support:\n\n- Gradient-based optimization.\n- Evolutionary optimization.\n- Surrogate models.\n- Topology optimization.\n- Adjoint methods.\n\nDo not implement a second optimization framework.\n\nTrack parameter dependencies and geometry revisions.\n\nEnsure that changes invalidate only the affected meshes, effective-property calculations, and results.\n\nEvery optimization candidate must identify:\n\n- Constituent geometry.\n- Material definitions.\n- Parameter values.\n- Solver.\n- Boundary conditions.\n- Excitation.\n- Effective-property method.\n- Validity range.\n- Objective values.\n- Constraint violations.\n- Numerical convergence.\n\n---\n\n# 13. MULTISCALE AND HIERARCHICAL STRUCTURES\n\nEstablish an extensible architecture for hierarchical metamaterials.\n\nA structure may contain:\n\n- Multiple unit-cell types.\n- Unit cells assembled into supercells.\n- Supercells assembled into larger structures.\n- Multiple periodic scales.\n- Nested resonant structures.\n- Graded internal architectures.\n\nSupport supercell representations and corresponding analysis configurations.\n\nDistinguish the scale of:\n\n- Constituent features.\n- Unit cells.\n- Supercells.\n- Finite assemblies.\n- Macroscopic models.\n\nDo not attempt to implement complete molecular, atomic, or quantum modeling here. That is the subject of Prompt 22.\n\nHowever, preserve interfaces that will allow lower-scale material models to inform constituent material properties later.\n\n---\n\n# 14. MANUFACTURABILITY AND PHYSICAL REALIZABILITY\n\nExtend the manufacturing constraints from Prompt 19.\n\nSupport:\n\n- Minimum feature dimensions.\n- Minimum gap size.\n- Minimum wall thickness.\n- Material availability.\n- Fabrication tolerances.\n- Surface roughness constraints.\n- Layer alignment.\n- Assembly tolerances.\n- Maximum aspect ratio.\n- Minimum spacing.\n- Structural stability constraints.\n\nSupport manufacturing-process profiles for:\n\n- CNC machining.\n- PCB fabrication.\n- Lithography.\n- Additive manufacturing.\n- Laser cutting.\n- Sheet fabrication.\n- Composite fabrication.\n- Lamination.\n\nDo not assume a theoretical unit cell can be manufactured.\n\nAllow optimization to penalize or reject physically unrealizable designs.\n\nWhere relevant, investigate tolerance sensitivity and the effect of manufacturing deviations on effective properties.\n\n---\n\n# 15. VISUALIZATION AND ENGINEERING INSPECTION\n\nExtend the existing RESONANT visualization framework.\n\nDo not build a separate visualization application.\n\nSupport:\n\n## 15.1 Microstructure visualization\n\nDisplay:\n\n- Unit cells.\n- Lattice geometry.\n- Internal inclusions.\n- Resonators.\n- Material regions.\n- Interfaces.\n- Periodic boundaries.\n- Supercells.\n- Layered structures.\n- Defects.\n- Graded arrangements.\n\n## 15.2 Field visualization\n\nWhere available:\n\n- Electric fields.\n- Magnetic fields.\n- Acoustic pressure.\n- Particle velocity.\n- Mechanical displacement.\n- Stress and strain.\n- Temperature.\n- Energy density.\n- Energy flux.\n- Surface currents.\n\n## 15.3 Reciprocal-space visualization\n\nProvide:\n\n- Reciprocal lattice.\n- Brillouin zone.\n- High-symmetry points.\n- Wavevector paths.\n- Dispersion surfaces where supported.\n\n## 15.4 Band-structure visualization\n\nDisplay:\n\n- Frequency versus wavevector.\n- Band branches.\n- Band gaps.\n- Mode crossings.\n- Avoided crossings.\n- Flat bands.\n- Polarization.\n- Group velocity.\n\n## 15.5 Effective-property visualization\n\nProvide frequency-dependent plots of:\n\n- Effective permittivity.\n- Effective permeability.\n- Effective refractive index.\n- Effective density.\n- Effective bulk modulus.\n- Effective stiffness.\n- Effective conductivity.\n- Effective thermal conductivity.\n\nDisplay uncertainty and validity regions.\n\nClearly distinguish:\n\n- Measured constituent properties.\n- Calculated effective properties.\n- Retrieved properties.\n- Approximate properties.\n- Assumed properties.\n\n## 15.6 Comparison views\n\nSupport:\n\n- Individual unit-cell comparison.\n- Explicit versus homogenized structure.\n- Before and after optimization.\n- Different lattice configurations.\n- Different material configurations.\n- Different frequency bands.\n\nEvery visualization must identify its physical quantity, units, solver, model, geometry revision, material revision, and validity range.\n\n---\n\n# 16. USER WORKFLOW\n\nIntegrate metamaterial engineering into the existing RESONANT workspace.\n\nProvide a coherent workflow:\n\n1. Create or import a unit cell.\n2. Define lattice geometry.\n3. Parameterize constituent features.\n4. Assign constituent materials.\n5. Define physical domains.\n6. Configure periodic or Bloch-Floquet boundaries.\n7. Define excitation and polarization.\n8. Select physical analysis.\n9. Validate unit-cell geometry and boundaries.\n10. Generate or update the mesh.\n11. Run eigenmode or frequency-domain analysis.\n12. Calculate dispersion.\n13. Identify band gaps.\n14. Calculate effective properties where valid.\n15. Evaluate homogenization assumptions.\n16. Compare explicit and effective structures.\n17. Investigate resonant behavior.\n18. Sweep geometric and material parameters.\n19. Define functional objectives.\n20. Evaluate candidate designs.\n21. Validate optimized structures.\n22. Save and document the resulting material design.\n\nAllow users to move between unit-cell analysis, finite-structure analysis, and effective-material analysis without rebuilding the project.\n\n---\n\n# 17. CEME INTEGRATION\n\nUse CEME as the authoritative framework for material state, constitutive properties, energy transfer, and multiphysics coupling.\n\nDo not duplicate:\n\n- Material registry.\n- Material state management.\n- Physical quantity registry.\n- Geometry management.\n- Energy transfer records.\n- Conservation auditing.\n- Solver orchestration.\n- Provenance.\n\nMetamaterial resources must provide derived effective-property models through appropriate CEME interfaces.\n\nSupport:\n\n- Frequency-dependent effective constitutive properties.\n- Anisotropic material tensors.\n- Spatially varying effective properties.\n- Dynamic effective properties where appropriate.\n- Temperature-dependent effective response.\n- Material-state-dependent behavior.\n\nEnsure that the effective material model retains a link to its constituent structure.\n\nWhere material state changes, invalidate affected effective-property results.\n\nExamples:\n\n- Heating changes constituent conductivity.\n- Temperature changes resonator dimensions.\n- Mechanical deformation changes lattice spacing.\n- Fluid loading changes acoustic resonator behavior.\n- Constituent damage changes effective stiffness.\n- Material phase changes alter effective electromagnetic properties.\n\nDo not automatically treat an effective material as independent of the physical structure that produced it.\n\n---\n\n# 18. AUTOMATION AND PROGRAMMATIC ACCESS\n\nExpose meaningful metamaterial engineering capabilities through the existing application services.\n\nThe existing Protobuf contract remains authoritative.\n\nPotential operations include:\n\n- Create metamaterial.\n- Create unit cell.\n- Configure lattice.\n- Configure periodic boundaries.\n- Assign constituent materials.\n- Configure internal resonators.\n- Update geometric parameters.\n- Validate unit cell.\n- Generate mesh.\n- Run Bloch-Floquet analysis.\n- Calculate band structure.\n- Identify band gaps.\n- Calculate effective properties.\n- Configure homogenization.\n- Validate homogenization.\n- Compare explicit and effective structures.\n- Run parameter sweeps.\n- Define metamaterial objectives.\n- Run optimization.\n- Compare candidate designs.\n- Retrieve dispersion results.\n- Retrieve effective constitutive tensors.\n- Export engineering results.\n\nFollow established patterns for:\n\n- Asynchronous jobs.\n- Cancellation.\n- Progress reporting.\n- Idempotency.\n- Optimistic concurrency.\n- Revision tracking.\n- Capability discovery.\n- Error handling.\n- Provenance.\n\nDo not transfer large scientific field arrays through ordinary control-plane protobuf messages.\n\nUse established scientific-data and bulk-transfer mechanisms.\n\nGUI, Python, and automation must use the same application services.\n\n---\n\n# 19. DATA MODEL AND PROJECT SERIALIZATION\n\nPersist metamaterial engineering resources using existing project serialization conventions.\n\nUse stable UUIDs.\n\nPersist:\n\n- Metamaterial identity.\n- Unit-cell definitions.\n- Lattice vectors.\n- Constituent material references.\n- Constituent geometry.\n- Parameter definitions.\n- Parameter values.\n- Periodic boundary definitions.\n- Physical domains.\n- Excitation configurations.\n- Analysis configurations.\n- Homogenization configurations.\n- Effective-property results.\n- Validity information.\n- Manufacturing constraints.\n- Optimization objectives.\n- Candidate configurations.\n- Solver provenance.\n- Validation results.\n\nKeep durable engineering definitions separate from transient solver state.\n\nMaintain complete traceability between an effective material and its underlying constituent structure.\n\nEnsure backward compatibility.\n\n---\n\n# 20. SCIENTIFIC VALIDATION\n\nScientific correctness is a release requirement.\n\nEvery implemented reference model must have automated validation.\n\n## Electromagnetic split-ring resonator\n\n- Resonant-frequency comparison.\n- Mesh convergence.\n- Surface-current verification.\n- Reflection and transmission.\n- Energy balance.\n- Effective-property retrieval stability.\n\n## Acoustic locally resonant metamaterial\n\n- Analytical resonance comparison.\n- Dispersion behavior.\n- Band-gap verification.\n- Effective-property consistency.\n- Energy accounting.\n\n## Mechanical locally resonant lattice\n\n- Analytical coupled-oscillator comparison.\n- Dispersion verification.\n- Mode-shape consistency.\n- Energy transfer.\n- Mesh convergence.\n\n## Photonic periodic structure\n\n- Analytical or established band-structure comparison.\n- Periodic boundary verification.\n- Polarization consistency.\n- Mesh convergence.\n- Band-gap verification.\n\n## Layered effective medium\n\n- Analytical effective-medium comparison where applicable.\n- Explicit versus homogenized structure comparison.\n- Frequency-range validity.\n- Reflection and transmission consistency.\n\nFor all analyses:\n\n- Record solver versions.\n- Record geometry revisions.\n- Record material revisions.\n- Record lattice parameters.\n- Record boundary conditions.\n- Record excitation.\n- Record mesh and convergence information.\n- Record homogenization assumptions.\n- Record validity ranges.\n- Report uncertainty.\n- Identify numerical failures.\n\nDo not claim a negative effective parameter or exotic physical behavior without a valid calculation and documented interpretation.\n\n---\n\n# 21. TESTING REQUIREMENTS\n\nAdd tests covering:\n\n- Unit-cell creation.\n- Lattice geometry.\n- Reciprocal lattice generation.\n- Periodic boundary validation.\n- Bloch-Floquet phase relationships.\n- Material-region assignment.\n- Constituent geometry updates.\n- Geometry revision tracking.\n- Mesh invalidation.\n- Band-structure analysis.\n- Band-gap identification.\n- Effective-property calculation.\n- Tensor-valued properties.\n- Homogenization validity.\n- Retrieval stability.\n- Resonant inclusion behavior.\n- Parameter sweeps.\n- Sensitivity analysis.\n- Explicit versus homogenized comparison.\n- CEME integration.\n- Serialization.\n- Automation operations.\n- Project compatibility.\n\nAdd failure tests for:\n\n- Invalid unit cells.\n- Incompatible periodic faces.\n- Invalid lattice vectors.\n- Missing constituent materials.\n- Invalid boundary conditions.\n- Unsupported physical domains.\n- Solver failure.\n- Non-convergence.\n- Invalid homogenization assumptions.\n- Retrieval instability.\n- Stale geometry.\n- Stale material properties.\n- Cancellation.\n- Invalid optimization bounds.\n\nRun existing regression suites.\n\nDo not mark a capability complete merely because its data structures or GUI panels exist.\n\n---\n\n# 22. IMPLEMENTATION PHASES\n\nImplement in carefully scoped phases.\n\n## Phase A \u2014 Audit and architecture\n\n- Inspect existing material and periodic-physics capabilities.\n- Define metamaterial resource contracts.\n- Define unit-cell and lattice representations.\n- Define homogenization interfaces.\n- Identify solver support.\n\n## Phase B \u2014 Unit-cell engineering\n\n- Unit-cell representation.\n- Lattice definitions.\n- Periodic boundaries.\n- Bloch-Floquet conditions.\n- Parameterization.\n- Validation.\n\n## Phase C \u2014 Periodic analysis\n\n- Reciprocal lattice.\n- Brillouin zones.\n- Wavevector sweeps.\n- Eigenmode analysis.\n- Dispersion relations.\n- Band-gap detection.\n\n## Phase D \u2014 Effective-property modeling\n\n- Domain-specific homogenization.\n- Effective tensors.\n- Frequency dependence.\n- Retrieval stability.\n- Validity reporting.\n- Explicit versus effective comparisons.\n\n## Phase E \u2014 Reference metamaterials\n\nPrioritize:\n\n1. Electromagnetic split-ring resonator array.\n2. Acoustic locally resonant metamaterial.\n3. Mechanical locally resonant lattice.\n4. Photonic periodic structure.\n5. Layered effective medium.\n\n## Phase F \u2014 Structured and hierarchical materials\n\n- Graded materials.\n- Defect structures.\n- Layered structures.\n- Supercells.\n- Non-periodic configurations.\n- Hierarchical representations.\n\n## Phase G \u2014 Function-driven design\n\n- Effective-property objectives.\n- Band-gap objectives.\n- Candidate generation.\n- Parameter exploration.\n- Optimization.\n- Validation.\n\n## Phase H \u2014 GUI and automation\n\n- Unit-cell workspace.\n- Reciprocal-space inspection.\n- Band-structure visualization.\n- Effective-property inspection.\n- Application service integration.\n\n## Phase I \u2014 Validation and release readiness\n\n- Analytical benchmarks.\n- Numerical convergence.\n- Homogenization validation.\n- Energy conservation.\n- Regression testing.\n- Documentation.\n\nIf a phase depends on missing solver functionality, implement clean interfaces and document the dependency.\n\nDo not fabricate scientific results.\n\n---\n\n# 23. PERFORMANCE AND ARCHITECTURAL REQUIREMENTS\n\n- Reuse existing geometry and meshing infrastructure.\n- Reuse existing resonance and modal systems.\n- Preserve domain-specific physical models.\n- Keep homogenization independent of rendering.\n- Avoid unnecessary remeshing.\n- Track dependency revisions.\n- Support asynchronous analysis.\n- Support cancellation and progress reporting.\n- Reuse valid frequency and wavevector results.\n- Avoid unnecessary field-data copies.\n- Preserve CPU reference implementations.\n- Use existing CUDA acceleration where appropriate.\n- Keep optional scientific dependencies modular.\n- Document external dependency licenses.\n- Avoid monolithic metamaterial classes.\n- Keep physical calculations outside the GUI.\n\n---\n\n# 24. DOCUMENTATION\n\nCreate or update documentation covering:\n\n- Metamaterial architecture.\n- Unit-cell engineering.\n- Lattice geometry.\n- Bloch-Floquet analysis.\n- Reciprocal-space analysis.\n- Band structures.\n- Band gaps.\n- Resonant inclusions.\n- Effective material properties.\n- Homogenization.\n- Retrieval limitations.\n- Spatial dispersion.\n- Graded and layered materials.\n- Hierarchical structures.\n- Manufacturing constraints.\n- Function-driven metamaterial design.\n- CEME integration.\n- Automation API.\n- Scientific assumptions.\n- Validation methodology.\n\nUpdate the documentation from Prompts 17\u201320.\n\nInclude architecture diagrams and representative engineering workflows.\n\nClearly distinguish implemented, partially implemented, and planned capabilities.\n\n---\n\n# 25. ACCEPTANCE CRITERIA\n\nThis work is complete only when:\n\n1. Metamaterials are represented as structured physical assemblies rather than ordinary materials with manually assigned exotic properties.\n2. Unit cells can be created and parameterized.\n3. Lattice definitions and periodic boundaries are validated.\n4. Bloch-Floquet analysis works for at least one validated physical domain.\n5. Dispersion and band structures can be calculated.\n6. Band gaps can be identified and characterized.\n7. At least one effective-property calculation is derived from an actual constituent structure.\n8. Effective properties retain traceability to constituent geometry and materials.\n9. Homogenization assumptions and validity ranges are reported.\n10. At least one resonant metamaterial reference model is implemented and validated.\n11. Explicit and effective models can be compared where supported.\n12. Parameter sweeps and sensitivity analysis work.\n13. Metamaterial resources integrate with CEME.\n14. GUI, Python, and automation use the same underlying application services.\n15. Existing projects remain compatible.\n16. Regression tests pass.\n17. Scientific validation tests pass within documented tolerances.\n18. Documentation reflects actual implementation and limitations.\n\n---\n\n# 26. FINAL ENGINEERING REPORT\n\nAt completion, provide a detailed report containing:\n\n- Repository audit findings.\n- Existing capabilities reused.\n- New architecture introduced.\n- Files and modules changed.\n- Unit-cell implementation.\n- Periodic solver integration.\n- Band-structure implementation.\n- Homogenization methods implemented.\n- Effective-property calculations.\n- Reference metamaterials implemented.\n- Scientific equations and assumptions.\n- Validation results and tolerances.\n- Test results.\n- Performance observations.\n- GUI changes.\n- Automation API additions.\n- Serialization changes.\n- Known limitations.\n- Incomplete work and reasons.\n- External dependencies and license implications.\n- Recommended next development prompt.\n\nDo not claim a feature is implemented unless it is present, integrated, and tested.\n\nDo not conceal failed tests or unsupported physics.\n\n---\n\n# FINAL DIRECTIVE\n\nThe objective is to give RESONANT the ability to engineer materials whose physical properties emerge from their internal architecture.\n\nA user should progressively be able to ask:\n\n- What happens if I change the internal structure of this material?\n- Can I engineer a material to block a particular frequency range?\n- Can I create a material with a particular effective refractive index?\n- Can I control the direction in which energy propagates?\n- Can I create a structure that confines or localizes energy?\n- Can I engineer effective density, stiffness, or acoustic impedance?\n- Can I create unusual electromagnetic or acoustic dispersion?\n- How do individual resonators interact to produce collective behavior?\n- When is a homogenized model physically valid?\n- How closely does the effective model reproduce the actual structure?\n- What manufacturing tolerances will destroy the desired behavior?\n- What constituent geometry produces the macroscopic response I want?\n\nRESONANT must progressively become an environment where physical material behavior can be engineered from the inside out.\n\n**Do not build a library of decorative metamaterial shapes or manually assigned exotic material properties. Build a rigorous computational foundation for designing and validating emergent physical behavior from structured matter.**",
+  "file": "requests/inbox/2026-11-26-prompt-21-metamaterials-and-en-req-chat-20261126-019.md",
+  "attachments": [],
+  "context": "User: 'add this ticket and perform it in order' (queued after REQ-CHAT-20261126-018)",
+  "text_sha256": "a1c944a33feb129705427c2f0a4f3a294185940843b1b0795a98dfbd8121868a",
+  "classification": {
+    "proposed_type": null,
+    "proposed_source": "heuristic",
+    "normalized_type": null,
+    "heuristic_type": "FEATURE",
+    "final_type": "FEATURE",
+    "confidence": "high",
+    "validation": "PASS",
+    "classifier_reason": "request statement is framed as feature: Implement, ability to, capability, must support",
+    "correction_reason": null,
+    "normalization_note": null,
+    "evidence": [
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement the next major scientific and engineering capability in RESONANT: **Metamaterials and Engineered Effective Properties**."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "capability",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement the next major scientific and engineering capability in RESONANT: **Metamaterials and Engineered Effective Properties**."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "capability",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This capability establishes the ability to engineer macroscopic physical behavior through deliberately designed internal material structures."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "ability to",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This capability establishes the ability to engineer macroscopic physical behavior through deliberately designed internal material structures."
+      },
+      {
+        "category": "FEATURE",
+        "where": "head",
+        "phrase": "must support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "It must support the investigation and engineering of materials whose effective physical behavior emerges from:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "objective",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The objective is to progressively allow users to design materials with deliberately engineered physical characteristics rather than simply selecting from predefined material-property databases."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "allow",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The objective is to progressively allow users to design materials with deliberately engineered physical characteristics rather than simply selecting from predefined material-property databases."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "should support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "RESONANT should support metamaterial engineering across electromagnetic, optical, acoustic, mechanical, elastic, thermal, and other supported physical domains."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "extends",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This work extends:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Extend",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Extend their capabilities through established interfaces."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capabilities",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Extend their capabilities through established interfaces."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "integration",
+        "strength": "strong",
+        "note": "",
+        "sentence": "CAD and OpenCASCADE integration."
+      },
+      {
+        "category": "PERFORMANCE",
+        "where": "body",
+        "phrase": "Optimization",
+        "strength": "weak",
+        "note": "bullet",
+        "sentence": "Optimization infrastructure."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capabilities",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Existing capabilities."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capabilities",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Partially implemented capabilities."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capabilities",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Missing capabilities."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Reusable",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Reusable solvers and scientific libraries."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Produce",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Produce an implementation plan based on repository evidence."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capabilities",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not invent existing capabilities."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not create parallel material, geometry, resonance, or solver architectures."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "reusable",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Establish a reusable metamaterial architecture."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Introduce",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Introduce a metamaterial resource that references:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "integrate",
+        "strength": "strong",
+        "note": "",
+        "sentence": "The resulting effective material model should integrate with CEME through existing material and constitutive-model interfaces."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "build the ",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Constituent materials: actual physical materials used to build the structure."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "first-class",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Establish the unit cell as a first-class engineering object."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support arbitrary parameterized geometry using the existing CAD architecture."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support named parameters including:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support appropriate boundary conditions:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement a reusable periodic-physics analysis interface."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "reusable",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement a reusable periodic-physics analysis interface."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support Bloch-Floquet analysis where the underlying solver permits it."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Generate",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Generate reciprocal-space geometry from the actual lattice definition."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capability",
+        "strength": "strong",
+        "note": "",
+        "sentence": "This is the central scientific capability of Prompt 21."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Develop",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Develop an architecture for calculating effective constitutive behavior from the underlying structured material."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "create",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Do not create a universal effective-property calculator."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support tensor-valued properties where appropriate."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support investigation of:"
+      }
+    ],
+    "scores": {
+      "FEATURE": {
+        "head": 5,
+        "body": 138
+      },
+      "BUG": {
+        "head": 1,
+        "body": 19
+      },
+      "CRASH": {
+        "head": 0,
+        "body": 0
+      },
+      "REGRESSION": {
+        "head": 0,
+        "body": 0
+      },
+      "PERFORMANCE": {
+        "head": 0,
+        "body": 14
+      },
+      "REFACTOR": {
+        "head": 0,
+        "body": 26
+      },
+      "BUILD": {
+        "head": 0,
+        "body": 2
+      },
+      "DOCUMENTATION": {
+        "head": 0,
+        "body": 7
+      },
+      "INVESTIGATION": {
+        "head": 1,
+        "body": 49
+      },
+      "PROCESS-CHANGE": {
+        "head": 0,
+        "body": 1
+      }
+    },
+    "evidence_total": 263,
+    "validator": "scripts/request_classification.py"
+  },
+  "links": {
+    "work": [
+      "WORK-000020"
+    ]
+  },
+  "commits": [],
+  "resolution": {
+    "from": "processing",
+    "to": "completed",
+    "at": "2026-11-28T03:35:23.328788+00:00",
+    "by": "agent-dev-20261126151713-76f632",
+    "gates": [
+      {
+        "work": "WORK-000020",
+        "at": "2026-11-28T03:35:05.910011+00:00",
+        "verdict": "PASS",
+        "request_fingerprint": "cb7e6e6c32c8fddeb16ee75f6b2dae5e40d4a6e9f969e00a71edceef2c8d8426",
+        "test_runs": [
+          "20261127T223024-535277"
+        ]
+      }
+    ]
+  }
+}

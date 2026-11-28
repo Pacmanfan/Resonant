@@ -28,5 +28,9 @@ within 0.13 % of √ε_∥.
 
 ## Limits
 
-Oblique incidence, anisotropic layers, losses and 2D/3D lattices are not
-modeled; the elastic counterpart is the periodic rod (`mechanics/Bloch`).
+This analysis is lossless and at normal incidence. Oblique incidence (TE and
+TM), lossy layers, the uniaxial effective slab and parameter retrieval are in
+`em.layered-effective-medium` (`ObliqueLayers`, `Retrieval`;
+[effective properties](../materials/EFFECTIVE_PROPERTIES.md), REQ-CHAT-20261126-019).
+2D/3D lattices are not modeled; the elastic counterpart is the periodic rod
+(`mechanics/Bloch`).

@@ -67,6 +67,7 @@ void FunctionalPanel::setController(FunctionalController* controller)
         ui_->sweepButton->setEnabled(true);
     });
     connect(ui_->structureCombo, &QComboBox::currentIndexChanged, this, [this] {
+        ui_->saveMaterialButton->setEnabled(false);
         analysis_ = json::object();
         sweep_ = json();
         resultId_.clear();
@@ -96,6 +97,15 @@ void FunctionalPanel::setController(FunctionalController* controller)
         }
         ui_->analyzeButton->setEnabled(false);
         ui_->statusLabel->setText(tr("Analyzing…"));
+    });
+    connect(ui_->saveMaterialButton, &QPushButton::clicked, this, [this] {
+        auto saved = controller_->createEffectiveMaterial(resultId_);
+        if (!saved) {
+            ui_->statusLabel->setText(tr("The effective material was not saved: %1").arg(QString::fromStdString(saved.message())));
+            return;
+        }
+        const QString name = QString::fromStdString(analysis_["details"]["effectiveMaterial"].value("name", ""));
+        ui_->statusLabel->setText(tr("Saved '%1' to the materials library (provenance: homogenized). Undo removes it.").arg(name));
     });
     connect(ui_->sweepButton, &QPushButton::clicked, this, [this] {
         auto job = controller_->sweep(currentStructure(), ui_->sweepParameterCombo->currentData().toString(), ui_->sweepFrom->value(),
@@ -264,6 +274,17 @@ void FunctionalPanel::showResult(const QString& resultId)
                                                      c.value("satisfied", false) ? tr("satisfied") : tr("violated"));
     for (const json& o : analysis_.value("objectives", json::array()))
         details << tr("Objective %1 (%2 %3): %4").arg(text(o, "id"), text(o, "sense"), text(o, "metric"), number(o["value"]));
+    const json effective = analysis_.value("details", json::object()).value("effectiveMaterial", json());
+    if (effective.is_object()) {
+        details << tr("Effective material: %1 (%2, by %3)").arg(text(effective, "name"), text(effective, "kind"), text(effective, "method"));
+        details << tr("  valid: %1").arg(text(effective, "validity"));
+        for (const json& p : effective.value("properties", json::array()))
+            details << QStringLiteral("  • %1.%2 (%3) = %4%5")
+                           .arg(text(p, "domain"), text(p, "key"), text(p, "component"), number(p["value"]),
+                                p.value("frequencyTable", json::array()).empty() ? QString() : tr(", frequency-dependent"));
+        for (const json& l : effective.value("limitations", json::array()))
+            details << tr("  limitation: %1").arg(QString::fromStdString(l.get<std::string>()));
+    }
     const json provenance = analysis_.value("provenance", json::object());
     details << tr("Computed %1 by %2").arg(QString::fromStdString(provenance.value("created", "")),
                                            QString::fromStdString(provenance.value("application", "")));
@@ -283,6 +304,7 @@ void FunctionalPanel::showStaleness()
     if (resultId_.isEmpty() || !controller_)
         return;
     const json now = controller_->result(resultId_);
+    ui_->saveMaterialButton->setEnabled(!now.value("stale", false) && now.value("details", json::object()).contains("effectiveMaterial"));
     if (now.value("stale", false)) {
         QStringList reasons;
         for (const json& r : now.value("currentStaleness", json::array()))
@@ -411,6 +433,11 @@ int FunctionalPanel::plottedPoints() const
 QPushButton* FunctionalPanel::analyzeButton() const
 {
     return ui_->analyzeButton;
+}
+
+QPushButton* FunctionalPanel::saveMaterialButton() const
+{
+    return ui_->saveMaterialButton;
 }
 
 void FunctionalPanel::startSweep(const QString& parameter, double from, double to, int points, const QString& metric)

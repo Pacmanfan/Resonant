@@ -16,4 +16,5 @@ paths these documents name exist.
 * `COUPLED_ENGINE_ARCHITECTURE.md` — the Coupled Energy–Matter Engine as implemented (modules, data flow, participants, services); `COUPLED_ENGINE_AUDIT.md` (the audit before it), `PHYSICAL_SYSTEM_MODEL.md` (the system document), `COUPLED_ENGINE_ROADMAP.md` (its phases and next steps).
 * `FUNCTIONAL_STRUCTURE_ARCHITECTURE.md` — functional structures: geometry as a physical design variable, analyses, studies, services, the panel; `FUNCTIONAL_STRUCTURE_AUDIT.md` (the audit before them).
 * Resonance engineering (ADR-000222): `docs/physics/RESONANCE_ARCHITECTURE.md`, `docs/physics/COUPLED_RESONATORS.md`, `docs/physics/RESONANCE_SPECTROSCOPY.md`.
+* Metamaterials (ADR-000223): `docs/materials/METAMATERIAL_ARCHITECTURE.md`, `docs/materials/EFFECTIVE_PROPERTIES.md`, `docs/physics/HOMOGENIZATION_AND_VALIDITY.md`.
 * `AUTOMATION_ARCHITECTURE.md` — the application services, the protobuf contract, transports, threads; `AUTOMATION_DECISIONS.md` (the choices and alternatives); `MCP_INTEGRATION.md` (AI assistants).

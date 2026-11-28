@@ -31,6 +31,8 @@ public:
     resonant::Result<QString> analyze(const QString& id, const QString& model);
     resonant::Result<QString> sweep(const QString& id, const QString& parameter, double from, double to, int points, const QString& model);
     nlohmann::json result(const QString& resultId) const;
+    // Saves a result's effective material into the library (one undoable step); the new material's id.
+    resonant::Result<QString> createEffectiveMaterial(const QString& resultId);
     bool busy() const { return !pending_.isEmpty(); }
 
 signals:

@@ -33,14 +33,17 @@ src/core/functional     no physics, no domain, no coupling (layering rule)
   Dependencies          content keys, staleness, the simulation-geometry cache
   Analysis              the registry interface: kinds, models, metrics, roles, outcomes
   FunctionalStudy       analyze, sweep, sensitivity, mode tracking, objectives, constraints, explanations
+  EffectiveMaterial     the effective material of an effective-medium analysis and its library form
 
 src/core/coupling
   FunctionalAnalyses    the analyses (cavity, optical resonator, horn, mechanical, photonic cell, periodic rod, coupled slab)
+  ResonanceAnalyses     Helmholtz, cantilever and coupled resonators
+  MetamaterialAnalyses  the effective-medium analyses (ADR-000223)
   FunctionalAdapter     the optimization adapter "functional"
 
 domains                 CavityResonator, OpticalResonator, PeriodicLayers (electromagnetics), Horn + horn.acoustic (manipulators);
                         existing: mechanics studies and Bloch, layered media, the coupled engine
-src/core/services       FunctionalStructureService (14 operations)
+src/core/services       FunctionalStructureService (15 operations, with CreateEffectiveMaterial)
 proto/resonant/v1/functional    the contract
 src/app                 FunctionalController, FunctionalPanel (dock "Functional Structures")
 ```
@@ -72,6 +75,11 @@ src/app                 FunctionalController, FunctionalPanel (dock "Functional 
 | `mechanics.cantilever-resonator` | confinement | Euler–Bernoulli modes, first mode as an oscillator (ring-down) | `mechanics/LumpedResonators` |
 | `mechanics.coupled-cantilevers` | confinement | two tip-referred oscillators and a spring | `mechanics/LumpedResonators`, `oscillators` ([page](../physics/COUPLED_RESONATORS.md)) |
 | `acoustic.coupled-helmholtz` | confinement | lumped acoustic network | `manipulators/Helmholtz`, `oscillators` |
+| `mechanics.mass-in-mass-lattice` | effective-medium | closed form, cell Bloch eigenproblem, finite chain | `mechanics/LocallyResonantLattice`, `oscillators/BlochLattice` ([metamaterials](../materials/METAMATERIAL_ARCHITECTURE.md)) |
+| `acoustic.resonator-duct` | effective-medium | cell transfer matrices with shunt Helmholtz resonators | `manipulators/ResonatorDuct` |
+| `em.layered-effective-medium` | effective-medium | uniaxial mixing vs exact TE/TM stacks; retrieval | `electromagnetics/ObliqueLayers`, `Retrieval` |
+| `em.split-ring-array` | effective-medium | quasi-static LC circuit (an approximation) | `electromagnetics/SplitRing` |
+| `thermal.layered-conductivity` | effective-medium | series/parallel conductances vs finite volumes | `thermal/LayeredConductivity` |
 
 Each kind declares its mechanism (used in explanations), its models with
 fidelity, assumptions and validity, its metrics with units and definitions,

@@ -25,7 +25,8 @@ namespace resonant::functional {
 using Values = std::map<std::string, double, std::less<>>;
 
 // The energy-transformation category of the request (section 4).
-enum class Category { Propagation, Reflection, Focusing, Confinement, Dissipation, Force, Coupled };
+// EffectiveMedium: properties of an organized structure derived as those of a material (RES-META-001).
+enum class Category { Propagation, Reflection, Focusing, Confinement, Dissipation, Force, Coupled, EffectiveMedium };
 std::string_view toString(Category category);
 
 struct MetricInfo {

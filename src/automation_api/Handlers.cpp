@@ -905,11 +905,12 @@ void Dispatcher::registerProjectAndScene()
                                                                       {v1::MATERIAL_PROVENANCE_MANUFACTURER, "manufacturer"},
                                                                       {v1::MATERIAL_PROVENANCE_LITERATURE, "literature"},
                                                                       {v1::MATERIAL_PROVENANCE_THEORETICAL, "theoretical"},
-                                                                      {v1::MATERIAL_PROVENANCE_ILLUSTRATIVE, "illustrative"}};
+                                                                      {v1::MATERIAL_PROVENANCE_ILLUSTRATIVE, "illustrative"},
+                                                                      {v1::MATERIAL_PROVENANCE_HOMOGENIZED, "homogenized"}};
                 for (const v1::MaterialProperty& p : in.properties()) {
                     const auto it = provenance.find(p.provenance());
                     if (it == provenance.end())
-                        return services::invalid("every property needs its provenance (measured, manufacturer, literature, theoretical, illustrative)",
+                        return services::invalid("every property needs its provenance (measured, manufacturer, literature, theoretical, illustrative, homogenized)",
                                                  "properties.provenance");
                     material["domains"][p.domain()][p.key()] = {{"value", p.value_si()}, {"provenance", it->second}, {"source", p.source()}};
                 }
@@ -1719,6 +1720,26 @@ void Dispatcher::registerAutomation()
                 x->set_asymmetric(m.value("asymmetric", false));
                 x->set_fit_quality(m.value("fitQuality", 0.0));
             }
+            return std::nullopt;
+        });
+    unary<v1::CreateEffectiveMaterialRequest, v1::CreateEffectiveMaterialResponse>(
+        "FunctionalStructureService", "CreateEffectiveMaterial", Permission::Modify, true, false,
+        [this](const v1::CreateEffectiveMaterialRequest& in, v1::CreateEffectiveMaterialResponse& out, const CallContext& c) -> Failure {
+            const std::string id = in.material_id().empty() ? Id::generate().str() : in.material_id();
+            nlohmann::json options{{"id", id}, {"components", nlohmann::json::object()}};
+            if (!in.name().empty())
+                options["name"] = in.name();
+            for (const auto& [key, component] : in.components())
+                options["components"][key] = component;
+            auto m = session_.services().functional.createEffectiveMaterial(c, in.result_id(), options);
+            if (!m)
+                return m.error();
+            detail::mutated(out.mutable_header(), m.value());
+            toProto(m.value().changes, out.mutable_changes());
+            addMaterialRef(out.mutable_changes()->mutable_created(), id);
+            if (!m.value().dryRun)
+                if (auto created = session_.services().materials.get(c, Id(id)))
+                    toProto(created.value(), out.mutable_material());
             return std::nullopt;
         });
     unary<v1::ExplainCandidatesRequest, v1::ExplainCandidatesResponse>(

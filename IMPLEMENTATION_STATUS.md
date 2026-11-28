@@ -421,3 +421,19 @@ milestones below.)
 | Resonant cavity in the Coupled Energy–Matter Engine (`rectangular-cavity`, `em.cavity.mode`, `thermal.lumped`, `thermal.uniform-expansion`) | Tested | lumped thermal model |
 | Q against extraction (β/(1+β)) as a tradeoff | Tested | through sweeps and objectives |
 | Coupled resonators as one finite-element model, Q of open radiating structures, fluid resonances beyond lumped acoustics, nonlinear field solvers | Missing | planned |
+
+## Metamaterials and effective properties — `docs/requirements/metamaterials.md`, `docs/materials/METAMATERIAL_ARCHITECTURE.md`
+
+| Capability | State | Notes |
+|---|---|---|
+| Effective-medium analyses as functional structures, constituents / unit cell / periodic / effective / equivalent kept apart | Tested | category `effective-medium`; `details.representations` |
+| Bloch–Floquet analysis of lumped cells (numerical, phase-shifted links) | Tested | `src/core/oscillators/BlochLattice`; against monatomic, diatomic and mass-in-mass closed forms |
+| Locally resonant mass-in-mass lattice: gap, negative effective mass, finite-chain attenuation, long-wave speed | Tested | cell masses from geometry in the example |
+| Duct with Helmholtz resonators: Bloch dispersion, hybridization and Bragg gaps, effective bulk modulus, finite-array attenuation | Tested | plane waves; lumped resonators |
+| Layered media at oblique incidence (TE, TM, lossy), uniaxial effective slab, oblique Bloch waves | Tested | against the layered-media solver, Airy and Brewster |
+| S-parameter retrieval: branch by continuity, passivity, conditioning, locality and antiresonance flags | Tested | negative-index slab retrieved |
+| Split-ring arrays: circuit model, Lorentzian permeability, negative band, Kramers–Kronig and passivity | Tested | an approximation; no full-wave check |
+| Layered thermal conductivity tensor against finite volumes | Tested | |
+| Validity with every effective value; no effective material outside it | Tested | `docs/physics/HOMOGENIZATION_AND_VALIDITY.md` |
+| Effective materials saved into the library (provenance `homogenized`, undoable, stale results refused) and used by the coupled engine | Tested | `CreateEffectiveMaterial`; Python, MCP, the panel's Save effective material |
+| 2D/3D Bloch of continua, full-wave split rings, anisotropic (tensor) library materials, architected and graded lattices, nonlinear or time-varying metamaterials | Missing | planned |

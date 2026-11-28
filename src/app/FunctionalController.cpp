@@ -92,6 +92,15 @@ Result<QString> FunctionalController::sweep(const QString& id, const QString& pa
     return jobId;
 }
 
+Result<QString> FunctionalController::createEffectiveMaterial(const QString& resultId)
+{
+    const std::string id = resonant::Id::generate().str();
+    auto m = document_->services().functional.createEffectiveMaterial(DocumentController::guiContext(), resultId.toStdString(), json{{"id", id}});
+    if (!m)
+        return Result<QString>::failure(m.error().message);
+    return QString::fromStdString(id);
+}
+
 json FunctionalController::result(const QString& resultId) const
 {
     auto r = document_->services().functional.result(DocumentController::guiContext(), resultId.toStdString());

@@ -21,7 +21,8 @@ participants read the laws at their cells or elements whenever the material
 revision changed. Distinguished as the request asks: intrinsic definition
 (library), initial state (the reference temperature), current state (the
 temperature field), its evolution (history), derived properties (law
-values); effective (homogenized) properties remain planned.
+values); effective (homogenized) properties come from the effective-medium
+analyses (`docs/materials/METAMATERIAL_ARCHITECTURE.md`).
 
 ```text
 material state evolution in an iterative coupled run (revisions increase on every update)
@@ -45,15 +46,18 @@ property value records:
 
 - its SI value and unit (from the domain's property definitions);
 - its provenance: measured, manufacturer-supplied, literature-derived,
-  theoretical, or illustrative;
+  theoretical, illustrative, or homogenized (derived from an organized
+  structure by an effective-medium analysis; the source names the method,
+  structure and result, REQ-CHAT-20261126-019, ADR-000223);
 - a validity range in frequency and temperature;
 - optionally a table of values over frequency (linear interpolation,
   clamped at the ends).
 
 What it cannot express: dependence on temperature, pressure, stress, strain
 or fields; anisotropy (tensors); spatial variation inside an object;
-history (plasticity, damage); phase; thermal properties; values computed by
-a tool or homogenized from a structure.
+history (plasticity, damage); phase; values computed by an external tool.
+(Thermal properties are current since REQ-CHAT-20261126-016; values
+homogenized from a structure since REQ-CHAT-20261126-019.)
 
 ## Planned: properties as functions of state
 
@@ -78,8 +82,9 @@ Material ── per domain ──► PropertySet ── key ──► PropertyMo
 - **Validity is enforced:** evaluating outside the validity domain returns
   the value with a reported extrapolation (the run's warnings), or fails
   where the model forbids it. Never silent (RES-SFE-008).
-- **Provenance gains** `Computed` (tool, version, inputs) and `Homogenized`
-  (structure, model, frequency range), RES-SFE-009 and RES-SFE-005.
+- **Provenance gains** `Computed` (tool, version, inputs), RES-SFE-009.
+  `Homogenized` (structure, model, frequency range; RES-SFE-005) is current
+  (`docs/materials/METAMATERIAL_ARCHITECTURE.md`).
 
 ## Where state lives
 

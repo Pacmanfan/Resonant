@@ -419,6 +419,7 @@ void toProto(const nlohmann::json& m, v1::Material* out)
                                   : provenance == "literature"   ? v1::MATERIAL_PROVENANCE_LITERATURE
                                   : provenance == "theoretical"  ? v1::MATERIAL_PROVENANCE_THEORETICAL
                                   : provenance == "illustrative" ? v1::MATERIAL_PROVENANCE_ILLUSTRATIVE
+                                  : provenance == "homogenized"  ? v1::MATERIAL_PROVENANCE_HOMOGENIZED
                                                                  : v1::MATERIAL_PROVENANCE_UNSPECIFIED);
             }
         }

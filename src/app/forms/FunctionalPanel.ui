@@ -38,6 +38,13 @@
      <item><widget class="QLabel" name="modelLabel"><property name="text"><string>Model</string></property></widget></item>
      <item><widget class="QComboBox" name="modelCombo"><property name="sizePolicy"><sizepolicy hsizetype="Expanding" vsizetype="Fixed"/></property></widget></item>
      <item><widget class="QPushButton" name="analyzeButton"><property name="text"><string>Analyze</string></property></widget></item>
+     <item>
+      <widget class="QPushButton" name="saveMaterialButton">
+       <property name="text"><string>Save effective material</string></property>
+       <property name="enabled"><bool>false</bool></property>
+       <property name="toolTip"><string>Add the effective material this analysis derived to the project's materials library (provenance: homogenized). Available for a current effective-medium result inside its validity.</string></property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>

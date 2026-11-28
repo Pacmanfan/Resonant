@@ -1,7 +1,9 @@
 // The functional-structure application services (REQ-CHAT-20261126-017, RES-FUNC-014).
 #include "services/Services.h"
 
+#include "commands/SceneCommands.h"
 #include "coupling/FunctionalAdapter.h"
+#include "functional/EffectiveMaterial.h"
 #include "functional/FunctionalStudy.h"
 #include "optimization/Engine.h"
 #include "optimization/Persistence.h"
@@ -549,6 +551,52 @@ Outcome<json> FunctionalStructureService::explain(const CallContext& c, const st
     }
     return json{{"run", runId}, {"structure", id}, {"evaluations", run->candidates.size()}, {"candidates", candidates},
                 {"note", "each candidate's values were computed by the named model for that candidate's own design"}};
+}
+
+Outcome<Mutation> FunctionalStructureService::createEffectiveMaterial(const CallContext& c, const std::string& resultId, const json& options)
+{
+    if (auto a = s_.authorize(c, Permission::Modify); !a)
+        return a.error();
+    if (!options.is_null() && !options.is_object())
+        return invalid("options must be an object", "options");
+    const ResultEntry* entry = s_.result(resultId);
+    if (!entry || entry->kind != kResultKind || !entry->document)
+        return notFound("there is no functional result '" + resultId + "'", "result", resultId);
+    const json& d = *entry->document;
+    if (d.value("kind", "") != "analysis")
+        return invalid("an effective material comes from an analysis result, not from a " + d.value("kind", std::string("?")), "resultId");
+    const json* record = nullptr;
+    if (const auto details = d.find("details"); details != d.end() && details->is_object())
+        if (const auto e = details->find("effectiveMaterial"); e != details->end())
+            record = &*e;
+    if (!record)
+        return ServiceError::make(ErrorCode::FailedPrecondition,
+                                  "the analysis reported no effective material: it is not an effective-medium analysis, or the structure lies "
+                                  "outside the validity of its effective description (see the result's warnings)");
+    if (const auto stale = fn::resultStaleness(d, s_.project(), fn::AnalysisRegistry::instance()); !stale.empty())
+        return ServiceError::make(ErrorCode::FailedPrecondition, "the result is stale (" + stale.front().what + ": " + stale.front().detail +
+                                                                     "): run the analysis again before saving its effective material");
+    auto effective = fn::EffectiveMaterial::fromJson(*record);
+    if (!effective)
+        return invalid(effective.message(), "details.effectiveMaterial");
+    const json o = options.is_object() ? options : json::object();
+    const Id id = o.contains("id") && o["id"].is_string() && !o["id"].get<std::string>().empty() ? Id(o["id"].get<std::string>()) : Id::generate();
+    const std::string reference = "result " + resultId + " (" + d.value("analysis", json::object()).value("kind", std::string()) + ", project revision " +
+                                  std::to_string(entry->projectRevision) + ")";
+    auto material = fn::toLibraryMaterial(effective.value(), id, o.value("name", std::string()), o.value("components", json()), reference);
+    if (!material)
+        return invalid(material.message(), "options");
+    const Material m = material.take();
+    return s_.mutate(c, "FunctionalStructureService.CreateEffectiveMaterial", {m.id()}, std::nullopt, [m](Project& target) -> Outcome<std::unique_ptr<Command>> {
+        if (target.materials.find(m.id()))
+            return ServiceError::make(ErrorCode::AlreadyExists, "a material with the id '" + m.id().str() + "' exists");
+        MaterialLibrary library = target.materials;
+        if (Status st = library.add(m); !st)
+            return invalid(st.message(), "options");
+        std::unique_ptr<Command> command =
+            std::make_unique<SetMaterialLibraryCommand>(target.materials, std::move(library), "Add effective material " + m.name());
+        return command;
+    });
 }
 
 }  // namespace resonant::services

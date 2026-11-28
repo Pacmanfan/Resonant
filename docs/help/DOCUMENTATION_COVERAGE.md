@@ -5,8 +5,8 @@ screenshot manifest, `demos/profiles/` and the Python package; `python/tests`
 fails when this report is out of date. A major user-facing feature is not complete
 without a help topic (RES-HELP-012).
 
-**32 features.** Help topic: 32/32. Illustrated with a screenshot: 19/32. Example project: 24/32. Demonstration: 17/32. Python API: 23/32.
-Help: 123 topics in 12 categories.
+**33 features.** Help topic: 33/33. Illustrated with a screenshot: 19/33. Example project: 25/33. Demonstration: 17/33. Python API: 24/33.
+Help: 124 topics in 12 categories.
 
 | Feature | Help topic | Status | Screenshots | Example projects | Demos | Python API |
 |---|---|---|---|---|---|---|
@@ -31,6 +31,7 @@ Help: 123 topics in 12 categories.
 | Optimization Studio | `opt.studio` | available | optimization-studio.png | optimization/a-acoustic-focal-array.resonant, optimization/f-sidelobe-reduction.resonant | F | resonant.optimization |
 | Functional structures | `opt.functional-structures` | available | - | functional/a-microwave-cavity.resonant, functional/c-acoustic-horn.resonant | - | resonant_api (FunctionalStructureService) |
 | Resonance engineering | `opt.functional-structures` | available | - | resonance/a-helmholtz-resonator.resonant, resonance/b-coupled-cantilevers.resonant | - | resonant_api (FunctionalStructureService, ResonanceService) |
+| Metamaterials and effective properties | `opt.metamaterials` | available | - | metamaterials/a-mass-in-mass-lattice.resonant, metamaterials/e-layered-thermal.resonant | - | resonant_api (FunctionalStructureService.CreateEffectiveMaterial) |
 | Topology optimization | `opt.topology` | experimental | - | - | - | - |
 | Experiments and acquisition | `exp.acquisition` | available | experiment-workspace.png | experiments/acoustic_experiments.resonant, experiments/mechanical_experiments.resonant | - | resonant.experiments |
 | Measurement correlation | `exp.correlation` | available | - | experiments/rf_experiments.resonant | G (partial) | resonant.measurements.compare |

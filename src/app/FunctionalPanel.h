@@ -42,6 +42,7 @@ public:
     void showCurve(int index);
     int plottedPoints() const;
     QPushButton* analyzeButton() const;
+    QPushButton* saveMaterialButton() const;
     void startSweep(const QString& parameter, double from, double to, int points, const QString& metric);
 
 public slots:

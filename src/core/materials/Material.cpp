@@ -13,6 +13,7 @@ std::string_view toString(Provenance provenance)
     case Provenance::LiteratureDerived: return "literature";
     case Provenance::Theoretical: return "theoretical";
     case Provenance::Illustrative: return "illustrative";
+    case Provenance::Homogenized: return "homogenized";
     }
     return "illustrative";
 }
@@ -24,6 +25,7 @@ std::optional<Provenance> provenanceFromString(std::string_view text)
     if (text == "literature") return Provenance::LiteratureDerived;
     if (text == "theoretical") return Provenance::Theoretical;
     if (text == "illustrative") return Provenance::Illustrative;
+    if (text == "homogenized") return Provenance::Homogenized;
     return std::nullopt;
 }
 

@@ -87,23 +87,24 @@ own scope decides what each delivers.
 
 ## Stage 7 — Metamaterials and periodic structures
 
-- **Status:** 1D current (REQ-CHAT-20261126-017): the two-layer electromagnetic cell (exact Bloch, gaps, finite-stack transmission) and the periodic rod as analyses; 2D/3D lattices remain.
+- **Status:** 1D current (REQ-CHAT-20261126-017): the two-layer electromagnetic cell (exact Bloch, gaps, finite-stack transmission) and the periodic rod as analyses; since REQ-CHAT-20261126-019 also locally resonant lattices (mass-in-mass, Helmholtz-loaded duct) with Bloch analysis of lumped cells, oblique layered stacks and split-ring arrays (circuit model), each checked against a finite structure (`docs/physics/METAMATERIAL_VALIDATION.md`); 2D/3D lattices remain.
 
 - **Goals:** `UnitCell` and `Lattice`; 2D/3D Bloch analysis (elastic, acoustic, electromagnetic with phase-shifted periodic boundaries); band diagrams; finite structures from lattices.
 - **Depends on:** stage 6. **Reuses:** `mechanics/Bloch`, Yee periodic boundaries, finite elements.
 - **Risks:** cost of 3D band structures; boundary effects in finite samples.
 - **Validation:** published band diagrams; finite-slab transmission against the band gaps.
 - **Acceptance:** band gaps predicted by cells match finite-structure transmission within stated tolerances.
-- **Queued:** REQ-CHAT-20261126-019 (Prompt 21, metamaterials and effective properties).
+- **Done:** REQ-CHAT-20261126-019 (Prompt 21, metamaterials and effective properties; ADR-000223).
 
 ## Stage 8 — Microstructure and homogenization
 
+- **Status:** partly current (REQ-CHAT-20261126-019): effective materials (`functional/EffectiveMaterial`) from static layered homogenization (dielectric, thermal), long-wavelength limits (resonator duct) and S-parameter retrieval, each with its validity; saved into the library with provenance `homogenized` and used by the coupled engine. Asymptotic homogenization of 2D/3D cells remains.
 - **Goals:** `EffectiveProperties` from asymptotic homogenization and from S-parameter retrieval, with validity and passivity checks.
 - **Depends on:** stage 7.
 - **Risks:** retrieval branches; validity near resonances.
 - **Validation:** layered media (exact), comparison of homogenized and full-structure responses.
 - **Acceptance:** effective properties never shown without their model, cell and frequency range.
-- **Queued:** REQ-CHAT-20261126-019, REQ-CHAT-20261126-020 (Prompt 22, multiscale material modeling).
+- **Queued:** REQ-CHAT-20261126-020 (Prompt 22, multiscale material modeling). Done: REQ-CHAT-20261126-019.
 
 ## Stage 9 — Multiscale external solver integration
 

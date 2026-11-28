@@ -8,6 +8,7 @@ enum MaterialProvenance {
   MATERIAL_PROVENANCE_LITERATURE = 3;    // derived from published values
   MATERIAL_PROVENANCE_THEORETICAL = 4;   // a model or estimate
   MATERIAL_PROVENANCE_ILLUSTRATIVE = 5;  // for demonstration only
+  MATERIAL_PROVENANCE_HOMOGENIZED = 6;   // derived from an organized structure by an effective-medium analysis
 }
 
 // One property of one physics domain. Values are SI (kg/m^3, m/s, Pa, S/m,

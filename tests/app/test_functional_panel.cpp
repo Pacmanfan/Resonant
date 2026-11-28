@@ -37,9 +37,9 @@ protected:
         window_->close();
         window_.reset();
     }
-    void open(const char* file)
+    void open(const char* file, const char* folder = "functional")
     {
-        const auto path = std::filesystem::path(RESONANT_SOURCE_DIR) / "examples" / "functional" / file;
+        const auto path = std::filesystem::path(RESONANT_SOURCE_DIR) / "examples" / folder / file;
         ASSERT_TRUE(window_->openProjectFile(QString::fromStdString(path.string())).ok());
         QTest::qWait(20);
     }
@@ -107,4 +107,29 @@ TEST_F(FunctionalPanelTest, CurvesSwitchWithoutRecomputingAndASweepIsPlotted)
     ASSERT_TRUE(ready.wait(30000) || ready.count() > 0);
     EXPECT_EQ(panel().plottedPoints(), 5);
     EXPECT_TRUE(panel().statusText().contains("Sweep finished")) << panel().statusText().toStdString();
+}
+
+TEST_F(FunctionalPanelTest, SavesAnEffectiveMaterialIntoTheLibraryUndoably)
+{
+    // RES-META-011, RES-META-012: the laminate's effective material, from the panel.
+    open("e-layered-thermal.resonant", "metamaterials");
+    EXPECT_FALSE(panel().saveMaterialButton()->isEnabled());
+    ASSERT_TRUE(analyzeAndWait());
+    EXPECT_TRUE(panel().detailsText().contains("Effective material")) << panel().detailsText().toStdString();
+    EXPECT_TRUE(panel().detailsText().contains("thermal.thermalConductivity (perpendicular)"));
+    ASSERT_TRUE(panel().saveMaterialButton()->isEnabled());
+    const size_t before = window_->controller().project().materials.materials().size();
+    panel().saveMaterialButton()->click();
+    QTest::qWait(20);
+    ASSERT_EQ(window_->controller().project().materials.materials().size(), before + 1);
+    const Material& saved = window_->controller().project().materials.materials().back();
+    EXPECT_EQ(saved.property(PhysicsDomain::Thermal, "thermalConductivity")->provenance, Provenance::Homogenized);
+    EXPECT_TRUE(panel().statusText().contains("homogenized")) << panel().statusText().toStdString();
+    window_->controller().undo();
+    QTest::qWait(20);
+    EXPECT_EQ(window_->controller().project().materials.materials().size(), before);
+    // An edit makes the result stale: nothing more can be saved from it.
+    panel().editParameter(0, 0.0006);
+    QTest::qWait(20);
+    EXPECT_FALSE(panel().saveMaterialButton()->isEnabled());
 }

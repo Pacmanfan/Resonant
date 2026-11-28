@@ -27,7 +27,7 @@ discover is something you can trust.
   refracts into materials and rings in cavities; pulses and spectra.
 * **Vibration of things** — beams, plates, membranes and solids: natural
   frequencies and mode shapes, frequency responses, impulses, waves along
-  rods, vibration steered to a chosen spot, phononic rods with stop bands,
+  rods, vibration steered to a chosen spot, metamaterials with band gaps,
   and the sound a vibrating plate sends out.
 * **Radio waves and antennas** — dipoles, monopoles and loops with their
   impedance, gain and patterns; phased arrays you can steer and taper;

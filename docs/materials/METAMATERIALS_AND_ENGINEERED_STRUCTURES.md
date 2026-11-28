@@ -1,7 +1,15 @@
 # Metamaterials and Engineered Structures
 
-**Status:** a 1D periodic-rod band structure is current (`docs/mechanics/PHONONIC_STRUCTURES.md`);
-everything else here is planned (RES-SFE-005, ADR-000219).
+**Status:** one-dimensional structures are current: the periodic rod
+(`docs/mechanics/PHONONIC_STRUCTURES.md`), the two-layer photonic cell, and the
+effective-medium analyses of REQ-CHAT-20261126-019 (locally resonant
+mass-in-mass lattice, Helmholtz-loaded duct, layered dielectric with retrieval,
+split-ring circuit model, layered thermal medium; effective materials saved
+into the library) — see [the architecture](METAMATERIAL_ARCHITECTURE.md),
+[effective properties](EFFECTIVE_PROPERTIES.md),
+[validity](../physics/HOMOGENIZATION_AND_VALIDITY.md) and
+[validation](../physics/METAMATERIAL_VALIDATION.md). 2D/3D lattices and the
+rest of the planned capabilities below remain planned (RES-SFE-005, ADR-000219, ADR-000223).
 
 An engineered structure gets its behavior from its internal geometry: a
 periodic arrangement scatters waves coherently (Bragg band gaps), small
@@ -42,6 +50,11 @@ frequency range, the cell-to-wavelength ratio, and how it was validated
 against the full structure (RES-SFE-005).
 
 ## Planned capabilities (stage 7 and 8 of the roadmap)
+
+Current since REQ-CHAT-20261126-019: Bloch analysis of lumped 1D cells,
+S-parameter retrieval of slabs with branch tracking and passivity checks,
+static homogenization of layered media (dielectric and thermal), and
+band-gap and effective-property metrics as optimization targets. Planned:
 
 - **Unit cells and lattices** as engineering geometry (`UnitCell`,
   `Lattice`: Bravais vectors, the cell's geometry and material regions),

@@ -377,6 +377,11 @@ public:
     Outcome<JobView> optimize(const CallContext& c, const std::string& id, const nlohmann::json& spec);
     // The best candidates of an optimization run of a structure, each explained against the current design.
     Outcome<nlohmann::json> explain(const CallContext& c, const std::string& runId, int count);
+    // Saves the effective material of an analysis result into the project's library (RES-META-011):
+    // provenance "homogenized", the derivation in its sources; one undoable step. A stale result, or
+    // one without an effective material (outside its validity, or not an effective-medium analysis),
+    // is refused. options: {"id", "name", "components": {"domain.key": "parallel" | "perpendicular" | ...}}
+    Outcome<Mutation> createEffectiveMaterial(const CallContext& c, const std::string& resultId, const nlohmann::json& options);
 
     static constexpr const char* kExtension = "functional";
     static constexpr const char* kResultKind = "functional.result";

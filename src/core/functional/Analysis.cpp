@@ -16,6 +16,7 @@ std::string_view toString(Category c)
     case Category::Dissipation: return "dissipation";
     case Category::Force: return "force";
     case Category::Coupled: return "coupled";
+    case Category::EffectiveMedium: return "effective-medium";
     }
     return "confinement";
 }

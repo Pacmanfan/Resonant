@@ -43,6 +43,8 @@ FEATURES = [
      "resonant_api (FunctionalStructureService)"),
     ("Resonance engineering", "opt.functional-structures", ["resonance/a-helmholtz-resonator.resonant", "resonance/b-coupled-cantilevers.resonant"], [],
      "resonant_api (FunctionalStructureService, ResonanceService)"),
+    ("Metamaterials and effective properties", "opt.metamaterials", ["metamaterials/a-mass-in-mass-lattice.resonant", "metamaterials/e-layered-thermal.resonant"], [],
+     "resonant_api (FunctionalStructureService.CreateEffectiveMaterial)"),
     ("Topology optimization", "opt.topology", [], [], "-"),
     ("Experiments and acquisition", "exp.acquisition", ["experiments/acoustic_experiments.resonant", "experiments/mechanical_experiments.resonant"], [], "resonant.experiments"),
     ("Measurement correlation", "exp.correlation", ["experiments/rf_experiments.resonant"], ["demo-g-experimental-correlation"], "resonant.measurements.compare"),

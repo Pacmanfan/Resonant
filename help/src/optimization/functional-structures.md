@@ -6,7 +6,7 @@ order: 80
 status: available
 summary: Engineered objects whose behavior Resonant computes from their geometry - parameters, analyses, sweeps, staleness and explained candidates.
 keywords: [functional structure, geometry, parameter, cavity, resonator, horn, band gap, sweep, sensitivity, stale]
-related: [opt.studio, opt.objectives, opt.constraints, ui.panels]
+related: [opt.studio, opt.objectives, opt.constraints, opt.metamaterials, ui.panels]
 ---
 
 A **functional structure** describes an engineered object: the scene objects
@@ -19,7 +19,8 @@ Open one of the example projects in `examples/functional` (a microwave
 cavity, a two-mirror optical resonator, an acoustic horn, a mechanical
 resonator, a photonic unit cell, a coupled slab) or `examples/resonance` (a
 Helmholtz resonator, coupled cantilevers, coupled Helmholtz resonators, a
-heated cavity) and choose
+heated cavity) or `examples/metamaterials` (see
+[Metamaterials](metamaterials.md)) and choose
 **Panels > Functional Structures**.
 
 ## The panel
@@ -56,5 +57,5 @@ model. To adopt a candidate, set its parameter values.
 Structures are created through Python, the API or the example projects; the
 panel inspects, edits parameters, analyzes and sweeps. The analyses cover
 rectangular cavities, paraxial two-mirror resonators, Webster horns, the
-mechanical studies, two-layer cells, periodic rods and the coupled slab;
-forces are not computed.
+mechanical studies, two-layer cells, periodic rods, the coupled slab and the
+effective-medium analyses; forces are not computed.

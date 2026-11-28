@@ -6,6 +6,7 @@ import "resonant/v1/common/jobs.proto";
 import "resonant/v1/common/metadata.proto";
 import "resonant/v1/common/validation.proto";
 import "resonant/v1/functional/functional.proto";
+import "resonant/v1/materials/material.proto";
 
 message ListAnalysisKindsRequest { RequestHeader header = 1; }
 message ListAnalysisKindsResponse { ResponseHeader header = 1; repeated AnalysisKind kinds = 2; }
@@ -78,6 +79,15 @@ message OptimizeStructureResponse { ResponseHeader header = 1; Job job = 2; }
 message ExplainCandidatesRequest { RequestHeader header = 1; string run_id = 2; int32 count = 3; }
 message ExplainCandidatesResponse { ResponseHeader header = 1; string structure_id = 2; repeated CandidateExplanation candidates = 3; }
 
+message CreateEffectiveMaterialRequest {
+  RequestHeader header = 1;
+  string result_id = 2;                     // an analysis result that reports an effective material
+  string material_id = 3;                   // empty: generated
+  string name = 4;                          // empty: the effective material's own name
+  map<string, string> components = 5;       // "domain.key" -> the principal component the isotropic value carries
+}
+message CreateEffectiveMaterialResponse { ResponseHeader header = 1; Material material = 2; ChangeSummary changes = 3; }
+
 // Functional structures: engineered objects whose behavior the analyses compute; parameters,
 // analyses, sweeps, sensitivities and optimization of geometry-driven designs.
 service FunctionalStructureService {
@@ -111,4 +121,8 @@ service FunctionalStructureService {
   rpc OptimizeStructure(OptimizeStructureRequest) returns (OptimizeStructureResponse);
   // The best feasible candidates of a run, each explained against the present design.
   rpc ExplainCandidates(ExplainCandidatesRequest) returns (ExplainCandidatesResponse);
+  // Saves the effective material of an effective-medium analysis into the project's library, with
+  // provenance "homogenized" and its derivation (structure, cell, method, validity) in the sources;
+  // one undo step. A stale result, or one outside the validity of its effective description, is refused.
+  rpc CreateEffectiveMaterial(CreateEffectiveMaterialRequest) returns (CreateEffectiveMaterialResponse);
 }

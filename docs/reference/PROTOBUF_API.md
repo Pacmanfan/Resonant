@@ -17,7 +17,7 @@ carries a `resonant.v1.Error` (see [errors](#errors)).
 - [AuditService](#auditservice) (1 method)
 - [EmitterService](#emitterservice) (4 methods)
 - [EventService](#eventservice) (2 methods)
-- [FunctionalStructureService](#functionalstructureservice) (14 methods)
+- [FunctionalStructureService](#functionalstructureservice) (15 methods)
 - [GeometryService](#geometryservice) (4 methods)
 - [JobService](#jobservice) (4 methods)
 - [MaterialService](#materialservice) (6 methods)
@@ -89,6 +89,7 @@ Functional structures: engineered objects whose behavior the analyses compute; p
 |---|---|---|---|
 | `AnalyzeStructure` | `AnalyzeStructureRequest` | `AnalyzeStructureResponse` | Runs the structure's analysis as a job; the result id is in the finished job's results. |
 | `ComputeStructureSensitivity` | `ComputeStructureSensitivityRequest` | `ComputeStructureSensitivityResponse` | Central-difference sensitivities of every metric to the parameters, as a job. |
+| `CreateEffectiveMaterial` | `CreateEffectiveMaterialRequest` | `CreateEffectiveMaterialResponse` | Saves the effective material of an effective-medium analysis into the project's library, with provenance "homogenized" and its derivation (structure, cell, method, validity) in the sources; one undo step. A stale result, or one outside the validity of its effective description, is refused. |
 | `DeleteFunctionalStructure` | `DeleteFunctionalStructureRequest` | `DeleteFunctionalStructureResponse` | Removes a structure, as one undo step (its objects stay in the scene). |
 | `ExplainCandidates` | `ExplainCandidatesRequest` | `ExplainCandidatesResponse` | The best feasible candidates of a run, each explained against the present design. |
 | `GetFunctionalResult` | `GetFunctionalResultRequest` | `GetFunctionalResultResponse` | An analysis, sweep or sensitivity result with its staleness against the current project. |
@@ -315,7 +316,7 @@ What an analysis kind computes and with which models.
 | `title` | `string` |  |
 | `description` | `string` |  |
 | `domains` | repeated `string` |  |
-| `category` | `string` | propagation, reflection, focusing, confinement, dissipation, force, coupled |
+| `category` | `string` | propagation, reflection, focusing, confinement, dissipation, force, coupled, effective-medium |
 | `mechanism` | `string` | the physical mechanism, in words |
 | `models` | repeated `AnalysisModel` |  |
 | `metrics` | repeated `AnalysisMetric` |  |
@@ -644,6 +645,24 @@ A coupling model: which quantity goes from which domain to which, how, and how f
 |---|---|---|
 | `header` | `ResponseHeader` |  |
 | `array` | `AcousticArray` |  |
+| `changes` | `ChangeSummary` |  |
+
+### CreateEffectiveMaterialRequest
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `RequestHeader` |  |
+| `result_id` | `string` | an analysis result that reports an effective material |
+| `material_id` | `string` | empty: generated |
+| `name` | `string` | empty: the effective material's own name |
+| `components` | repeated `CreateEffectiveMaterialRequest.ComponentsEntry` | "domain.key" -> the principal component the isotropic value carries |
+
+### CreateEffectiveMaterialResponse
+
+| Field | Type | Description |
+|---|---|---|
+| `header` | `ResponseHeader` |  |
+| `material` | `Material` |  |
 | `changes` | `ChangeSummary` |  |
 
 ### CreateEmitterRequest
@@ -2742,7 +2761,7 @@ Waits until the job finishes or the timeout passes (at most 30 s), then returns 
 
 ### MaterialProvenance
 
-`MATERIAL_PROVENANCE_UNSPECIFIED` = 0, `MATERIAL_PROVENANCE_MEASURED` = 1, `MATERIAL_PROVENANCE_MANUFACTURER` = 2, `MATERIAL_PROVENANCE_LITERATURE` = 3, `MATERIAL_PROVENANCE_THEORETICAL` = 4, `MATERIAL_PROVENANCE_ILLUSTRATIVE` = 5
+`MATERIAL_PROVENANCE_UNSPECIFIED` = 0, `MATERIAL_PROVENANCE_MEASURED` = 1, `MATERIAL_PROVENANCE_MANUFACTURER` = 2, `MATERIAL_PROVENANCE_LITERATURE` = 3, `MATERIAL_PROVENANCE_THEORETICAL` = 4, `MATERIAL_PROVENANCE_ILLUSTRATIVE` = 5, `MATERIAL_PROVENANCE_HOMOGENIZED` = 6
 
 ### FieldRegionKind
 

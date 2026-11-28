@@ -1,6 +1,7 @@
 #include "coupling/FunctionalAnalyses.h"
 
 #include "coupling/CoupledRun.h"
+#include "coupling/MetamaterialAnalyses.h"
 #include "coupling/ResonanceAnalyses.h"
 #include "dsp/Resonance.h"
 #include "electromagnetics/CavityResonator.h"
@@ -1026,6 +1027,7 @@ void registerFunctionalAnalyses(AnalysisRegistry& registry)
         registry.add(std::move(k));
     }
     registerResonanceAnalyses(registry);
+    registerMetamaterialAnalyses(registry);
     // Every evaluation turns exceptions (an invalid setting) into a failure.
     for (const AnalysisKind& k : registry.kinds()) {
         AnalysisKind copy = k;
