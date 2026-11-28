@@ -58,6 +58,16 @@ with 2 elements through the thickness reaches 34 % of the beam deflection
 with 5 elements along it, 97 % with 40). The study warns when fewer than 4
 elements span the thinnest side.
 
+**Solid20 (quadratic 20-node hexahedron).** 20 nodes (corners and edge
+midpoints), 3 dofs each, 3 x 3 x 3 Gauss integration. Curved geometry to
+second order; bends thin layers without the trilinear element's locking
+(a cantilever strip with 2 elements through the thickness is within 1 % of
+Timoshenko theory). An element may carry its own elasticity matrix and density
+(anisotropic, rotated, graded); an invalid matrix is refused. Zero-thickness
+interface elements (8 + 8 nodes, 3 x 3 points) join two coincident faces with
+normal and shear springs. Built by the layered-body builder:
+`LAYERED_SOLIDS.md` (REQ-CHAT-20261128-004, ADR-000232).
+
 ## Supports
 
 | Idealization | Positions | Free / Pinned / Clamped |

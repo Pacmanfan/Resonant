@@ -1,0 +1,145 @@
+{
+  "request_id": "REQ-CHAT-20261128-004",
+  "source": "chat",
+  "type": "FEATURE",
+  "priority": "NORMAL",
+  "created": "2026-11-28T11:25:49-05:00",
+  "created_utc": "2026-11-28T16:25:49+00:00",
+  "id_date": "2026-11-28",
+  "timezone": "EST (UTC-05:00)",
+  "status": "completed",
+  "original_text": "# PART III \u2014 THREE-DIMENSIONAL STRUCTURES AND INTERFACES\n\n## 3.1 Three-dimensional layered structures\n\nAddress the missing full-shell modeling capability identified in ADR-000228.\n\nDevelop a geometry-aware structural modeling architecture for layered and coated three-dimensional bodies.\n\nSupport:\n\n- Three-dimensional geometry.\n- Layered shells.\n- Coatings.\n- Composite structures.\n- Variable thickness.\n- Material transitions.\n- Curved interfaces.\n- Spatially varying material properties.\n\nUse an appropriate numerical method, preferably integrating an established finite-element architecture if compatible with the existing application.\n\nDo not pretend that layered-plate theory is equivalent to a general three-dimensional shell solution.\n\nRetain analytical plate and beam models as lower-fidelity reference methods.\n\n## 3.2 Non-ideal interface physics\n\nImplement a general interface representation.\n\nSupport progressively:\n\n- Perfect bonding as an explicitly selected idealization.\n- Finite normal stiffness.\n- Finite tangential stiffness.\n- Thermal contact resistance.\n- Mechanical slip.\n- Friction.\n- Partial debonding.\n- Interface failure criteria.\n\nEvery interface must have its own properties and provenance.\n\nA perfect interface must never be silently assumed.\n\nWhere an interface model is unavailable, the solver must identify the limitation and refuse the unsupported analysis.",
+  "file": "requests/inbox/2026-11-28-part-iii-three-dimensional-str-req-chat-20261128-004.md",
+  "attachments": [],
+  "context": "Phase 3 of REQ-CHAT-20261128-001 (Prompt 27): three-dimensional layered structures and non-ideal interfaces.",
+  "text_sha256": "8b96c6be5f40f2da40613707512ada15ac0c5339e816794ae57ed24e433f5793",
+  "classification": {
+    "proposed_type": "FEATURE",
+    "proposed_source": "override",
+    "normalized_type": "FEATURE",
+    "heuristic_type": "FEATURE",
+    "final_type": "FEATURE",
+    "confidence": "low",
+    "validation": "PASS",
+    "classifier_reason": "no framing in the request statement; body suggests feature: Develop, Implement, Support, capability",
+    "correction_reason": null,
+    "normalization_note": null,
+    "evidence": [
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "capability",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Address the missing full-shell modeling capability identified in ADR-000228."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Develop",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Develop a geometry-aware structural modeling architecture for layered and coated three-dimensional bodies."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support:"
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "integrating",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Use an appropriate numerical method, preferably integrating an established finite-element architecture if compatible with the existing application."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Implement",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Implement a general interface representation."
+      },
+      {
+        "category": "FEATURE",
+        "where": "body",
+        "phrase": "Support",
+        "strength": "strong",
+        "note": "",
+        "sentence": "Support progressively:"
+      }
+    ],
+    "scores": {
+      "FEATURE": {
+        "head": 0,
+        "body": 6
+      },
+      "BUG": {
+        "head": 0,
+        "body": 1
+      },
+      "CRASH": {
+        "head": 0,
+        "body": 0
+      },
+      "REGRESSION": {
+        "head": 0,
+        "body": 0
+      },
+      "PERFORMANCE": {
+        "head": 0,
+        "body": 0
+      },
+      "REFACTOR": {
+        "head": 0,
+        "body": 0
+      },
+      "BUILD": {
+        "head": 0,
+        "body": 0
+      },
+      "DOCUMENTATION": {
+        "head": 0,
+        "body": 0
+      },
+      "INVESTIGATION": {
+        "head": 0,
+        "body": 0
+      },
+      "PROCESS-CHANGE": {
+        "head": 0,
+        "body": 0
+      }
+    },
+    "evidence_total": 7,
+    "validator": "scripts/request_classification.py"
+  },
+  "links": {
+    "work": [
+      "WORK-000029"
+    ]
+  },
+  "commits": [],
+  "resolution": {
+    "from": "processing",
+    "to": "completed",
+    "at": "2026-11-28T18:12:09.075488+00:00",
+    "by": "agent-dev-20261126151713-76f632",
+    "gates": [
+      {
+        "work": "WORK-000029",
+        "at": "2026-11-28T18:11:57.820158+00:00",
+        "verdict": "PASS",
+        "request_fingerprint": "87ea95d0ec9000beeb73148559f286130a14bbef8840d09b7dfe48bb79490a97",
+        "test_runs": [
+          "20261128T130617-2676235"
+        ]
+      }
+    ]
+  }
+}

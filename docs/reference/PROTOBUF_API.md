@@ -224,7 +224,7 @@ Functionally architected matter: architectures of regions, layer stacks, interfa
 | Method | Request | Response | Description |
 |---|---|---|---|
 | `AddManufacturingRecord` | `AddManufacturingRecordRequest` | `AddManufacturingRecordResponse` | Adds a manufacturing record (batch, process, sequence, inspections, measured datasets); one undo step. |
-| `AnalyzeStack` | `AnalyzeStackRequest` | `AnalyzeStackResponse` | Runs an analysis of a stack (laminate, modes, harvester, thermal, electrical, electromagnetic, interfaces); changes nothing. |
+| `AnalyzeStack` | `AnalyzeStackRequest` | `AnalyzeStackResponse` | Runs an analysis of a stack (laminate, modes, harvester, thermal, electrical, electromagnetic, interfaces, layered-solid, layered-solid-thermal); changes nothing. |
 | `CheckManufacturability` | `CheckManufacturabilityRequest` | `CheckManufacturabilityResponse` | The architecture against its processes' constraints, with the residual stresses built in. |
 | `CheckStackCompatibility` | `CheckStackCompatibilityRequest` | `CheckStackCompatibilityResponse` | Checks a stack against an analysis's declared capability: what it would refuse and why. |
 | `CompareArchitectures` | `CompareArchitecturesRequest` | `CompareArchitecturesResponse` | Compares architectures side by side (no single score); kept in the project when asked (one undo step), so it needs the modify permission. |

@@ -188,6 +188,10 @@ milestones below.)
 | Measured frequency responses from CSV, stored and compared | Tested | no hardware acquisition |
 | Vibration targeting (actuator inputs by regularized least squares), applied undoably | Tested | structural parameter optimization: request 009 |
 | Horn geometry (conical, exponential, stepped) | Tested | analysed as a member of varying section |
+| Layered 3D solids: 20-node hexahedra on plane, cylindrical, spherical or revolved surfaces; isotropic, orthotropic, graded layers; varying thickness (RES-MECH-019) | Tested | linear, small displacements; at most 60000 elements |
+| Interfaces in 3D: perfect bonding (declared), springs, sliding, Coulomb contact (Newton), debonded regions, initiation index (RES-MECH-020) | Tested | no damage evolution or cohesive zones; no contact in debonded regions; holonomic friction |
+| 3D steady conduction with contact resistances (RES-MECH-021) | Tested | isotropic layers, no radiation |
+| Architected-matter stacks as 3D bodies: `layered-solid`, `layered-solid-thermal`, the Matter panel and service (RES-MECH-022) | Tested | surface, supports and loads from the options; in-plane orthotropic sets refused |
 | Periodic rod: longitudinal Bloch band structure, stop bands, finite-rod attenuation | Tested | 2D/3D phononic crystals, locally resonant metamaterials: Missing |
 | One-way sound radiation from plates and membranes (Rayleigh) | Tested | two-way fluid-structure interaction: Missing |
 | Threads, SIMD, GPU backends | Missing | single-threaded sparse direct solvers (not accelerated by decision: ADR-000212) |

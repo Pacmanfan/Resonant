@@ -115,3 +115,27 @@ TEST_F(MatterPanelTest, ABarrierStackGoesToTheCoupledEngine)
     panel().systemButton()->click();
     EXPECT_TRUE(panel().statusText().contains("Added the physical system")) << panel().statusText().toStdString();
 }
+
+TEST_F(MatterPanelTest, TheLayeredStackAsAThreeDimensionalBody)
+{
+    // The nickel-alumina step as a 3D body of 20-node elements (REQ-CHAT-20261128-004):
+    // its modes plotted, and the energy converter's cohesive zones refused with the reason.
+    open("d-graded-metal-ceramic.resonant");
+    panel().selectArchitecture("arch-step");
+    panel().selectAnalysis("layered-solid");
+    panel().setOptions("{\"mesh\": {\"elementsU\": 6, \"elementsV\": 2}, \"modes\": 3}");
+    panel().runButton()->click();
+    EXPECT_TRUE(panel().resultText().contains("f1 =")) << panel().resultText().toStdString();
+    EXPECT_TRUE(panel().resultText().contains("20-node")) << panel().resultText().toStdString();
+    EXPECT_EQ(panel().plottedPoints(), 3);
+}
+
+TEST_F(MatterPanelTest, TheThreeDimensionalSolidRefusesACohesiveZone)
+{
+    open("b-energy-converter.resonant");
+    panel().selectArchitecture("arch-bonded");
+    panel().selectAnalysis("layered-solid");
+    panel().setOptions("{}");
+    panel().runButton()->click();
+    EXPECT_TRUE(panel().resultText().contains("cohesive-zone")) << panel().resultText().toStdString();
+}

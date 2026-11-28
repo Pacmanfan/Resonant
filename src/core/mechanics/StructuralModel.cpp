@@ -1,5 +1,6 @@
 #include "mechanics/StructuralModel.h"
 
+#include <Eigen/Cholesky>
 #include <Eigen/LU>
 
 #include <cmath>
@@ -213,11 +214,10 @@ Eigen::Matrix<double, 6, 24> hexB(const std::array<Vec3, 8>& x, double xi, doubl
     return b;
 }
 
-void hexMatrices(const ElasticMaterial& m, const std::array<Vec3, 8>& x, Eigen::MatrixXd& k, Eigen::MatrixXd& mm)
+void hexMatrices(const Eigen::Matrix<double, 6, 6>& c, double density, const std::array<Vec3, 8>& x, Eigen::MatrixXd& k, Eigen::MatrixXd& mm)
 {
     k = Eigen::MatrixXd::Zero(24, 24);
     mm = Eigen::MatrixXd::Zero(24, 24);
-    const Eigen::Matrix<double, 6, 6> c = elasticity(m);
     const Gauss g = gauss(2);
     for (size_t i = 0; i < 2; ++i)
         for (size_t j = 0; j < 2; ++j)
@@ -230,7 +230,7 @@ void hexMatrices(const ElasticMaterial& m, const std::array<Vec3, 8>& x, Eigen::
                 for (int q = 0; q < 8; ++q)
                     n(q) = 0.125 * (1 + kHexXi[q][0] * g.x[i]) * (1 + kHexXi[q][1] * g.x[j]) * (1 + kHexXi[q][2] * g.x[l]);
                 // Mass: the same shape function for each direction (3x3 identity blocks).
-                const Eigen::Matrix<double, 8, 8> nn = n * n.transpose() * (w * m.density);
+                const Eigen::Matrix<double, 8, 8> nn = n * n.transpose() * (w * density);
                 for (int p = 0; p < 8; ++p)
                     for (int q = 0; q < 8; ++q)
                         for (int d = 0; d < 3; ++d)
@@ -240,6 +240,112 @@ void hexMatrices(const ElasticMaterial& m, const std::array<Vec3, 8>& x, Eigen::
     k = 0.5 * (k + k.transpose()).eval();
 }
 
+// ---- 20-node hexahedron -------------------------------------------------------------
+
+constexpr std::array<std::array<int, 3>, 20> kHex20Xi{{{-1, -1, -1}, {1, -1, -1}, {1, 1, -1}, {-1, 1, -1},  //
+                                                       {-1, -1, 1},  {1, -1, 1},  {1, 1, 1},  {-1, 1, 1},   //
+                                                       {0, -1, -1},  {1, 0, -1},  {0, 1, -1}, {-1, 0, -1},  //
+                                                       {0, -1, 1},   {1, 0, 1},   {0, 1, 1},  {-1, 0, 1},   //
+                                                       {-1, -1, 0},  {1, -1, 0},  {1, 1, 0},  {-1, 1, 0}}};
+
+Eigen::Matrix<double, 6, 60> hex20B(const Eigen::Matrix<double, 20, 3>& dx)
+{
+    Eigen::Matrix<double, 6, 60> b = Eigen::Matrix<double, 6, 60>::Zero();
+    for (int q = 0; q < 20; ++q) {
+        const double gx = dx(q, 0), gy = dx(q, 1), gz = dx(q, 2);
+        b(0, 3 * q) = gx;
+        b(1, 3 * q + 1) = gy;
+        b(2, 3 * q + 2) = gz;
+        b(3, 3 * q) = gy;
+        b(3, 3 * q + 1) = gx;
+        b(4, 3 * q + 1) = gz;
+        b(4, 3 * q + 2) = gy;
+        b(5, 3 * q) = gz;
+        b(5, 3 * q + 2) = gx;
+    }
+    return b;
+}
+
+// Stiffness and consistent mass of the 20-node hexahedron: 3 x 3 x 3 Gauss points.
+void hex20Matrices(const Eigen::Matrix<double, 6, 6>& c, double density, const std::array<Vec3, 20>& x, Eigen::MatrixXd& k, Eigen::MatrixXd& mm)
+{
+    Eigen::Matrix<double, 60, 60> kk = Eigen::Matrix<double, 60, 60>::Zero();
+    Eigen::Matrix<double, 20, 20> nn = Eigen::Matrix<double, 20, 20>::Zero();
+    const Gauss g = gauss(3);
+    for (size_t i = 0; i < 3; ++i)
+        for (size_t j = 0; j < 3; ++j)
+            for (size_t l = 0; l < 3; ++l) {
+                double detJ = 0.0;
+                const Eigen::Matrix<double, 20, 3> dx = solid20Gradients(x, g.x[i], g.x[j], g.x[l], detJ);
+                const double w = g.w[i] * g.w[j] * g.w[l] * detJ;
+                const Eigen::Matrix<double, 6, 60> b = hex20B(dx);
+                kk.noalias() += w * (b.transpose() * (c * b));
+                Eigen::Matrix<double, 20, 1> n;
+                Eigen::Matrix<double, 20, 3> dn;
+                solid20Shape(g.x[i], g.x[j], g.x[l], n, dn);
+                nn.noalias() += (w * density) * (n * n.transpose());
+            }
+    k = 0.5 * (kk + kk.transpose());
+    mm = Eigen::MatrixXd::Zero(60, 60);
+    for (int p = 0; p < 20; ++p)
+        for (int q = 0; q < 20; ++q)
+            for (int d = 0; d < 3; ++d)
+                mm(3 * p + d, 3 * q + d) = nn(p, q);
+}
+
+// The 8-node face of an interface element: shape functions and natural derivatives.
+void quad8Shape(double xi, double eta, Eigen::Matrix<double, 8, 1>& n, Eigen::Matrix<double, 8, 2>& dn)
+{
+    static constexpr int c[8][2] = {{-1, -1}, {1, -1}, {1, 1}, {-1, 1}, {0, -1}, {1, 0}, {0, 1}, {-1, 0}};
+    for (int q = 0; q < 8; ++q) {
+        const double a = c[q][0], b = c[q][1];
+        if (a != 0 && b != 0) {
+            n(q) = 0.25 * (1 + a * xi) * (1 + b * eta) * (a * xi + b * eta - 1);
+            dn(q, 0) = 0.25 * a * (1 + b * eta) * (2 * a * xi + b * eta);
+            dn(q, 1) = 0.25 * b * (1 + a * xi) * (a * xi + 2 * b * eta);
+        } else if (a == 0) {
+            n(q) = 0.5 * (1 - xi * xi) * (1 + b * eta);
+            dn(q, 0) = -xi * (1 + b * eta);
+            dn(q, 1) = 0.5 * b * (1 - xi * xi);
+        } else {
+            n(q) = 0.5 * (1 + a * xi) * (1 - eta * eta);
+            dn(q, 0) = 0.5 * a * (1 - eta * eta);
+            dn(q, 1) = -eta * (1 + a * xi);
+        }
+    }
+}
+
+// The face frame at a natural point of an interface element's lower face: rows t1, t2, n.
+Eigen::Matrix3d faceFrame(const std::array<Vec3, 8>& x, double xi, double eta, double& area, Vec3& point)
+{
+    Eigen::Matrix<double, 8, 1> n;
+    Eigen::Matrix<double, 8, 2> dn;
+    quad8Shape(xi, eta, n, dn);
+    Vec3 a1 = Vec3::Zero(), a2 = Vec3::Zero();
+    point = Vec3::Zero();
+    for (size_t q = 0; q < 8; ++q) {
+        a1 += dn(static_cast<Eigen::Index>(q), 0) * x[q];
+        a2 += dn(static_cast<Eigen::Index>(q), 1) * x[q];
+        point += n(static_cast<Eigen::Index>(q)) * x[q];
+    }
+    const Vec3 normal = a1.cross(a2);
+    area = normal.norm();
+    Eigen::Matrix3d r;
+    const Vec3 nz = normal / area, t1 = a1.normalized(), t2 = nz.cross(t1);
+    r.row(0) = t1;
+    r.row(1) = t2;
+    r.row(2) = nz;
+    return r;
+}
+
+std::array<Vec3, 8> lowerFace(const StructuralModel& model, const InterfaceElement& e)
+{
+    std::array<Vec3, 8> x;
+    for (size_t q = 0; q < 8; ++q)
+        x[q] = model.nodes[static_cast<size_t>(e.lower[q])];
+    return x;
+}
+
 int nodeCount(ElementKind kind)
 {
     switch (kind) {
@@ -247,6 +353,7 @@ int nodeCount(ElementKind kind)
     case ElementKind::Plate:
     case ElementKind::Membrane: return 4;
     case ElementKind::Solid: return 8;
+    case ElementKind::Solid20: return 20;
     }
     return 2;
 }
@@ -268,6 +375,7 @@ std::string_view toString(ElementKind kind)
     case ElementKind::Plate: return "plate (Kirchhoff, ACM rectangle)";
     case ElementKind::Membrane: return "membrane (bilinear)";
     case ElementKind::Solid: return "solid (trilinear hexahedron)";
+    case ElementKind::Solid20: return "solid (quadratic 20-node hexahedron)";
     }
     return "";
 }
@@ -278,7 +386,8 @@ int dofsPerNode(ElementKind kind)
     case ElementKind::Frame: return 6;
     case ElementKind::Plate: return 3;
     case ElementKind::Membrane: return 1;
-    case ElementKind::Solid: return 3;
+    case ElementKind::Solid:
+    case ElementKind::Solid20: return 3;
     }
     return 1;
 }
@@ -313,13 +422,10 @@ double StructuralModel::totalMass() const
             mass += m.density * e.thickness * a * b;
             break;
         }
-        case ElementKind::Solid: {
-            Eigen::MatrixXd k, mm;
-            std::array<Vec3, 8> x;
-            for (size_t q = 0; q < 8; ++q)
-                x[q] = nodes[static_cast<size_t>(e.nodes[q])];
-            hexMatrices(m, x, k, mm);
-            mass += mm.sum() / 3.0;
+        case ElementKind::Solid:
+        case ElementKind::Solid20: {
+            const ElementMatrices em = elementMatrices(*this, e);
+            mass += em.mass.sum() / 3.0;
             break;
         }
         }
@@ -331,7 +437,8 @@ Vec3 StructuralModel::dofDirection(int local) const
 {
     switch (kind) {
     case ElementKind::Frame:
-    case ElementKind::Solid: return local < 3 ? Vec3(Vec3::Unit(local)) : Vec3(Vec3::Zero());
+    case ElementKind::Solid:
+    case ElementKind::Solid20: return local < 3 ? Vec3(Vec3::Unit(local)) : Vec3(Vec3::Zero());
     case ElementKind::Plate:
     case ElementKind::Membrane: return local == 0 ? normal : Vec3(Vec3::Zero());
     }
@@ -385,6 +492,43 @@ Status StructuralModel::validate() const
             return Status::failure("a plate or membrane element needs a positive thickness");
         if (kind == ElementKind::Membrane && !(e.tension > 0.0))
             return Status::failure("a membrane needs a positive tension");
+        if (e.constitutive >= 0) {
+            if (kind != ElementKind::Solid && kind != ElementKind::Solid20)
+                return Status::failure("only solid elements carry their own elasticity matrix");
+            if (static_cast<size_t>(e.constitutive) >= constitutive.size())
+                return Status::failure("an element refers to an elasticity matrix that does not exist");
+        }
+        if (kind == ElementKind::Solid20) {
+            double detJ = 0.0;
+            solid20Gradients(solid20Positions(*this, e), 0, 0, 0, detJ);
+            if (!(detJ > 0.0))
+                return Status::failure("a 20-node element is inverted or degenerate (non-positive Jacobian at its centre)");
+        }
+    }
+    // An invalid elasticity matrix is refused, never repaired: it must be symmetric
+    // and positive definite (a stable material), with a positive density.
+    for (size_t i = 0; i < constitutive.size(); ++i) {
+        const Constitutive& c = constitutive[i];
+        const double scale = c.stiffness.cwiseAbs().maxCoeff();
+        if (!(scale > 0.0) || !c.stiffness.allFinite())
+            return Status::failure("elasticity matrix " + std::to_string(i) + " is zero or not finite");
+        if ((c.stiffness - c.stiffness.transpose()).cwiseAbs().maxCoeff() > 1e-9 * scale)
+            return Status::failure("elasticity matrix " + std::to_string(i) + " (" + c.description + ") is not symmetric");
+        if (Eigen::LLT<Eigen::Matrix<double, 6, 6>>(c.stiffness).info() != Eigen::Success)
+            return Status::failure("elasticity matrix " + std::to_string(i) + " (" + c.description +
+                                   ") is not positive definite: the material would be unstable");
+        if (!(c.density > 0.0))
+            return Status::failure("elasticity matrix " + std::to_string(i) + " (" + c.description + ") needs a positive density");
+    }
+    if (!interfaces.empty() && kind != ElementKind::Solid20)
+        return Status::failure("interface elements join 20-node solid elements only");
+    for (const InterfaceElement& ie : interfaces) {
+        for (size_t q = 0; q < 8; ++q)
+            for (const int node : {ie.lower[q], ie.upper[q]})
+                if (node < 0 || static_cast<size_t>(node) >= nodes.size())
+                    return Status::failure("an interface element refers to a node that does not exist");
+        if (!(ie.normalStiffness >= 0.0) || !(ie.shearStiffness >= 0.0))
+            return Status::failure("an interface element needs non-negative normal and shear stiffnesses");
     }
     return Status::success();
 }
@@ -458,9 +602,12 @@ ElementMatrices elementMatrices(const StructuralModel& model, const Element& e)
         std::array<Vec3, 8> x;
         for (size_t q = 0; q < 8; ++q)
             x[q] = model.nodes[static_cast<size_t>(e.nodes[q])];
-        hexMatrices(m, x, out.stiffness, out.mass);
+        hexMatrices(elementElasticity(model, e), elementDensity(model, e), x, out.stiffness, out.mass);
         break;
     }
+    case ElementKind::Solid20:
+        hex20Matrices(elementElasticity(model, e), elementDensity(model, e), solid20Positions(model, e), out.stiffness, out.mass);
+        break;
     }
     return out;
 }
@@ -486,7 +633,7 @@ SystemMatrices assemble(const StructuralModel& model)
             if (found == cache.end())
                 found = cache.emplace(key, elementMatrices(model, e)).first;
             local = found->second;
-        } else if (model.kind == ElementKind::Solid) {
+        } else if (model.kind == ElementKind::Solid && e.constitutive < 0) {
             const Vec3 d = model.nodes[static_cast<size_t>(e.nodes[6])] - model.nodes[static_cast<size_t>(e.nodes[0])];
             const Vec3 d1 = model.nodes[static_cast<size_t>(e.nodes[1])] - model.nodes[static_cast<size_t>(e.nodes[0])];
             const auto key = std::make_tuple(e.material, 1, d.x(), d.y(), d.z(), d1.x(), d1.y(), d1.z());
@@ -516,6 +663,23 @@ SystemMatrices assemble(const StructuralModel& model)
                 if (eta > 0.0)
                     lt.emplace_back(index[i], index[j], eta * k);
             }
+        }
+    }
+    // Interface elements: stiffness only (a zero-thickness spring layer has no mass).
+    for (const InterfaceElement& ie : model.interfaces) {
+        const Eigen::MatrixXd local = interfaceStiffness(model, ie);
+        std::array<int, 48> index{};
+        for (size_t q = 0; q < 8; ++q)
+            for (int d = 0; d < 3; ++d) {
+                index[3 * q + static_cast<size_t>(d)] = s.map.free[model.dof(static_cast<size_t>(ie.lower[q]), d)];
+                index[24 + 3 * q + static_cast<size_t>(d)] = s.map.free[model.dof(static_cast<size_t>(ie.upper[q]), d)];
+            }
+        for (size_t i = 0; i < 48; ++i) {
+            if (index[i] < 0)
+                continue;
+            for (size_t j = 0; j < 48; ++j)
+                if (index[j] >= 0 && local(static_cast<Eigen::Index>(i), static_cast<Eigen::Index>(j)) != 0.0)
+                    kt.emplace_back(index[i], index[j], local(static_cast<Eigen::Index>(i), static_cast<Eigen::Index>(j)));
         }
     }
     const auto n = static_cast<Eigen::Index>(s.map.freeCount());
@@ -586,12 +750,9 @@ ElementStress elementStress(const StructuralModel& model, const Element& e, cons
     case ElementKind::Membrane:
         out.description = "a membrane carries its pre-tension only; no stress is calculated from its deflection";
         break;
-    case ElementKind::Solid: {
-        std::array<Vec3, 8> x;
-        for (size_t q = 0; q < 8; ++q)
-            x[q] = model.nodes[static_cast<size_t>(e.nodes[q])];
-        double detJ = 0.0;
-        const Eigen::Matrix<double, 6, 1> sigma = elasticity(m) * hexB(x, 0, 0, 0, detJ) * ue;
+    case ElementKind::Solid:
+    case ElementKind::Solid20: {
+        const Eigen::Matrix<double, 6, 1> sigma = solidStress(model, e, u, 0, 0, 0);
         const double sx = sigma(0), sy = sigma(1), sz = sigma(2), txy = sigma(3), tyz = sigma(4), tzx = sigma(5);
         out.available = true;
         out.maxNormal = std::max({std::abs(sx), std::abs(sy), std::abs(sz)});
@@ -612,6 +773,214 @@ Eigen::Matrix<double, 6, 24> solidStrainMatrix(const std::array<Vec3, 8>& x, dou
 Eigen::Matrix<double, 6, 6> solidElasticity(const ElasticMaterial& material)
 {
     return elasticity(material);
+}
+
+int nodesPerElement(ElementKind kind)
+{
+    return nodeCount(kind);
+}
+
+const std::array<std::array<int, 3>, 20>& solid20NaturalCoordinates()
+{
+    return kHex20Xi;
+}
+
+Eigen::Matrix<double, 6, 6> elementElasticity(const StructuralModel& model, const Element& e)
+{
+    if (e.constitutive >= 0)
+        return model.constitutive[static_cast<size_t>(e.constitutive)].stiffness;
+    return elasticity(model.materials[static_cast<size_t>(e.material)]);
+}
+
+double elementDensity(const StructuralModel& model, const Element& e)
+{
+    if (e.constitutive >= 0)
+        return model.constitutive[static_cast<size_t>(e.constitutive)].density;
+    return model.materials[static_cast<size_t>(e.material)].density;
+}
+
+void solid20Shape(double xi, double eta, double zeta, Eigen::Matrix<double, 20, 1>& n, Eigen::Matrix<double, 20, 3>& dn)
+{
+    for (int q = 0; q < 20; ++q) {
+        const double a = kHex20Xi[static_cast<size_t>(q)][0], b = kHex20Xi[static_cast<size_t>(q)][1], c = kHex20Xi[static_cast<size_t>(q)][2];
+        if (a != 0 && b != 0 && c != 0) {  // corner
+            const double p = 1 + a * xi, r = 1 + b * eta, t = 1 + c * zeta, sum = a * xi + b * eta + c * zeta - 2;
+            n(q) = 0.125 * p * r * t * sum;
+            dn(q, 0) = 0.125 * a * r * t * (sum + p);
+            dn(q, 1) = 0.125 * b * p * t * (sum + r);
+            dn(q, 2) = 0.125 * c * p * r * (sum + t);
+        } else if (a == 0) {  // midpoint of an edge along xi
+            n(q) = 0.25 * (1 - xi * xi) * (1 + b * eta) * (1 + c * zeta);
+            dn(q, 0) = -0.5 * xi * (1 + b * eta) * (1 + c * zeta);
+            dn(q, 1) = 0.25 * b * (1 - xi * xi) * (1 + c * zeta);
+            dn(q, 2) = 0.25 * c * (1 - xi * xi) * (1 + b * eta);
+        } else if (b == 0) {
+            n(q) = 0.25 * (1 + a * xi) * (1 - eta * eta) * (1 + c * zeta);
+            dn(q, 0) = 0.25 * a * (1 - eta * eta) * (1 + c * zeta);
+            dn(q, 1) = -0.5 * eta * (1 + a * xi) * (1 + c * zeta);
+            dn(q, 2) = 0.25 * c * (1 + a * xi) * (1 - eta * eta);
+        } else {
+            n(q) = 0.25 * (1 + a * xi) * (1 + b * eta) * (1 - zeta * zeta);
+            dn(q, 0) = 0.25 * a * (1 + b * eta) * (1 - zeta * zeta);
+            dn(q, 1) = 0.25 * b * (1 + a * xi) * (1 - zeta * zeta);
+            dn(q, 2) = -0.5 * zeta * (1 + a * xi) * (1 + b * eta);
+        }
+    }
+}
+
+Eigen::Matrix<double, 20, 3> solid20Gradients(const std::array<Vec3, 20>& x, double xi, double eta, double zeta, double& detJ)
+{
+    Eigen::Matrix<double, 20, 1> n;
+    Eigen::Matrix<double, 20, 3> dn;
+    solid20Shape(xi, eta, zeta, n, dn);
+    Eigen::Matrix3d j = Eigen::Matrix3d::Zero();
+    for (int q = 0; q < 20; ++q)
+        j += dn.row(q).transpose() * x[static_cast<size_t>(q)].transpose();
+    detJ = j.determinant();
+    return dn * j.inverse().transpose();
+}
+
+std::array<Vec3, 20> solid20Positions(const StructuralModel& model, const Element& e)
+{
+    std::array<Vec3, 20> x;
+    for (size_t q = 0; q < 20; ++q)
+        x[q] = model.nodes[static_cast<size_t>(e.nodes[q])];
+    return x;
+}
+
+Eigen::Matrix<double, 6, 1> solidStress(const StructuralModel& model, const Element& e, const Eigen::VectorXd& u, double xi, double eta, double zeta)
+{
+    const int count = nodeCount(model.kind);
+    Eigen::VectorXd ue(3 * count);
+    for (int q = 0; q < count; ++q)
+        for (int d = 0; d < 3; ++d)
+            ue(3 * q + d) = u(static_cast<Eigen::Index>(model.dof(static_cast<size_t>(e.nodes[static_cast<size_t>(q)]), d)));
+    double detJ = 0.0;
+    if (model.kind == ElementKind::Solid20)
+        return elementElasticity(model, e) * (hex20B(solid20Gradients(solid20Positions(model, e), xi, eta, zeta, detJ)) * ue);
+    std::array<Vec3, 8> x;
+    for (size_t q = 0; q < 8; ++q)
+        x[q] = model.nodes[static_cast<size_t>(e.nodes[q])];
+    return elementElasticity(model, e) * (hexB(x, xi, eta, zeta, detJ) * ue);
+}
+
+Eigen::MatrixXd interfaceStiffness(const StructuralModel& model, const InterfaceElement& ie)
+{
+    Eigen::Matrix<double, 48, 48> k = Eigen::Matrix<double, 48, 48>::Zero();
+    const std::array<Vec3, 8> x = lowerFace(model, ie);
+    const Gauss g = gauss(3);
+    for (size_t i = 0; i < 3; ++i)
+        for (size_t j = 0; j < 3; ++j) {
+            double area = 0.0;
+            Vec3 point;
+            const Eigen::Matrix3d r = faceFrame(x, g.x[i], g.x[j], area, point);
+            const size_t gp = 3 * i + j;
+            const Eigen::Vector3d dvec(ie.shearStiffness * ie.shearFactor[gp], ie.shearStiffness * ie.shearFactor[gp],
+                                       ie.normalStiffness * ie.normalFactor[gp]);
+            const Eigen::Matrix3d d = r.transpose() * dvec.asDiagonal() * r;  // world frame
+            Eigen::Matrix<double, 8, 1> n;
+            Eigen::Matrix<double, 8, 2> dn;
+            quad8Shape(g.x[i], g.x[j], n, dn);
+            // The jump operator: u_upper - u_lower = [-N  N] (u_lower; u_upper).
+            Eigen::Matrix<double, 3, 48> b = Eigen::Matrix<double, 3, 48>::Zero();
+            for (int q = 0; q < 8; ++q) {
+                b.block<3, 3>(0, 3 * q) = -n(q) * Eigen::Matrix3d::Identity();
+                b.block<3, 3>(0, 24 + 3 * q) = n(q) * Eigen::Matrix3d::Identity();
+            }
+            k.noalias() += (g.w[i] * g.w[j] * area) * (b.transpose() * d * b);
+        }
+    return 0.5 * (k + k.transpose());
+}
+
+std::array<InterfacePointState, 9> interfaceStates(const StructuralModel& model, const InterfaceElement& ie, const Eigen::VectorXd& u)
+{
+    std::array<InterfacePointState, 9> out;
+    const std::array<Vec3, 8> x = lowerFace(model, ie);
+    const Gauss g = gauss(3);
+    for (size_t i = 0; i < 3; ++i)
+        for (size_t j = 0; j < 3; ++j) {
+            InterfacePointState& p = out[3 * i + j];
+            double area = 0.0;
+            const Eigen::Matrix3d r = faceFrame(x, g.x[i], g.x[j], area, p.position);
+            Eigen::Matrix<double, 8, 1> n;
+            Eigen::Matrix<double, 8, 2> dn;
+            quad8Shape(g.x[i], g.x[j], n, dn);
+            p.jump = Vec3::Zero();
+            for (size_t q = 0; q < 8; ++q)
+                p.jump += n(static_cast<Eigen::Index>(q)) * (model.translation(u, static_cast<size_t>(ie.upper[q])) -
+                                                             model.translation(u, static_cast<size_t>(ie.lower[q])));
+            p.normal = r.row(2).transpose();
+            const Eigen::Vector3d local = r * p.jump;
+            p.opening = local(2);
+            p.slip = std::hypot(local(0), local(1));
+            const size_t gp = 3 * i + j;
+            p.normalTraction = ie.normalStiffness * ie.normalFactor[gp] * p.opening;
+            p.shearTraction = ie.shearStiffness * ie.shearFactor[gp] * p.slip;
+            p.xi = g.x[i];
+            p.eta = g.x[j];
+        }
+    return out;
+}
+
+std::array<Eigen::Matrix3d, 9> interfaceFrames(const StructuralModel& model, const InterfaceElement& ie)
+{
+    std::array<Eigen::Matrix3d, 9> out;
+    const std::array<Vec3, 8> x = lowerFace(model, ie);
+    const Gauss g = gauss(3);
+    for (size_t i = 0; i < 3; ++i)
+        for (size_t j = 0; j < 3; ++j) {
+            double area = 0.0;
+            Vec3 point;
+            out[3 * i + j] = faceFrame(x, g.x[i], g.x[j], area, point);
+        }
+    return out;
+}
+
+Eigen::MatrixXd interfaceStiffness(const StructuralModel& model, const InterfaceElement& ie, const std::array<Eigen::Matrix3d, 9>& localTangent)
+{
+    Eigen::Matrix<double, 48, 48> k = Eigen::Matrix<double, 48, 48>::Zero();
+    const std::array<Vec3, 8> x = lowerFace(model, ie);
+    const Gauss g = gauss(3);
+    for (size_t i = 0; i < 3; ++i)
+        for (size_t j = 0; j < 3; ++j) {
+            double area = 0.0;
+            Vec3 point;
+            const Eigen::Matrix3d r = faceFrame(x, g.x[i], g.x[j], area, point);
+            const Eigen::Matrix3d d = r.transpose() * localTangent[3 * i + j] * r;
+            Eigen::Matrix<double, 8, 1> n;
+            Eigen::Matrix<double, 8, 2> dn;
+            quad8Shape(g.x[i], g.x[j], n, dn);
+            Eigen::Matrix<double, 3, 48> b = Eigen::Matrix<double, 3, 48>::Zero();
+            for (int q = 0; q < 8; ++q) {
+                b.block<3, 3>(0, 3 * q) = -n(q) * Eigen::Matrix3d::Identity();
+                b.block<3, 3>(0, 24 + 3 * q) = n(q) * Eigen::Matrix3d::Identity();
+            }
+            k.noalias() += (g.w[i] * g.w[j] * area) * (b.transpose() * d * b);
+        }
+    return 0.5 * (k + k.transpose());
+}
+
+Eigen::Matrix<double, 48, 1> interfaceForces(const StructuralModel& model, const InterfaceElement& ie, const std::array<Eigen::Vector3d, 9>& localTraction)
+{
+    Eigen::Matrix<double, 48, 1> f = Eigen::Matrix<double, 48, 1>::Zero();
+    const std::array<Vec3, 8> x = lowerFace(model, ie);
+    const Gauss g = gauss(3);
+    for (size_t i = 0; i < 3; ++i)
+        for (size_t j = 0; j < 3; ++j) {
+            double area = 0.0;
+            Vec3 point;
+            const Eigen::Matrix3d r = faceFrame(x, g.x[i], g.x[j], area, point);
+            const Eigen::Vector3d t = r.transpose() * localTraction[3 * i + j];  // world
+            Eigen::Matrix<double, 8, 1> n;
+            Eigen::Matrix<double, 8, 2> dn;
+            quad8Shape(g.x[i], g.x[j], n, dn);
+            const double w = g.w[i] * g.w[j] * area;
+            for (int q = 0; q < 8; ++q) {
+                f.segment<3>(3 * q) -= w * n(q) * t;
+                f.segment<3>(24 + 3 * q) += w * n(q) * t;
+            }
+        }
+    return f;
 }
 
 }  // namespace resonant::mechanics

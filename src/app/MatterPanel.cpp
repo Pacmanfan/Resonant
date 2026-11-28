@@ -51,7 +51,9 @@ MatterPanel::MatterPanel(QWidget* parent) : QWidget(parent), ui_(std::make_uniqu
                                                                            {"thermal", tr("Through-thickness conduction")},
                                                                            {"electrical", tr("Through-thickness electrical")},
                                                                            {"electromagnetic", tr("Layered plane-wave solver")},
-                                                                           {"interfaces", tr("Interface quantities")}})
+                                                                           {"interfaces", tr("Interface quantities")},
+                                                                           {"layered-solid", tr("Three-dimensional layered solid")},
+                                                                           {"layered-solid-thermal", tr("Three-dimensional layered conduction")}})
         ui_->analysisCombo->addItem(label, id);
     for (const char* d : {"mechanical", "electrical", "thermal", "electromagnetic", "acoustic", "magnetic", "optical", "chemical", "fluid"}) {
         ui_->fromCombo->addItem(QString::fromLatin1(d));
@@ -119,6 +121,13 @@ void MatterPanel::setController(MatterController* controller)
             ui_->resultPlot->setCurve(column(result["profile"], "0"), column(result["profile"], "1"), tr("Temperature through the stack"), tr("Height (m)"), tr("T (K)"));
         } else if (analysis == QLatin1String("harvester") && !result.value("sweep", json::array()).empty()) {
             ui_->resultPlot->setCurve(column(result["sweep"], "frequency"), column(result["sweep"], "power"), tr("Harvested power"), tr("Frequency (Hz)"), tr("P (W)"));
+        } else if (analysis == QLatin1String("layered-solid") && result.contains("frequencies")) {
+            QVector<double> n, f;
+            for (size_t k = 0; k < result["frequencies"].size(); ++k) {
+                n.push_back(static_cast<double>(k + 1));
+                f.push_back(result["frequencies"][k].get<double>());
+            }
+            ui_->resultPlot->setCurve(n, f, tr("Modes of the three-dimensional body"), tr("Mode"), tr("f (Hz)"));
         } else if (analysis == QLatin1String("modes") && result.contains("coated")) {
             QVector<double> n, coated, bare;
             for (size_t k = 0; k < result["coated"].size(); ++k) {

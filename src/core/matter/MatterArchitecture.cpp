@@ -165,6 +165,7 @@ const std::vector<InterfaceModelKind>& interfaceModelKinds()
         {"cohesive-zone", "Cohesive zone", "mechanical", {{"strength", "Pa"}, {"fractureEnergy", "J/m^2"}},
          "bonded until the traction reaches the strength, then separating with the fracture energy"},
         {"frictional-contact", "Frictional contact", "mechanical", {{"frictionCoefficient", "1"}}, "Coulomb friction, no tension"},
+        {"sliding", "Sliding contact", "mechanical", {{"normalStiffness", "N/m^3"}}, "frictionless contact without separation: no shear traction"},
         {"thermal-contact-resistance", "Thermal contact resistance", "thermal", {{"resistance", "m^2 K/W"}},
          "a temperature jump q R across the interface (thermal boundary or Kapitza resistance)"},
         {"electrical-contact-resistance", "Electrical contact resistance", "electrical", {{"resistance", "ohm m^2"}}, "a potential jump J R across the interface"},

@@ -40,7 +40,12 @@ project in `examples/matter` to see one.
   - **bending modes:** the coated structure against the bare one;
   - **the piezoelectric cantilever:** harvested power and its energy balance;
   - **conduction through the thickness**, including contact resistances;
-  - **the layered electromagnetic solver.**
+  - **the layered electromagnetic solver;**
+  - **the three-dimensional layered solid:** modes, or a static response
+    with interface tractions and initiation indices, and steady conduction.
+    The stack lies on a plane, cylinder, sphere or revolved profile given in
+    the options. Each interface's model is used as declared: perfect bonding,
+    springs, sliding, friction or a contact resistance.
 
   Each result lists its assumptions and warnings. An analysis that cannot
   represent part of the stack says so instead of guessing.
@@ -67,7 +72,7 @@ is one undo step.
 
 ## Limits
 
-- Coated beams and plates are analyzed; curved shells such as a bell are not.
+- Curved layered bodies (a bell's profile) are analyzed in three dimensions, linearly; interface damage evolution is not modelled.
 - Piezoelectric conversion is a single-mode cantilever model.
 - The example data are representative handbook values, labelled as such.
 - An optimized or explored architecture is a prediction until it is measured.

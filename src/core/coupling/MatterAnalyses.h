@@ -20,6 +20,13 @@
 //   electromagnetic  the layered plane-wave solver (em::LayeredSolution)
 //   interfaces       derived quantities of each interface: acoustic transmission,
 //                    the thermal-mismatch stress, the temperature jump under a flux
+//   layered-solid    the stack as a three-dimensional body of 20-node hexahedra
+//                    (mechanics/LayeredSolid) on a flat, cylindrical, spherical or
+//                    revolved reference surface: modes, or a static response with
+//                    the interfaces' tractions, states and initiation indices
+//                    (REQ-CHAT-20261128-004, ADR-000232)
+//   layered-solid-thermal  steady three-dimensional conduction of the same body,
+//                    with the interfaces' contact resistances
 
 #include "foundation/Result.h"
 #include "matter/MatterArchitecture.h"

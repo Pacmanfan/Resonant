@@ -69,7 +69,8 @@ service MatterService {
   rpc ListMechanisms(ListMechanismsRequest) returns (ListMechanismsResponse);
   // Checks a stack against an analysis's declared capability: what it would refuse and why.
   rpc CheckStackCompatibility(CheckStackCompatibilityRequest) returns (CheckStackCompatibilityResponse);
-  // Runs an analysis of a stack (laminate, modes, harvester, thermal, electrical, electromagnetic, interfaces); changes nothing.
+  // Runs an analysis of a stack (laminate, modes, harvester, thermal, electrical, electromagnetic, interfaces, layered-solid,
+  // layered-solid-thermal); changes nothing.
   rpc AnalyzeStack(AnalyzeStackRequest) returns (AnalyzeStackResponse);
   // A region's resolved properties with their origin, and every combination method of its composition with its bounds.
   rpc GetEffectiveProperties(GetEffectivePropertiesRequest) returns (GetEffectivePropertiesResponse);

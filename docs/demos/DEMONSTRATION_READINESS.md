@@ -39,7 +39,7 @@ These belong to REQ-CHAT-20261128-011.
 
 | Stage | Exists | Needed |
 |---|---|---|
-| A bell's modes, with its geometry | no: no shell model (ADR-000228) | layered shells or solids (REQ-CHAT-20261128-004) |
+| A bell's modes, with its geometry | yes since REQ-CHAT-20261128-004: a layered solid of revolution on the bell's meridian (ADR-000232) | the bell's profile and material (Prompt 30) |
 | The sound the bell radiates | for baffled plates (Rayleigh, one-way) | radiation from a curved vibrating body (REQ-CHAT-20261128-004, -005) |
 | Helmholtz resonance | yes: lumped resonators (REQ-CHAT-20261126-018) | the resonator driven by the computed field |
 | Pressure loading the cantilever | no: `acoustic.pressure-to-structure` is planned | the acoustic load on a structure (REQ-CHAT-20261128-005) |

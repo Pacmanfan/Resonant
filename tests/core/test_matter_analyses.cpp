@@ -261,3 +261,87 @@ TEST(MatterAnalyses, EffectivePropertiesAreListedWithEveryMethod)
     EXPECT_GE(e["methods"].size(), 5u);
     EXPECT_TRUE(resonant::coupling::effectiveRegionProperties(architecture(*p, "arch-multi"), "nothing", p->materials).is_null());
 }
+
+// --- the three-dimensional layered solid (REQ-CHAT-20261128-004, ADR-000232) -------------------
+
+TEST(MatterAnalyses, TheLayeredSolidConductsLikeTheSeriesModelThroughAFlatStack)
+{
+    auto c = example("c-thermal-barrier.resonant");
+    const auto a = architecture(*c, "arch-tbc");
+    auto one = resonant::coupling::analyzeStack(a, "st-wall", "thermal", json::object(), c->materials);
+    ASSERT_TRUE(one) << one.message();
+    auto three = resonant::coupling::analyzeStack(a, "st-wall", "layered-solid-thermal",
+                                                  json{{"thermal", {{"innerTemperature", 373.15}, {"outerTemperature", 293.15}}}}, c->materials);
+    ASSERT_TRUE(three) << three.message();
+    // Laterally insulated and flat, the 3D conduction is one-dimensional: the same resistance.
+    const double r = one.value()["metrics"]["resistance"].get<double>();
+    EXPECT_NEAR(three.value()["metrics"]["heatFluxIn"].get<double>(), 80.0 / r, 0.01 * 80.0 / r);
+    EXPECT_NE(three.value()["result"]["fidelity"].get<std::string>().find("three-dimensional"), std::string::npos);
+    // The mechanical 3D solid refuses the cohesive zone it cannot represent.
+    auto mech = resonant::coupling::analyzeStack(a, "st-wall", "layered-solid", json::object(), c->materials);
+    ASSERT_FALSE(mech);
+    EXPECT_NE(mech.message().find("cohesive-zone"), std::string::npos) << mech.message();
+}
+
+TEST(MatterAnalyses, TheLayeredSolidModesLieBetweenTheNarrowBeamAndTheWidePlate)
+{
+    auto d = example("d-graded-metal-ceramic.resonant");
+    const auto a = architecture(*d, "arch-step");
+    auto narrow = resonant::coupling::analyzeStack(a, "st-fgm", "modes", json::object(), d->materials);
+    auto wide = resonant::coupling::analyzeStack(a, "st-fgm", "modes", json{{"wide", true}}, d->materials);
+    auto solid = resonant::coupling::analyzeStack(a, "st-fgm", "layered-solid", json{{"mesh", {{"elementsU", 10}, {"elementsV", 6}}}}, d->materials);
+    ASSERT_TRUE(narrow && wide) << narrow.message() << wide.message();
+    ASSERT_TRUE(solid) << solid.message();
+    const double f = solid.value()["metrics"]["f1"].get<double>();
+    EXPECT_GT(f, 0.99 * narrow.value()["metrics"]["f1"].get<double>());
+    EXPECT_LT(f, 1.02 * wide.value()["metrics"]["f1"].get<double>());
+    // The graded architecture is divided into sublayers of constant properties, and says so.
+    const auto g = architecture(*d, "arch-fgm");
+    auto graded = resonant::coupling::analyzeStack(g, "st-fgm", "layered-solid", json{{"sublayers", 6}}, d->materials);
+    ASSERT_TRUE(graded) << graded.message();
+    EXPECT_EQ(graded.value()["result"]["layers"].get<int>(), 6);
+}
+
+TEST(MatterAnalyses, TheLayeredSolidReportsInterfaceTractionsAndRefusesWhatItCannotDo)
+{
+    auto d = example("d-graded-metal-ceramic.resonant");
+    auto a = architecture(*d, "arch-step");
+    // Declare the interface as a spring layer with strengths (the 3D solid reads them).
+    for (auto& i : a.interfaces)
+        if (i.id == "i-step") {
+            InterfaceModel m;
+            m.kind = "finite-stiffness";
+            for (const auto& [key, value] : std::vector<std::pair<std::string, double>>{
+                     {"normalStiffness", 1e14}, {"shearStiffness", 5e13}, {"normalStrength", 50e6}, {"shearStrength", 80e6}}) {
+                SourcedValue v;
+                v.value = value;
+                v.source = "test";
+                m.parameters[key] = v;
+            }
+            i.models = {m};
+        }
+    const json options{{"analysis", "static"},
+                       {"mesh", {{"elementsU", 10}, {"elementsV", 2}}},
+                       {"loads", {{"edgeForces", json::array({{{"edge", "u1"}, {"force", json::array({0, 0, -50.0})}}})}}}};
+    auto r = resonant::coupling::analyzeStack(a, "st-fgm", "layered-solid", options, d->materials);
+    ASSERT_TRUE(r) << r.message();
+    const json& result = r.value()["result"];
+    ASSERT_EQ(result["interfaces"].size(), 1u);
+    EXPECT_GT(result["interfaces"][0]["maxShearTraction"].get<double>(), 0.0);
+    EXPECT_TRUE(result["interfaces"][0].contains("maxFailureIndex"));
+    EXPECT_TRUE(r.value()["metrics"].contains("maxFailureIndex"));
+    EXPECT_GT(r.value()["metrics"]["maxDisplacement"].get<double>(), 0.0);
+    // A static analysis without a load, and an unknown analysis, are refused.
+    EXPECT_FALSE(resonant::coupling::analyzeStack(a, "st-fgm", "layered-solid", json{{"analysis", "static"}}, d->materials));
+    EXPECT_FALSE(resonant::coupling::analyzeStack(a, "st-fgm", "layered-solid", json{{"analysis", "buckling"}}, d->materials));
+    // A curved surface from the options: a quarter cylinder of the same stack.
+    auto curved = resonant::coupling::analyzeStack(
+        a, "st-fgm", "layered-solid",
+        json{{"surface", {{"kind", "cylinder"}, {"radius", 0.05}, {"length", 0.02}, {"sweep", 1.5707963267948966}}},
+             {"supports", {{"clamped", json::array({"u0", "u1"})}}},
+             {"analysis", "static"},
+             {"loads", {{"innerPressure", 1e6}}}},
+        d->materials);
+    ASSERT_TRUE(curved) << curved.message();
+    EXPECT_NE(curved.value()["result"]["surface"].get<std::string>().find("cylinder"), std::string::npos);
+}

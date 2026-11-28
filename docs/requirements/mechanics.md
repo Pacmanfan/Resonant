@@ -1,6 +1,6 @@
 # Mechanical Waves, Structural Vibration and Elasticity
 
-**Owner of:** `RES-MECH-001..018`
+**Owner of:** `RES-MECH-001..022`
 **Source:** REQ-CHAT-20261126-006 ("Prompt 10")
 **Refines:** `product.md` RES-PRODUCT-001, -007, -009, -010, -012
 **Decisions:** ADR-000205, ADR-000210
@@ -139,3 +139,59 @@ background jobs with progress and cancellation; results with complete
 metadata; validation recorded in `docs/mechanics/MECHANICAL_VALIDATION.md`;
 eight example projects generated and checked by the tests.
 *Verification:* `MechanicalStudy.*`, `MechanicalExamples.*`.
+
+### RES-MECH-019 — Layered three-dimensional bodies
+
+A layered or coated body is modeled in three dimensions: a reference surface
+(plane, cylinder, sphere or surface of revolution) and layers built along its
+normal, meshed with quadratic 20-node hexahedra with elements through every
+layer. Layers may be:
+- isotropic, orthotropic (axes following the surface) or graded;
+- of constant thickness, or of thickness varying along the surface.
+
+Seams and poles are joined. The existing static, modal, harmonic and transient
+analyses apply to these models. Layered-plate theory and the beam and plate
+models remain lower-fidelity references and are never presented as equivalent.
+*Verification:* `LayeredSolid.CantileverStripMatchesTimoshenkoBeamTheory`, `-ModesMatchBeamTheory`, `-PerfectlyBondedBilayerMatchesLaminateTheoryAsItsThinLimit`, `-ThickCylinderUnderInternalPressureMatchesLame`, `-FullRingMergesItsSeamAndMatchesLame`, `-ThickSphereUnderInternalPressureMatchesLame`, `-ARevolvedProfileIsTheSameBodyAsTheCylinder`, `-ATaperedLayerHasItsVolumeAndBendsLikeATaperedBeam`, `-AGradedLayerBendsWithTheStiffnessOfItsProfile`, `-AnOrthotropicLayerFollowsItsMaterialAxes`, `-TheDisplayMeshDrawsTheOuterQuadraticFaces`.
+
+### RES-MECH-020 — Non-ideal interfaces, never assumed
+
+Every interface between two layers states its mechanical model:
+- perfect bonding, an explicitly selected idealization;
+- finite normal and shear stiffness;
+- sliding;
+- frictional contact (Coulomb, no tension).
+
+An interface without a model, or with a model the solver does not represent
+(a cohesive zone), refuses the analysis with the reason. Debonded regions carry
+no traction. Normal and shear strengths give the quadratic initiation index
+`(max(t_n, 0) / N)^2 + (t_s / S)^2`; damage evolution is not modelled. Modes
+of a frictional contact are refused. A body or layer that is not held is
+refused, never solved.
+*Verification:* `LayeredSolid.InterfaceSpringsAddTheirComplianceInSeries`, `-CompoundCylinderWithAFiniteStiffnessInterfaceMatchesLame`, `-ASlidingInterfaceCarriesNoShear`, `-FrictionalContactSticksBelowAndSlipsAtTheCoulombLimit`, `-ADebondedRegionIsTractionFreeAndSoftensTheStrip`, `-TheQuadraticCriterionPredictsInitiationUnderUniformTension`, `-AnInterfaceWithoutAModelIsRefusedNeverAssumedPerfect`, `-AnInvalidElasticityMatrixIsRefusedByTheModel`.
+
+### RES-MECH-021 — Thermal contact in three dimensions
+
+Steady conduction runs on the same layered geometry. Each interface states
+perfect contact or a contact resistance (a missing thermal model, or a layer
+without a conductivity, is refused). The result reports:
+- the heat flow from the reactions;
+- the mean temperature jump at each interface;
+- the temperature range of each layer.
+
+*Verification:* `LayeredSolid.ConductionThroughLayersWithAContactResistance`, `-RadialConductionThroughACoatedPipeMatchesTheLogarithmicProfile`.
+
+### RES-MECH-022 — Layered solids of architected matter
+
+An architecture's stack is analysed as a three-dimensional body through the
+matter capability system:
+- `layered-solid`: modal or static, with interface tractions, states and
+  initiation indices;
+- `layered-solid-thermal`.
+
+Both declare what they represent, and the stack check refuses the rest with
+reasons. The surface, mesh, supports, loads and debonded regions are analysis
+options. The analyses are available through the matter service and the Matter
+panel.
+*Verification:* `MatterAnalyses.TheLayeredSolidConductsLikeTheSeriesModelThroughAFlatStack`, `-TheLayeredSolidModesLieBetweenTheNarrowBeamAndTheWidePlate`, `-TheLayeredSolidReportsInterfaceTractionsAndRefusesWhatItCannotDo`, `MatterPanelTest.TheLayeredStackAsAThreeDimensionalBody`, `-TheThreeDimensionalSolidRefusesACohesiveZone`, `python/tests/test_matter_api.py`.
+

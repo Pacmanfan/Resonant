@@ -12,6 +12,7 @@ material records, jobs, results, rendering, and the signal definitions of
 | Document | Contents |
 |---|---|
 | `STRUCTURAL_MECHANICS.md` | idealizations, element formulations, supports, meshes, statics |
+| `LAYERED_SOLIDS.md` | layered 3D solids on curved surfaces, interfaces (springs, sliding, friction, debonding, initiation), 3D conduction, validation |
 | `MECHANICAL_MATERIALS.md` | the elastic material model and the material library |
 | `MODAL_ANALYSIS.md` | the eigenvalue problem, the solvers, mode display |
 | `FORCED_RESPONSE.md` | harmonic analysis, damping models, frequency-response functions, measured data |

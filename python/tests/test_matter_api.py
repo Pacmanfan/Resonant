@@ -59,6 +59,15 @@ class MatterApiTests(unittest.TestCase):
         self.assertEqual({a["id"] for a in listed}, {"arch-bonded", "arch-film"})
         caps = json_format.MessageToDict(matter.GetMatterCapabilities().capabilities)
         self.assertIn("harvester", [a["id"] for a in caps["analyses"]])
+        # The three-dimensional layered solid (REQ-CHAT-20261128-004): declared, and it refuses
+        # what it cannot represent (the cohesive zones, the segmented electrode) with the reasons.
+        self.assertIn("layered-solid", [a["id"] for a in caps["analyses"]])
+        self.assertIn("layered-solid-thermal", [a["id"] for a in caps["analyses"]])
+        solid = json_format.MessageToDict(matter.CheckStackCompatibility(architecture_id="arch-bonded", stack_id="st-beam", analysis="layered-solid").result)
+        self.assertFalse(solid["compatible"])
+        self.assertTrue(any("cohesive-zone" in i["message"] for i in solid["issues"]))
+        with self.assertRaises(ApiError):
+            matter.AnalyzeStack(architecture_id="arch-bonded", stack_id="st-beam", analysis="layered-solid")
         check = json_format.MessageToDict(matter.CheckStackCompatibility(architecture_id="arch-bonded", stack_id="st-beam", analysis="coupled-engine").result)
         self.assertFalse(check["compatible"])  # the segmented electrode is refused, with its reason
         with self.assertRaises(ApiError):

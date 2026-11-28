@@ -117,8 +117,12 @@ In the **Matter** panel an engineer:
 These are also listed in ADR-000228 and `IMPLEMENTATION_STATUS.md`.
 
 **Structures:**
-- There is no shell or solid finite-element model of layered bodies, so a bell
-  with deposited films is not analyzed. Coated beams and plates are.
+- Layered bodies are analyzed in three dimensions by the `layered-solid`
+  analyses (REQ-CHAT-20261128-004, `../mechanics/LAYERED_SOLIDS.md`). The
+  surface may be flat, cylindrical, spherical or a surface of revolution (a
+  bell's profile), with explicit interfaces. They are linear, without damage
+  evolution or contact in debonded regions. A cohesive zone, a segmented layer
+  and an in-plane orthotropic set are refused there.
 - Piezoelectric conversion is a lumped single-mode cantilever model. The
   coupled engine's piezoelectric coupling stays planned.
 

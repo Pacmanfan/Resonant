@@ -25,7 +25,7 @@
 |---|---|---|---|
 | Harmonic acoustics, arrays, reflectors (Kirchhoff) | V | objects do not scatter the harmonic field; waveforms other than sinusoids; lens fields need full wave | - |
 | Acoustic FDTD | L | boundaries, materials and objects tested in 2D only; no elastic solids; no eigenmodes | -004 (3D validation where structures need it) |
-| Structural mechanics | L | hexahedra too stiff in bending; no shells, layered or composite bodies; structured meshes only | -004 |
+| Structural mechanics | L | hexahedra too stiff in bending; no shells, layered or composite bodies; structured meshes only | -004: addressed by 20-node layered solids on curved surfaces with explicit interfaces (ADR-000232); scene meshes stay structured |
 | Lamination theory, coated beam and plate modes | V | not a shell solution (ADR-000228) | -004 keeps it as the reference |
 | Piezoelectric conversion | L | lumped first-mode cantilever only; the engine's piezoelectric coupling is planned | -005 |
 | Thermoelectric, magnetostrictive, photovoltaic | N | listed as mechanisms, not modeled | -005 |

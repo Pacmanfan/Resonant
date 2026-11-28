@@ -249,7 +249,8 @@ double StructureStudy::elementsPerWavelength(double frequencyHz) const
         wavelength = std::sqrt(e.tension / (m.density * e.thickness)) / frequencyHz;
         break;
     }
-    case ElementKind::Solid: wavelength = m.shearSpeed() / frequencyHz; break;
+    case ElementKind::Solid:
+    case ElementKind::Solid20: wavelength = m.shearSpeed() / frequencyHz; break;
     }
     return wavelength / elementSize;
 }
@@ -262,7 +263,8 @@ std::string StructureStudy::waveDescription() const
     case ElementKind::Frame: return "bending wavelength of the beam";
     case ElementKind::Plate: return "bending wavelength of the plate";
     case ElementKind::Membrane: return "wavelength of the membrane";
-    case ElementKind::Solid: return "shear wavelength of the solid";
+    case ElementKind::Solid:
+    case ElementKind::Solid20: return "shear wavelength of the solid";
     }
     return "";
 }
@@ -530,11 +532,11 @@ StructureStudy prepareStudy(const Project& project, const Id& structureId, size_
     // Cost.
     study.freeDofs = model.dofCount() - model.fixedDofCount();
     const double n = static_cast<double>(study.freeDofs);
-    const double perRow = static_cast<double>(model.dofsPerNode()) * (model.kind == ElementKind::Frame ? 3.0 : model.kind == ElementKind::Solid ? 27.0 : 9.0);
+    const double perRow = static_cast<double>(model.dofsPerNode()) * (model.kind == ElementKind::Frame ? 3.0 : model.kind == ElementKind::Solid ? 27.0 : model.kind == ElementKind::Solid20 ? 81.0 : 9.0);
     // Sparse matrices (K, M, loss) and a factor whose fill grows like n log n
     // (1D, 2D meshes) or n^(4/3) (3D) under fill-reducing ordering: a rough estimate.
     const double fill = model.kind == ElementKind::Frame ? perRow * n
-                        : model.kind == ElementKind::Solid ? 30.0 * std::pow(n, 4.0 / 3.0)
+                        : (model.kind == ElementKind::Solid || model.kind == ElementKind::Solid20) ? 30.0 * std::pow(n, 4.0 / 3.0)
                                                             : 20.0 * n * std::log2(std::max(2.0, n));
     study.estimatedBytes = static_cast<size_t>(3.0 * perRow * n * 16.0 + fill * 16.0 * 2.0);
     study.properties.push_back({"Mesh", format("%zu elements, %zu nodes, %zu free degrees of freedom", model.elements.size(), model.nodes.size(), study.freeDofs)});

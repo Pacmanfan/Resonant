@@ -8,6 +8,7 @@
 #include "materials/Material.h"
 #include "matter/PropertyResolution.h"
 #include "mechanics/Laminate.h"
+#include "mechanics/LayeredSolid.h"
 #include "mechanics/PiezoelectricBeam.h"
 
 #include <algorithm>
@@ -814,6 +815,344 @@ Result<json> interfacesAnalysis(const Architecture& a, const Stack& s, const jso
                 {"assumptions", json::array({"normal incidence for the acoustic transmission", "the thermal mismatch of the free laminate (lamination theory)"})}};
 }
 
+
+// --- the three-dimensional layered solid (REQ-CHAT-20261128-004, ADR-000232) -------------------
+
+double optionNumber(const json& o, const char* key, double fallback)
+{
+    return o.contains(key) && o[key].is_number() ? o[key].get<double>() : fallback;
+}
+
+Result<mechanics::BodyEdge> edgeOf(const json& v)
+{
+    const std::string e = v.is_string() ? v.get<std::string>() : std::string();
+    if (e == "u0")
+        return mechanics::BodyEdge::U0;
+    if (e == "u1")
+        return mechanics::BodyEdge::U1;
+    if (e == "v0")
+        return mechanics::BodyEdge::V0;
+    if (e == "v1")
+        return mechanics::BodyEdge::V1;
+    return Result<mechanics::BodyEdge>::failure("an edge is one of u0, u1, v0, v1, not '" + e + "'");
+}
+
+Result<int> axisOf(const json& v)
+{
+    const std::string x = v.is_string() ? v.get<std::string>() : std::string();
+    if (x == "x")
+        return 0;
+    if (x == "y")
+        return 1;
+    if (x == "z")
+        return 2;
+    return Result<int>::failure("an axis is one of x, y, z, not '" + x + "'");
+}
+
+Result<Vec3> vectorOf(const json& v)
+{
+    if (!v.is_array() || v.size() != 3 || !v[0].is_number() || !v[1].is_number() || !v[2].is_number())
+        return Result<Vec3>::failure("a vector is three numbers");
+    return Vec3(v[0].get<double>(), v[1].get<double>(), v[2].get<double>());
+}
+
+// The body of a stack: its layers (graded ones divided into sublayers), the
+// interfaces it declares, and the reference surface of the options.
+Result<mechanics::LayeredBody> bodyOf(const Architecture& a, const Stack& s, const json& o, const MaterialLibrary& lib, bool thermal, json& notes)
+{
+    using R = Result<mechanics::LayeredBody>;
+    auto subs = subLayers(a, s, thermal ? std::set<std::string>{"thermal"} : std::set<std::string>{"mechanical"}, std::max(1, static_cast<int>(optionNumber(o, "sublayers", 4))), lib);
+    if (!subs)
+        return R::failure(subs.message());
+    mechanics::LayeredBody body;
+    body.name = s.id;
+    const json surface = o.value("surface", json::object());
+    const std::string kind = surface.value("kind", std::string("plane"));
+    auto& rs = body.surface;
+    if (kind == "plane") {
+        rs.kind = mechanics::ReferenceSurface::Kind::Plane;
+        rs.length = optionNumber(surface, "length", s.length);
+        rs.width = optionNumber(surface, "width", s.width);
+        if (!(rs.length > 0.0 && rs.width > 0.0))
+            return R::failure("the stack '" + s.id + "' has no in-plane extent: give it a length and width, or a surface in the options");
+    } else if (kind == "cylinder") {
+        rs.kind = mechanics::ReferenceSurface::Kind::Cylinder;
+        rs.radius = optionNumber(surface, "radius", 0.0);
+        rs.length = optionNumber(surface, "length", s.length);
+        rs.sweep = optionNumber(surface, "sweep", 2 * std::numbers::pi);
+    } else if (kind == "sphere") {
+        rs.kind = mechanics::ReferenceSurface::Kind::Sphere;
+        rs.radius = optionNumber(surface, "radius", 0.0);
+        rs.polarStart = optionNumber(surface, "polarStart", 0.0);
+        rs.polarEnd = optionNumber(surface, "polarEnd", std::numbers::pi / 2);
+        rs.sweep = optionNumber(surface, "sweep", 2 * std::numbers::pi);
+    } else if (kind == "revolution") {
+        rs.kind = mechanics::ReferenceSurface::Kind::Revolution;
+        rs.sweep = optionNumber(surface, "sweep", 2 * std::numbers::pi);
+        for (const auto& pt : surface.value("profile", json::array()))
+            if (pt.is_array() && pt.size() == 2 && pt[0].is_number() && pt[1].is_number())
+                rs.profile.push_back({pt[0].get<double>(), pt[1].get<double>()});
+    } else {
+        return R::failure("a surface is a plane, cylinder, sphere or revolution, not '" + kind + "'");
+    }
+    if (Status st = rs.validate(); !st)
+        return R::failure(st.message());
+    const json mesh = o.value("mesh", json::object());
+    body.elementsU = static_cast<int>(optionNumber(mesh, "elementsU", 12));
+    body.elementsV = static_cast<int>(optionNumber(mesh, "elementsV", 2));
+    const int through = static_cast<int>(optionNumber(mesh, "elementsThrough", 2));
+    const json debonded = o.value("debonded", json::object());
+    const std::vector<Sub>& list = subs.value();
+    for (size_t i = 0; i < list.size(); ++i) {
+        const Sub& sub = list[i];
+        mechanics::BodyLayer l;
+        l.name = sub.id;
+        l.thickness.start = sub.thickness;
+        const bool split = (i > 0 && list[i - 1].layer == sub.layer) || (i + 1 < list.size() && list[i + 1].layer == sub.layer);
+        l.elementsThrough = split ? 1 : std::max(1, through);
+        l.material.base.name = sub.region;
+        if (thermal) {
+            if (std::abs(sub.kzz - sub.kxx) > 1e-9 * std::max(sub.kzz, sub.kxx))
+                return R::failure("the layer '" + sub.id + "' conducts anisotropically: the three-dimensional conduction takes isotropic layers");
+            l.material.conductivity = sub.kzz;
+        } else {
+            if (std::abs(sub.E1 - sub.E2) > 1e-9 * std::max(sub.E1, sub.E2))
+                return R::failure("the layer '" + sub.id + "' is orthotropic in its plane: the three-dimensional solid needs nine orthotropic constants, "
+                                  "which the architecture's in-plane elastic set does not give; refused");
+            l.material.base.youngsModulus = sub.E1;
+            l.material.base.poissonsRatio = sub.nu12;
+            l.material.base.density = sub.rho;
+            l.material.base.lossFactor = sub.loss;
+            l.material.base.lossFactorStated = sub.loss > 0.0;
+            l.material.base.provenance = sub.origins.empty() ? "the material library" : sub.origins.front();
+        }
+        body.layers.push_back(l);
+        if (i == 0)
+            continue;
+        // The interface below this sublayer: the same layer (a graded layer's division),
+        // the same region continuing, or the architecture's declared interface.
+        mechanics::LayerInterface li;
+        const Sub& prev = list[i - 1];
+        if (prev.layer == sub.layer || s.layers[prev.layer].region == s.layers[sub.layer].region) {
+            li.name = prev.layer == sub.layer ? "within " + s.layers[sub.layer].id : s.layers[prev.layer].id + "/" + s.layers[sub.layer].id;
+            li.mechanical = mechanics::InterfaceMechanics::PerfectBonding;
+            li.thermal = mechanics::InterfaceThermal::Perfect;
+            li.provenance = "continuous material (one region), not an interface";
+        } else {
+            const Interface* in = interfaceBetweenLayers(a, s, prev.layer);
+            if (!in)
+                return R::failure("the layers '" + s.layers[prev.layer].id + "' and '" + s.layers[sub.layer].id + "' meet without an interface: nothing is assumed about it");
+            li.name = in->id;
+            li.provenance = "interface '" + in->id + "'";
+            if (const InterfaceModel* m = in->modelFor("mechanical")) {
+                const auto param = [&](const char* key) { return m->parameter(key) ? std::optional<double>(m->parameter(key)->value) : std::nullopt; };
+                if (m->kind == "perfect" || m->kind == "perfect-bonding") {
+                    li.mechanical = mechanics::InterfaceMechanics::PerfectBonding;
+                } else if (m->kind == "finite-stiffness") {
+                    li.mechanical = mechanics::InterfaceMechanics::FiniteStiffness;
+                    li.normalStiffness = param("normalStiffness").value_or(0.0);
+                    li.shearStiffness = param("shearStiffness").value_or(0.0);
+                } else if (m->kind == "sliding") {
+                    li.mechanical = mechanics::InterfaceMechanics::Sliding;
+                    li.normalStiffness = param("normalStiffness").value_or(0.0);
+                } else if (m->kind == "frictional-contact") {
+                    li.mechanical = mechanics::InterfaceMechanics::FrictionalContact;
+                    li.frictionCoefficient = param("frictionCoefficient").value_or(0.0);
+                    li.normalStiffness = param("normalStiffness").value_or(0.0);
+                    li.shearStiffness = param("shearStiffness").value_or(0.0);
+                } else if (!thermal) {
+                    return R::failure("the " + m->kind + " model of '" + in->id + "' is not represented by the three-dimensional solid");
+                }
+                li.normalStrength = param("normalStrength");
+                li.shearStrength = param("shearStrength");
+            }
+            if (const InterfaceModel* m = in->modelFor("thermal")) {
+                if (m->kind == "perfect")
+                    li.thermal = mechanics::InterfaceThermal::Perfect;
+                else if (m->kind == "thermal-contact-resistance" && m->parameter("resistance")) {
+                    li.thermal = mechanics::InterfaceThermal::Resistance;
+                    li.thermalResistance = m->parameter("resistance")->value;
+                }
+            }
+            if (debonded.contains(in->id))
+                for (const auto& box : debonded[in->id])
+                    if (box.is_array() && box.size() == 4)
+                        li.debonded.push_back({box[0].get<double>(), box[1].get<double>(), box[2].get<double>(), box[3].get<double>()});
+            if (li.mechanical == mechanics::InterfaceMechanics::PerfectBonding && li.normalStrength)
+                notes.push_back("the tractions at the perfectly bonded interface '" + in->id + "' are recovered from the stress of the layer below");
+        }
+        body.interfaces.push_back(li);
+    }
+    if (Status st = body.validate(); !st)
+        return R::failure(st.message());
+    return body;
+}
+
+Result<json> layeredSolidAnalysis(const Architecture& a, const Stack& s, const json& o, const MaterialLibrary& lib, bool thermal)
+{
+    using R = Result<json>;
+    json notes = json::array();
+    auto made = bodyOf(a, s, o, lib, thermal, notes);
+    if (!made)
+        return R::failure(made.message());
+    const mechanics::LayeredBody& body = made.value();
+    json result{{"surface", body.surface.describe()}, {"layers", body.layers.size()}};
+    json metrics = json::object();
+    json assumptions = json::array(), warnings = json::array();
+    if (thermal) {
+        const json t = o.value("thermal", json::object());
+        mechanics::LayeredThermalBoundary bc;
+        if (t.contains("innerTemperature"))
+            bc.innerTemperature = t["innerTemperature"].get<double>();
+        if (t.contains("outerTemperature"))
+            bc.outerTemperature = t["outerTemperature"].get<double>();
+        if (t.contains("innerFlux"))
+            bc.innerFlux = t["innerFlux"].get<double>();
+        if (t.contains("outerConvection") && t["outerConvection"].is_array() && t["outerConvection"].size() == 2)
+            bc.outerConvection = std::array<double, 2>{t["outerConvection"][0].get<double>(), t["outerConvection"][1].get<double>()};
+        if (!bc.innerTemperature && !bc.outerTemperature && !bc.outerConvection && !bc.innerFlux) {
+            bc.innerTemperature = 373.15;  // the default case, stated
+            bc.outerTemperature = 293.15;
+            assumptions.push_back("no thermal condition given: the inner face at 373.15 K and the outer at 293.15 K");
+        }
+        auto r = mechanics::solveLayeredConduction(body, bc);
+        if (!r)
+            return R::failure(r.message());
+        const auto& v = r.value();
+        result["analysis"] = "steady conduction";
+        result["fidelity"] = v.fidelity;
+        result["heatIn"] = v.heatIn;
+        result["innerArea"] = v.innerArea;
+        json jumps = json::array();
+        double worst = 0.0;
+        for (size_t i = 0; i < body.interfaces.size(); ++i) {
+            jumps.push_back({{"interface", body.interfaces[i].name}, {"jump", v.interfaceJump[i]}});
+            worst = std::max(worst, std::abs(v.interfaceJump[i]));
+        }
+        result["interfaceJumps"] = jumps;
+        json ranges = json::array();
+        for (size_t l = 0; l < body.layers.size(); ++l)
+            ranges.push_back({{"layer", body.layers[l].name}, {"min", v.layerRange[l][0]}, {"max", v.layerRange[l][1]}});
+        result["layerTemperatures"] = ranges;
+        metrics = {{"heatIn", v.heatIn}, {"heatFluxIn", v.innerArea > 0 ? v.heatIn / v.innerArea : 0.0}, {"maxInterfaceJump", worst}};
+        for (const auto& x : v.assumptions)
+            assumptions.push_back(x);
+        for (const auto& x : v.warnings)
+            warnings.push_back(x);
+    } else {
+        mechanics::LayeredSupports supports;
+        const json sp = o.value("supports", json{{"clamped", json::array({"u0"})}});
+        for (const auto& e : sp.value("clamped", json::array())) {
+            auto edge = edgeOf(e);
+            if (!edge)
+                return R::failure(edge.message());
+            supports.clamped.push_back(edge.value());
+        }
+        for (const auto& p : sp.value("symmetry", json::array())) {
+            auto axis = axisOf(p.value("axis", json()));
+            if (!axis)
+                return R::failure(axis.message());
+            supports.symmetry.push_back({axis.value(), p.value("value", 0.0)});
+        }
+        for (const auto& x : sp.value("heldAxes", json::array())) {
+            auto axis = axisOf(x);
+            if (!axis)
+                return R::failure(axis.message());
+            supports.heldAxes.push_back(axis.value());
+        }
+        supports.innerFaceClamped = sp.value("innerFaceClamped", false);
+        const std::string kind = o.value("analysis", std::string("modal"));
+        if (kind == "modal") {
+            auto r = mechanics::solveLayeredModal(body, supports, static_cast<int>(optionNumber(o, "modes", 4)));
+            if (!r)
+                return R::failure(r.message());
+            const auto& v = r.value();
+            result["analysis"] = "free vibration";
+            result["fidelity"] = v.fidelity;
+            result["frequencies"] = v.frequencies;
+            result["mesh"] = {{"elements", v.mesh.structure.elements.size()}, {"nodes", v.mesh.structure.nodes.size()}};
+            result["mass"] = v.mesh.structure.totalMass();
+            metrics = {{"mass", v.mesh.structure.totalMass()}};
+            if (!v.frequencies.empty())
+                metrics["f1"] = v.frequencies.front();
+            for (const auto& x : v.assumptions)
+                assumptions.push_back(x);
+            for (const auto& x : v.warnings)
+                warnings.push_back(x);
+        } else if (kind == "static") {
+            mechanics::LayeredLoads loads;
+            const json ld = o.value("loads", json::object());
+            loads.innerPressure = optionNumber(ld, "innerPressure", 0.0);
+            loads.outerPressure = optionNumber(ld, "outerPressure", 0.0);
+            if (ld.contains("outerTraction")) {
+                auto t = vectorOf(ld["outerTraction"]);
+                if (!t)
+                    return R::failure("the outer traction: " + t.message());
+                loads.outerTraction = t.value();
+            }
+            for (const auto& ef : ld.value("edgeForces", json::array())) {
+                auto edge = edgeOf(ef.value("edge", json()));
+                auto force = vectorOf(ef.value("force", json()));
+                if (!edge || !force)
+                    return R::failure("an edge force needs an edge (u0, u1, v0, v1) and a force (three numbers, N)");
+                loads.edgeForces.emplace_back(edge.value(), force.value());
+            }
+            if (loads.innerPressure == 0.0 && loads.outerPressure == 0.0 && loads.outerTraction.norm() == 0.0 && loads.edgeForces.empty())
+                return R::failure("a static analysis needs a load (options.loads: innerPressure, outerPressure, outerTraction or edgeForces)");
+            auto r = mechanics::solveLayeredStatic(body, supports, loads);
+            if (!r)
+                return R::failure(r.message());
+            const auto& v = r.value();
+            result["analysis"] = "static";
+            result["fidelity"] = v.fidelity;
+            result["maxDisplacement"] = v.maxDisplacement;
+            result["compliance"] = v.compliance;
+            result["converged"] = v.converged;
+            result["iterations"] = v.iterations;
+            result["mesh"] = {{"elements", v.mesh.structure.elements.size()}, {"nodes", v.mesh.structure.nodes.size()}};
+            json layers = json::array();
+            double worstStress = 0.0;
+            for (size_t l = 0; l < body.layers.size(); ++l) {
+                layers.push_back({{"layer", body.layers[l].name}, {"maxVonMises", v.maxVonMises(static_cast<int>(l))}});
+                worstStress = std::max(worstStress, v.maxVonMises(static_cast<int>(l)));
+            }
+            result["layerStresses"] = layers;
+            json interfaces = json::array();
+            std::optional<double> worstIndex;
+            for (size_t i = 0; i < body.interfaces.size(); ++i) {
+                double tn = 0.0, ts = 0.0;
+                std::map<std::string, int> states;
+                for (const auto& p : v.interfacePoints)
+                    if (p.interface == static_cast<int>(i)) {
+                        tn = std::max(tn, p.normalTraction);
+                        ts = std::max(ts, p.shearTraction);
+                        ++states[p.state];
+                    }
+                json entry{{"interface", body.interfaces[i].name}, {"maxNormalTraction", tn}, {"maxShearTraction", ts}, {"states", states}};
+                if (const auto f = v.maxFailureIndex(static_cast<int>(i))) {
+                    entry["maxFailureIndex"] = *f;
+                    entry["initiation"] = *f >= 1.0;
+                    worstIndex = std::max(worstIndex.value_or(0.0), *f);
+                }
+                interfaces.push_back(entry);
+            }
+            result["interfaces"] = interfaces;
+            metrics = {{"maxDisplacement", v.maxDisplacement}, {"maxVonMises", worstStress}, {"compliance", v.compliance}};
+            if (worstIndex)
+                metrics["maxFailureIndex"] = *worstIndex;
+            for (const auto& x : v.assumptions)
+                assumptions.push_back(x);
+            for (const auto& x : v.warnings)
+                warnings.push_back(x);
+        } else {
+            return R::failure("the layered solid's analysis is 'modal' or 'static', not '" + kind + "'");
+        }
+    }
+    for (const auto& n : notes)
+        assumptions.push_back(n);
+    return json{{"metrics", metrics}, {"result", result}, {"assumptions", assumptions}, {"warnings", warnings}};
+}
+
 }  // namespace
 
 const std::vector<SolverCapability>& matterCapabilities()
@@ -861,6 +1200,21 @@ const std::vector<SolverCapability>& matterCapabilities()
          {"the layered-slab geometry of the engine", "electromagnetic interfaces perfect", "anisotropy through the through-thickness conductivity only"},
          {"the stack as regions", "the domains and couplings of the engine"}, {"the coupled result and its ledger"},
          {"thermal.thermalConductivity", "thermal.density", "thermal.specificHeat"}},
+        {"layered-solid", "Three-dimensional layered solid", "mechanics.layered-solid.hex20", {"mechanical"},
+         {"isotropic", "graded", "composition-effective"}, {"perfect", "perfect-bonding", "finite-stiffness", "sliding", "frictional-contact"}, {},
+         "three-dimensional: a flat, cylindrical, spherical or revolved stack", {"continuum", "mesoscale (layers)", "device"}, {},
+         {"frictional contact (Coulomb, holonomic)"},
+         {"linear elasticity, small displacements (larger ones are flagged)", "isotropic layers: an in-plane orthotropic set does not give the nine 3D constants",
+          "a graded layer by sublayers of constant properties", "debonded regions traction-free, without contact; no damage evolution (cohesive zones refused)",
+          "the body is built in its own frame on the options' reference surface (default: the stack's length and width)"},
+         {"the stack's layers with E, nu, rho", "options: surface, mesh, supports, analysis (modal or static), loads, debonded regions"},
+         {"frequencies (modal)", "displacements, layer stresses, interface tractions, states and initiation indices (static)"}, mech},
+        {"layered-solid-thermal", "Three-dimensional layered conduction", "thermal.layered-solid.hex20", {"thermal"},
+         {"isotropic", "graded", "composition-effective"}, {"perfect", "thermal-contact-resistance"}, {},
+         "three-dimensional: a flat, cylindrical, spherical or revolved stack", {"continuum", "mesoscale (layers)", "device"}, {}, {},
+         {"steady conduction, isotropic layers, no radiation", "faces without a condition insulated", "debonded regions not represented thermally"},
+         {"the stack's conductivities", "options: surface, mesh, thermal (inner and outer temperatures, inner flux, outer convection)"},
+         {"the heat flow, interface temperature jumps and layer temperature ranges"}, {"thermal.thermalConductivity"}},
     };
     return caps;
 }
@@ -913,6 +1267,10 @@ Result<json> analyzeStack(const Architecture& a, const std::string& stackId, con
         r = electromagneticAnalysis(a, *s, o, library);
     else if (analysis == "interfaces")
         r = interfacesAnalysis(a, *s, o, library);
+    else if (analysis == "layered-solid")
+        r = layeredSolidAnalysis(a, *s, o, library, false);
+    else if (analysis == "layered-solid-thermal")
+        r = layeredSolidAnalysis(a, *s, o, library, true);
     if (!r)
         return r;
     json out = r.value();
@@ -945,6 +1303,17 @@ Result<json> analyzeStack(const Architecture& a, const std::string& stackId, con
 const std::vector<MatterMetric>& matterMetrics(const std::string& analysis)
 {
     static const std::map<std::string, std::vector<MatterMetric>> metrics{
+        {"layered-solid",
+         {{"f1", "First frequency (3D)", "Hz", "the lowest mode of the 20-node model with the stated supports (modal)"},
+          {"mass", "Mass", "kg", "the integral of rho over the meshed body"},
+          {"maxDisplacement", "Largest displacement", "m", "max |u| over the nodes (static)"},
+          {"maxVonMises", "Largest von Mises stress", "Pa", "at element centres, over all layers (static)"},
+          {"compliance", "Compliance", "J", "f^T u of the applied loads (static)"},
+          {"maxFailureIndex", "Largest interface initiation index", "1", "(max(t_n, 0) / N)^2 + (t_s / S)^2 at interface points with both strengths (static)"}}},
+        {"layered-solid-thermal",
+         {{"heatIn", "Heat flow in", "W", "through the inner face"},
+          {"heatFluxIn", "Mean heat flux in", "W/m^2", "the heat flow over the inner face's area"},
+          {"maxInterfaceJump", "Largest interface temperature jump", "K", "the mean jump across each interface, largest in magnitude"}}},
         {"laminate",
          {{"Ex", "In-plane modulus Ex", "Pa", "1 / (h a11)"},
           {"Ey", "In-plane modulus Ey", "Pa", "1 / (h a22)"},

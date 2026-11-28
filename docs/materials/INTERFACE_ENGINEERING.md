@@ -11,11 +11,12 @@ that analysis refuse the stack.
 | Model | Physics | Parameters | Used by |
 |---|---|---|---|
 | perfect | all | - | every analysis |
-| perfect-bonding | mechanical | - | lamination, modes, the cantilever |
-| finite-stiffness | mechanical | normalStiffness, shearStiffness (N/m^3) | recorded; refused by the analyses |
+| perfect-bonding | mechanical | - | lamination, modes, the cantilever, the 3D layered solid (shared nodes) |
+| finite-stiffness | mechanical | normalStiffness, shearStiffness (N/m^3) | the 3D layered solid (spring layer); refused by the others |
 | cohesive-zone | mechanical | strength (Pa), fractureEnergy (J/m^2) | bonded below the strength; delamination screening |
-| frictional-contact | mechanical | frictionCoefficient | recorded; refused |
-| thermal-contact-resistance | thermal | resistance (m^2 K/W) | through-thickness conduction; the coupled engine |
+| frictional-contact | mechanical | frictionCoefficient (penalties normalStiffness, shearStiffness optional) | the 3D layered solid (Coulomb, Newton with return mapping); refused by the others |
+| sliding | mechanical | normalStiffness (N/m^3) | the 3D layered solid (no shear); refused by the others |
+| thermal-contact-resistance | thermal | resistance (m^2 K/W) | through-thickness conduction; the coupled engine; the 3D layered conduction |
 | electrical-contact-resistance | electrical | resistance (ohm m^2) | through-thickness electrical; refused by the layered solver |
 | dielectric | electrical | surfaceChargeDensity (C/m^2) | recorded; refused |
 | charge-transfer | electrical | barrierHeight (V) | recorded; refused |
@@ -52,6 +53,15 @@ from its domain settings `interfaces`, which `stackToPhysicalSystem` writes from
 the architecture. It is verified against the series formula and the jump
 `q (w1 / 2 k1 + w2 / 2 k2 + R)` between the adjacent cells
 (`ThermalContact.*`, `MatterCoupling.TheBarrierStackRunsInTheCoupledEngine`).
+
+The three-dimensional layered solid (`mechanics/LayeredSolid`,
+`MatterAnalyses` `layered-solid`, `layered-solid-thermal`; RES-MECH-019..022)
+represents perfect bonding, finite stiffness, sliding and frictional contact
+mechanically, and perfect contact or a contact resistance thermally. Optional
+model parameters `normalStrength` and `shearStrength` give the quadratic
+initiation index at every interface point. Debonded regions are given as
+analysis options. A cohesive zone is refused: there is no damage evolution
+(`../mechanics/LAYERED_SOLIDS.md`).
 
 ## Optimization and measurement
 
